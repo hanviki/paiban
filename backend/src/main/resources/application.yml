@@ -1,0 +1,103 @@
+http:
+  port: 1099
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1024
+    min-spare-threads: 30
+    accept-count: 5000
+  port: 1088
+  ssl:
+    # 证书名字
+    key-store: 2723918__whuh.com.pfx
+    #key-store: classpath:keystore.keystore
+    key-store-password: 8MaA4L57
+    keyStoreType: PKCS12
+  servlet:
+    context-path: /
+cxf:
+  path: /webservice
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: dev
+  aop:
+    proxy-target-class: true
+
+  messages:
+    encoding: utf-8
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        min-idle: 8
+        max-idle: 500
+        max-active: 2000
+        max-wait: 10000
+    timeout: 0
+
+
+
+#mybatis plus 设置
+mybatis-plus:
+  type-aliases-package: cc.mrbird.febs.system.domain,cc.mrbird.febs.job.domain,cc.mrbird.febs.scm.entity,cc.mrbird.febs.webService.SapToScm,cc.mrbird.febs.webService.ScmToGys
+  mapper-locations: classpath:mapper/*/*.xml
+  configuration:
+    jdbc-type-for-null: null
+  global-config:
+    # 关闭 mybatis-plus的 banner
+    banner: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ['httptrace', 'metrics']
+
+
+febs:
+  # 上传文件所在的路径
+  uploadPath: D:/Scm/UploadFile/
+  baseUrl: http://127.0.0.1:1088
+  timeout: 30000
+  # 是否异步记录用户操作日志
+  openAopLog: true
+  # 单次最大批量入库数量
+  max:
+    batch:
+      insert:
+        num: 1000
+  shiro:
+    # 后端免认证接口 url
+    anonUrl: /webservice/*,/druid/**,/weather/info,/comFile/checkFile/*,/uploadFile/**,/login,/captcha.jpg,/scmDVendoruser/user2/*,/scmDVendor/GetByVendorId/*,/scmDVendor/regist,/comFile/upload,/logout/**,/regist,/user/check/**,/swagger-resources/**,/webjars/**,/v2/**,/swagger-ui.html/**,/favicon.ico
+    # token有效期，单位秒
+    jwtTimeOut: 6000
+  # Swagger相关配置
+  swagger:
+    basePackage: cc.mrbird.febs
+    title: FEBS VUE API
+    description: FEBS VUE API Document.
+    version: 2.0
+    author: viki
+    url: https://mrbird.cc
+    email: 852252810@qq.com
+    license: Apache 2.0
+    licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
+# sap jco 配置
+jco:
+  ashost: 192.168.64.29
+  sysnr: 00
+  client: 300
+  user: COM_SCM
+  passw: '@123456'
+  lang: EN
+

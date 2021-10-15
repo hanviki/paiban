@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlBScheduleMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlBSchedule">
+                    <id column="id" property="id"/>
+                    <result column="user_no" property="userNo"/>
+                    <result column="name" property="name"/>
+                    <result column="user_name" property="userName"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="yq_name" property="yqName"/>
+                    <result column="dept_id" property="deptId"/>
+                    <result column="yq_id" property="yqId"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
+                    <result column="note" property="note"/>
+                    <result column="audit_suggestion" property="auditSuggestion"/>
+                    <result column="audit_date" property="auditDate"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, user_no, name, user_name, dept_name, yq_name, dept_id, yq_id, start_date, end_date, note, audit_suggestion, audit_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateSdlBSchedule" parameterType="cc.mrbird.febs.sdl.entity.SdlBSchedule">
+        update sdl_b_schedule
+        <trim prefix="set" suffixOverrides=",">
+<if test="userNo != null">user_no=#{userNo},</if>
+<if test="name != null">name=#{name},</if>
+<if test="userName != null">user_name=#{userName},</if>
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="yqName != null">yq_name=#{yqName},</if>
+<if test="deptId != null">dept_id=#{deptId},</if>
+<if test="yqId != null">yq_id=#{yqId},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
+<if test="note != null">note=#{note},</if>
+<if test="auditSuggestion != null">audit_suggestion=#{auditSuggestion},</if>
+<if test="auditDate != null">audit_date=#{auditDate},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlBSchedule" resultType="cc.mrbird.febs.sdl.entity.SdlBSchedule" parameterType="cc.mrbird.febs.sdl.entity.SdlBSchedule">
+        select  *  from sdl_b_schedule
+        where  1=1
+            <if test="sdlBSchedule.id != null and sdlBSchedule.id != ''"> and  sdl_b_schedule.id =#{ sdlBSchedule.id} </if>
+            <if test="sdlBSchedule.userNo != null and sdlBSchedule.userNo != ''"> and  sdl_b_schedule.user_no like concat('%', #{ sdlBSchedule.userNo} ,'%')</if>
+            <if test="sdlBSchedule.name != null and sdlBSchedule.name != ''"> and  sdl_b_schedule.name like concat('%', #{ sdlBSchedule.name} ,'%')</if>
+            <if test="sdlBSchedule.userName != null and sdlBSchedule.userName != ''"> and  sdl_b_schedule.user_name like concat('%', #{ sdlBSchedule.userName} ,'%')</if>
+            <if test="sdlBSchedule.deptName != null and sdlBSchedule.deptName != ''"> and  sdl_b_schedule.dept_name like concat('%', #{ sdlBSchedule.deptName} ,'%')</if>
+            <if test="sdlBSchedule.yqName != null and sdlBSchedule.yqName != ''"> and  sdl_b_schedule.yq_name like concat('%', #{ sdlBSchedule.yqName} ,'%')</if>
+            <if test="sdlBSchedule.deptId != null and sdlBSchedule.deptId != ''"> and  sdl_b_schedule.dept_id like concat('%', #{ sdlBSchedule.deptId} ,'%')</if>
+        <if test="sdlBSchedule.yqId != null"> and  sdl_b_schedule.yq_id =#{ sdlBSchedule.yqId} </if>
+        <if test="sdlBSchedule.startDateFrom!= null">
+            AND sdl_b_schedule.start_date <![CDATA[ >= ]]>  #{sdlBSchedule.startDateFrom}
+        </if>
+        <if test="sdlBSchedule.startDateTo!= null">
+            AND  sdl_b_schedule.start_date <![CDATA[ <= ]]>  #{sdlBSchedule.startDateTo}
+        </if>
+        <if test="sdlBSchedule.endDateFrom!= null">
+            AND sdl_b_schedule.end_date <![CDATA[ >= ]]>  #{sdlBSchedule.endDateFrom}
+        </if>
+        <if test="sdlBSchedule.endDateTo!= null">
+            AND  sdl_b_schedule.end_date <![CDATA[ <= ]]>  #{sdlBSchedule.endDateTo}
+        </if>
+            <if test="sdlBSchedule.note != null and sdlBSchedule.note != ''"> and  sdl_b_schedule.note like concat('%', #{ sdlBSchedule.note} ,'%')</if>
+            <if test="sdlBSchedule.auditSuggestion != null and sdlBSchedule.auditSuggestion != ''"> and  sdl_b_schedule.audit_suggestion like concat('%', #{ sdlBSchedule.auditSuggestion} ,'%')</if>
+        <if test="sdlBSchedule.auditDateFrom!= null">
+            AND sdl_b_schedule.audit_date <![CDATA[ >= ]]>  #{sdlBSchedule.auditDateFrom}
+        </if>
+        <if test="sdlBSchedule.auditDateTo!= null">
+            AND  sdl_b_schedule.audit_date <![CDATA[ <= ]]>  #{sdlBSchedule.auditDateTo}
+        </if>
+        <if test="sdlBSchedule.state != null"> and  sdl_b_schedule.state =#{ sdlBSchedule.state} </if>
+        <if test="sdlBSchedule.isDeletemark != null"> and  sdl_b_schedule.IS_DELETEMARK =#{ sdlBSchedule.isDeletemark} </if>
+        <if test="sdlBSchedule.createTimeFrom!= null">
+            AND sdl_b_schedule.CREATE_TIME <![CDATA[ >= ]]>  #{sdlBSchedule.createTimeFrom}
+        </if>
+        <if test="sdlBSchedule.createTimeTo!= null">
+            AND  sdl_b_schedule.CREATE_TIME <![CDATA[ <= ]]>  #{sdlBSchedule.createTimeTo}
+        </if>
+        <if test="sdlBSchedule.modifyTimeFrom!= null">
+            AND sdl_b_schedule.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlBSchedule.modifyTimeFrom}
+        </if>
+        <if test="sdlBSchedule.modifyTimeTo!= null">
+            AND  sdl_b_schedule.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlBSchedule.modifyTimeTo}
+        </if>
+        <if test="sdlBSchedule.createUserId != null"> and  sdl_b_schedule.CREATE_USER_ID =#{ sdlBSchedule.createUserId} </if>
+        <if test="sdlBSchedule.modifyUserId != null"> and  sdl_b_schedule.MODIFY_USER_ID =#{ sdlBSchedule.modifyUserId} </if>
+</select>
+
+</mapper>

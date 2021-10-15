@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlBScheduleDetailMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+                    <id column="id" property="id"/>
+                    <result column="base_id" property="baseId"/>
+                    <result column="user_no" property="userNo"/>
+                    <result column="name" property="name"/>
+                    <result column="user_name" property="userName"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="yq_name" property="yqName"/>
+                    <result column="bq_name" property="bqName"/>
+                    <result column="dept_id" property="deptId"/>
+                    <result column="yq_id" property="yqId"/>
+                    <result column="bq_id" property="bqId"/>
+                    <result column="schedule_date" property="scheduleDate"/>
+                    <result column="banci_id" property="banciId"/>
+                    <result column="banci" property="banci"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="rylx_id" property="rylxId"/>
+                    <result column="rylx_name" property="rylxName"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, user_account, user_account_name, rylx_id, rylx_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateSdlBScheduleDetail" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+        update sdl_b_schedule_detail
+        <trim prefix="set" suffixOverrides=",">
+<if test="baseId != null">base_id=#{baseId},</if>
+<if test="userNo != null">user_no=#{userNo},</if>
+<if test="name != null">name=#{name},</if>
+<if test="userName != null">user_name=#{userName},</if>
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="yqName != null">yq_name=#{yqName},</if>
+<if test="bqName != null">bq_name=#{bqName},</if>
+<if test="deptId != null">dept_id=#{deptId},</if>
+<if test="yqId != null">yq_id=#{yqId},</if>
+<if test="bqId != null">bq_id=#{bqId},</if>
+<if test="scheduleDate != null">schedule_date=#{scheduleDate},</if>
+<if test="banciId != null">banci_id=#{banciId},</if>
+<if test="banci != null">banci=#{banci},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="rylxId != null">rylx_id=#{rylxId},</if>
+<if test="rylxName != null">rylx_name=#{rylxName},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlBScheduleDetail" resultType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+        select  *  from sdl_b_schedule_detail
+        where  1=1
+            <if test="sdlBScheduleDetail.id != null and sdlBScheduleDetail.id != ''"> and  sdl_b_schedule_detail.id =#{ sdlBScheduleDetail.id} </if>
+            <if test="sdlBScheduleDetail.baseId != null and sdlBScheduleDetail.baseId != ''"> and  sdl_b_schedule_detail.base_id like concat('%', #{ sdlBScheduleDetail.baseId} ,'%')</if>
+            <if test="sdlBScheduleDetail.userNo != null and sdlBScheduleDetail.userNo != ''"> and  sdl_b_schedule_detail.user_no like concat('%', #{ sdlBScheduleDetail.userNo} ,'%')</if>
+            <if test="sdlBScheduleDetail.name != null and sdlBScheduleDetail.name != ''"> and  sdl_b_schedule_detail.name like concat('%', #{ sdlBScheduleDetail.name} ,'%')</if>
+            <if test="sdlBScheduleDetail.userName != null and sdlBScheduleDetail.userName != ''"> and  sdl_b_schedule_detail.user_name like concat('%', #{ sdlBScheduleDetail.userName} ,'%')</if>
+            <if test="sdlBScheduleDetail.deptName != null and sdlBScheduleDetail.deptName != ''"> and  sdl_b_schedule_detail.dept_name like concat('%', #{ sdlBScheduleDetail.deptName} ,'%')</if>
+            <if test="sdlBScheduleDetail.yqName != null and sdlBScheduleDetail.yqName != ''"> and  sdl_b_schedule_detail.yq_name like concat('%', #{ sdlBScheduleDetail.yqName} ,'%')</if>
+            <if test="sdlBScheduleDetail.bqName != null and sdlBScheduleDetail.bqName != ''"> and  sdl_b_schedule_detail.bq_name like concat('%', #{ sdlBScheduleDetail.bqName} ,'%')</if>
+            <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''"> and  sdl_b_schedule_detail.dept_id like concat('%', #{ sdlBScheduleDetail.deptId} ,'%')</if>
+        <if test="sdlBScheduleDetail.yqId != null"> and  sdl_b_schedule_detail.yq_id =#{ sdlBScheduleDetail.yqId} </if>
+            <if test="sdlBScheduleDetail.bqId != null and sdlBScheduleDetail.bqId != ''"> and  sdl_b_schedule_detail.bq_id like concat('%', #{ sdlBScheduleDetail.bqId} ,'%')</if>
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND sdl_b_schedule_detail.schedule_date <![CDATA[ >= ]]>  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateTo!= null">
+            AND  sdl_b_schedule_detail.schedule_date <![CDATA[ <= ]]>  #{sdlBScheduleDetail.scheduleDateTo}
+        </if>
+        <if test="sdlBScheduleDetail.banciId != null"> and  sdl_b_schedule_detail.banci_id =#{ sdlBScheduleDetail.banciId} </if>
+            <if test="sdlBScheduleDetail.banci != null and sdlBScheduleDetail.banci != ''"> and  sdl_b_schedule_detail.banci like concat('%', #{ sdlBScheduleDetail.banci} ,'%')</if>
+            <if test="sdlBScheduleDetail.userAccount != null and sdlBScheduleDetail.userAccount != ''"> and  sdl_b_schedule_detail.user_account like concat('%', #{ sdlBScheduleDetail.userAccount} ,'%')</if>
+            <if test="sdlBScheduleDetail.userAccountName != null and sdlBScheduleDetail.userAccountName != ''"> and  sdl_b_schedule_detail.user_account_name like concat('%', #{ sdlBScheduleDetail.userAccountName} ,'%')</if>
+        <if test="sdlBScheduleDetail.rylxId != null"> and  sdl_b_schedule_detail.rylx_id =#{ sdlBScheduleDetail.rylxId} </if>
+        <if test="sdlBScheduleDetail.rylxName != null"> and  sdl_b_schedule_detail.rylx_name =#{ sdlBScheduleDetail.rylxName} </if>
+        <if test="sdlBScheduleDetail.state != null"> and  sdl_b_schedule_detail.state =#{ sdlBScheduleDetail.state} </if>
+        <if test="sdlBScheduleDetail.isDeletemark != null"> and  sdl_b_schedule_detail.IS_DELETEMARK =#{ sdlBScheduleDetail.isDeletemark} </if>
+        <if test="sdlBScheduleDetail.createTimeFrom!= null">
+            AND sdl_b_schedule_detail.CREATE_TIME <![CDATA[ >= ]]>  #{sdlBScheduleDetail.createTimeFrom}
+        </if>
+        <if test="sdlBScheduleDetail.createTimeTo!= null">
+            AND  sdl_b_schedule_detail.CREATE_TIME <![CDATA[ <= ]]>  #{sdlBScheduleDetail.createTimeTo}
+        </if>
+        <if test="sdlBScheduleDetail.modifyTimeFrom!= null">
+            AND sdl_b_schedule_detail.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlBScheduleDetail.modifyTimeFrom}
+        </if>
+        <if test="sdlBScheduleDetail.modifyTimeTo!= null">
+            AND  sdl_b_schedule_detail.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlBScheduleDetail.modifyTimeTo}
+        </if>
+        <if test="sdlBScheduleDetail.createUserId != null"> and  sdl_b_schedule_detail.CREATE_USER_ID =#{ sdlBScheduleDetail.createUserId} </if>
+        <if test="sdlBScheduleDetail.modifyUserId != null"> and  sdl_b_schedule_detail.MODIFY_USER_ID =#{ sdlBScheduleDetail.modifyUserId} </if>
+</select>
+
+</mapper>

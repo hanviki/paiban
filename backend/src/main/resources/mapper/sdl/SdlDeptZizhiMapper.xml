@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlDeptZizhiMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDeptZizhi">
+                    <id column="id" property="id"/>
+                    <result column="banci_id" property="banciId"/>
+                    <result column="dept_id" property="deptId"/>
+                    <result column="is_bq" property="isBq"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, banci_id, dept_id, is_bq
+    </sql>
+    <update id="updateSdlDeptZizhi" parameterType="cc.mrbird.febs.sdl.entity.SdlDeptZizhi">
+        update sdl_dept_zizhi
+        <trim prefix="set" suffixOverrides=",">
+<if test="banciId != null">banci_id=#{banciId},</if>
+<if test="deptId != null">dept_id=#{deptId},</if>
+<if test="isBq != null">is_bq=#{isBq},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlDeptZizhi" resultType="cc.mrbird.febs.sdl.entity.SdlDeptZizhi" parameterType="cc.mrbird.febs.sdl.entity.SdlDeptZizhi">
+        select  *  from sdl_dept_zizhi
+        where  1=1
+            <if test="sdlDeptZizhi.deptId != null and sdlDeptZizhi.deptId != ''"> and  sdl_dept_zizhi.dept_id like concat('%', #{ sdlDeptZizhi.deptId} ,'%')</if>
+</select>
+
+</mapper>

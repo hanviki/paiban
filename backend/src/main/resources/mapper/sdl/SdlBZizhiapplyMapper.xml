@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlBZizhiapplyMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlBZizhiapply">
+                    <id column="id" property="id"/>
+                    <result column="user_no" property="userNo"/>
+                    <result column="name" property="name"/>
+                    <result column="user_name" property="userName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="rylx_id" property="rylxId"/>
+                    <result column="rylx_name" property="rylxName"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="bq_name" property="bqName"/>
+                    <result column="dept_id" property="deptId"/>
+                    <result column="apply_date" property="applyDate"/>
+                    <result column="apply_type" property="applyType"/>
+                    <result column="school_date" property="schoolDate"/>
+                    <result column="position_name" property="positionName"/>
+                    <result column="position_prdate" property="positionPrdate"/>
+                    <result column="orign_type" property="orignType"/>
+                    <result column="new_type" property="newType"/>
+                    <result column="note" property="note"/>
+                    <result column="audit_suggestion" property="auditSuggestion"/>
+                    <result column="audit_date" property="auditDate"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, user_no, name, user_name, user_account, user_account_name, rylx_id, rylx_name, dept_name, bq_name, dept_id, apply_date, apply_type, school_date, position_name, position_prdate, orign_type, new_type, note, audit_suggestion, audit_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateSdlBZizhiapply" parameterType="cc.mrbird.febs.sdl.entity.SdlBZizhiapply">
+        update sdl_b_zizhiapply
+        <trim prefix="set" suffixOverrides=",">
+<if test="userNo != null">user_no=#{userNo},</if>
+<if test="name != null">name=#{name},</if>
+<if test="userName != null">user_name=#{userName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="rylxId != null">rylx_id=#{rylxId},</if>
+<if test="rylxName != null">rylx_name=#{rylxName},</if>
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="bqName != null">bq_name=#{bqName},</if>
+<if test="deptId != null">dept_id=#{deptId},</if>
+<if test="applyDate != null">apply_date=#{applyDate},</if>
+<if test="applyType != null">apply_type=#{applyType},</if>
+<if test="schoolDate != null">school_date=#{schoolDate},</if>
+<if test="positionName != null">position_name=#{positionName},</if>
+<if test="positionPrdate != null">position_prdate=#{positionPrdate},</if>
+<if test="orignType != null">orign_type=#{orignType},</if>
+<if test="newType != null">new_type=#{newType},</if>
+<if test="note != null">note=#{note},</if>
+<if test="auditSuggestion != null">audit_suggestion=#{auditSuggestion},</if>
+<if test="auditDate != null">audit_date=#{auditDate},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlBZizhiapply" resultType="cc.mrbird.febs.sdl.entity.SdlBZizhiapply" parameterType="cc.mrbird.febs.sdl.entity.SdlBZizhiapply">
+        select  *  from sdl_b_zizhiapply
+        where  1=1
+            <if test="sdlBZizhiapply.id != null and sdlBZizhiapply.id != ''"> and  sdl_b_zizhiapply.id =#{ sdlBZizhiapply.id} </if>
+            <if test="sdlBZizhiapply.userNo != null and sdlBZizhiapply.userNo != ''"> and  sdl_b_zizhiapply.user_no like concat('%', #{ sdlBZizhiapply.userNo} ,'%')</if>
+            <if test="sdlBZizhiapply.name != null and sdlBZizhiapply.name != ''"> and  sdl_b_zizhiapply.name like concat('%', #{ sdlBZizhiapply.name} ,'%')</if>
+            <if test="sdlBZizhiapply.userName != null and sdlBZizhiapply.userName != ''"> and  sdl_b_zizhiapply.user_name like concat('%', #{ sdlBZizhiapply.userName} ,'%')</if>
+            <if test="sdlBZizhiapply.userAccount != null and sdlBZizhiapply.userAccount != ''"> and  sdl_b_zizhiapply.user_account like concat('%', #{ sdlBZizhiapply.userAccount} ,'%')</if>
+            <if test="sdlBZizhiapply.userAccountName != null and sdlBZizhiapply.userAccountName != ''"> and  sdl_b_zizhiapply.user_account_name like concat('%', #{ sdlBZizhiapply.userAccountName} ,'%')</if>
+        <if test="sdlBZizhiapply.rylxId != null"> and  sdl_b_zizhiapply.rylx_id =#{ sdlBZizhiapply.rylxId} </if>
+            <if test="sdlBZizhiapply.rylxName != null and sdlBZizhiapply.rylxName != ''"> and  sdl_b_zizhiapply.rylx_name like concat('%', #{ sdlBZizhiapply.rylxName} ,'%')</if>
+            <if test="sdlBZizhiapply.deptName != null and sdlBZizhiapply.deptName != ''"> and  sdl_b_zizhiapply.dept_name like concat('%', #{ sdlBZizhiapply.deptName} ,'%')</if>
+            <if test="sdlBZizhiapply.bqName != null and sdlBZizhiapply.bqName != ''"> and  sdl_b_zizhiapply.bq_name like concat('%', #{ sdlBZizhiapply.bqName} ,'%')</if>
+            <if test="sdlBZizhiapply.deptId != null and sdlBZizhiapply.deptId != ''"> and  sdl_b_zizhiapply.dept_id like concat('%', #{ sdlBZizhiapply.deptId} ,'%')</if>
+        <if test="sdlBZizhiapply.applyDateFrom!= null">
+            AND sdl_b_zizhiapply.apply_date <![CDATA[ >= ]]>  #{sdlBZizhiapply.applyDateFrom}
+        </if>
+        <if test="sdlBZizhiapply.applyDateTo!= null">
+            AND  sdl_b_zizhiapply.apply_date <![CDATA[ <= ]]>  #{sdlBZizhiapply.applyDateTo}
+        </if>
+            <if test="sdlBZizhiapply.applyType != null and sdlBZizhiapply.applyType != ''"> and  sdl_b_zizhiapply.apply_type like concat('%', #{ sdlBZizhiapply.applyType} ,'%')</if>
+        <if test="sdlBZizhiapply.schoolDateFrom!= null">
+            AND sdl_b_zizhiapply.school_date <![CDATA[ >= ]]>  #{sdlBZizhiapply.schoolDateFrom}
+        </if>
+        <if test="sdlBZizhiapply.schoolDateTo!= null">
+            AND  sdl_b_zizhiapply.school_date <![CDATA[ <= ]]>  #{sdlBZizhiapply.schoolDateTo}
+        </if>
+            <if test="sdlBZizhiapply.positionName != null and sdlBZizhiapply.positionName != ''"> and  sdl_b_zizhiapply.position_name like concat('%', #{ sdlBZizhiapply.positionName} ,'%')</if>
+            <if test="sdlBZizhiapply.positionPrdate != null and sdlBZizhiapply.positionPrdate != ''"> and  sdl_b_zizhiapply.position_prdate like concat('%', #{ sdlBZizhiapply.positionPrdate} ,'%')</if>
+            <if test="sdlBZizhiapply.orignType != null and sdlBZizhiapply.orignType != ''"> and  sdl_b_zizhiapply.orign_type like concat('%', #{ sdlBZizhiapply.orignType} ,'%')</if>
+            <if test="sdlBZizhiapply.newType != null and sdlBZizhiapply.newType != ''"> and  sdl_b_zizhiapply.new_type like concat('%', #{ sdlBZizhiapply.newType} ,'%')</if>
+            <if test="sdlBZizhiapply.note != null and sdlBZizhiapply.note != ''"> and  sdl_b_zizhiapply.note like concat('%', #{ sdlBZizhiapply.note} ,'%')</if>
+            <if test="sdlBZizhiapply.auditSuggestion != null and sdlBZizhiapply.auditSuggestion != ''"> and  sdl_b_zizhiapply.audit_suggestion like concat('%', #{ sdlBZizhiapply.auditSuggestion} ,'%')</if>
+        <if test="sdlBZizhiapply.auditDateFrom!= null">
+            AND sdl_b_zizhiapply.audit_date <![CDATA[ >= ]]>  #{sdlBZizhiapply.auditDateFrom}
+        </if>
+        <if test="sdlBZizhiapply.auditDateTo!= null">
+            AND  sdl_b_zizhiapply.audit_date <![CDATA[ <= ]]>  #{sdlBZizhiapply.auditDateTo}
+        </if>
+        <if test="sdlBZizhiapply.state != null"> and  sdl_b_zizhiapply.state =#{ sdlBZizhiapply.state} </if>
+        <if test="sdlBZizhiapply.isDeletemark != null"> and  sdl_b_zizhiapply.IS_DELETEMARK =#{ sdlBZizhiapply.isDeletemark} </if>
+        <if test="sdlBZizhiapply.createTimeFrom!= null">
+            AND sdl_b_zizhiapply.CREATE_TIME <![CDATA[ >= ]]>  #{sdlBZizhiapply.createTimeFrom}
+        </if>
+        <if test="sdlBZizhiapply.createTimeTo!= null">
+            AND  sdl_b_zizhiapply.CREATE_TIME <![CDATA[ <= ]]>  #{sdlBZizhiapply.createTimeTo}
+        </if>
+        <if test="sdlBZizhiapply.modifyTimeFrom!= null">
+            AND sdl_b_zizhiapply.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlBZizhiapply.modifyTimeFrom}
+        </if>
+        <if test="sdlBZizhiapply.modifyTimeTo!= null">
+            AND  sdl_b_zizhiapply.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlBZizhiapply.modifyTimeTo}
+        </if>
+        <if test="sdlBZizhiapply.createUserId != null"> and  sdl_b_zizhiapply.CREATE_USER_ID =#{ sdlBZizhiapply.createUserId} </if>
+        <if test="sdlBZizhiapply.modifyUserId != null"> and  sdl_b_zizhiapply.MODIFY_USER_ID =#{ sdlBZizhiapply.modifyUserId} </if>
+</select>
+
+</mapper>

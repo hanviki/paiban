@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlDZizhiMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDZizhi">
+                    <id column="id" property="id"/>
+                    <result column="mudule_name" property="muduleName"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+                    <result column="parent_id" property="parentId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, mudule_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, parent_id
+    </sql>
+    <update id="updateSdlDZizhi" parameterType="cc.mrbird.febs.sdl.entity.SdlDZizhi">
+        update sdl_d_zizhi
+        <trim prefix="set" suffixOverrides=",">
+<if test="muduleName != null">mudule_name=#{muduleName},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+<if test="parentId != null">parent_id=#{parentId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlDZizhi" resultType="cc.mrbird.febs.sdl.entity.SdlDZizhi" parameterType="cc.mrbird.febs.sdl.entity.SdlDZizhi">
+        select  *  from sdl_d_zizhi
+        where  1=1
+            <if test="sdlDZizhi.muduleName != null and sdlDZizhi.muduleName != ''"> and  sdl_d_zizhi.mudule_name like concat('%', #{ sdlDZizhi.muduleName} ,'%')</if>
+        <if test="sdlDZizhi.state != null"> and  sdl_d_zizhi.state =#{ sdlDZizhi.state} </if>
+        <if test="sdlDZizhi.isDeletemark != null"> and  sdl_d_zizhi.IS_DELETEMARK =#{ sdlDZizhi.isDeletemark} </if>
+        <if test="sdlDZizhi.createTimeFrom!= null">
+            AND sdl_d_zizhi.CREATE_TIME <![CDATA[ >= ]]>  #{sdlDZizhi.createTimeFrom}
+        </if>
+        <if test="sdlDZizhi.createTimeTo!= null">
+            AND  sdl_d_zizhi.CREATE_TIME <![CDATA[ <= ]]>  #{sdlDZizhi.createTimeTo}
+        </if>
+        <if test="sdlDZizhi.modifyTimeFrom!= null">
+            AND sdl_d_zizhi.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlDZizhi.modifyTimeFrom}
+        </if>
+        <if test="sdlDZizhi.modifyTimeTo!= null">
+            AND  sdl_d_zizhi.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlDZizhi.modifyTimeTo}
+        </if>
+        <if test="sdlDZizhi.parentId != null"> and  sdl_d_zizhi.parent_id =#{ sdlDZizhi.parentId} </if>
+</select>
+
+</mapper>
