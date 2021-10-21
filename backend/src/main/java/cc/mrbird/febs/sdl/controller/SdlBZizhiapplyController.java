@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,10 +61,15 @@ public ISdlBZizhiapplyService iSdlBZizhiapplyService;
  * @return
  */
 @GetMapping
-@RequiresPermissions("sdlBZizhiapply:view")
 public Map<String, Object> List(QueryRequest request, SdlBZizhiapply sdlBZizhiapply){
         return getDataTable(this.iSdlBZizhiapplyService.findSdlBZizhiapplys(request, sdlBZizhiapply));
         }
+    @GetMapping("new")
+    public Map<String, Object> List_new(QueryRequest request, SdlBZizhiapply sdlBZizhiapply){
+        User currentUser= FebsUtil.getCurrentUser();
+        sdlBZizhiapply.setUserDept(currentUser.getDeptId());
+        return getDataTable(this.iSdlBZizhiapplyService.findSdlBZizhiapplys(request, sdlBZizhiapply));
+    }
 
 /**
  * 添加
@@ -77,6 +83,11 @@ public void addSdlBZizhiapply(@Valid SdlBZizhiapply sdlBZizhiapply)throws FebsEx
         try{
         User currentUser= FebsUtil.getCurrentUser();
         sdlBZizhiapply.setCreateUserId(currentUser.getUserId());
+        sdlBZizhiapply.setUserNo(currentUser.getUsername());
+            sdlBZizhiapply.setName(currentUser.getRealname());
+        sdlBZizhiapply.setApplyDate(new Date());
+        sdlBZizhiapply.setState(1);
+        sdlBZizhiapply.setUserDept(currentUser.getDeptId());
         this.iSdlBZizhiapplyService.createSdlBZizhiapply(sdlBZizhiapply);
         }catch(Exception e){
         message="新增/按钮失败" ;
@@ -92,11 +103,14 @@ public void addSdlBZizhiapply(@Valid SdlBZizhiapply sdlBZizhiapply)throws FebsEx
  */
 @Log("修改")
 @PutMapping
-@RequiresPermissions("sdlBZizhiapply:update")
 public void updateSdlBZizhiapply(@Valid SdlBZizhiapply sdlBZizhiapply)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
       sdlBZizhiapply.setModifyUserId(currentUser.getUserId());
+            sdlBZizhiapply.setUserDept(currentUser.getDeptId());
+            sdlBZizhiapply.setUserNo(currentUser.getUsername());
+            sdlBZizhiapply.setName(currentUser.getRealname());
+            sdlBZizhiapply.setApplyDate(new Date());
         this.iSdlBZizhiapplyService.updateSdlBZizhiapply(sdlBZizhiapply);
         }catch(Exception e){
         message="修改失败" ;

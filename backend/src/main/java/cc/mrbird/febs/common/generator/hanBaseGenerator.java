@@ -65,7 +65,7 @@ public class hanBaseGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         //strategy.setTablePrefix(new String[] { "tlog_", "tsys_" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"sdl_b_deptchange"}); // 需要生成的表
+        strategy.setInclude(new String[]{"sdl_b_zizhiapply"}); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -151,12 +151,12 @@ public class hanBaseGenerator {
         // 自定义 xxListIndex.html 生成
         List<FileOutConfig> focList = new ArrayList<FileOutConfig>();
 
-
+/**
   focList.add(new FileOutConfig("/templates/templatesMybatis/list.vue.vm") {
 @Override public String outputFile(TableInfo tableInfo) {
 // 自定义输入文件名称
 // return projectPath + "/src/main/resources/" + moduleName + "/" + tableInfo.getEntityName() + "ListIndex.vue";
-return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.getEntityName() + "List.vue";
+return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.getEntityName() + "List2.vue";
 }
 });
 
@@ -169,7 +169,7 @@ return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.
 // 自定义输入文件名称
 return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.getEntityName() + "Add.vue";
 }
-});
+});*/
  //  cfg.setFileOutConfigList(focList);
  //  mpg.setCfg(cfg);
 
@@ -177,13 +177,13 @@ return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.
  focList.add(new FileOutConfig("/templates/templatesMybatis/edit.vue.vm") {
 @Override public String outputFile(TableInfo tableInfo) {
 // 自定义输入文件名称
-return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.getEntityName() + "Edit.vue";
+return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.getEntityName() + "Edit2.vue";
 }
 });
 
  //  自定义 xxUpdate.html生成
 
-
+/**
  focList.add(new FileOutConfig("/templates/templatesMybatis/mapper.java.vm") {
 @Override public String outputFile(TableInfo tableInfo) {
 // 自定义输入文件名称
@@ -197,7 +197,7 @@ return projectPath + "/src/main/java/cc/mrbird/febs/" + moduleName + "/dao/" + t
                 // 自定义输入文件名称
                 return projectPath + "/src/main/resources/mapper/" + moduleName + "/" + tableInfo.getEntityName() + "Mapper.xml";
             }
-        });
+        });*/
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
 
@@ -210,10 +210,10 @@ return projectPath + "/src/main/java/cc/mrbird/febs/" + moduleName + "/dao/" + t
         // 放置自己项目的 src/main/resources/templates 目录下, 默认名称一下可以不配置，也可以自定义模板名称
         TemplateConfig tc = new TemplateConfig();
         ///templates/templatesMybatis/controller.java.vm
-        tc.setController("/templates/templatesMybatis/controller.java.vm");
-        tc.setService("/templates/templatesMybatis/service.java.vm");
-        tc.setServiceImpl("/templates/templatesMybatis/serviceImpl.java.vm");
-        tc.setEntity("/templates/templatesMybatis/entity.java.vm");
+        tc.setController("");
+        tc.setService("");
+        tc.setServiceImpl("");//templates/templatesMybatis/serviceImpl.java.vm
+        tc.setEntity("");///templates/templatesMybatis/entity.java.vm
         // tc.setMapper("/templates/templatesMybatis/mapper.java.vm");
         //  tc.setXml("/templates/templatesMybatis/mapper.xml.vm");
         tc.setMapper("");

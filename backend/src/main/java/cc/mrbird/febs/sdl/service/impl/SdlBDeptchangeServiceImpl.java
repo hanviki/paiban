@@ -48,6 +48,9 @@ public IPage<SdlBDeptchange> findSdlBDeptchanges(QueryRequest request, SdlBDeptc
         LambdaQueryWrapper<SdlBDeptchange> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(SdlBDeptchange::getIsDeletemark, 1);//1是未删 0是已删
 
+            if (StringUtils.isNotBlank(sdlBDeptchange.getUserDept())) {
+                queryWrapper.eq(SdlBDeptchange::getUserDept, sdlBDeptchange.getUserDept());
+            }
                                 if (StringUtils.isNotBlank(sdlBDeptchange.getUserAccount())) {
                                 queryWrapper.and( p->p.eq(SdlBDeptchange::getUserAccount, sdlBDeptchange.getUserAccount()).or().like(SdlBDeptchange::getUserAccountName, sdlBDeptchange.getUserAccount()));
                                 }
@@ -101,6 +104,7 @@ public void createSdlBDeptchange(SdlBDeptchange sdlBDeptchange){
             }
         }
     }
+    sdl.setUserDept(sdlBDeptchange.getUserDept());
     sdl.setOperationName(sdlBDeptchange.getOperationName());
     sdl.setDeptNewId(dept_new_id);
     sdl.setDeptNewName(dept_new_name);
@@ -121,6 +125,7 @@ public void updateSdlBDeptchange(SdlBDeptchange sdlBDeptchange){
     String dept_new_id="";
     String dept_new_name="";
     String bq_new_name="";
+    sdl.setUserDept(sdlBDeptchange.getUserDept());
     sdl.setOperationName(sdlBDeptchange.getOperationName());
     sdl.setDeptNewId(dept_new_id);
     sdl.setDeptNewName(dept_new_name);

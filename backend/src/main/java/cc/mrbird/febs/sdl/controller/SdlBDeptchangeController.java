@@ -61,6 +61,8 @@ public ISdlBDeptchangeService iSdlBDeptchangeService;
  */
 @GetMapping
 public Map<String, Object> List(QueryRequest request, SdlBDeptchange sdlBDeptchange){
+        User currentUser= FebsUtil.getCurrentUser();
+        sdlBDeptchange.setUserDept(currentUser.getDeptId());
         return getDataTable(this.iSdlBDeptchangeService.findSdlBDeptchanges(request, sdlBDeptchange));
         }
 
@@ -75,7 +77,7 @@ public void addSdlBDeptchange(@Valid SdlBDeptchange sdlBDeptchange)throws FebsEx
         try{
         User currentUser= FebsUtil.getCurrentUser();
         sdlBDeptchange.setCreateUserId(currentUser.getUserId());
-
+                sdlBDeptchange.setUserDept(currentUser.getDeptId());
         this.iSdlBDeptchangeService.createSdlBDeptchange(sdlBDeptchange);
         }catch(Exception e){
         message="移入失败" ;
@@ -95,6 +97,7 @@ public void updateSdlBDeptchange(@Valid SdlBDeptchange sdlBDeptchange)throws Feb
         try{
         User currentUser= FebsUtil.getCurrentUser();
         sdlBDeptchange.setModifyUserId(currentUser.getUserId());
+                sdlBDeptchange.setUserDept(currentUser.getDeptId());
         this.iSdlBDeptchangeService.updateSdlBDeptchange(sdlBDeptchange);
         }catch(Exception e){
         message="操作失败" ;

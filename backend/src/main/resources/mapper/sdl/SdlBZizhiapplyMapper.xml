@@ -7,21 +7,57 @@
                     <id column="id" property="id"/>
                     <result column="user_no" property="userNo"/>
                     <result column="name" property="name"/>
+                    <result column="user_dept" property="userDept"/>
                     <result column="user_name" property="userName"/>
                     <result column="user_account" property="userAccount"/>
                     <result column="user_account_name" property="userAccountName"/>
-                    <result column="rylx_id" property="rylxId"/>
-                    <result column="rylx_name" property="rylxName"/>
                     <result column="dept_name" property="deptName"/>
                     <result column="bq_name" property="bqName"/>
                     <result column="dept_id" property="deptId"/>
                     <result column="apply_date" property="applyDate"/>
                     <result column="apply_type" property="applyType"/>
+                    <result column="user_type_name" property="userTypeName"/>
+                    <result column="user_new_type_name" property="userNewTypeName"/>
+                    <result column="user_type" property="userType"/>
+                    <result column="user_new_type" property="userNewType"/>
+                    <result column="rylx" property="rylx"/>
+                    <result column="yggh" property="yggh"/>
+                    <result column="gh_hk" property="ghHk"/>
+                    <result column="sex_name" property="sexName"/>
+                    <result column="birthday" property="birthday"/>
                     <result column="school_date" property="schoolDate"/>
-                    <result column="position_name" property="positionName"/>
-                    <result column="position_prdate" property="positionPrdate"/>
-                    <result column="orign_type" property="orignType"/>
-                    <result column="new_type" property="newType"/>
+                    <result column="zyjsgw" property="zyjsgw"/>
+                    <result column="bianhao_jx" property="bianhaoJx"/>
+                    <result column="zyjsgw_lc" property="zyjsgwLc"/>
+                    <result column="xcszyjzc" property="xcszyjzc"/>
+                    <result column="appointed_date" property="appointedDate"/>
+                    <result column="appointed_date_lc" property="appointedDateLc"/>
+                    <result column="zizu" property="zizu"/>
+                    <result column="yuangongzu" property="yuangongzu"/>
+                    <result column="xrgwjb" property="xrgwjb"/>
+                    <result column="xrgwjbprsj" property="xrgwjbprsj"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="zyjs_np" property="zyjsNp"/>
+                    <result column="zyjs_date_np" property="zyjsDateNp"/>
+                    <result column="zyjs_npjx" property="zyjsNpjx"/>
+                    <result column="zyjs_date_npjx" property="zyjsDateNpjx"/>
+                    <result column="edu" property="edu"/>
+                    <result column="edu_school" property="eduSchool"/>
+                    <result column="guoji" property="guoji"/>
+                    <result column="minzu" property="minzu"/>
+                    <result column="jiguan" property="jiguan"/>
+                    <result column="political_status" property="politicalStatus"/>
+                    <result column="bianhao_lc" property="bianhaoLc"/>
+                    <result column="xingzhengjiebie" property="xingzhengjiebie"/>
+                    <result column="id_card" property="idCard"/>
+                    <result column="work_date" property="workDate"/>
+                    <result column="yishi_lb" property="yishiLb"/>
+                    <result column="yishi_jb" property="yishiJb"/>
+                    <result column="yishi_zhiyefanwei" property="yishiZhiyefanwei"/>
+                    <result column="yishi_zgzsbianhao" property="yishiZgzsbianhao"/>
+                    <result column="yishi_ziyebianhao" property="yishiZiyebianhao"/>
+                    <result column="renshizifw" property="renshizifw"/>
+                    <result column="renshizfenlei" property="renshizfenlei"/>
                     <result column="note" property="note"/>
                     <result column="audit_suggestion" property="auditSuggestion"/>
                     <result column="audit_date" property="auditDate"/>
@@ -35,28 +71,64 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, user_no, name, user_name, user_account, user_account_name, rylx_id, rylx_name, dept_name, bq_name, dept_id, apply_date, apply_type, school_date, position_name, position_prdate, orign_type, new_type, note, audit_suggestion, audit_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, user_no, name, user_dept, user_name, user_account, user_account_name, dept_name, bq_name, dept_id, apply_date, apply_type, user_type_name, user_new_type_name, user_type, user_new_type, rylx, yggh, gh_hk, sex_name, birthday, school_date, zyjsgw, bianhao_jx, zyjsgw_lc, xcszyjzc, appointed_date, appointed_date_lc, zizu, yuangongzu, xrgwjb, xrgwjbprsj, zhicheng, zyjs_np, zyjs_date_np, zyjs_npjx, zyjs_date_npjx, edu, edu_school, guoji, minzu, jiguan, political_status, bianhao_lc, xingzhengjiebie, id_card, work_date, yishi_lb, yishi_jb, yishi_zhiyefanwei, yishi_zgzsbianhao, yishi_ziyebianhao, renshizifw, renshizfenlei, note, audit_suggestion, audit_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateSdlBZizhiapply" parameterType="cc.mrbird.febs.sdl.entity.SdlBZizhiapply">
         update sdl_b_zizhiapply
         <trim prefix="set" suffixOverrides=",">
 <if test="userNo != null">user_no=#{userNo},</if>
 <if test="name != null">name=#{name},</if>
+<if test="userDept != null">user_dept=#{userDept},</if>
 <if test="userName != null">user_name=#{userName},</if>
 <if test="userAccount != null">user_account=#{userAccount},</if>
 <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
-<if test="rylxId != null">rylx_id=#{rylxId},</if>
-<if test="rylxName != null">rylx_name=#{rylxName},</if>
 <if test="deptName != null">dept_name=#{deptName},</if>
 <if test="bqName != null">bq_name=#{bqName},</if>
 <if test="deptId != null">dept_id=#{deptId},</if>
 <if test="applyDate != null">apply_date=#{applyDate},</if>
 <if test="applyType != null">apply_type=#{applyType},</if>
+<if test="userTypeName != null">user_type_name=#{userTypeName},</if>
+<if test="userNewTypeName != null">user_new_type_name=#{userNewTypeName},</if>
+<if test="userType != null">user_type=#{userType},</if>
+<if test="userNewType != null">user_new_type=#{userNewType},</if>
+<if test="rylx != null">rylx=#{rylx},</if>
+<if test="yggh != null">yggh=#{yggh},</if>
+<if test="ghHk != null">gh_hk=#{ghHk},</if>
+<if test="sexName != null">sex_name=#{sexName},</if>
+<if test="birthday != null">birthday=#{birthday},</if>
 <if test="schoolDate != null">school_date=#{schoolDate},</if>
-<if test="positionName != null">position_name=#{positionName},</if>
-<if test="positionPrdate != null">position_prdate=#{positionPrdate},</if>
-<if test="orignType != null">orign_type=#{orignType},</if>
-<if test="newType != null">new_type=#{newType},</if>
+<if test="zyjsgw != null">zyjsgw=#{zyjsgw},</if>
+<if test="bianhaoJx != null">bianhao_jx=#{bianhaoJx},</if>
+<if test="zyjsgwLc != null">zyjsgw_lc=#{zyjsgwLc},</if>
+<if test="xcszyjzc != null">xcszyjzc=#{xcszyjzc},</if>
+<if test="appointedDate != null">appointed_date=#{appointedDate},</if>
+<if test="appointedDateLc != null">appointed_date_lc=#{appointedDateLc},</if>
+<if test="zizu != null">zizu=#{zizu},</if>
+<if test="yuangongzu != null">yuangongzu=#{yuangongzu},</if>
+<if test="xrgwjb != null">xrgwjb=#{xrgwjb},</if>
+<if test="xrgwjbprsj != null">xrgwjbprsj=#{xrgwjbprsj},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="zyjsNp != null">zyjs_np=#{zyjsNp},</if>
+<if test="zyjsDateNp != null">zyjs_date_np=#{zyjsDateNp},</if>
+<if test="zyjsNpjx != null">zyjs_npjx=#{zyjsNpjx},</if>
+<if test="zyjsDateNpjx != null">zyjs_date_npjx=#{zyjsDateNpjx},</if>
+<if test="edu != null">edu=#{edu},</if>
+<if test="eduSchool != null">edu_school=#{eduSchool},</if>
+<if test="guoji != null">guoji=#{guoji},</if>
+<if test="minzu != null">minzu=#{minzu},</if>
+<if test="jiguan != null">jiguan=#{jiguan},</if>
+<if test="politicalStatus != null">political_status=#{politicalStatus},</if>
+<if test="bianhaoLc != null">bianhao_lc=#{bianhaoLc},</if>
+<if test="xingzhengjiebie != null">xingzhengjiebie=#{xingzhengjiebie},</if>
+<if test="idCard != null">id_card=#{idCard},</if>
+<if test="workDate != null">work_date=#{workDate},</if>
+<if test="yishiLb != null">yishi_lb=#{yishiLb},</if>
+<if test="yishiJb != null">yishi_jb=#{yishiJb},</if>
+<if test="yishiZhiyefanwei != null">yishi_zhiyefanwei=#{yishiZhiyefanwei},</if>
+<if test="yishiZgzsbianhao != null">yishi_zgzsbianhao=#{yishiZgzsbianhao},</if>
+<if test="yishiZiyebianhao != null">yishi_ziyebianhao=#{yishiZiyebianhao},</if>
+<if test="renshizifw != null">renshizifw=#{renshizifw},</if>
+<if test="renshizfenlei != null">renshizfenlei=#{renshizfenlei},</if>
 <if test="note != null">note=#{note},</if>
 <if test="auditSuggestion != null">audit_suggestion=#{auditSuggestion},</if>
 <if test="auditDate != null">audit_date=#{auditDate},</if>
@@ -76,11 +148,10 @@
             <if test="sdlBZizhiapply.id != null and sdlBZizhiapply.id != ''"> and  sdl_b_zizhiapply.id =#{ sdlBZizhiapply.id} </if>
             <if test="sdlBZizhiapply.userNo != null and sdlBZizhiapply.userNo != ''"> and  sdl_b_zizhiapply.user_no like concat('%', #{ sdlBZizhiapply.userNo} ,'%')</if>
             <if test="sdlBZizhiapply.name != null and sdlBZizhiapply.name != ''"> and  sdl_b_zizhiapply.name like concat('%', #{ sdlBZizhiapply.name} ,'%')</if>
+            <if test="sdlBZizhiapply.userDept != null and sdlBZizhiapply.userDept != ''"> and  sdl_b_zizhiapply.user_dept like concat('%', #{ sdlBZizhiapply.userDept} ,'%')</if>
             <if test="sdlBZizhiapply.userName != null and sdlBZizhiapply.userName != ''"> and  sdl_b_zizhiapply.user_name like concat('%', #{ sdlBZizhiapply.userName} ,'%')</if>
             <if test="sdlBZizhiapply.userAccount != null and sdlBZizhiapply.userAccount != ''"> and  sdl_b_zizhiapply.user_account like concat('%', #{ sdlBZizhiapply.userAccount} ,'%')</if>
             <if test="sdlBZizhiapply.userAccountName != null and sdlBZizhiapply.userAccountName != ''"> and  sdl_b_zizhiapply.user_account_name like concat('%', #{ sdlBZizhiapply.userAccountName} ,'%')</if>
-        <if test="sdlBZizhiapply.rylxId != null"> and  sdl_b_zizhiapply.rylx_id =#{ sdlBZizhiapply.rylxId} </if>
-            <if test="sdlBZizhiapply.rylxName != null and sdlBZizhiapply.rylxName != ''"> and  sdl_b_zizhiapply.rylx_name like concat('%', #{ sdlBZizhiapply.rylxName} ,'%')</if>
             <if test="sdlBZizhiapply.deptName != null and sdlBZizhiapply.deptName != ''"> and  sdl_b_zizhiapply.dept_name like concat('%', #{ sdlBZizhiapply.deptName} ,'%')</if>
             <if test="sdlBZizhiapply.bqName != null and sdlBZizhiapply.bqName != ''"> and  sdl_b_zizhiapply.bq_name like concat('%', #{ sdlBZizhiapply.bqName} ,'%')</if>
             <if test="sdlBZizhiapply.deptId != null and sdlBZizhiapply.deptId != ''"> and  sdl_b_zizhiapply.dept_id like concat('%', #{ sdlBZizhiapply.deptId} ,'%')</if>
@@ -91,16 +162,48 @@
             AND  sdl_b_zizhiapply.apply_date <![CDATA[ <= ]]>  #{sdlBZizhiapply.applyDateTo}
         </if>
             <if test="sdlBZizhiapply.applyType != null and sdlBZizhiapply.applyType != ''"> and  sdl_b_zizhiapply.apply_type like concat('%', #{ sdlBZizhiapply.applyType} ,'%')</if>
-        <if test="sdlBZizhiapply.schoolDateFrom!= null">
-            AND sdl_b_zizhiapply.school_date <![CDATA[ >= ]]>  #{sdlBZizhiapply.schoolDateFrom}
-        </if>
-        <if test="sdlBZizhiapply.schoolDateTo!= null">
-            AND  sdl_b_zizhiapply.school_date <![CDATA[ <= ]]>  #{sdlBZizhiapply.schoolDateTo}
-        </if>
-            <if test="sdlBZizhiapply.positionName != null and sdlBZizhiapply.positionName != ''"> and  sdl_b_zizhiapply.position_name like concat('%', #{ sdlBZizhiapply.positionName} ,'%')</if>
-            <if test="sdlBZizhiapply.positionPrdate != null and sdlBZizhiapply.positionPrdate != ''"> and  sdl_b_zizhiapply.position_prdate like concat('%', #{ sdlBZizhiapply.positionPrdate} ,'%')</if>
-            <if test="sdlBZizhiapply.orignType != null and sdlBZizhiapply.orignType != ''"> and  sdl_b_zizhiapply.orign_type like concat('%', #{ sdlBZizhiapply.orignType} ,'%')</if>
-            <if test="sdlBZizhiapply.newType != null and sdlBZizhiapply.newType != ''"> and  sdl_b_zizhiapply.new_type like concat('%', #{ sdlBZizhiapply.newType} ,'%')</if>
+            <if test="sdlBZizhiapply.userTypeName != null and sdlBZizhiapply.userTypeName != ''"> and  sdl_b_zizhiapply.user_type_name like concat('%', #{ sdlBZizhiapply.userTypeName} ,'%')</if>
+            <if test="sdlBZizhiapply.userNewTypeName != null and sdlBZizhiapply.userNewTypeName != ''"> and  sdl_b_zizhiapply.user_new_type_name like concat('%', #{ sdlBZizhiapply.userNewTypeName} ,'%')</if>
+        <if test="sdlBZizhiapply.userType != null"> and  sdl_b_zizhiapply.user_type =#{ sdlBZizhiapply.userType} </if>
+        <if test="sdlBZizhiapply.userNewType != null"> and  sdl_b_zizhiapply.user_new_type =#{ sdlBZizhiapply.userNewType} </if>
+            <if test="sdlBZizhiapply.rylx != null and sdlBZizhiapply.rylx != ''"> and  sdl_b_zizhiapply.rylx like concat('%', #{ sdlBZizhiapply.rylx} ,'%')</if>
+            <if test="sdlBZizhiapply.yggh != null and sdlBZizhiapply.yggh != ''"> and  sdl_b_zizhiapply.yggh like concat('%', #{ sdlBZizhiapply.yggh} ,'%')</if>
+            <if test="sdlBZizhiapply.ghHk != null and sdlBZizhiapply.ghHk != ''"> and  sdl_b_zizhiapply.gh_hk like concat('%', #{ sdlBZizhiapply.ghHk} ,'%')</if>
+            <if test="sdlBZizhiapply.sexName != null and sdlBZizhiapply.sexName != ''"> and  sdl_b_zizhiapply.sex_name like concat('%', #{ sdlBZizhiapply.sexName} ,'%')</if>
+            <if test="sdlBZizhiapply.birthday != null and sdlBZizhiapply.birthday != ''"> and  sdl_b_zizhiapply.birthday like concat('%', #{ sdlBZizhiapply.birthday} ,'%')</if>
+            <if test="sdlBZizhiapply.schoolDate != null and sdlBZizhiapply.schoolDate != ''"> and  sdl_b_zizhiapply.school_date like concat('%', #{ sdlBZizhiapply.schoolDate} ,'%')</if>
+            <if test="sdlBZizhiapply.zyjsgw != null and sdlBZizhiapply.zyjsgw != ''"> and  sdl_b_zizhiapply.zyjsgw like concat('%', #{ sdlBZizhiapply.zyjsgw} ,'%')</if>
+            <if test="sdlBZizhiapply.bianhaoJx != null and sdlBZizhiapply.bianhaoJx != ''"> and  sdl_b_zizhiapply.bianhao_jx like concat('%', #{ sdlBZizhiapply.bianhaoJx} ,'%')</if>
+            <if test="sdlBZizhiapply.zyjsgwLc != null and sdlBZizhiapply.zyjsgwLc != ''"> and  sdl_b_zizhiapply.zyjsgw_lc like concat('%', #{ sdlBZizhiapply.zyjsgwLc} ,'%')</if>
+            <if test="sdlBZizhiapply.xcszyjzc != null and sdlBZizhiapply.xcszyjzc != ''"> and  sdl_b_zizhiapply.xcszyjzc like concat('%', #{ sdlBZizhiapply.xcszyjzc} ,'%')</if>
+            <if test="sdlBZizhiapply.appointedDate != null and sdlBZizhiapply.appointedDate != ''"> and  sdl_b_zizhiapply.appointed_date like concat('%', #{ sdlBZizhiapply.appointedDate} ,'%')</if>
+            <if test="sdlBZizhiapply.appointedDateLc != null and sdlBZizhiapply.appointedDateLc != ''"> and  sdl_b_zizhiapply.appointed_date_lc like concat('%', #{ sdlBZizhiapply.appointedDateLc} ,'%')</if>
+            <if test="sdlBZizhiapply.zizu != null and sdlBZizhiapply.zizu != ''"> and  sdl_b_zizhiapply.zizu like concat('%', #{ sdlBZizhiapply.zizu} ,'%')</if>
+            <if test="sdlBZizhiapply.yuangongzu != null and sdlBZizhiapply.yuangongzu != ''"> and  sdl_b_zizhiapply.yuangongzu like concat('%', #{ sdlBZizhiapply.yuangongzu} ,'%')</if>
+            <if test="sdlBZizhiapply.xrgwjb != null and sdlBZizhiapply.xrgwjb != ''"> and  sdl_b_zizhiapply.xrgwjb like concat('%', #{ sdlBZizhiapply.xrgwjb} ,'%')</if>
+            <if test="sdlBZizhiapply.xrgwjbprsj != null and sdlBZizhiapply.xrgwjbprsj != ''"> and  sdl_b_zizhiapply.xrgwjbprsj like concat('%', #{ sdlBZizhiapply.xrgwjbprsj} ,'%')</if>
+            <if test="sdlBZizhiapply.zhicheng != null and sdlBZizhiapply.zhicheng != ''"> and  sdl_b_zizhiapply.zhicheng like concat('%', #{ sdlBZizhiapply.zhicheng} ,'%')</if>
+            <if test="sdlBZizhiapply.zyjsNp != null and sdlBZizhiapply.zyjsNp != ''"> and  sdl_b_zizhiapply.zyjs_np like concat('%', #{ sdlBZizhiapply.zyjsNp} ,'%')</if>
+            <if test="sdlBZizhiapply.zyjsDateNp != null and sdlBZizhiapply.zyjsDateNp != ''"> and  sdl_b_zizhiapply.zyjs_date_np like concat('%', #{ sdlBZizhiapply.zyjsDateNp} ,'%')</if>
+            <if test="sdlBZizhiapply.zyjsNpjx != null and sdlBZizhiapply.zyjsNpjx != ''"> and  sdl_b_zizhiapply.zyjs_npjx like concat('%', #{ sdlBZizhiapply.zyjsNpjx} ,'%')</if>
+            <if test="sdlBZizhiapply.zyjsDateNpjx != null and sdlBZizhiapply.zyjsDateNpjx != ''"> and  sdl_b_zizhiapply.zyjs_date_npjx like concat('%', #{ sdlBZizhiapply.zyjsDateNpjx} ,'%')</if>
+            <if test="sdlBZizhiapply.edu != null and sdlBZizhiapply.edu != ''"> and  sdl_b_zizhiapply.edu like concat('%', #{ sdlBZizhiapply.edu} ,'%')</if>
+            <if test="sdlBZizhiapply.eduSchool != null and sdlBZizhiapply.eduSchool != ''"> and  sdl_b_zizhiapply.edu_school like concat('%', #{ sdlBZizhiapply.eduSchool} ,'%')</if>
+            <if test="sdlBZizhiapply.guoji != null and sdlBZizhiapply.guoji != ''"> and  sdl_b_zizhiapply.guoji like concat('%', #{ sdlBZizhiapply.guoji} ,'%')</if>
+            <if test="sdlBZizhiapply.minzu != null and sdlBZizhiapply.minzu != ''"> and  sdl_b_zizhiapply.minzu like concat('%', #{ sdlBZizhiapply.minzu} ,'%')</if>
+            <if test="sdlBZizhiapply.jiguan != null and sdlBZizhiapply.jiguan != ''"> and  sdl_b_zizhiapply.jiguan like concat('%', #{ sdlBZizhiapply.jiguan} ,'%')</if>
+            <if test="sdlBZizhiapply.politicalStatus != null and sdlBZizhiapply.politicalStatus != ''"> and  sdl_b_zizhiapply.political_status like concat('%', #{ sdlBZizhiapply.politicalStatus} ,'%')</if>
+            <if test="sdlBZizhiapply.bianhaoLc != null and sdlBZizhiapply.bianhaoLc != ''"> and  sdl_b_zizhiapply.bianhao_lc like concat('%', #{ sdlBZizhiapply.bianhaoLc} ,'%')</if>
+            <if test="sdlBZizhiapply.xingzhengjiebie != null and sdlBZizhiapply.xingzhengjiebie != ''"> and  sdl_b_zizhiapply.xingzhengjiebie like concat('%', #{ sdlBZizhiapply.xingzhengjiebie} ,'%')</if>
+            <if test="sdlBZizhiapply.idCard != null and sdlBZizhiapply.idCard != ''"> and  sdl_b_zizhiapply.id_card like concat('%', #{ sdlBZizhiapply.idCard} ,'%')</if>
+            <if test="sdlBZizhiapply.workDate != null and sdlBZizhiapply.workDate != ''"> and  sdl_b_zizhiapply.work_date like concat('%', #{ sdlBZizhiapply.workDate} ,'%')</if>
+            <if test="sdlBZizhiapply.yishiLb != null and sdlBZizhiapply.yishiLb != ''"> and  sdl_b_zizhiapply.yishi_lb like concat('%', #{ sdlBZizhiapply.yishiLb} ,'%')</if>
+            <if test="sdlBZizhiapply.yishiJb != null and sdlBZizhiapply.yishiJb != ''"> and  sdl_b_zizhiapply.yishi_jb like concat('%', #{ sdlBZizhiapply.yishiJb} ,'%')</if>
+            <if test="sdlBZizhiapply.yishiZhiyefanwei != null and sdlBZizhiapply.yishiZhiyefanwei != ''"> and  sdl_b_zizhiapply.yishi_zhiyefanwei like concat('%', #{ sdlBZizhiapply.yishiZhiyefanwei} ,'%')</if>
+            <if test="sdlBZizhiapply.yishiZgzsbianhao != null and sdlBZizhiapply.yishiZgzsbianhao != ''"> and  sdl_b_zizhiapply.yishi_zgzsbianhao like concat('%', #{ sdlBZizhiapply.yishiZgzsbianhao} ,'%')</if>
+            <if test="sdlBZizhiapply.yishiZiyebianhao != null and sdlBZizhiapply.yishiZiyebianhao != ''"> and  sdl_b_zizhiapply.yishi_ziyebianhao like concat('%', #{ sdlBZizhiapply.yishiZiyebianhao} ,'%')</if>
+            <if test="sdlBZizhiapply.renshizifw != null and sdlBZizhiapply.renshizifw != ''"> and  sdl_b_zizhiapply.renshizifw like concat('%', #{ sdlBZizhiapply.renshizifw} ,'%')</if>
+            <if test="sdlBZizhiapply.renshizfenlei != null and sdlBZizhiapply.renshizfenlei != ''"> and  sdl_b_zizhiapply.renshizfenlei like concat('%', #{ sdlBZizhiapply.renshizfenlei} ,'%')</if>
             <if test="sdlBZizhiapply.note != null and sdlBZizhiapply.note != ''"> and  sdl_b_zizhiapply.note like concat('%', #{ sdlBZizhiapply.note} ,'%')</if>
             <if test="sdlBZizhiapply.auditSuggestion != null and sdlBZizhiapply.auditSuggestion != ''"> and  sdl_b_zizhiapply.audit_suggestion like concat('%', #{ sdlBZizhiapply.auditSuggestion} ,'%')</if>
         <if test="sdlBZizhiapply.auditDateFrom!= null">

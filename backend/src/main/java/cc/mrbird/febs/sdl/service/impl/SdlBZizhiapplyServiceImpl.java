@@ -37,6 +37,7 @@ import java.time.LocalDate;
 public class SdlBZizhiapplyServiceImpl extends ServiceImpl<SdlBZizhiapplyMapper, SdlBZizhiapply> implements ISdlBZizhiapplyService {
 
 
+
 @Override
 public IPage<SdlBZizhiapply> findSdlBZizhiapplys(QueryRequest request, SdlBZizhiapply sdlBZizhiapply){
         try{
@@ -46,12 +47,12 @@ public IPage<SdlBZizhiapply> findSdlBZizhiapplys(QueryRequest request, SdlBZizhi
                                 if (StringUtils.isNotBlank(sdlBZizhiapply.getUserName())) {
                                 queryWrapper.like(SdlBZizhiapply::getUserName, sdlBZizhiapply.getUserName());
                                 }
-                                if (StringUtils.isNotBlank(sdlBZizhiapply.getUserAccount())) {
-                                queryWrapper.like(SdlBZizhiapply::getUserAccount, sdlBZizhiapply.getUserAccount());
-                                }
-                                if (StringUtils.isNotBlank(sdlBZizhiapply.getUserAccountName())) {
-                                queryWrapper.like(SdlBZizhiapply::getUserAccountName, sdlBZizhiapply.getUserAccountName());
-                                }
+            if (StringUtils.isNotBlank(sdlBZizhiapply.getUserDept())) {
+                queryWrapper.eq(SdlBZizhiapply::getUserDept, sdlBZizhiapply.getUserDept());
+            }
+            if (StringUtils.isNotBlank(sdlBZizhiapply.getUserAccount())) {
+                queryWrapper.and( p->p.eq(SdlBZizhiapply::getUserAccount, sdlBZizhiapply.getUserAccount()).or().like(SdlBZizhiapply::getUserAccountName, sdlBZizhiapply.getUserAccount()));
+            }
                                 if (sdlBZizhiapply.getState()!=null) {
                                 queryWrapper.eq(SdlBZizhiapply::getState, sdlBZizhiapply.getState());
                                 }
@@ -89,6 +90,9 @@ public void createSdlBZizhiapply(SdlBZizhiapply sdlBZizhiapply){
 public void updateSdlBZizhiapply(SdlBZizhiapply sdlBZizhiapply){
         sdlBZizhiapply.setModifyTime(new Date());
         this.baseMapper.updateSdlBZizhiapply(sdlBZizhiapply);
+  if(sdlBZizhiapply.getState()!=null &&sdlBZizhiapply.getState().equals(3)){
+      this.baseMapper.updateUserType(sdlBZizhiapply.getId());
+  }
         }
 
 @Override

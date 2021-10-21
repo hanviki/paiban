@@ -4,13 +4,26 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-           
             <a-col :md="8" :sm="24">
-              <a-form-item label="人事编号/姓名" v-bind="formItemLayout">
+              <a-form-item label="申请人账号\姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
            
+              <a-col :md="8" :sm="24">
+                <a-form-item label="状态" v-bind="formItemLayout">
+                  <a-select
+                    style="width: 100%"
+                    v-model="searchState"
+                    @change="handleSeachChange"
+                  >
+                    <a-select-option value="0"> 全部 </a-select-option>
+                    <a-select-option value="1"> 待审核 </a-select-option>
+                    <a-select-option value="3"> 已审核 </a-select-option>
+                    <a-select-option value="2"> 审核未通过 </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -22,8 +35,6 @@
           </span>
         </a-row>
       </a-form>
-    </div>
-    <div>
       <!-- 表格区域 -->
       <a-table
         ref="TableInfo"
@@ -40,51 +51,63 @@
         :bordered="bordered"
         :scroll="{ x: 900 }"
       >
-        <template slot="remark" slot-scope="text, record">
-          <a-popover placement="topLeft">
-            <template slot="content">
-              <div style="max-width: 200px">{{ text }}</div>
-            </template>
-            <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
-          </a-popover>
+        <!-- <template
+        slot="auditSuggestion"
+        slot-scope="text, record"
+      >
+        <div v-if="record.state==3 || record.state==2">
+          {{text}}
+        </div>
+        <div v-else>
+          <div key="auditSuggestion">
+            <a-textarea
+              @blur="e => inputChange(e.target.value,record,'auditSuggestion')"
+              :value="record.auditSuggestion"
+            >
+            </a-textarea>
+          </div>
+        </div>
+      </template> -->
+        <template slot="operation" slot-scope="text, record">
+          <a-icon
+            v-show="record.state == 1"
+            type="setting"
+            theme="twoTone"
+            twoToneColor="#4a9ff5"
+            @click="edit(record)"
+            title="审核"
+          ></a-icon>
         </template>
       </a-table>
     </div>
-    <!-- 新增字典 -->
-    <sdlBUser-add
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </sdlBUser-add>
-    <!-- 修改字典 -->
-    <sdlBUser-edit
-      ref="sdlBUserEdit"
+    <sdlBZizhiapply-edit
+      ref="sdlBZizhiapplyEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </sdlBUser-edit>
+    </sdlBZizhiapply-edit>
   </a-card>
 </template>
 
 <script>
-import SdlBUserAdd from "./SdlBUserAdd";
-import SdlBUserEdit from "./SdlBUserEdit";
-
+import SdlBZizhiapplyEdit from "./SdlBZizhiapplyEdit2";
 const formItemLayout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "SdlBUser",
-  components: { SdlBUserAdd, SdlBUserEdit },
+  name: "SdlBZizhiapply",
+  components: { SdlBZizhiapplyEdit},
   data() {
     return {
       advanced: false,
       dataSource: [],
       selectedRowKeys: [],
-      sortedInfo: null,
+      sortedInfo: {
+          filed: 'state ,create_time',
+          order: 'descend'
+      },
       paginationInfo: null,
       formItemLayout,
       pagination: {
@@ -96,11 +119,15 @@ export default {
         showTotal: (total, range) =>
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
-      queryParams: {},
-      addVisiable: false,
+      queryParams: {
+        
+      },
       editVisiable: false,
+      auditSuggestion: "",
+      auditId: "",
       loading: false,
       bordered: true,
+      searchState: '0'
     };
   },
   computed: {
@@ -108,12 +135,7 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
- {
-          title: "人员类型",
-          dataIndex: "rylx",
-          width: 100,
-        },
-         {
+        {
           title: "人事编码",
           dataIndex: "userAccount",
           width: 120,
@@ -124,36 +146,60 @@ export default {
           dataIndex: "userAccountName",
           width: 100,
         },
+           {
+          title: "人员类型",
+          dataIndex: "rylx",
+          width: 100,
+        },
+        {
+          title: "科室",
+          dataIndex: "deptName",
+          width: 100,
+        },
+        {
+          title: "病区",
+          dataIndex: "bqName",
+          width: 100,
+        },
+        // {
+        //   title: "申请日期",
+        //   dataIndex: "applyDate",
+        //   width: 100,
+        // },
+        {
+          title: "变更类型",
+          dataIndex: "applyType",
+          width: 100,
+        },
+       
+         {
+          title: "原资质",
+          dataIndex: "userTypeName",
+          width: 100,
+        },
+        {
+          title: "新资质",
+          dataIndex: "userNewTypeName",
+          width: 100,
+        },
+        {
+          title: "申报理由",
+          dataIndex: "note",
+          width: 300,
+        },
+      
+
          {
           title: "员工工号",
           dataIndex: "yggh",
           width: 100,
         },
-        {
-          title: "资质类型",
-          dataIndex: "userTypeName",
-          width: 100,
-        },
-        {
-          title: "科室编号",
-          dataIndex: "deptId",
-          width: 100,
-        },
-         {
-          title: "科室名称",
-          dataIndex: "deptName",
-          width: 100,
-        },
-         {
-          title: "病区名称",
-          dataIndex: "bqName",
-          width: 100,
-        },
-        {
-          title: "华科人事编号",
-          dataIndex: "ghHk",
-          width: 100,
-        },
+       
+        // {
+        //   title: "华科人事编号",
+        //   dataIndex: "ghHk",
+        //   width: 100,
+        // },
          {
           title: "性别",
           dataIndex: "sexName",
@@ -170,46 +216,46 @@ export default {
           dataIndex: "yuangongzu",
           width: 100,
         },
-       {
-          title: "员工子组",
-          dataIndex: "zizu",
-          width: 100,
-        },
+      //  {
+      //     title: "员工子组",
+      //     dataIndex: "zizu",
+      //     width: 100,
+      //   },
          {
           title: "人事子范围",
           dataIndex: "renshizifw",
           width: 100,
         },
-       {
-          title: "人事子范围分类",
-          dataIndex: "renshizfenlei",
-          width: 100,
-        },
+      //  {
+      //     title: "人事子范围分类",
+      //     dataIndex: "renshizfenlei",
+      //     width: 100,
+      //   },
         //  {
         //   title: "身份证号",
         //   dataIndex: "idCard",
         //   width: 100,
         // },
-         {
-          title: "行政级别",
-          dataIndex: "xingzhengjiebie",
-          width: 100,
-        },
+        //  {
+        //   title: "行政级别",
+        //   dataIndex: "xingzhengjiebie",
+        //   width: 100,
+        // },
         {
           title: "职称",
           dataIndex: "zhicheng",
           width: 100,
         },
-        {
-          title: "岗位等级",
-          dataIndex: "xrgwjb",
-          width: 100,
-        },
-        {
-          title: "岗位等级开始日期",
-          dataIndex: "xrgwjbprsj",
-          width: 100,
-        },
+        // {
+        //   title: "岗位等级",
+        //   dataIndex: "xrgwjb",
+        //   width: 100,
+        // },
+        // {
+        //   title: "岗位等级开始日期",
+        //   dataIndex: "xrgwjbprsj",
+        //   width: 100,
+        // },
          {
           title: "临床职称",
           dataIndex: "zyjsgwLc",
@@ -220,11 +266,11 @@ export default {
           dataIndex: "appointedDateLc",
           width: 100,
         },
-         {
-          title: "临床证书编号",
-          dataIndex: "bianhaoLc",
-          width: 130,
-        },
+        //  {
+        //   title: "临床证书编号",
+        //   dataIndex: "bianhaoLc",
+        //   width: 130,
+        // },
          {
           title: "教学职称",
           dataIndex: "zyjsgw",
@@ -235,11 +281,11 @@ export default {
           dataIndex: "appointedDate",
           width: 100,
         },
-        {
-          title: "教学证书编号",
-          dataIndex: "bianhaoJx",
-          width: 130,
-        },
+        // {
+        //   title: "教学证书编号",
+        //   dataIndex: "bianhaoJx",
+        //   width: 130,
+        // },
         {
           title: "内聘临床专业技术职务",
           dataIndex: "zyjsNp",
@@ -265,41 +311,41 @@ export default {
           dataIndex: "edu",
           width: 100,
         },
-        {
-          title: "毕业学校",
-          dataIndex: "eduSchool",
-          width: 100,
-        },
-        {
-          title: "国籍",
-          dataIndex: "guoji",
-          width: 100,
-        },
-        {
-          title: "民族",
-          dataIndex: "minzu",
-          width: 100,
-        },
-        {
-          title: "籍贯",
-          dataIndex: "jiguan",
-          width: 100,
-        },
-        {
-          title: "政治面貌",
-          dataIndex: "politicalStatus",
-          width: 100,
-        },
+        // {
+        //   title: "毕业学校",
+        //   dataIndex: "eduSchool",
+        //   width: 100,
+        // },
+        // {
+        //   title: "国籍",
+        //   dataIndex: "guoji",
+        //   width: 100,
+        // },
+        // {
+        //   title: "民族",
+        //   dataIndex: "minzu",
+        //   width: 100,
+        // },
+        // {
+        //   title: "籍贯",
+        //   dataIndex: "jiguan",
+        //   width: 100,
+        // },
+        // {
+        //   title: "政治面貌",
+        //   dataIndex: "politicalStatus",
+        //   width: 100,
+        // },
          {
           title: "入职时间",
           dataIndex: "schoolDate",
           width: 100,
         },
-        {
-          title: "参加工作时间",
-          dataIndex: "workDate",
-          width: 100,
-        },
+        // {
+        //   title: "参加工作时间",
+        //   dataIndex: "workDate",
+        //   width: 100,
+        // },
         {
           title: "医师类别",
           dataIndex: "yishiLb",
@@ -325,8 +371,32 @@ export default {
           dataIndex: "yishiZiyebianhao",
           width: 130,
         },
+         {
+          title: "审核意见",
+          dataIndex: "auditSuggestion",
+          width: 130,
+          fixed: "right",
+        },
         {
-          title: "操作",
+          title: "审核状态",
+          dataIndex: "state",
+          width: 100,
+          customRender: (text, row, index) => {
+            switch (text) {
+              case 1:
+                return <a-tag color="green">未审核</a-tag>;
+              case 2:
+                return <a-tag color="red">审核未通过</a-tag>;
+              case 3:
+                return <a-tag color="#f50">已审核</a-tag>;
+              default:
+                return text;
+            }
+          },
+          fixed: "right",
+        },
+        {
+          title: "审核",
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" },
           fixed: "right",
@@ -336,11 +406,23 @@ export default {
     },
   },
   mounted() {
-    this.fetch();
+    this.search();
   },
   methods: {
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
+    },
+     handleEditSuccess() {
+      this.editVisiable = false;
+      this.$message.success("审核完成");
+      this.search();
+    },
+    handleEditClose() {
+      this.editVisiable = false;
+    },
+    edit(record) {
+      this.$refs.sdlBZizhiapplyEdit.setFormValues(record);
+      this.editVisiable = true;
     },
     toggleAdvanced() {
       this.advanced = !this.advanced;
@@ -348,50 +430,70 @@ export default {
         this.queryParams.comments = "";
       }
     },
-    handleAddSuccess() {
-      this.addVisiable = false;
-      this.$message.success("新增成功");
-      this.search();
+    handleSeachChange(value){
+        this.queryParams.state= value
+       this.search()
     },
-    handleAddClose() {
-      this.addVisiable = false;
+    audit(record) {
+      this.auditVisiable = true;
+      this.auditSuggestion = "";
+      this.auditId = record.id;
     },
-    add() {
-      this.addVisiable = true;
+    handleCancle() {
+      this.auditVisiable = false;
+      this.auditSuggestion = "";
+      this.auditId = "";
     },
-    handleEditSuccess() {
-      this.editVisiable = false;
-      this.$message.success("修改成功");
-      this.search();
+    inputChange (value, record, filedName) {
+     // console.info(value)
+      record[filedName] = value
     },
-    handleEditClose() {
-      this.editVisiable = false;
-    },
-    edit(record) {
-      this.$refs.sdlBUserEdit.setFormValues(record);
-      this.editVisiable = true;
-    },
-    batchDelete() {
-      if (!this.selectedRowKeys.length) {
-        this.$message.warning("请选择需要删除的记录");
-        return;
-      }
-      let that = this;
-      this.$confirm({
-        title: "确定删除所选中的记录?",
-        content: "当您点击确定按钮后，这些记录将会被彻底删除",
+    handleAudit() {
+        let that =this
+      that.$confirm({
+        title: "确定审核通过所选中的记录?",
+        content: "当您点击确定按钮后，这些记录将会被审核通过",
         centered: true,
         onOk() {
-          let sdlBUserIds = that.selectedRowKeys.join(",");
-          that.$delete("sdlBUser/" + sdlBUserIds).then(() => {
-            that.$message.success("删除成功");
-            that.selectedRowKeys = [];
-            that.search();
-          });
+          that.loading = true;
+          that.$put("sdlBZizhiapply", {
+            auditSuggestion: that.auditSuggestion,
+            id: that.auditId,
+            state: 3,
+          })
+            .then(() => {
+              that.loading = false;
+              that.handleCancle();
+            })
+            .catch(() => {
+              that.loading = false;
+            });
         },
-        onCancel() {
-          that.selectedRowKeys = [];
+        onCancel() {},
+      });
+    },
+    handleNoAudit() {
+         let that =this
+      that.$confirm({
+        title: "确定审核不通过所选中的记录?",
+        content: "当您点击确定按钮后，这些记录将会被审核不通过",
+        centered: true,
+        onOk() {
+          that.loading = true;
+          that.$put("sdlBZizhiapply", {
+            auditSuggestion: that.auditSuggestion,
+            id: that.auditId,
+            state: 3,
+          })
+            .then(() => {
+              that.loading = false;
+              that.handleCancle();
+            })
+            .catch(() => {
+              that.loading = false;
+            });
         },
+        onCancel() {},
       });
     },
     exportExcel() {
@@ -402,7 +504,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("sdlBUser/excel", {
+      this.$export("sdlBZizhiapply/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -416,10 +518,14 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
+       let queryParams = this.queryParams
+      if(queryParams.state==0){
+          delete queryParams.state
+      }
       this.fetch({
         sortField: sortField,
         sortOrder: sortOrder,
-        ...this.queryParams,
+        ...queryParams,
       });
     },
     reset() {
@@ -436,6 +542,9 @@ export default {
       this.paginationInfo = null;
       // 重置查询参数
       this.queryParams = {};
+      this.auditId=''
+      this.auditSuggestion= ''
+      this.searchState= "0"
       this.fetch();
     },
     handleTableChange(pagination, filters, sorter) {
@@ -460,7 +569,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlBUser", {
+      this.$get("sdlBZizhiapply", {
         ...params,
       }).then((r) => {
         let data = r.data;

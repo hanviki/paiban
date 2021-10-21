@@ -42,6 +42,14 @@ public IPage<${entity}> find${entity}s(QueryRequest request, ${entity} ${table.e
         try{
         LambdaQueryWrapper<${entity}> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(${entity}::getIsDeletemark, 1);//1是未删 0是已删
+        if (StringUtils.isNotBlank(${table.entityPath}.getUserAccount())) {
+        queryWrapper.and(wrap->  wrap.eq(${entity}::getUserAccount, ${table.entityPath}.getUserAccount()).or()
+        .like(${entity}::getUserAccountName, ${table.entityPath}.getUserAccount()));
+
+        }
+        if (${table.entityPath}.getState()!=null) {
+        queryWrapper.eq(${entity}::getState, ${table.entityPath}.getState());
+        }
 
         #foreach($field in ${table.fields})
                 #if($cfg.searchFileds.contains($field.name))

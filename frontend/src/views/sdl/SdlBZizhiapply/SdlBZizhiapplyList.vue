@@ -5,27 +5,10 @@
         <a-row>
           <div :class="advanced ? null : 'fold'">
             <a-col :md="8" :sm="24">
-              <a-form-item label="申请人的账号" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userName" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="被申请人的账号" v-bind="formItemLayout">
+              <a-form-item label="申请人的账号\姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="被申请人的姓名" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccountName" />
-              </a-form-item>
-            </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="状态" v-bind="formItemLayout">
-                  <a-input v-model="queryParams.state" />
-                </a-form-item>
-              </a-col>
-            </template>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -47,7 +30,7 @@
           @click="add"
           >新增</a-button
         >
-        <a-button
+        <!-- <a-button
           v-hasPermission="['sdlBZizhiapply:delete']"
           @click="batchDelete"
           >删除</a-button
@@ -62,7 +45,7 @@
             更多操作
             <a-icon type="down" />
           </a-button>
-        </a-dropdown>
+        </a-dropdown> -->
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -90,18 +73,13 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['sdlBZizhiapply:update']"
+            v-show="record.state == 2"
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-          <a-badge
-            v-hasNoPermission="['sdlBZizhiapply:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge>
         </template>
       </a-table>
     </div>
@@ -164,13 +142,19 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "人员类型id",
-          dataIndex: "rylxId",
+          title: "人事编码",
+          dataIndex: "userAccount",
+          width: 120,
+        },
+
+        {
+          title: "姓名",
+          dataIndex: "userAccountName",
           width: 100,
         },
         {
           title: "人员类型",
-          dataIndex: "rylxName",
+          dataIndex: "rylx",
           width: 100,
         },
         {
@@ -183,55 +167,237 @@ export default {
           dataIndex: "bqName",
           width: 100,
         },
+        // {
+        //   title: "申请日期",
+        //   dataIndex: "applyDate",
+        //   width: 100,
+        // },
         {
-          title: "科室ID",
-          dataIndex: "deptId",
-          width: 100,
-        },
-        {
-          title: "申请日期",
-          dataIndex: "applyDate",
-          width: 100,
-        },
-        {
-          title: "申请资质",
+          title: "变更类型",
           dataIndex: "applyType",
           width: 100,
         },
-        {
-          title: "来院时间",
-          dataIndex: "schoolDate",
-          width: 100,
-        },
-        {
-          title: "现职称",
-          dataIndex: "positionName",
-          width: 100,
-        },
-        {
-          title: "现职称聘任时间",
-          dataIndex: "positionPrdate",
-          width: 100,
-        },
+
         {
           title: "原资质",
-          dataIndex: "orignType",
+          dataIndex: "userTypeName",
           width: 100,
         },
         {
           title: "新资质",
-          dataIndex: "newType",
+          dataIndex: "userNewTypeName",
           width: 100,
         },
         {
-          title: "备注",
+          title: "申报理由",
           dataIndex: "note",
+          width: 300,
+        },
+
+        {
+          title: "员工工号",
+          dataIndex: "yggh",
+          width: 100,
+        },
+        // {
+        //   title: "华科人事编号",
+        //   dataIndex: "ghHk",
+        //   width: 100,
+        // },
+        {
+          title: "性别",
+          dataIndex: "sexName",
           width: 100,
         },
         {
-          title: "审核时间",
-          dataIndex: "auditDate",
+          title: "出生年月",
+          dataIndex: "birthday",
           width: 100,
+        },
+
+        {
+          title: "员工组",
+          dataIndex: "yuangongzu",
+          width: 100,
+        },
+        //  {
+        //     title: "员工子组",
+        //     dataIndex: "zizu",
+        //     width: 100,
+        //   },
+        {
+          title: "人事子范围",
+          dataIndex: "renshizifw",
+          width: 100,
+        },
+        //  {
+        //     title: "人事子范围分类",
+        //     dataIndex: "renshizfenlei",
+        //     width: 100,
+        //   },
+        //  {
+        //   title: "身份证号",
+        //   dataIndex: "idCard",
+        //   width: 100,
+        // },
+        //  {
+        //   title: "行政级别",
+        //   dataIndex: "xingzhengjiebie",
+        //   width: 100,
+        // },
+        {
+          title: "职称",
+          dataIndex: "zhicheng",
+          width: 100,
+        },
+        // {
+        //   title: "岗位等级",
+        //   dataIndex: "xrgwjb",
+        //   width: 100,
+        // },
+        // {
+        //   title: "岗位等级开始日期",
+        //   dataIndex: "xrgwjbprsj",
+        //   width: 100,
+        // },
+        {
+          title: "临床职称",
+          dataIndex: "zyjsgwLc",
+          width: 100,
+        },
+        {
+          title: "聘任时间（临床）",
+          dataIndex: "appointedDateLc",
+          width: 100,
+        },
+        //  {
+        //   title: "临床证书编号",
+        //   dataIndex: "bianhaoLc",
+        //   width: 130,
+        // },
+        {
+          title: "教学职称",
+          dataIndex: "zyjsgw",
+          width: 100,
+        },
+        {
+          title: "教学聘任时间",
+          dataIndex: "appointedDate",
+          width: 100,
+        },
+        // {
+        //   title: "教学证书编号",
+        //   dataIndex: "bianhaoJx",
+        //   width: 130,
+        // },
+        {
+          title: "内聘临床专业技术职务",
+          dataIndex: "zyjsNp",
+          width: 100,
+        },
+        {
+          title: "内聘临床时间",
+          dataIndex: "zyjsDateNp",
+          width: 100,
+        },
+        {
+          title: "内聘教学专业技术职务",
+          dataIndex: "zyjsNpjx",
+          width: 100,
+        },
+        {
+          title: "内聘教学时间",
+          dataIndex: "zyjsDateNpjx",
+          width: 100,
+        },
+        {
+          title: "学历",
+          dataIndex: "edu",
+          width: 100,
+        },
+        // {
+        //   title: "毕业学校",
+        //   dataIndex: "eduSchool",
+        //   width: 100,
+        // },
+        // {
+        //   title: "国籍",
+        //   dataIndex: "guoji",
+        //   width: 100,
+        // },
+        // {
+        //   title: "民族",
+        //   dataIndex: "minzu",
+        //   width: 100,
+        // },
+        // {
+        //   title: "籍贯",
+        //   dataIndex: "jiguan",
+        //   width: 100,
+        // },
+        // {
+        //   title: "政治面貌",
+        //   dataIndex: "politicalStatus",
+        //   width: 100,
+        // },
+        {
+          title: "入职时间",
+          dataIndex: "schoolDate",
+          width: 100,
+        },
+        // {
+        //   title: "参加工作时间",
+        //   dataIndex: "workDate",
+        //   width: 100,
+        // },
+        {
+          title: "医师类别",
+          dataIndex: "yishiLb",
+          width: 100,
+        },
+        {
+          title: "医师级别",
+          dataIndex: "yishiJb",
+          width: 100,
+        },
+        {
+          title: "医师执业范围",
+          dataIndex: "yishiZhiyefanwei",
+          width: 100,
+        },
+        {
+          title: "医师资格证书编号",
+          dataIndex: "yishiZgzsbianhao",
+          width: 130,
+        },
+        {
+          title: "医师执业证书编码",
+          dataIndex: "yishiZiyebianhao",
+          width: 130,
+        },
+        {
+          title: "审核意见",
+          dataIndex: "auditSuggestion",
+          width: 130,
+          fixed: "right",
+        },
+        {
+          title: "审核状态",
+          dataIndex: "state",
+          width: 100,
+          customRender: (text, row, index) => {
+            switch (text) {
+              case 1:
+                return <a-tag color="green">已提交</a-tag>;
+              case 2:
+                return <a-tag color="red">审核未通过</a-tag>;
+              case 3:
+                return <a-tag color="#f50">已审核</a-tag>;
+              default:
+                return text;
+            }
+          },
+          fixed: "right",
         },
         {
           title: "操作",
@@ -368,7 +534,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlBZizhiapply", {
+      this.$get("sdlBZizhiapply/new", {
         ...params,
       }).then((r) => {
         let data = r.data;

@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.utils.ExportExcelUtils;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 
@@ -124,18 +125,29 @@ public void deleteSdlBUsers(@NotBlank(message = "{required}") @PathVariable Stri
         throw new FebsException(message);
         }
         }
-@PostMapping("excel")
-@RequiresPermissions("sdlBUser:export")
-public void export(QueryRequest request, SdlBUser sdlBUser, HttpServletResponse response) throws FebsException {
-        try {
-        List<SdlBUser> sdlBUsers = this.iSdlBUserService.findSdlBUsers(request, sdlBUser).getRecords();
-        ExcelKit.$Export(SdlBUser.class, response).downXlsx(sdlBUsers, false);
-        } catch (Exception e) {
-        message = "导出Excel失败";
-        log.error(message, e);
-        throw new FebsException(message);
+    @PostMapping("excel")
+    public void export(QueryRequest request, SdlBUser sdlBUser,String dataJson,HttpServletResponse response)throws FebsException{
+        try{
+            request.setPageNum(1);
+            request.setPageSize(20000);
+            User currentUser = FebsUtil.getCurrentUser();
+
+
+            sdlBUser.setDeptId(currentUser.getDeptId());
+            sdlBUser.setIsDeletemark(1);
+            request.setSortField("user_account");
+            request.setSortOrder("ascend");
+            List<SdlBUser> sdlBUserList=  this.iSdlBUserService.findSdlBUsers(request, sdlBUser).getRecords();
+
+
+            //ExcelKit.$Export(DcaBAuditdynamic.class,response).downXlsx(dcaBAuditdynamics,false);
+            ExportExcelUtils.exportCustomExcel_han(response, sdlBUserList,dataJson,"");
+        }catch(Exception e){
+            message="导出Excel失败";
+            log.error(message,e);
+            throw new FebsException(message);
         }
-        }
+    }
 
 @GetMapping("/{id}")
 public SdlBUser detail(@NotBlank(message = "{required}") @PathVariable String id) {

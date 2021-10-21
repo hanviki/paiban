@@ -28,5 +28,6 @@ public interface ISdlBUserService extends IService<SdlBUser> {
 
         void deleteSdlBUsers(String[]Ids);
 
+        List<String> getUserAccounts();
 
         }

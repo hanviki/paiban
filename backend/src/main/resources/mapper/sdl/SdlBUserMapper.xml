@@ -9,24 +9,57 @@
                     <result column="user_account" property="userAccount"/>
                     <result column="bq_name" property="bqName"/>
                     <result column="user_type" property="userType"/>
+                    <result column="user_type_name" property="userTypeName"/>
                     <result column="dept_id" property="deptId"/>
                     <result column="telephone" property="telephone"/>
                     <result column="dept_name" property="deptName"/>
                     <result column="position_name" property="positionName"/>
                     <result column="np_position_name" property="npPositionName"/>
+                    <result column="rylx" property="rylx"/>
+                    <result column="yggh" property="yggh"/>
+                    <result column="gh_hk" property="ghHk"/>
                     <result column="sex_name" property="sexName"/>
+                    <result column="qualify_no" property="qualifyNo"/>
                     <result column="birthday" property="birthday"/>
                     <result column="school_date" property="schoolDate"/>
                     <result column="zyjsgw" property="zyjsgw"/>
+                    <result column="bianhao_jx" property="bianhaoJx"/>
                     <result column="zyjsgw_lc" property="zyjsgwLc"/>
                     <result column="xcszyjzc" property="xcszyjzc"/>
                     <result column="appointed_date" property="appointedDate"/>
-                    <result column="patent_ranknum" property="patentRanknum"/>
+                    <result column="appointed_date_lc" property="appointedDateLc"/>
+                    <result column="zizu" property="zizu"/>
+                    <result column="yuangongzu" property="yuangongzu"/>
+                    <result column="xrgwjb" property="xrgwjb"/>
+                    <result column="xrgwjbprsj" property="xrgwjbprsj"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="zyjs_np" property="zyjsNp"/>
+                    <result column="zyjs_date_np" property="zyjsDateNp"/>
+                    <result column="zyjs_npjx" property="zyjsNpjx"/>
+                    <result column="zyjs_date_npjx" property="zyjsDateNpjx"/>
+                    <result column="edu" property="edu"/>
+                    <result column="edu_school" property="eduSchool"/>
+                    <result column="guoji" property="guoji"/>
+                    <result column="minzu" property="minzu"/>
+                    <result column="jiguan" property="jiguan"/>
+                    <result column="political_status" property="politicalStatus"/>
+                    <result column="bianhao_lc" property="bianhaoLc"/>
+                    <result column="xingzhengjiebie" property="xingzhengjiebie"/>
+                    <result column="id_card" property="idCard"/>
+                    <result column="work_date" property="workDate"/>
+                    <result column="yishi_lb" property="yishiLb"/>
+                    <result column="yishi_jb" property="yishiJb"/>
+                    <result column="yishi_zhiyefanwei" property="yishiZhiyefanwei"/>
+                    <result column="yishi_zgzsbianhao" property="yishiZgzsbianhao"/>
+                    <result column="yishi_ziyebianhao" property="yishiZiyebianhao"/>
+                    <result column="renshizifw" property="renshizifw"/>
+                    <result column="renshizfenlei" property="renshizfenlei"/>
                     <result column="is_authority" property="isAuthority"/>
                     <result column="file_id" property="fileId"/>
-                    <result column="is_zhuanrang" property="isZhuanrang"/>
+                    <result column="IsUse" property="IsUse"/>
                     <result column="file_url" property="fileUrl"/>
                     <result column="patent_good" property="patentGood"/>
+                    <result column="patent_ranknum" property="patentRanknum"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -38,21 +71,13 @@
                     <result column="auditManName" property="auditManName"/>
                     <result column="auditDate" property="auditDate"/>
                     <result column="auditSuggestion" property="auditSuggestion"/>
-                    <result column="IsUse" property="IsUse"/>
-                    <result column="appointed_date_lc" property="appointedDateLc"/>
                     <result column="file_id_lc" property="fileIdLc"/>
                     <result column="file_url_lc" property="fileUrlLc"/>
-                    <result column="yuangongzu" property="yuangongzu"/>
-                    <result column="xrgwjb" property="xrgwjb"/>
-                    <result column="xrgwjbprsj" property="xrgwjbprsj"/>
                     <result column="djrdzzw" property="djrdzzw"/>
                     <result column="is_chujikh" property="isChujikh"/>
                     <result column="chujikh_date" property="chujikhDate"/>
                     <result column="is_zhongjikh" property="isZhongjikh"/>
                     <result column="zhongjikh_date" property="zhongjikhDate"/>
-                    <result column="political_status" property="politicalStatus"/>
-                    <result column="staff_grade" property="staffGrade"/>
-                    <result column="id_card" property="idCard"/>
                     <result column="staff_date" property="staffDate"/>
                     <result column="picture_id" property="pictureId"/>
                     <result column="picture_url" property="pictureUrl"/>
@@ -64,7 +89,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, user_account_name, user_account, bq_name, user_type, dept_id, telephone, dept_name, position_name, np_position_name, sex_name, birthday, school_date, zyjsgw, zyjsgw_lc, xcszyjzc, appointed_date, patent_ranknum, is_authority, file_id, is_zhuanrang, file_url, patent_good, state, IS_DELETEMARK, CREATE_TIME, display_index, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, auditMan, auditManName, auditDate, auditSuggestion, IsUse, appointed_date_lc, file_id_lc, file_url_lc, yuangongzu, xrgwjb, xrgwjbprsj, djrdzzw, is_chujikh, chujikh_date, is_zhongjikh, zhongjikh_date, political_status, staff_grade, id_card, staff_date, picture_id, picture_url, gqpxqk, gfhyspxqk, zjspnlceqk, dca_year
+        id, user_account_name, user_account, bq_name, user_type, user_type_name, dept_id, telephone, dept_name, position_name, np_position_name, rylx, yggh, gh_hk, sex_name, qualify_no, birthday, school_date, zyjsgw, bianhao_jx, zyjsgw_lc, xcszyjzc, appointed_date, appointed_date_lc, zizu, yuangongzu, xrgwjb, xrgwjbprsj, zhicheng, zyjs_np, zyjs_date_np, zyjs_npjx, zyjs_date_npjx, edu, edu_school, guoji, minzu, jiguan, political_status, bianhao_lc, xingzhengjiebie, id_card, work_date, yishi_lb, yishi_jb, yishi_zhiyefanwei, yishi_zgzsbianhao, yishi_ziyebianhao, renshizifw, renshizfenlei, is_authority, file_id, IsUse, file_url, patent_good, patent_ranknum, state, IS_DELETEMARK, CREATE_TIME, display_index, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, auditMan, auditManName, auditDate, auditSuggestion, file_id_lc, file_url_lc, djrdzzw, is_chujikh, chujikh_date, is_zhongjikh, zhongjikh_date, staff_date, picture_id, picture_url, gqpxqk, gfhyspxqk, zjspnlceqk, dca_year
     </sql>
     <update id="updateSdlBUser" parameterType="cc.mrbird.febs.sdl.entity.SdlBUser">
         update sdl_b_user
@@ -73,24 +98,57 @@
 <if test="userAccount != null">user_account=#{userAccount},</if>
 <if test="bqName != null">bq_name=#{bqName},</if>
 <if test="userType != null">user_type=#{userType},</if>
+<if test="userTypeName != null">user_type_name=#{userTypeName},</if>
 <if test="deptId != null">dept_id=#{deptId},</if>
 <if test="telephone != null">telephone=#{telephone},</if>
 <if test="deptName != null">dept_name=#{deptName},</if>
 <if test="positionName != null">position_name=#{positionName},</if>
 <if test="npPositionName != null">np_position_name=#{npPositionName},</if>
+<if test="rylx != null">rylx=#{rylx},</if>
+<if test="yggh != null">yggh=#{yggh},</if>
+<if test="ghHk != null">gh_hk=#{ghHk},</if>
 <if test="sexName != null">sex_name=#{sexName},</if>
+<if test="qualifyNo != null">qualify_no=#{qualifyNo},</if>
 <if test="birthday != null">birthday=#{birthday},</if>
 <if test="schoolDate != null">school_date=#{schoolDate},</if>
 <if test="zyjsgw != null">zyjsgw=#{zyjsgw},</if>
+<if test="bianhaoJx != null">bianhao_jx=#{bianhaoJx},</if>
 <if test="zyjsgwLc != null">zyjsgw_lc=#{zyjsgwLc},</if>
 <if test="xcszyjzc != null">xcszyjzc=#{xcszyjzc},</if>
 <if test="appointedDate != null">appointed_date=#{appointedDate},</if>
-<if test="patentRanknum != null">patent_ranknum=#{patentRanknum},</if>
+<if test="appointedDateLc != null">appointed_date_lc=#{appointedDateLc},</if>
+<if test="zizu != null">zizu=#{zizu},</if>
+<if test="yuangongzu != null">yuangongzu=#{yuangongzu},</if>
+<if test="xrgwjb != null">xrgwjb=#{xrgwjb},</if>
+<if test="xrgwjbprsj != null">xrgwjbprsj=#{xrgwjbprsj},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="zyjsNp != null">zyjs_np=#{zyjsNp},</if>
+<if test="zyjsDateNp != null">zyjs_date_np=#{zyjsDateNp},</if>
+<if test="zyjsNpjx != null">zyjs_npjx=#{zyjsNpjx},</if>
+<if test="zyjsDateNpjx != null">zyjs_date_npjx=#{zyjsDateNpjx},</if>
+<if test="edu != null">edu=#{edu},</if>
+<if test="eduSchool != null">edu_school=#{eduSchool},</if>
+<if test="guoji != null">guoji=#{guoji},</if>
+<if test="minzu != null">minzu=#{minzu},</if>
+<if test="jiguan != null">jiguan=#{jiguan},</if>
+<if test="politicalStatus != null">political_status=#{politicalStatus},</if>
+<if test="bianhaoLc != null">bianhao_lc=#{bianhaoLc},</if>
+<if test="xingzhengjiebie != null">xingzhengjiebie=#{xingzhengjiebie},</if>
+<if test="idCard != null">id_card=#{idCard},</if>
+<if test="workDate != null">work_date=#{workDate},</if>
+<if test="yishiLb != null">yishi_lb=#{yishiLb},</if>
+<if test="yishiJb != null">yishi_jb=#{yishiJb},</if>
+<if test="yishiZhiyefanwei != null">yishi_zhiyefanwei=#{yishiZhiyefanwei},</if>
+<if test="yishiZgzsbianhao != null">yishi_zgzsbianhao=#{yishiZgzsbianhao},</if>
+<if test="yishiZiyebianhao != null">yishi_ziyebianhao=#{yishiZiyebianhao},</if>
+<if test="renshizifw != null">renshizifw=#{renshizifw},</if>
+<if test="renshizfenlei != null">renshizfenlei=#{renshizfenlei},</if>
 <if test="isAuthority != null">is_authority=#{isAuthority},</if>
 <if test="fileId != null">file_id=#{fileId},</if>
-<if test="isZhuanrang != null">is_zhuanrang=#{isZhuanrang},</if>
+<if test="IsUse != null">IsUse=#{IsUse},</if>
 <if test="fileUrl != null">file_url=#{fileUrl},</if>
 <if test="patentGood != null">patent_good=#{patentGood},</if>
+<if test="patentRanknum != null">patent_ranknum=#{patentRanknum},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -102,21 +160,13 @@
 <if test="auditManName != null">auditManName=#{auditManName},</if>
 <if test="auditDate != null">auditDate=#{auditDate},</if>
 <if test="auditSuggestion != null">auditSuggestion=#{auditSuggestion},</if>
-<if test="IsUse != null">IsUse=#{IsUse},</if>
-<if test="appointedDateLc != null">appointed_date_lc=#{appointedDateLc},</if>
 <if test="fileIdLc != null">file_id_lc=#{fileIdLc},</if>
 <if test="fileUrlLc != null">file_url_lc=#{fileUrlLc},</if>
-<if test="yuangongzu != null">yuangongzu=#{yuangongzu},</if>
-<if test="xrgwjb != null">xrgwjb=#{xrgwjb},</if>
-<if test="xrgwjbprsj != null">xrgwjbprsj=#{xrgwjbprsj},</if>
 <if test="djrdzzw != null">djrdzzw=#{djrdzzw},</if>
 <if test="isChujikh != null">is_chujikh=#{isChujikh},</if>
 <if test="chujikhDate != null">chujikh_date=#{chujikhDate},</if>
 <if test="isZhongjikh != null">is_zhongjikh=#{isZhongjikh},</if>
 <if test="zhongjikhDate != null">zhongjikh_date=#{zhongjikhDate},</if>
-<if test="politicalStatus != null">political_status=#{politicalStatus},</if>
-<if test="staffGrade != null">staff_grade=#{staffGrade},</if>
-<if test="idCard != null">id_card=#{idCard},</if>
 <if test="staffDate != null">staff_date=#{staffDate},</if>
 <if test="pictureId != null">picture_id=#{pictureId},</if>
 <if test="pictureUrl != null">picture_url=#{pictureUrl},</if>
@@ -136,24 +186,56 @@
             <if test="sdlBUser.userAccount != null and sdlBUser.userAccount != ''"> and  sdl_b_user.user_account like concat('%', #{ sdlBUser.userAccount} ,'%')</if>
             <if test="sdlBUser.bqName != null and sdlBUser.bqName != ''"> and  sdl_b_user.bq_name like concat('%', #{ sdlBUser.bqName} ,'%')</if>
         <if test="sdlBUser.userType != null"> and  sdl_b_user.user_type =#{ sdlBUser.userType} </if>
+            <if test="sdlBUser.userTypeName != null and sdlBUser.userTypeName != ''"> and  sdl_b_user.user_type_name like concat('%', #{ sdlBUser.userTypeName} ,'%')</if>
             <if test="sdlBUser.deptId != null and sdlBUser.deptId != ''"> and  sdl_b_user.dept_id like concat('%', #{ sdlBUser.deptId} ,'%')</if>
             <if test="sdlBUser.telephone != null and sdlBUser.telephone != ''"> and  sdl_b_user.telephone like concat('%', #{ sdlBUser.telephone} ,'%')</if>
             <if test="sdlBUser.deptName != null and sdlBUser.deptName != ''"> and  sdl_b_user.dept_name like concat('%', #{ sdlBUser.deptName} ,'%')</if>
             <if test="sdlBUser.positionName != null and sdlBUser.positionName != ''"> and  sdl_b_user.position_name like concat('%', #{ sdlBUser.positionName} ,'%')</if>
             <if test="sdlBUser.npPositionName != null and sdlBUser.npPositionName != ''"> and  sdl_b_user.np_position_name like concat('%', #{ sdlBUser.npPositionName} ,'%')</if>
+            <if test="sdlBUser.rylx != null and sdlBUser.rylx != ''"> and  sdl_b_user.rylx like concat('%', #{ sdlBUser.rylx} ,'%')</if>
+            <if test="sdlBUser.yggh != null and sdlBUser.yggh != ''"> and  sdl_b_user.yggh like concat('%', #{ sdlBUser.yggh} ,'%')</if>
+            <if test="sdlBUser.ghHk != null and sdlBUser.ghHk != ''"> and  sdl_b_user.gh_hk like concat('%', #{ sdlBUser.ghHk} ,'%')</if>
             <if test="sdlBUser.sexName != null and sdlBUser.sexName != ''"> and  sdl_b_user.sex_name like concat('%', #{ sdlBUser.sexName} ,'%')</if>
+            <if test="sdlBUser.qualifyNo != null and sdlBUser.qualifyNo != ''"> and  sdl_b_user.qualify_no like concat('%', #{ sdlBUser.qualifyNo} ,'%')</if>
             <if test="sdlBUser.birthday != null and sdlBUser.birthday != ''"> and  sdl_b_user.birthday like concat('%', #{ sdlBUser.birthday} ,'%')</if>
             <if test="sdlBUser.schoolDate != null and sdlBUser.schoolDate != ''"> and  sdl_b_user.school_date like concat('%', #{ sdlBUser.schoolDate} ,'%')</if>
             <if test="sdlBUser.zyjsgw != null and sdlBUser.zyjsgw != ''"> and  sdl_b_user.zyjsgw like concat('%', #{ sdlBUser.zyjsgw} ,'%')</if>
+            <if test="sdlBUser.bianhaoJx != null and sdlBUser.bianhaoJx != ''"> and  sdl_b_user.bianhao_jx like concat('%', #{ sdlBUser.bianhaoJx} ,'%')</if>
             <if test="sdlBUser.zyjsgwLc != null and sdlBUser.zyjsgwLc != ''"> and  sdl_b_user.zyjsgw_lc like concat('%', #{ sdlBUser.zyjsgwLc} ,'%')</if>
             <if test="sdlBUser.xcszyjzc != null and sdlBUser.xcszyjzc != ''"> and  sdl_b_user.xcszyjzc like concat('%', #{ sdlBUser.xcszyjzc} ,'%')</if>
             <if test="sdlBUser.appointedDate != null and sdlBUser.appointedDate != ''"> and  sdl_b_user.appointed_date like concat('%', #{ sdlBUser.appointedDate} ,'%')</if>
-        <if test="sdlBUser.patentRanknum != null"> and  sdl_b_user.patent_ranknum =#{ sdlBUser.patentRanknum} </if>
+            <if test="sdlBUser.appointedDateLc != null and sdlBUser.appointedDateLc != ''"> and  sdl_b_user.appointed_date_lc like concat('%', #{ sdlBUser.appointedDateLc} ,'%')</if>
+            <if test="sdlBUser.zizu != null and sdlBUser.zizu != ''"> and  sdl_b_user.zizu like concat('%', #{ sdlBUser.zizu} ,'%')</if>
+            <if test="sdlBUser.yuangongzu != null and sdlBUser.yuangongzu != ''"> and  sdl_b_user.yuangongzu like concat('%', #{ sdlBUser.yuangongzu} ,'%')</if>
+            <if test="sdlBUser.xrgwjb != null and sdlBUser.xrgwjb != ''"> and  sdl_b_user.xrgwjb like concat('%', #{ sdlBUser.xrgwjb} ,'%')</if>
+            <if test="sdlBUser.xrgwjbprsj != null and sdlBUser.xrgwjbprsj != ''"> and  sdl_b_user.xrgwjbprsj like concat('%', #{ sdlBUser.xrgwjbprsj} ,'%')</if>
+            <if test="sdlBUser.zhicheng != null and sdlBUser.zhicheng != ''"> and  sdl_b_user.zhicheng like concat('%', #{ sdlBUser.zhicheng} ,'%')</if>
+            <if test="sdlBUser.zyjsNp != null and sdlBUser.zyjsNp != ''"> and  sdl_b_user.zyjs_np like concat('%', #{ sdlBUser.zyjsNp} ,'%')</if>
+            <if test="sdlBUser.zyjsDateNp != null and sdlBUser.zyjsDateNp != ''"> and  sdl_b_user.zyjs_date_np like concat('%', #{ sdlBUser.zyjsDateNp} ,'%')</if>
+            <if test="sdlBUser.zyjsNpjx != null and sdlBUser.zyjsNpjx != ''"> and  sdl_b_user.zyjs_npjx like concat('%', #{ sdlBUser.zyjsNpjx} ,'%')</if>
+            <if test="sdlBUser.zyjsDateNpjx != null and sdlBUser.zyjsDateNpjx != ''"> and  sdl_b_user.zyjs_date_npjx like concat('%', #{ sdlBUser.zyjsDateNpjx} ,'%')</if>
+            <if test="sdlBUser.edu != null and sdlBUser.edu != ''"> and  sdl_b_user.edu like concat('%', #{ sdlBUser.edu} ,'%')</if>
+            <if test="sdlBUser.eduSchool != null and sdlBUser.eduSchool != ''"> and  sdl_b_user.edu_school like concat('%', #{ sdlBUser.eduSchool} ,'%')</if>
+            <if test="sdlBUser.guoji != null and sdlBUser.guoji != ''"> and  sdl_b_user.guoji like concat('%', #{ sdlBUser.guoji} ,'%')</if>
+            <if test="sdlBUser.minzu != null and sdlBUser.minzu != ''"> and  sdl_b_user.minzu like concat('%', #{ sdlBUser.minzu} ,'%')</if>
+            <if test="sdlBUser.jiguan != null and sdlBUser.jiguan != ''"> and  sdl_b_user.jiguan like concat('%', #{ sdlBUser.jiguan} ,'%')</if>
+            <if test="sdlBUser.politicalStatus != null and sdlBUser.politicalStatus != ''"> and  sdl_b_user.political_status like concat('%', #{ sdlBUser.politicalStatus} ,'%')</if>
+            <if test="sdlBUser.bianhaoLc != null and sdlBUser.bianhaoLc != ''"> and  sdl_b_user.bianhao_lc like concat('%', #{ sdlBUser.bianhaoLc} ,'%')</if>
+            <if test="sdlBUser.xingzhengjiebie != null and sdlBUser.xingzhengjiebie != ''"> and  sdl_b_user.xingzhengjiebie like concat('%', #{ sdlBUser.xingzhengjiebie} ,'%')</if>
+            <if test="sdlBUser.idCard != null and sdlBUser.idCard != ''"> and  sdl_b_user.id_card like concat('%', #{ sdlBUser.idCard} ,'%')</if>
+            <if test="sdlBUser.workDate != null and sdlBUser.workDate != ''"> and  sdl_b_user.work_date like concat('%', #{ sdlBUser.workDate} ,'%')</if>
+            <if test="sdlBUser.yishiLb != null and sdlBUser.yishiLb != ''"> and  sdl_b_user.yishi_lb like concat('%', #{ sdlBUser.yishiLb} ,'%')</if>
+            <if test="sdlBUser.yishiJb != null and sdlBUser.yishiJb != ''"> and  sdl_b_user.yishi_jb like concat('%', #{ sdlBUser.yishiJb} ,'%')</if>
+            <if test="sdlBUser.yishiZhiyefanwei != null and sdlBUser.yishiZhiyefanwei != ''"> and  sdl_b_user.yishi_zhiyefanwei like concat('%', #{ sdlBUser.yishiZhiyefanwei} ,'%')</if>
+            <if test="sdlBUser.yishiZgzsbianhao != null and sdlBUser.yishiZgzsbianhao != ''"> and  sdl_b_user.yishi_zgzsbianhao like concat('%', #{ sdlBUser.yishiZgzsbianhao} ,'%')</if>
+            <if test="sdlBUser.yishiZiyebianhao != null and sdlBUser.yishiZiyebianhao != ''"> and  sdl_b_user.yishi_ziyebianhao like concat('%', #{ sdlBUser.yishiZiyebianhao} ,'%')</if>
+            <if test="sdlBUser.renshizifw != null and sdlBUser.renshizifw != ''"> and  sdl_b_user.renshizifw like concat('%', #{ sdlBUser.renshizifw} ,'%')</if>
+            <if test="sdlBUser.renshizfenlei != null and sdlBUser.renshizfenlei != ''"> and  sdl_b_user.renshizfenlei like concat('%', #{ sdlBUser.renshizfenlei} ,'%')</if>
             <if test="sdlBUser.isAuthority != null and sdlBUser.isAuthority != ''"> and  sdl_b_user.is_authority like concat('%', #{ sdlBUser.isAuthority} ,'%')</if>
             <if test="sdlBUser.fileId != null and sdlBUser.fileId != ''"> and  sdl_b_user.file_id like concat('%', #{ sdlBUser.fileId} ,'%')</if>
-            <if test="sdlBUser.isZhuanrang != null and sdlBUser.isZhuanrang != ''"> and  sdl_b_user.is_zhuanrang like concat('%', #{ sdlBUser.isZhuanrang} ,'%')</if>
             <if test="sdlBUser.fileUrl != null and sdlBUser.fileUrl != ''"> and  sdl_b_user.file_url like concat('%', #{ sdlBUser.fileUrl} ,'%')</if>
             <if test="sdlBUser.patentGood != null and sdlBUser.patentGood != ''"> and  sdl_b_user.patent_good like concat('%', #{ sdlBUser.patentGood} ,'%')</if>
+        <if test="sdlBUser.patentRanknum != null"> and  sdl_b_user.patent_ranknum =#{ sdlBUser.patentRanknum} </if>
         <if test="sdlBUser.state != null"> and  sdl_b_user.state =#{ sdlBUser.state} </if>
         <if test="sdlBUser.isDeletemark != null"> and  sdl_b_user.IS_DELETEMARK =#{ sdlBUser.isDeletemark} </if>
         <if test="sdlBUser.createTimeFrom!= null">
@@ -178,18 +260,11 @@
             AND  sdl_b_user.auditDate <![CDATA[ <= ]]>  #{sdlBUser.auditDateTo}
         </if>
             <if test="sdlBUser.auditSuggestion != null and sdlBUser.auditSuggestion != ''"> and  sdl_b_user.auditSuggestion like concat('%', #{ sdlBUser.auditSuggestion} ,'%')</if>
-            <if test="sdlBUser.appointedDateLc != null and sdlBUser.appointedDateLc != ''"> and  sdl_b_user.appointed_date_lc like concat('%', #{ sdlBUser.appointedDateLc} ,'%')</if>
             <if test="sdlBUser.fileIdLc != null and sdlBUser.fileIdLc != ''"> and  sdl_b_user.file_id_lc like concat('%', #{ sdlBUser.fileIdLc} ,'%')</if>
             <if test="sdlBUser.fileUrlLc != null and sdlBUser.fileUrlLc != ''"> and  sdl_b_user.file_url_lc like concat('%', #{ sdlBUser.fileUrlLc} ,'%')</if>
-            <if test="sdlBUser.yuangongzu != null and sdlBUser.yuangongzu != ''"> and  sdl_b_user.yuangongzu like concat('%', #{ sdlBUser.yuangongzu} ,'%')</if>
-            <if test="sdlBUser.xrgwjb != null and sdlBUser.xrgwjb != ''"> and  sdl_b_user.xrgwjb like concat('%', #{ sdlBUser.xrgwjb} ,'%')</if>
-            <if test="sdlBUser.xrgwjbprsj != null and sdlBUser.xrgwjbprsj != ''"> and  sdl_b_user.xrgwjbprsj like concat('%', #{ sdlBUser.xrgwjbprsj} ,'%')</if>
             <if test="sdlBUser.djrdzzw != null and sdlBUser.djrdzzw != ''"> and  sdl_b_user.djrdzzw like concat('%', #{ sdlBUser.djrdzzw} ,'%')</if>
             <if test="sdlBUser.chujikhDate != null and sdlBUser.chujikhDate != ''"> and  sdl_b_user.chujikh_date like concat('%', #{ sdlBUser.chujikhDate} ,'%')</if>
             <if test="sdlBUser.zhongjikhDate != null and sdlBUser.zhongjikhDate != ''"> and  sdl_b_user.zhongjikh_date like concat('%', #{ sdlBUser.zhongjikhDate} ,'%')</if>
-            <if test="sdlBUser.politicalStatus != null and sdlBUser.politicalStatus != ''"> and  sdl_b_user.political_status like concat('%', #{ sdlBUser.politicalStatus} ,'%')</if>
-            <if test="sdlBUser.staffGrade != null and sdlBUser.staffGrade != ''"> and  sdl_b_user.staff_grade like concat('%', #{ sdlBUser.staffGrade} ,'%')</if>
-            <if test="sdlBUser.idCard != null and sdlBUser.idCard != ''"> and  sdl_b_user.id_card like concat('%', #{ sdlBUser.idCard} ,'%')</if>
             <if test="sdlBUser.staffDate != null and sdlBUser.staffDate != ''"> and  sdl_b_user.staff_date like concat('%', #{ sdlBUser.staffDate} ,'%')</if>
             <if test="sdlBUser.pictureId != null and sdlBUser.pictureId != ''"> and  sdl_b_user.picture_id like concat('%', #{ sdlBUser.pictureId} ,'%')</if>
             <if test="sdlBUser.pictureUrl != null and sdlBUser.pictureUrl != ''"> and  sdl_b_user.picture_url like concat('%', #{ sdlBUser.pictureUrl} ,'%')</if>

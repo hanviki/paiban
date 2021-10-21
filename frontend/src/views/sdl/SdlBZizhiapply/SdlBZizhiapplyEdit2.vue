@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="修改资质申请"
+    title="资质申请审核"
     :maskClosable="false"
     width="90%"
     placement="right"
@@ -38,43 +38,34 @@
         </a-row>
       </div>
     </a-form> -->
- <a-form :form="form">
+    <a-form :form="form">
       <a-row>
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="人事编号">
             <a-input
               :disabled="true"
-              v-decorator="['userAccount' ,{ rules: [{ required: true, message: '人事编号不能为空' }] },]"
+              v-decorator="[
+                'userAccount',
+                { rules: [{ required: true, message: '人事编号不能为空' }] },
+              ]"
             />
           </a-form-item>
         </a-col>
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="姓名">
-            <a-input
-              :disabled="true"
-              v-decorator="['userAccountName']"
-            />
+            <a-input :disabled="true" v-decorator="['userAccountName']" />
           </a-form-item>
         </a-col>
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="科室">
-            <a-input
-              :disabled="true"
-              v-decorator="['deptName']"
-            />
-            <a-input
-              type="hidden"
-              v-decorator="['deptId']"
-            />
+            <a-input :disabled="true" v-decorator="['deptName']" />
+            <a-input type="hidden" v-decorator="['deptId']" />
           </a-form-item>
         </a-col>
 
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="出生日期">
-            <a-input
-              :disabled="true"
-              v-decorator="['birthday']"
-            />
+            <a-input :disabled="true" v-decorator="['birthday']" />
           </a-form-item>
         </a-col>
         <a-col :sm="16">
@@ -82,262 +73,127 @@
             v-bind="{ labelCol: { span: 4 }, wrapperCol: { span: 20 } }"
             label="病区"
           >
-            <a-input
-              :disabled="true"
-              v-decorator="['bqName']"
-            />
+            <a-input :disabled="true" v-decorator="['bqName']" />
           </a-form-item>
         </a-col>
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="性别">
-            <a-input
-              :disabled="true"
-              v-decorator="['sexName']"
-            />
+            <a-input :disabled="true" v-decorator="['sexName']" />
           </a-form-item>
         </a-col>
 
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="人员类别">
-            <a-input
-              :disabled="true"
-              v-decorator="['rylx']"
-            />
+            <a-input :disabled="true" v-decorator="['rylx']" />
           </a-form-item>
         </a-col>
-         <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="员工组">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'yuangongzu',
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-       <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="人事子范围">
-          <a-input
-          :disabled="true"
-            v-decorator="[
-              'renshizifw',
-       
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-       <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="职称">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'zhicheng',
-            
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="临床职称">
-          <a-input
-          :disabled="true"
-            v-decorator="[
-              'zyjsgwLc',
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="临床聘任时间">
-          <a-input
-           :disabled="true"
-            v-decorator="[
-              'appointedDateLc',
-            
-            ]"
-          />
-        </a-form-item>
-      </a-col>
- <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="教学职称">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'zyjsgw',
-            
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-       <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="教学聘任时间">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'appointedDate',
-             
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="内聘临床职务">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'zyjsNp',
-             
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-       <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="内聘临床时间">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'zyjsDateNp',
-             
-            ]"
-          />
-        </a-form-item>
-      </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="员工组">
+            <a-input :disabled="true" v-decorator="['yuangongzu']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="人事子范围">
+            <a-input :disabled="true" v-decorator="['renshizifw']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="职称">
+            <a-input :disabled="true" v-decorator="['zhicheng']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="临床职称">
+            <a-input :disabled="true" v-decorator="['zyjsgwLc']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="临床聘任时间">
+            <a-input :disabled="true" v-decorator="['appointedDateLc']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="教学职称">
+            <a-input :disabled="true" v-decorator="['zyjsgw']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="教学聘任时间">
+            <a-input :disabled="true" v-decorator="['appointedDate']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="内聘临床职务">
+            <a-input :disabled="true" v-decorator="['zyjsNp']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="内聘临床时间">
+            <a-input :disabled="true" v-decorator="['zyjsDateNp']" />
+          </a-form-item>
+        </a-col>
 
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="内聘教学职务">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'zyjsNpjx',
-             
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="内聘教学时间">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'zyjsDateNpjx',
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="学历">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'edu',
-            
-            ]"
-          />
-        </a-form-item>
-      </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="内聘教学职务">
+            <a-input :disabled="true" v-decorator="['zyjsNpjx']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="内聘教学时间">
+            <a-input :disabled="true" v-decorator="['zyjsDateNpjx']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="学历">
+            <a-input :disabled="true" v-decorator="['edu']" />
+          </a-form-item>
+        </a-col>
 
-       <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="来校工作时间">
-          <a-input
-            
-            :disabled="true"
-            v-decorator="[
-              'schoolDate',
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-     <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="医师类别">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'yishiLb',
-             
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-       <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="医师级别">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'yishiJb',
-            
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="医师执业范围">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'yishiZhiyefanwei',
-            
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="医师资格证号">
-          <a-input
-           :disabled="true"
-            v-decorator="[
-              'yishiZgzsbianhao',
-            
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="医师执业证号">
-          <a-input
-            :disabled="true"
-            v-decorator="[
-              'yishiZiyebianhao',
-             
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="来校工作时间">
+            <a-input :disabled="true" v-decorator="['schoolDate']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="医师类别">
+            <a-input :disabled="true" v-decorator="['yishiLb']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="医师级别">
+            <a-input :disabled="true" v-decorator="['yishiJb']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="医师执业范围">
+            <a-input :disabled="true" v-decorator="['yishiZhiyefanwei']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="医师资格证号">
+            <a-input :disabled="true" v-decorator="['yishiZgzsbianhao']" />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="6">
+          <a-form-item v-bind="formItemLayout" label="医师执业证号">
+            <a-input :disabled="true" v-decorator="['yishiZiyebianhao']" />
+          </a-form-item>
+        </a-col>
 
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="变更类型">
-            <a-select style="width: 100%"  v-decorator="['applyType',{ rules: [{ required: true, message: '变更类型不能为空' }] },]">
-              <a-select-option value="普通资质"> 普通资质 </a-select-option>
-              <a-select-option value="授权资质"> 授权资质 </a-select-option>
-            </a-select>
+                <a-input :disabled="true" v-decorator="['applyType']" />
           </a-form-item>
         </a-col>
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="原资质">
-            <a-input
-              :disabled="true"
-              v-decorator="['userTypeName']"
-            />
-             <a-input
-              type="hidden"
-              v-decorator="['userType']"
-            />
+            <a-input :disabled="true" v-decorator="['userTypeName']" />
+            <a-input type="hidden" v-decorator="['userType']" />
           </a-form-item>
         </a-col>
         <a-col :sm="6">
           <a-form-item v-bind="formItemLayout" label="新资质">
-            <a-select
-              style="width: 100%"
-              @change="usertypeChange"
-              v-decorator="[
-                'userNewType',
-                { rules: [{ required: true, message: '新资质不能为空' }] },
-              ]"
-            >
-              <a-select-option v-for="d in data" :key="d.id" :value="d.id">
-                {{ d.muduleName }}
-              </a-select-option>
-            </a-select>
+                <a-input :disabled="true" v-decorator="['userNewTypeName']" />
           </a-form-item>
         </a-col>
         <a-col :sm="24">
@@ -346,8 +202,24 @@
             label="申请理由"
           >
             <a-textarea
+              :disabled="true"
               v-decorator="['note']"
               placeholder="请填写申请理由"
+              :auto-size="{ minRows: 5 }"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :sm="24">
+          <a-form-item
+            v-bind="{ labelCol: { span: 2 }, wrapperCol: { span: 22 } }"
+            label="审核意见"
+          >
+            <a-textarea
+              v-decorator="[
+                'auditSuggestion',
+                { rules: [{ required: true, message: '审核意见不能为空' }] },
+              ]"
+              placeholder="请填写审核意见"
               :auto-size="{ minRows: 5,maxRows: 8 }"
             />
           </a-form-item>
@@ -364,7 +236,10 @@
         <a-button style="margin-right: 0.8rem">取消</a-button>
       </a-popconfirm>
       <a-button @click="handleSubmit" type="primary" :loading="loading"
-        >提交</a-button
+        >审核通过</a-button
+      >
+      <a-button @click="handleNoSubmit" type="danger" :loading="loading"
+        >审核不通过</a-button
       >
     </div>
   </a-drawer>
@@ -389,12 +264,12 @@ export default {
       formItemLayout,
       form: this.$form.createForm(this),
       sdlBZizhiapply: {},
-       value:'',
-      data:[],
-     userData:[]
+      value: "",
+      data: [],
+      userData: [],
     };
   },
-   watch: {
+  watch: {
     editVisiable() {
       if (this.editVisiable) {
         this.$get("sdlDZizhi").then((res) => {
@@ -408,27 +283,27 @@ export default {
     reset() {
       this.loading = false;
       this.form.resetFields();
-       this.value=''
-      this.data=[]
-      this.userData=[]
+      this.value = "";
+      this.data = [];
+      this.userData = [];
     },
     onClose() {
       this.reset();
       this.$emit("close");
     },
-    
-  search(value) {
-      if(value!=''){
-      this.$get("sdlBUser/dept", {
-        userAccount: value
-      }).then((r) => {
-        this.userData=r.data.rows
-      });
+
+    search(value) {
+      if (value != "") {
+        this.$get("sdlBUser/dept", {
+          userAccount: value,
+        }).then((r) => {
+          this.userData = r.data.rows;
+        });
       }
     },
     setFormValues({ ...sdlBZizhiapply }) {
       let fields = [
-         "userAccount",
+        "userAccount",
         "userAccountName",
         "bqName",
         "userType",
@@ -480,7 +355,8 @@ export default {
         "userNewType",
         "userNewTypeName",
         "note",
-        "applyType"
+        "applyType",
+        "auditSuggestion",
       ];
       let fieldDates = ["applyDate"];
       Object.keys(sdlBZizhiapply).forEach((key) => {
@@ -496,17 +372,17 @@ export default {
           } else {
             obj[key] = sdlBZizhiapply[key];
           }
-          this.sdlBZizhiapply[key] = obj[key]
+          this.sdlBZizhiapply[key] = obj[key];
           this.form.setFieldsValue(obj);
         }
       });
       this.sdlBZizhiapply.id = sdlBZizhiapply.id;
     },
-      setFormValues2({ ...sdlBUser }) {
+    setFormValues2({ ...sdlBUser }) {
       let fields = [
-         "userAccount",
+        "userAccount",
         "userAccountName",
-       "bqName",
+        "bqName",
         "userType",
         "userTypeName",
         "deptId",
@@ -552,7 +428,8 @@ export default {
         "yishiZgzsbianhao",
         "yishiZiyebianhao",
         "renshizifw",
-        "renshizfenlei"
+        "renshizfenlei",
+        "auditSuggestion",
       ];
       let fieldDates = [];
       Object.keys(sdlBUser).forEach((key) => {
@@ -568,28 +445,72 @@ export default {
           } else {
             obj[key] = sdlBUser[key];
           }
-          this.sdlBZizhiapply[key] = obj[key]
+          this.sdlBZizhiapply[key] = obj[key];
           this.form.setFieldsValue(obj);
         }
       });
     },
     handleSubmit() {
-      this.form.validateFields((err, values) => {
+      let that = this;
+
+      that.form.validateFields((err, values) => {
         if (!err) {
-          let sdlBZizhiapply = this.form.getFieldsValue();
-          sdlBZizhiapply.id = this.sdlBZizhiapply.id;
-          sdlBZizhiapply.state = 1
-          sdlBZizhiapply.userNewTypeName= this.sdlBZizhiapply.userNewTypeName
-          this.$put("sdlBZizhiapply", {
-            ...sdlBZizhiapply,
-          })
-            .then(() => {
-              this.reset();
-              this.$emit("success");
-            })
-            .catch(() => {
-              this.loading = false;
-            });
+          that.$confirm({
+            title: "确定审核通过此记录?",
+            content: "当您点击确定按钮后，这些记录将会被审核",
+            centered: true,
+            onOk() {
+              let sdlBZizhiapply = that.form.getFieldsValue();
+              sdlBZizhiapply.id = that.sdlBZizhiapply.id;
+              sdlBZizhiapply.state = 3;
+              that
+                .$put("sdlBZizhiapply", {
+                  ...sdlBZizhiapply,
+                })
+                .then(() => {
+                  that.reset();
+                  that.$emit("success");
+                })
+                .catch(() => {
+                  that.loading = false;
+                });
+            },
+            onCancel() {
+              that.selectedRowKeys = [];
+            },
+          });
+        }
+      });
+    },
+    handleNoSubmit() {
+      let that = this;
+
+      that.form.validateFields((err, values) => {
+        if (!err) {
+          that.$confirm({
+            title: "确定审核不通过此记录?",
+            content: "当您点击确定按钮后，这些记录将会被审核不通过",
+            centered: true,
+            onOk() {
+              let sdlBZizhiapply = that.form.getFieldsValue();
+              sdlBZizhiapply.id = that.sdlBZizhiapply.id;
+              sdlBZizhiapply.state = 2;
+              that
+                .$put("sdlBZizhiapply", {
+                  ...sdlBZizhiapply,
+                })
+                .then(() => {
+                  that.reset();
+                  that.$emit("success");
+                })
+                .catch(() => {
+                  that.loading = false;
+                });
+            },
+            onCancel() {
+              that.selectedRowKeys = [];
+            },
+          });
         }
       });
     },
@@ -616,7 +537,8 @@ export default {
         "userNewType",
         "qualifyNo",
         "applyType",
-        "note"
+        "note",
+        "auditSuggestion",
       ]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {
@@ -625,18 +547,17 @@ export default {
       }
     },
     handleSearch(value) {
-       this.search(value)
+      this.search(value);
     },
     handleChange(value) {
-      
       this.value = value;
-      let data= this.userData.filter(p=>p.userAccount==value)
-      this.setFormValues2(data[0])
+      let data = this.userData.filter((p) => p.userAccount == value);
+      this.setFormValues2(data[0]);
     },
-    usertypeChange(value){
-      let data= this.data.filter(p=>p.id==value)
-       this.sdlBZizhiapply['userNewTypeName']=data[0].muduleName
-    }
+    usertypeChange(value) {
+      let data = this.data.filter((p) => p.id == value);
+      this.sdlBZizhiapply["userNewTypeName"] = data[0].muduleName;
+    },
   },
 };
 </script>

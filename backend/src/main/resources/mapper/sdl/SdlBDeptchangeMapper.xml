@@ -5,6 +5,9 @@
         <!-- 通用查询映射结果 -->
         <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlBDeptchange">
                     <id column="id" property="id"/>
+                    <result column="user_no" property="userNo"/>
+                    <result column="name" property="name"/>
+                    <result column="user_dept" property="userDept"/>
                     <result column="user_account_name" property="userAccountName"/>
                     <result column="user_account" property="userAccount"/>
                     <result column="operation_name" property="operationName"/>
@@ -16,21 +19,45 @@
                     <result column="telephone" property="telephone"/>
                     <result column="dept_name" property="deptName"/>
                     <result column="dept_new_name" property="deptNewName"/>
-                    <result column="position_name" property="positionName"/>
-                    <result column="np_position_name" property="npPositionName"/>
+                    <result column="user_type_name" property="userTypeName"/>
+                    <result column="rylx" property="rylx"/>
+                    <result column="yggh" property="yggh"/>
+                    <result column="gh_hk" property="ghHk"/>
                     <result column="sex_name" property="sexName"/>
                     <result column="birthday" property="birthday"/>
                     <result column="school_date" property="schoolDate"/>
                     <result column="zyjsgw" property="zyjsgw"/>
+                    <result column="bianhao_jx" property="bianhaoJx"/>
                     <result column="zyjsgw_lc" property="zyjsgwLc"/>
                     <result column="xcszyjzc" property="xcszyjzc"/>
                     <result column="appointed_date" property="appointedDate"/>
-                    <result column="patent_ranknum" property="patentRanknum"/>
-                    <result column="is_authority" property="isAuthority"/>
-                    <result column="file_id" property="fileId"/>
-                    <result column="is_zhuanrang" property="isZhuanrang"/>
-                    <result column="file_url" property="fileUrl"/>
-                    <result column="patent_good" property="patentGood"/>
+                    <result column="appointed_date_lc" property="appointedDateLc"/>
+                    <result column="zizu" property="zizu"/>
+                    <result column="yuangongzu" property="yuangongzu"/>
+                    <result column="xrgwjb" property="xrgwjb"/>
+                    <result column="xrgwjbprsj" property="xrgwjbprsj"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="zyjs_np" property="zyjsNp"/>
+                    <result column="zyjs_date_np" property="zyjsDateNp"/>
+                    <result column="zyjs_npjx" property="zyjsNpjx"/>
+                    <result column="zyjs_date_npjx" property="zyjsDateNpjx"/>
+                    <result column="edu" property="edu"/>
+                    <result column="edu_school" property="eduSchool"/>
+                    <result column="guoji" property="guoji"/>
+                    <result column="minzu" property="minzu"/>
+                    <result column="jiguan" property="jiguan"/>
+                    <result column="political_status" property="politicalStatus"/>
+                    <result column="bianhao_lc" property="bianhaoLc"/>
+                    <result column="xingzhengjiebie" property="xingzhengjiebie"/>
+                    <result column="id_card" property="idCard"/>
+                    <result column="work_date" property="workDate"/>
+                    <result column="yishi_lb" property="yishiLb"/>
+                    <result column="yishi_jb" property="yishiJb"/>
+                    <result column="yishi_zhiyefanwei" property="yishiZhiyefanwei"/>
+                    <result column="yishi_zgzsbianhao" property="yishiZgzsbianhao"/>
+                    <result column="yishi_ziyebianhao" property="yishiZiyebianhao"/>
+                    <result column="renshizifw" property="renshizifw"/>
+                    <result column="renshizfenlei" property="renshizfenlei"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -38,41 +65,18 @@
                     <result column="MODIFY_TIME" property="modifyTime"/>
                     <result column="CREATE_USER_ID" property="createUserId"/>
                     <result column="MODIFY_USER_ID" property="modifyUserId"/>
-                    <result column="auditMan" property="auditMan"/>
-                    <result column="auditManName" property="auditManName"/>
-                    <result column="auditDate" property="auditDate"/>
-                    <result column="auditSuggestion" property="auditSuggestion"/>
-                    <result column="IsUse" property="IsUse"/>
-                    <result column="appointed_date_lc" property="appointedDateLc"/>
-                    <result column="file_id_lc" property="fileIdLc"/>
-                    <result column="file_url_lc" property="fileUrlLc"/>
-                    <result column="yuangongzu" property="yuangongzu"/>
-                    <result column="xrgwjb" property="xrgwjb"/>
-                    <result column="xrgwjbprsj" property="xrgwjbprsj"/>
-                    <result column="djrdzzw" property="djrdzzw"/>
-                    <result column="is_chujikh" property="isChujikh"/>
-                    <result column="chujikh_date" property="chujikhDate"/>
-                    <result column="is_zhongjikh" property="isZhongjikh"/>
-                    <result column="zhongjikh_date" property="zhongjikhDate"/>
-                    <result column="political_status" property="politicalStatus"/>
-                    <result column="staff_grade" property="staffGrade"/>
-                    <result column="id_card" property="idCard"/>
-                    <result column="staff_date" property="staffDate"/>
-                    <result column="picture_id" property="pictureId"/>
-                    <result column="picture_url" property="pictureUrl"/>
-                    <result column="gqpxqk" property="gqpxqk"/>
-                    <result column="gfhyspxqk" property="gfhyspxqk"/>
-                    <result column="zjspnlceqk" property="zjspnlceqk"/>
-                    <result column="dca_year" property="dcaYear"/>
         </resultMap>
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, user_account_name, user_account, operation_name, bq_name, bq_new_name, user_type, dept_id, dept_new_id, telephone, dept_name, dept_new_name, position_name, np_position_name, sex_name, birthday, school_date, zyjsgw, zyjsgw_lc, xcszyjzc, appointed_date, patent_ranknum, is_authority, file_id, is_zhuanrang, file_url, patent_good, state, IS_DELETEMARK, CREATE_TIME, display_index, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, auditMan, auditManName, auditDate, auditSuggestion, IsUse, appointed_date_lc, file_id_lc, file_url_lc, yuangongzu, xrgwjb, xrgwjbprsj, djrdzzw, is_chujikh, chujikh_date, is_zhongjikh, zhongjikh_date, political_status, staff_grade, id_card, staff_date, picture_id, picture_url, gqpxqk, gfhyspxqk, zjspnlceqk, dca_year
+        id, user_no, name, user_dept, user_account_name, user_account, operation_name, bq_name, bq_new_name, user_type, dept_id, dept_new_id, telephone, dept_name, dept_new_name, user_type_name, rylx, yggh, gh_hk, sex_name, birthday, school_date, zyjsgw, bianhao_jx, zyjsgw_lc, xcszyjzc, appointed_date, appointed_date_lc, zizu, yuangongzu, xrgwjb, xrgwjbprsj, zhicheng, zyjs_np, zyjs_date_np, zyjs_npjx, zyjs_date_npjx, edu, edu_school, guoji, minzu, jiguan, political_status, bianhao_lc, xingzhengjiebie, id_card, work_date, yishi_lb, yishi_jb, yishi_zhiyefanwei, yishi_zgzsbianhao, yishi_ziyebianhao, renshizifw, renshizfenlei, state, IS_DELETEMARK, CREATE_TIME, display_index, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateSdlBDeptchange" parameterType="cc.mrbird.febs.sdl.entity.SdlBDeptchange">
         update sdl_b_deptchange
         <trim prefix="set" suffixOverrides=",">
+<if test="userNo != null">user_no=#{userNo},</if>
+<if test="name != null">name=#{name},</if>
+<if test="userDept != null">user_dept=#{userDept},</if>
 <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
 <if test="userAccount != null">user_account=#{userAccount},</if>
 <if test="operationName != null">operation_name=#{operationName},</if>
@@ -84,21 +88,45 @@
 <if test="telephone != null">telephone=#{telephone},</if>
 <if test="deptName != null">dept_name=#{deptName},</if>
 <if test="deptNewName != null">dept_new_name=#{deptNewName},</if>
-<if test="positionName != null">position_name=#{positionName},</if>
-<if test="npPositionName != null">np_position_name=#{npPositionName},</if>
+<if test="userTypeName != null">user_type_name=#{userTypeName},</if>
+<if test="rylx != null">rylx=#{rylx},</if>
+<if test="yggh != null">yggh=#{yggh},</if>
+<if test="ghHk != null">gh_hk=#{ghHk},</if>
 <if test="sexName != null">sex_name=#{sexName},</if>
 <if test="birthday != null">birthday=#{birthday},</if>
 <if test="schoolDate != null">school_date=#{schoolDate},</if>
 <if test="zyjsgw != null">zyjsgw=#{zyjsgw},</if>
+<if test="bianhaoJx != null">bianhao_jx=#{bianhaoJx},</if>
 <if test="zyjsgwLc != null">zyjsgw_lc=#{zyjsgwLc},</if>
 <if test="xcszyjzc != null">xcszyjzc=#{xcszyjzc},</if>
 <if test="appointedDate != null">appointed_date=#{appointedDate},</if>
-<if test="patentRanknum != null">patent_ranknum=#{patentRanknum},</if>
-<if test="isAuthority != null">is_authority=#{isAuthority},</if>
-<if test="fileId != null">file_id=#{fileId},</if>
-<if test="isZhuanrang != null">is_zhuanrang=#{isZhuanrang},</if>
-<if test="fileUrl != null">file_url=#{fileUrl},</if>
-<if test="patentGood != null">patent_good=#{patentGood},</if>
+<if test="appointedDateLc != null">appointed_date_lc=#{appointedDateLc},</if>
+<if test="zizu != null">zizu=#{zizu},</if>
+<if test="yuangongzu != null">yuangongzu=#{yuangongzu},</if>
+<if test="xrgwjb != null">xrgwjb=#{xrgwjb},</if>
+<if test="xrgwjbprsj != null">xrgwjbprsj=#{xrgwjbprsj},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="zyjsNp != null">zyjs_np=#{zyjsNp},</if>
+<if test="zyjsDateNp != null">zyjs_date_np=#{zyjsDateNp},</if>
+<if test="zyjsNpjx != null">zyjs_npjx=#{zyjsNpjx},</if>
+<if test="zyjsDateNpjx != null">zyjs_date_npjx=#{zyjsDateNpjx},</if>
+<if test="edu != null">edu=#{edu},</if>
+<if test="eduSchool != null">edu_school=#{eduSchool},</if>
+<if test="guoji != null">guoji=#{guoji},</if>
+<if test="minzu != null">minzu=#{minzu},</if>
+<if test="jiguan != null">jiguan=#{jiguan},</if>
+<if test="politicalStatus != null">political_status=#{politicalStatus},</if>
+<if test="bianhaoLc != null">bianhao_lc=#{bianhaoLc},</if>
+<if test="xingzhengjiebie != null">xingzhengjiebie=#{xingzhengjiebie},</if>
+<if test="idCard != null">id_card=#{idCard},</if>
+<if test="workDate != null">work_date=#{workDate},</if>
+<if test="yishiLb != null">yishi_lb=#{yishiLb},</if>
+<if test="yishiJb != null">yishi_jb=#{yishiJb},</if>
+<if test="yishiZhiyefanwei != null">yishi_zhiyefanwei=#{yishiZhiyefanwei},</if>
+<if test="yishiZgzsbianhao != null">yishi_zgzsbianhao=#{yishiZgzsbianhao},</if>
+<if test="yishiZiyebianhao != null">yishi_ziyebianhao=#{yishiZiyebianhao},</if>
+<if test="renshizifw != null">renshizifw=#{renshizifw},</if>
+<if test="renshizfenlei != null">renshizfenlei=#{renshizfenlei},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -106,32 +134,6 @@
 <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
 <if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
 <if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
-<if test="auditMan != null">auditMan=#{auditMan},</if>
-<if test="auditManName != null">auditManName=#{auditManName},</if>
-<if test="auditDate != null">auditDate=#{auditDate},</if>
-<if test="auditSuggestion != null">auditSuggestion=#{auditSuggestion},</if>
-<if test="IsUse != null">IsUse=#{IsUse},</if>
-<if test="appointedDateLc != null">appointed_date_lc=#{appointedDateLc},</if>
-<if test="fileIdLc != null">file_id_lc=#{fileIdLc},</if>
-<if test="fileUrlLc != null">file_url_lc=#{fileUrlLc},</if>
-<if test="yuangongzu != null">yuangongzu=#{yuangongzu},</if>
-<if test="xrgwjb != null">xrgwjb=#{xrgwjb},</if>
-<if test="xrgwjbprsj != null">xrgwjbprsj=#{xrgwjbprsj},</if>
-<if test="djrdzzw != null">djrdzzw=#{djrdzzw},</if>
-<if test="isChujikh != null">is_chujikh=#{isChujikh},</if>
-<if test="chujikhDate != null">chujikh_date=#{chujikhDate},</if>
-<if test="isZhongjikh != null">is_zhongjikh=#{isZhongjikh},</if>
-<if test="zhongjikhDate != null">zhongjikh_date=#{zhongjikhDate},</if>
-<if test="politicalStatus != null">political_status=#{politicalStatus},</if>
-<if test="staffGrade != null">staff_grade=#{staffGrade},</if>
-<if test="idCard != null">id_card=#{idCard},</if>
-<if test="staffDate != null">staff_date=#{staffDate},</if>
-<if test="pictureId != null">picture_id=#{pictureId},</if>
-<if test="pictureUrl != null">picture_url=#{pictureUrl},</if>
-<if test="gqpxqk != null">gqpxqk=#{gqpxqk},</if>
-<if test="gfhyspxqk != null">gfhyspxqk=#{gfhyspxqk},</if>
-<if test="zjspnlceqk != null">zjspnlceqk=#{zjspnlceqk},</if>
-<if test="dcaYear != null">dca_year=#{dcaYear},</if>
         </trim>
                 where id=#{id}
 
@@ -140,6 +142,9 @@
         select  *  from sdl_b_deptchange
         where  1=1
             <if test="sdlBDeptchange.id != null and sdlBDeptchange.id != ''"> and  sdl_b_deptchange.id =#{ sdlBDeptchange.id} </if>
+            <if test="sdlBDeptchange.userNo != null and sdlBDeptchange.userNo != ''"> and  sdl_b_deptchange.user_no like concat('%', #{ sdlBDeptchange.userNo} ,'%')</if>
+            <if test="sdlBDeptchange.name != null and sdlBDeptchange.name != ''"> and  sdl_b_deptchange.name like concat('%', #{ sdlBDeptchange.name} ,'%')</if>
+            <if test="sdlBDeptchange.userDept != null and sdlBDeptchange.userDept != ''"> and  sdl_b_deptchange.user_dept like concat('%', #{ sdlBDeptchange.userDept} ,'%')</if>
             <if test="sdlBDeptchange.userAccountName != null and sdlBDeptchange.userAccountName != ''"> and  sdl_b_deptchange.user_account_name like concat('%', #{ sdlBDeptchange.userAccountName} ,'%')</if>
             <if test="sdlBDeptchange.userAccount != null and sdlBDeptchange.userAccount != ''"> and  sdl_b_deptchange.user_account like concat('%', #{ sdlBDeptchange.userAccount} ,'%')</if>
             <if test="sdlBDeptchange.operationName != null and sdlBDeptchange.operationName != ''"> and  sdl_b_deptchange.operation_name like concat('%', #{ sdlBDeptchange.operationName} ,'%')</if>
@@ -151,21 +156,45 @@
             <if test="sdlBDeptchange.telephone != null and sdlBDeptchange.telephone != ''"> and  sdl_b_deptchange.telephone like concat('%', #{ sdlBDeptchange.telephone} ,'%')</if>
             <if test="sdlBDeptchange.deptName != null and sdlBDeptchange.deptName != ''"> and  sdl_b_deptchange.dept_name like concat('%', #{ sdlBDeptchange.deptName} ,'%')</if>
             <if test="sdlBDeptchange.deptNewName != null and sdlBDeptchange.deptNewName != ''"> and  sdl_b_deptchange.dept_new_name like concat('%', #{ sdlBDeptchange.deptNewName} ,'%')</if>
-            <if test="sdlBDeptchange.positionName != null and sdlBDeptchange.positionName != ''"> and  sdl_b_deptchange.position_name like concat('%', #{ sdlBDeptchange.positionName} ,'%')</if>
-            <if test="sdlBDeptchange.npPositionName != null and sdlBDeptchange.npPositionName != ''"> and  sdl_b_deptchange.np_position_name like concat('%', #{ sdlBDeptchange.npPositionName} ,'%')</if>
+            <if test="sdlBDeptchange.userTypeName != null and sdlBDeptchange.userTypeName != ''"> and  sdl_b_deptchange.user_type_name like concat('%', #{ sdlBDeptchange.userTypeName} ,'%')</if>
+            <if test="sdlBDeptchange.rylx != null and sdlBDeptchange.rylx != ''"> and  sdl_b_deptchange.rylx like concat('%', #{ sdlBDeptchange.rylx} ,'%')</if>
+            <if test="sdlBDeptchange.yggh != null and sdlBDeptchange.yggh != ''"> and  sdl_b_deptchange.yggh like concat('%', #{ sdlBDeptchange.yggh} ,'%')</if>
+            <if test="sdlBDeptchange.ghHk != null and sdlBDeptchange.ghHk != ''"> and  sdl_b_deptchange.gh_hk like concat('%', #{ sdlBDeptchange.ghHk} ,'%')</if>
             <if test="sdlBDeptchange.sexName != null and sdlBDeptchange.sexName != ''"> and  sdl_b_deptchange.sex_name like concat('%', #{ sdlBDeptchange.sexName} ,'%')</if>
             <if test="sdlBDeptchange.birthday != null and sdlBDeptchange.birthday != ''"> and  sdl_b_deptchange.birthday like concat('%', #{ sdlBDeptchange.birthday} ,'%')</if>
             <if test="sdlBDeptchange.schoolDate != null and sdlBDeptchange.schoolDate != ''"> and  sdl_b_deptchange.school_date like concat('%', #{ sdlBDeptchange.schoolDate} ,'%')</if>
             <if test="sdlBDeptchange.zyjsgw != null and sdlBDeptchange.zyjsgw != ''"> and  sdl_b_deptchange.zyjsgw like concat('%', #{ sdlBDeptchange.zyjsgw} ,'%')</if>
+            <if test="sdlBDeptchange.bianhaoJx != null and sdlBDeptchange.bianhaoJx != ''"> and  sdl_b_deptchange.bianhao_jx like concat('%', #{ sdlBDeptchange.bianhaoJx} ,'%')</if>
             <if test="sdlBDeptchange.zyjsgwLc != null and sdlBDeptchange.zyjsgwLc != ''"> and  sdl_b_deptchange.zyjsgw_lc like concat('%', #{ sdlBDeptchange.zyjsgwLc} ,'%')</if>
             <if test="sdlBDeptchange.xcszyjzc != null and sdlBDeptchange.xcszyjzc != ''"> and  sdl_b_deptchange.xcszyjzc like concat('%', #{ sdlBDeptchange.xcszyjzc} ,'%')</if>
             <if test="sdlBDeptchange.appointedDate != null and sdlBDeptchange.appointedDate != ''"> and  sdl_b_deptchange.appointed_date like concat('%', #{ sdlBDeptchange.appointedDate} ,'%')</if>
-        <if test="sdlBDeptchange.patentRanknum != null"> and  sdl_b_deptchange.patent_ranknum =#{ sdlBDeptchange.patentRanknum} </if>
-            <if test="sdlBDeptchange.isAuthority != null and sdlBDeptchange.isAuthority != ''"> and  sdl_b_deptchange.is_authority like concat('%', #{ sdlBDeptchange.isAuthority} ,'%')</if>
-            <if test="sdlBDeptchange.fileId != null and sdlBDeptchange.fileId != ''"> and  sdl_b_deptchange.file_id like concat('%', #{ sdlBDeptchange.fileId} ,'%')</if>
-            <if test="sdlBDeptchange.isZhuanrang != null and sdlBDeptchange.isZhuanrang != ''"> and  sdl_b_deptchange.is_zhuanrang like concat('%', #{ sdlBDeptchange.isZhuanrang} ,'%')</if>
-            <if test="sdlBDeptchange.fileUrl != null and sdlBDeptchange.fileUrl != ''"> and  sdl_b_deptchange.file_url like concat('%', #{ sdlBDeptchange.fileUrl} ,'%')</if>
-            <if test="sdlBDeptchange.patentGood != null and sdlBDeptchange.patentGood != ''"> and  sdl_b_deptchange.patent_good like concat('%', #{ sdlBDeptchange.patentGood} ,'%')</if>
+            <if test="sdlBDeptchange.appointedDateLc != null and sdlBDeptchange.appointedDateLc != ''"> and  sdl_b_deptchange.appointed_date_lc like concat('%', #{ sdlBDeptchange.appointedDateLc} ,'%')</if>
+            <if test="sdlBDeptchange.zizu != null and sdlBDeptchange.zizu != ''"> and  sdl_b_deptchange.zizu like concat('%', #{ sdlBDeptchange.zizu} ,'%')</if>
+            <if test="sdlBDeptchange.yuangongzu != null and sdlBDeptchange.yuangongzu != ''"> and  sdl_b_deptchange.yuangongzu like concat('%', #{ sdlBDeptchange.yuangongzu} ,'%')</if>
+            <if test="sdlBDeptchange.xrgwjb != null and sdlBDeptchange.xrgwjb != ''"> and  sdl_b_deptchange.xrgwjb like concat('%', #{ sdlBDeptchange.xrgwjb} ,'%')</if>
+            <if test="sdlBDeptchange.xrgwjbprsj != null and sdlBDeptchange.xrgwjbprsj != ''"> and  sdl_b_deptchange.xrgwjbprsj like concat('%', #{ sdlBDeptchange.xrgwjbprsj} ,'%')</if>
+            <if test="sdlBDeptchange.zhicheng != null and sdlBDeptchange.zhicheng != ''"> and  sdl_b_deptchange.zhicheng like concat('%', #{ sdlBDeptchange.zhicheng} ,'%')</if>
+            <if test="sdlBDeptchange.zyjsNp != null and sdlBDeptchange.zyjsNp != ''"> and  sdl_b_deptchange.zyjs_np like concat('%', #{ sdlBDeptchange.zyjsNp} ,'%')</if>
+            <if test="sdlBDeptchange.zyjsDateNp != null and sdlBDeptchange.zyjsDateNp != ''"> and  sdl_b_deptchange.zyjs_date_np like concat('%', #{ sdlBDeptchange.zyjsDateNp} ,'%')</if>
+            <if test="sdlBDeptchange.zyjsNpjx != null and sdlBDeptchange.zyjsNpjx != ''"> and  sdl_b_deptchange.zyjs_npjx like concat('%', #{ sdlBDeptchange.zyjsNpjx} ,'%')</if>
+            <if test="sdlBDeptchange.zyjsDateNpjx != null and sdlBDeptchange.zyjsDateNpjx != ''"> and  sdl_b_deptchange.zyjs_date_npjx like concat('%', #{ sdlBDeptchange.zyjsDateNpjx} ,'%')</if>
+            <if test="sdlBDeptchange.edu != null and sdlBDeptchange.edu != ''"> and  sdl_b_deptchange.edu like concat('%', #{ sdlBDeptchange.edu} ,'%')</if>
+            <if test="sdlBDeptchange.eduSchool != null and sdlBDeptchange.eduSchool != ''"> and  sdl_b_deptchange.edu_school like concat('%', #{ sdlBDeptchange.eduSchool} ,'%')</if>
+            <if test="sdlBDeptchange.guoji != null and sdlBDeptchange.guoji != ''"> and  sdl_b_deptchange.guoji like concat('%', #{ sdlBDeptchange.guoji} ,'%')</if>
+            <if test="sdlBDeptchange.minzu != null and sdlBDeptchange.minzu != ''"> and  sdl_b_deptchange.minzu like concat('%', #{ sdlBDeptchange.minzu} ,'%')</if>
+            <if test="sdlBDeptchange.jiguan != null and sdlBDeptchange.jiguan != ''"> and  sdl_b_deptchange.jiguan like concat('%', #{ sdlBDeptchange.jiguan} ,'%')</if>
+            <if test="sdlBDeptchange.politicalStatus != null and sdlBDeptchange.politicalStatus != ''"> and  sdl_b_deptchange.political_status like concat('%', #{ sdlBDeptchange.politicalStatus} ,'%')</if>
+            <if test="sdlBDeptchange.bianhaoLc != null and sdlBDeptchange.bianhaoLc != ''"> and  sdl_b_deptchange.bianhao_lc like concat('%', #{ sdlBDeptchange.bianhaoLc} ,'%')</if>
+            <if test="sdlBDeptchange.xingzhengjiebie != null and sdlBDeptchange.xingzhengjiebie != ''"> and  sdl_b_deptchange.xingzhengjiebie like concat('%', #{ sdlBDeptchange.xingzhengjiebie} ,'%')</if>
+            <if test="sdlBDeptchange.idCard != null and sdlBDeptchange.idCard != ''"> and  sdl_b_deptchange.id_card like concat('%', #{ sdlBDeptchange.idCard} ,'%')</if>
+            <if test="sdlBDeptchange.workDate != null and sdlBDeptchange.workDate != ''"> and  sdl_b_deptchange.work_date like concat('%', #{ sdlBDeptchange.workDate} ,'%')</if>
+            <if test="sdlBDeptchange.yishiLb != null and sdlBDeptchange.yishiLb != ''"> and  sdl_b_deptchange.yishi_lb like concat('%', #{ sdlBDeptchange.yishiLb} ,'%')</if>
+            <if test="sdlBDeptchange.yishiJb != null and sdlBDeptchange.yishiJb != ''"> and  sdl_b_deptchange.yishi_jb like concat('%', #{ sdlBDeptchange.yishiJb} ,'%')</if>
+            <if test="sdlBDeptchange.yishiZhiyefanwei != null and sdlBDeptchange.yishiZhiyefanwei != ''"> and  sdl_b_deptchange.yishi_zhiyefanwei like concat('%', #{ sdlBDeptchange.yishiZhiyefanwei} ,'%')</if>
+            <if test="sdlBDeptchange.yishiZgzsbianhao != null and sdlBDeptchange.yishiZgzsbianhao != ''"> and  sdl_b_deptchange.yishi_zgzsbianhao like concat('%', #{ sdlBDeptchange.yishiZgzsbianhao} ,'%')</if>
+            <if test="sdlBDeptchange.yishiZiyebianhao != null and sdlBDeptchange.yishiZiyebianhao != ''"> and  sdl_b_deptchange.yishi_ziyebianhao like concat('%', #{ sdlBDeptchange.yishiZiyebianhao} ,'%')</if>
+            <if test="sdlBDeptchange.renshizifw != null and sdlBDeptchange.renshizifw != ''"> and  sdl_b_deptchange.renshizifw like concat('%', #{ sdlBDeptchange.renshizifw} ,'%')</if>
+            <if test="sdlBDeptchange.renshizfenlei != null and sdlBDeptchange.renshizfenlei != ''"> and  sdl_b_deptchange.renshizfenlei like concat('%', #{ sdlBDeptchange.renshizfenlei} ,'%')</if>
         <if test="sdlBDeptchange.state != null"> and  sdl_b_deptchange.state =#{ sdlBDeptchange.state} </if>
         <if test="sdlBDeptchange.isDeletemark != null"> and  sdl_b_deptchange.IS_DELETEMARK =#{ sdlBDeptchange.isDeletemark} </if>
         <if test="sdlBDeptchange.createTimeFrom!= null">
@@ -181,34 +210,6 @@
         <if test="sdlBDeptchange.modifyTimeTo!= null">
             AND  sdl_b_deptchange.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlBDeptchange.modifyTimeTo}
         </if>
-            <if test="sdlBDeptchange.auditMan != null and sdlBDeptchange.auditMan != ''"> and  sdl_b_deptchange.auditMan like concat('%', #{ sdlBDeptchange.auditMan} ,'%')</if>
-            <if test="sdlBDeptchange.auditManName != null and sdlBDeptchange.auditManName != ''"> and  sdl_b_deptchange.auditManName like concat('%', #{ sdlBDeptchange.auditManName} ,'%')</if>
-        <if test="sdlBDeptchange.auditDateFrom!= null">
-            AND sdl_b_deptchange.auditDate <![CDATA[ >= ]]>  #{sdlBDeptchange.auditDateFrom}
-        </if>
-        <if test="sdlBDeptchange.auditDateTo!= null">
-            AND  sdl_b_deptchange.auditDate <![CDATA[ <= ]]>  #{sdlBDeptchange.auditDateTo}
-        </if>
-            <if test="sdlBDeptchange.auditSuggestion != null and sdlBDeptchange.auditSuggestion != ''"> and  sdl_b_deptchange.auditSuggestion like concat('%', #{ sdlBDeptchange.auditSuggestion} ,'%')</if>
-            <if test="sdlBDeptchange.appointedDateLc != null and sdlBDeptchange.appointedDateLc != ''"> and  sdl_b_deptchange.appointed_date_lc like concat('%', #{ sdlBDeptchange.appointedDateLc} ,'%')</if>
-            <if test="sdlBDeptchange.fileIdLc != null and sdlBDeptchange.fileIdLc != ''"> and  sdl_b_deptchange.file_id_lc like concat('%', #{ sdlBDeptchange.fileIdLc} ,'%')</if>
-            <if test="sdlBDeptchange.fileUrlLc != null and sdlBDeptchange.fileUrlLc != ''"> and  sdl_b_deptchange.file_url_lc like concat('%', #{ sdlBDeptchange.fileUrlLc} ,'%')</if>
-            <if test="sdlBDeptchange.yuangongzu != null and sdlBDeptchange.yuangongzu != ''"> and  sdl_b_deptchange.yuangongzu like concat('%', #{ sdlBDeptchange.yuangongzu} ,'%')</if>
-            <if test="sdlBDeptchange.xrgwjb != null and sdlBDeptchange.xrgwjb != ''"> and  sdl_b_deptchange.xrgwjb like concat('%', #{ sdlBDeptchange.xrgwjb} ,'%')</if>
-            <if test="sdlBDeptchange.xrgwjbprsj != null and sdlBDeptchange.xrgwjbprsj != ''"> and  sdl_b_deptchange.xrgwjbprsj like concat('%', #{ sdlBDeptchange.xrgwjbprsj} ,'%')</if>
-            <if test="sdlBDeptchange.djrdzzw != null and sdlBDeptchange.djrdzzw != ''"> and  sdl_b_deptchange.djrdzzw like concat('%', #{ sdlBDeptchange.djrdzzw} ,'%')</if>
-            <if test="sdlBDeptchange.chujikhDate != null and sdlBDeptchange.chujikhDate != ''"> and  sdl_b_deptchange.chujikh_date like concat('%', #{ sdlBDeptchange.chujikhDate} ,'%')</if>
-            <if test="sdlBDeptchange.zhongjikhDate != null and sdlBDeptchange.zhongjikhDate != ''"> and  sdl_b_deptchange.zhongjikh_date like concat('%', #{ sdlBDeptchange.zhongjikhDate} ,'%')</if>
-            <if test="sdlBDeptchange.politicalStatus != null and sdlBDeptchange.politicalStatus != ''"> and  sdl_b_deptchange.political_status like concat('%', #{ sdlBDeptchange.politicalStatus} ,'%')</if>
-            <if test="sdlBDeptchange.staffGrade != null and sdlBDeptchange.staffGrade != ''"> and  sdl_b_deptchange.staff_grade like concat('%', #{ sdlBDeptchange.staffGrade} ,'%')</if>
-            <if test="sdlBDeptchange.idCard != null and sdlBDeptchange.idCard != ''"> and  sdl_b_deptchange.id_card like concat('%', #{ sdlBDeptchange.idCard} ,'%')</if>
-            <if test="sdlBDeptchange.staffDate != null and sdlBDeptchange.staffDate != ''"> and  sdl_b_deptchange.staff_date like concat('%', #{ sdlBDeptchange.staffDate} ,'%')</if>
-            <if test="sdlBDeptchange.pictureId != null and sdlBDeptchange.pictureId != ''"> and  sdl_b_deptchange.picture_id like concat('%', #{ sdlBDeptchange.pictureId} ,'%')</if>
-            <if test="sdlBDeptchange.pictureUrl != null and sdlBDeptchange.pictureUrl != ''"> and  sdl_b_deptchange.picture_url like concat('%', #{ sdlBDeptchange.pictureUrl} ,'%')</if>
-            <if test="sdlBDeptchange.gqpxqk != null and sdlBDeptchange.gqpxqk != ''"> and  sdl_b_deptchange.gqpxqk like concat('%', #{ sdlBDeptchange.gqpxqk} ,'%')</if>
-            <if test="sdlBDeptchange.gfhyspxqk != null and sdlBDeptchange.gfhyspxqk != ''"> and  sdl_b_deptchange.gfhyspxqk like concat('%', #{ sdlBDeptchange.gfhyspxqk} ,'%')</if>
-            <if test="sdlBDeptchange.zjspnlceqk != null and sdlBDeptchange.zjspnlceqk != ''"> and  sdl_b_deptchange.zjspnlceqk like concat('%', #{ sdlBDeptchange.zjspnlceqk} ,'%')</if>
-            <if test="sdlBDeptchange.dcaYear != null and sdlBDeptchange.dcaYear != ''"> and  sdl_b_deptchange.dca_year like concat('%', #{ sdlBDeptchange.dcaYear} ,'%')</if>
 </select>
 
 </mapper>

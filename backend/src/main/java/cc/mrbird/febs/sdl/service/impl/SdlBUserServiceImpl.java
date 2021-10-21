@@ -29,7 +29,7 @@ import java.time.LocalDate;
  * </p>
  *
  * @author viki
- * @since 2021-10-13
+ * @since 2021-10-18
  */
 @Slf4j
 @Service("ISdlBUserService")
@@ -42,16 +42,20 @@ public IPage<SdlBUser> findSdlBUsers(QueryRequest request, SdlBUser sdlBUser){
         try{
         LambdaQueryWrapper<SdlBUser> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.eq(SdlBUser::getIsDeletemark, 1);//1是未删 0是已删
+        if (StringUtils.isNotBlank(sdlBUser.getUserAccount())) {
+        queryWrapper.and(wrap->  wrap.eq(SdlBUser::getUserAccount, sdlBUser.getUserAccount()).or()
+        .like(SdlBUser::getUserAccountName, sdlBUser.getUserAccount()));
 
-            if (StringUtils.isNotBlank(sdlBUser.getUserAccount())) {
-                queryWrapper.and( p->p.eq(SdlBUser::getUserAccount, sdlBUser.getUserAccount()).or().like(SdlBUser::getUserAccountName, sdlBUser.getUserAccount()));
-            }
-                                if (sdlBUser.getState()!=null) {
-                                queryWrapper.eq(SdlBUser::getState, sdlBUser.getState());
-                                }
+        }
+        if (sdlBUser.getState()!=null) {
+        queryWrapper.eq(SdlBUser::getState, sdlBUser.getState());
+        }
             if (StringUtils.isNotBlank(sdlBUser.getDeptId())) {
-                queryWrapper.likeRight(SdlBUser::getDeptId, sdlBUser.getDeptId());
+                queryWrapper.apply("sdl_b_user.dept_id in (select t_dept.dept_id from t_dept where t_dept.DEPT_ID='"+sdlBUser.getDeptId()+"' or t_dept.PARENT_ID='"+sdlBUser.getDeptId()+"' )");
             }
+        queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
+
+
         Page<SdlBUser> page=new Page<>();
         SortUtil.handlePageSort(request,page,false);//true 是属性  false是数据库字段可两个
         return this.page(page,queryWrapper);
@@ -93,5 +97,9 @@ public void deleteSdlBUsers(String[]Ids){
         List<String> list=Arrays.asList(Ids);
         this.baseMapper.deleteBatchIds(list);
         }
-
+    @Override
+    @Transactional
+    public  List<String> getUserAccounts(){
+      return this.baseMapper.getUserAccounts();
+    }
         }

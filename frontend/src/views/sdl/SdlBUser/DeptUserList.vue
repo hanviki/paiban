@@ -13,6 +13,10 @@
            
           </div>
           <span style="float: right; margin-top: 3px">
+             <a-button
+                  type="primary"
+                  @click="exportCustomExcel"
+                >导出</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
             <a @click="toggleAdvanced" style="margin-left: 8px">
@@ -103,67 +107,52 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
          {
-          title: "人事编码",
-          dataIndex: "userAccount",
+          title: "人员类型",
+          dataIndex: "rylx",
           width: 100,
         },
+         {
+          title: "人事编码",
+          dataIndex: "userAccount",
+          width: 120,
+        },
+        
          {
           title: "姓名",
           dataIndex: "userAccountName",
           width: 100,
         },
+         {
+          title: "员工工号",
+          dataIndex: "yggh",
+          width: 100,
+        },
         {
+          title: "资质类型",
+          dataIndex: "userTypeName",
+          width: 100,
+        },
+        {
+          title: "科室编号",
+          dataIndex: "deptId",
+          width: 100,
+        },
+         {
+          title: "科室名称",
+          dataIndex: "deptName",
+          width: 100,
+        },
+         {
           title: "病区名称",
           dataIndex: "bqName",
           width: 100,
         },
         {
-          title: "人员类型",
-          dataIndex: "userType",
-          width: 100,
-          customRender: (text, row, index) => {
-            switch (text) {
-              case 0:
-                return "一值班";
-              case 1:
-                return "二值班";
-              case 2:
-                return "三值班";
-              case 3:
-                return "住院医师老总班";
-              case 4:
-                return "急诊班值班";
-              default:
-                return text;
-            }
-          },
-        },
-        {
-          title: "科室ID",
-          dataIndex: "deptId",
+          title: "华科人事编号",
+          dataIndex: "ghHk",
           width: 100,
         },
-        {
-          title: "手机号",
-          dataIndex: "telephone",
-          width: 100,
-        },
-        {
-          title: "科室名称",
-          dataIndex: "deptName",
-          width: 100,
-        },
-        {
-          title: "现岗位职务",
-          dataIndex: "positionName",
-          width: 100,
-        },
-        {
-          title: "拟聘岗位职务",
-          dataIndex: "npPositionName",
-          width: 100,
-        },
-        {
+         {
           title: "性别",
           dataIndex: "sexName",
           width: 100,
@@ -173,119 +162,125 @@ export default {
           dataIndex: "birthday",
           width: 100,
         },
-        {
-          title: "来校工作时间",
-          dataIndex: "schoolDate",
-          width: 100,
-        },
-        {
-          title: "现专业技术岗位",
-          dataIndex: "zyjsgw",
-          width: 100,
-        },
-        {
-          title: "现专业技术岗位（临床）",
-          dataIndex: "zyjsgwLc",
-          width: 100,
-        },
-        {
-          title: "现从事专业及专长",
-          dataIndex: "xcszyjzc",
-          width: 100,
-        },
-        {
-          title: "聘任时间",
-          dataIndex: "appointedDate",
-          width: 100,
-        },
-        {
-          title: "本人排名",
-          dataIndex: "patentRanknum",
-          width: 100,
-        },
-        {
-          title: "是否授权",
-          dataIndex: "isAuthority",
-          width: 100,
-        },
-        {
-          title: "附件",
-          dataIndex: "fileId",
-          width: 100,
-        },
-        {
-          title: "是否转让",
-          dataIndex: "isZhuanrang",
-          width: 100,
-        },
-        {
-          title: "附件地址",
-          dataIndex: "fileUrl",
-          width: 100,
-        },
-        {
-          title: "转让效益",
-          dataIndex: "patentGood",
-          width: 100,
-        },
-        {
-          title: "审核意见",
-          dataIndex: "auditSuggestion",
-          width: 100,
-        },
-        {
-          title: "聘任时间（临床）",
-          dataIndex: "appointedDateLc",
-          width: 100,
-        },
-        {
-          title: "附件（临床）",
-          dataIndex: "fileIdLc",
-          width: 100,
-        },
-        {
-          title: "附件地址（临床）",
-          dataIndex: "fileUrlLc",
-          width: 100,
-        },
+       
         {
           title: "员工组",
           dataIndex: "yuangongzu",
           width: 100,
         },
+       {
+          title: "员工子组",
+          dataIndex: "zizu",
+          width: 100,
+        },
+         {
+          title: "人事子范围",
+          dataIndex: "renshizifw",
+          width: 100,
+        },
+       {
+          title: "人事子范围分类",
+          dataIndex: "renshizfenlei",
+          width: 100,
+        },
+        //  {
+        //   title: "身份证号",
+        //   dataIndex: "idCard",
+        //   width: 100,
+        // },
+         {
+          title: "行政级别",
+          dataIndex: "xingzhengjiebie",
+          width: 100,
+        },
         {
-          title: "现任岗位级别",
+          title: "职称",
+          dataIndex: "zhicheng",
+          width: 100,
+        },
+        {
+          title: "岗位等级",
           dataIndex: "xrgwjb",
           width: 100,
         },
         {
-          title: "现任岗位级别聘任时间",
+          title: "岗位等级开始日期",
           dataIndex: "xrgwjbprsj",
           width: 100,
         },
-        {
-          title: "担(兼)任党政职务",
-          dataIndex: "djrdzzw",
+         {
+          title: "临床职称",
+          dataIndex: "zyjsgwLc",
+          width: 100,
+        },
+         {
+          title: "聘任时间（临床）",
+          dataIndex: "appointedDateLc",
+          width: 100,
+        },
+         {
+          title: "临床证书编号",
+          dataIndex: "bianhaoLc",
+          width: 130,
+        },
+         {
+          title: "教学职称",
+          dataIndex: "zyjsgw",
+          width: 100,
+        },
+         {
+          title: "教学聘任时间",
+          dataIndex: "appointedDate",
           width: 100,
         },
         {
-          title: "是否通过初级考核",
-          dataIndex: "isChujikh",
+          title: "教学证书编号",
+          dataIndex: "bianhaoJx",
+          width: 130,
+        },
+        {
+          title: "内聘临床专业技术职务",
+          dataIndex: "zyjsNp",
           width: 100,
         },
         {
-          title: "通过初级考核时间",
-          dataIndex: "chujikhDate",
+          title: "内聘临床时间",
+          dataIndex: "zyjsDateNp",
           width: 100,
         },
         {
-          title: "是否通过中级考核",
-          dataIndex: "isZhongjikh",
+          title: "内聘教学专业技术职务",
+          dataIndex: "zyjsNpjx",
           width: 100,
         },
         {
-          title: "通过中级考核时间",
-          dataIndex: "zhongjikhDate",
+          title: "内聘教学时间",
+          dataIndex: "zyjsDateNpjx",
+          width: 100,
+        },
+        {
+          title: "学历",
+          dataIndex: "edu",
+          width: 100,
+        },
+        {
+          title: "毕业学校",
+          dataIndex: "eduSchool",
+          width: 100,
+        },
+        {
+          title: "国籍",
+          dataIndex: "guoji",
+          width: 100,
+        },
+        {
+          title: "民族",
+          dataIndex: "minzu",
+          width: 100,
+        },
+        {
+          title: "籍贯",
+          dataIndex: "jiguan",
           width: 100,
         },
         {
@@ -293,45 +288,40 @@ export default {
           dataIndex: "politicalStatus",
           width: 100,
         },
-        {
-          title: "职员职级",
-          dataIndex: "staffGrade",
+         {
+          title: "入职时间",
+          dataIndex: "schoolDate",
           width: 100,
         },
         {
-          title: "身份证号",
-          dataIndex: "idCard",
+          title: "参加工作时间",
+          dataIndex: "workDate",
           width: 100,
         },
         {
-          title: "职位时间",
-          dataIndex: "staffDate",
+          title: "医师类别",
+          dataIndex: "yishiLb",
           width: 100,
         },
         {
-          title: "照片id",
-          dataIndex: "pictureId",
+          title: "医师级别",
+          dataIndex: "yishiJb",
           width: 100,
         },
         {
-          title: "照片url",
-          dataIndex: "pictureUrl",
+          title: "医师执业范围",
+          dataIndex: "yishiZhiyefanwei",
           width: 100,
         },
         {
-          title: "岗前培训情况",
-          dataIndex: "gqpxqk",
-          width: 100,
+          title: "医师资格证书编号",
+          dataIndex: "yishiZgzsbianhao",
+          width: 130,
         },
         {
-          title: "规范化医师培训情况",
-          dataIndex: "gfhyspxqk",
-          width: 100,
-        },
-        {
-          title: "中级水平能力测试情况",
-          dataIndex: "zjspnlceqk",
-          width: 100,
+          title: "医师执业证书编码",
+          dataIndex: "yishiZiyebianhao",
+          width: 130,
         },
       ];
     },
@@ -356,6 +346,8 @@ export default {
     },
     handleAddClose() {
       this.addVisiable = false;
+      this.$message.success("移入成功");
+      this.search();
     },
     add() {
       this.addVisiable = true;
@@ -394,7 +386,9 @@ export default {
               operationName: "移出",
             })
             .then(() => {
+              
               that.$message.success("移出成功");
+             
               that.selectedRowKeys = [];
               that.search();
             });
@@ -404,19 +398,25 @@ export default {
         },
       });
     },
-    exportExcel() {
-      let { sortedInfo } = this;
-      let sortField, sortOrder;
+    exportCustomExcel () {
+      let { sortedInfo } = this
+      let sortField, sortOrder
       // 获取当前列的排序和列的过滤规则
       if (sortedInfo) {
-        sortField = sortedInfo.field;
-        sortOrder = sortedInfo.order;
+        sortField = sortedInfo.field
+        sortOrder = sortedInfo.order
       }
-      this.$export("sdlBUser/excel", {
-        sortField: sortField,
-        sortOrder: sortOrder,
-        ...this.queryParams,
-      });
+      let json = this.columns
+     
+      let dataJson = JSON.stringify(json)
+      let queryParams= this.queryParams
+      
+      this.$export('sdlBUser/excel', {
+        sortField: 'user_account',
+        sortOrder: 'ascend',
+        dataJson: dataJson,
+        ...queryParams
+      })
     },
     search() {
       let { sortedInfo } = this;

@@ -19,12 +19,21 @@
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="0是一直班">
+      <a-form-item v-bind="formItemLayout" label="资质类型id">
         <a-input
-          placeholder="请输入0是一直班"
+          placeholder="请输入资质类型id"
           v-decorator="[
             'userType',
-            { rules: [{ required: true, message: '0是一直班不能为空' }] },
+            { rules: [{ required: true, message: '资质类型id不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="资质类型">
+        <a-input
+          placeholder="请输入资质类型"
+          v-decorator="[
+            'userTypeName',
+            { rules: [{ required: true, message: '资质类型不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -73,12 +82,48 @@
           ]"
         />
       </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="人员类型">
+        <a-input
+          placeholder="请输入人员类型"
+          v-decorator="[
+            'rylx',
+            { rules: [{ required: true, message: '人员类型不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="员工工号">
+        <a-input
+          placeholder="请输入员工工号"
+          v-decorator="[
+            'yggh',
+            { rules: [{ required: true, message: '员工工号不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="华科人事编号">
+        <a-input
+          placeholder="请输入华科人事编号"
+          v-decorator="[
+            'ghHk',
+            { rules: [{ required: true, message: '华科人事编号不能为空' }] },
+          ]"
+        />
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="性别">
         <a-input
           placeholder="请输入性别"
           v-decorator="[
             'sexName',
             { rules: [{ required: true, message: '性别不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="资质证号">
+        <a-input
+          placeholder="请输入资质证号"
+          v-decorator="[
+            'qualifyNo',
+            { rules: [{ required: true, message: '资质证号不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -100,25 +145,30 @@
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="现专业技术岗位">
+      <a-form-item v-bind="formItemLayout" label="教学职称">
         <a-input
-          placeholder="请输入现专业技术岗位"
+          placeholder="请输入教学职称"
           v-decorator="[
             'zyjsgw',
-            { rules: [{ required: true, message: '现专业技术岗位不能为空' }] },
+            { rules: [{ required: true, message: '教学职称不能为空' }] },
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="现专业技术岗位（临床）">
+      <a-form-item v-bind="formItemLayout" label="教学证书编号">
         <a-input
-          placeholder="请输入现专业技术岗位（临床）"
+          placeholder="请输入教学证书编号"
+          v-decorator="[
+            'bianhaoJx',
+            { rules: [{ required: true, message: '教学证书编号不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="临床职称">
+        <a-input
+          placeholder="请输入临床职称"
           v-decorator="[
             'zyjsgwLc',
-            {
-              rules: [
-                { required: true, message: '现专业技术岗位（临床）不能为空' },
-              ],
-            },
+            { rules: [{ required: true, message: '临床职称不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -142,69 +192,6 @@
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="本人排名">
-        <a-input
-          placeholder="请输入本人排名"
-          v-decorator="[
-            'patentRanknum',
-            { rules: [{ required: true, message: '本人排名不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="是否授权">
-        <a-input
-          placeholder="请输入是否授权"
-          v-decorator="[
-            'isAuthority',
-            { rules: [{ required: true, message: '是否授权不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="附件">
-        <a-input
-          placeholder="请输入附件"
-          v-decorator="[
-            'fileId',
-            { rules: [{ required: true, message: '附件不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="是否转让">
-        <a-input
-          placeholder="请输入是否转让"
-          v-decorator="[
-            'isZhuanrang',
-            { rules: [{ required: true, message: '是否转让不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="附件地址">
-        <a-input
-          placeholder="请输入附件地址"
-          v-decorator="[
-            'fileUrl',
-            { rules: [{ required: true, message: '附件地址不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="转让效益">
-        <a-input
-          placeholder="请输入转让效益"
-          v-decorator="[
-            'patentGood',
-            { rules: [{ required: true, message: '转让效益不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="审核意见">
-        <a-input
-          placeholder="请输入审核意见"
-          v-decorator="[
-            'auditSuggestion',
-            { rules: [{ required: true, message: '审核意见不能为空' }] },
-          ]"
-        />
-      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="聘任时间（临床）">
         <a-input
           placeholder="请输入聘任时间（临床）"
@@ -216,23 +203,12 @@
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="附件（临床）">
+      <a-form-item v-bind="formItemLayout" label="员工子组">
         <a-input
-          placeholder="请输入附件（临床）"
+          placeholder="请输入员工子组"
           v-decorator="[
-            'fileIdLc',
-            { rules: [{ required: true, message: '附件（临床）不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="附件地址（临床）">
-        <a-input
-          placeholder="请输入附件地址（临床）"
-          v-decorator="[
-            'fileUrlLc',
-            {
-              rules: [{ required: true, message: '附件地址（临床）不能为空' }],
-            },
+            'zizu',
+            { rules: [{ required: true, message: '员工子组不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -263,6 +239,290 @@
               rules: [
                 { required: true, message: '现任岗位级别聘任时间不能为空' },
               ],
+            },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="职称">
+        <a-input
+          placeholder="请输入职称"
+          v-decorator="[
+            'zhicheng',
+            { rules: [{ required: true, message: '职称不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="内聘临床专业技术职务">
+        <a-input
+          placeholder="请输入内聘临床专业技术职务"
+          v-decorator="[
+            'zyjsNp',
+            {
+              rules: [
+                { required: true, message: '内聘临床专业技术职务不能为空' },
+              ],
+            },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="内聘临床时间">
+        <a-input
+          placeholder="请输入内聘临床时间"
+          v-decorator="[
+            'zyjsDateNp',
+            { rules: [{ required: true, message: '内聘临床时间不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="内聘教学专业技术职务">
+        <a-input
+          placeholder="请输入内聘教学专业技术职务"
+          v-decorator="[
+            'zyjsNpjx',
+            {
+              rules: [
+                { required: true, message: '内聘教学专业技术职务不能为空' },
+              ],
+            },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="内聘教学时间">
+        <a-input
+          placeholder="请输入内聘教学时间"
+          v-decorator="[
+            'zyjsDateNpjx',
+            { rules: [{ required: true, message: '内聘教学时间不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="学历">
+        <a-input
+          placeholder="请输入学历"
+          v-decorator="[
+            'edu',
+            { rules: [{ required: true, message: '学历不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="毕业学校">
+        <a-input
+          placeholder="请输入毕业学校"
+          v-decorator="[
+            'eduSchool',
+            { rules: [{ required: true, message: '毕业学校不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="国籍">
+        <a-input
+          placeholder="请输入国籍"
+          v-decorator="[
+            'guoji',
+            { rules: [{ required: true, message: '国籍不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="民族">
+        <a-input
+          placeholder="请输入民族"
+          v-decorator="[
+            'minzu',
+            { rules: [{ required: true, message: '民族不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="籍贯">
+        <a-input
+          placeholder="请输入籍贯"
+          v-decorator="[
+            'jiguan',
+            { rules: [{ required: true, message: '籍贯不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="政治面貌">
+        <a-input
+          placeholder="请输入政治面貌"
+          v-decorator="[
+            'politicalStatus',
+            { rules: [{ required: true, message: '政治面貌不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="临床证书编号">
+        <a-input
+          placeholder="请输入临床证书编号"
+          v-decorator="[
+            'bianhaoLc',
+            { rules: [{ required: true, message: '临床证书编号不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="行政级别">
+        <a-input
+          placeholder="请输入行政级别"
+          v-decorator="[
+            'xingzhengjiebie',
+            { rules: [{ required: true, message: '行政级别不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="身份证号">
+        <a-input
+          placeholder="请输入身份证号"
+          v-decorator="[
+            'idCard',
+            { rules: [{ required: true, message: '身份证号不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="参加工作时间">
+        <a-input
+          placeholder="请输入参加工作时间"
+          v-decorator="[
+            'workDate',
+            { rules: [{ required: true, message: '参加工作时间不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="医师类别">
+        <a-input
+          placeholder="请输入医师类别"
+          v-decorator="[
+            'yishiLb',
+            { rules: [{ required: true, message: '医师类别不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="医师级别">
+        <a-input
+          placeholder="请输入医师级别"
+          v-decorator="[
+            'yishiJb',
+            { rules: [{ required: true, message: '医师级别不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="医师执业范围">
+        <a-input
+          placeholder="请输入医师执业范围"
+          v-decorator="[
+            'yishiZhiyefanwei',
+            { rules: [{ required: true, message: '医师执业范围不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="医师资格证书编号">
+        <a-input
+          placeholder="请输入医师资格证书编号"
+          v-decorator="[
+            'yishiZgzsbianhao',
+            {
+              rules: [{ required: true, message: '医师资格证书编号不能为空' }],
+            },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="医师执业证书编码">
+        <a-input
+          placeholder="请输入医师执业证书编码"
+          v-decorator="[
+            'yishiZiyebianhao',
+            {
+              rules: [{ required: true, message: '医师执业证书编码不能为空' }],
+            },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="人事子范围">
+        <a-input
+          placeholder="请输入人事子范围"
+          v-decorator="[
+            'renshizifw',
+            { rules: [{ required: true, message: '人事子范围不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="人事子范围分类">
+        <a-input
+          placeholder="请输入人事子范围分类"
+          v-decorator="[
+            'renshizfenlei',
+            { rules: [{ required: true, message: '人事子范围分类不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="是否授权">
+        <a-input
+          placeholder="请输入是否授权"
+          v-decorator="[
+            'isAuthority',
+            { rules: [{ required: true, message: '是否授权不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="附件">
+        <a-input
+          placeholder="请输入附件"
+          v-decorator="[
+            'fileId',
+            { rules: [{ required: true, message: '附件不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="附件地址">
+        <a-input
+          placeholder="请输入附件地址"
+          v-decorator="[
+            'fileUrl',
+            { rules: [{ required: true, message: '附件地址不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="转让效益">
+        <a-input
+          placeholder="请输入转让效益"
+          v-decorator="[
+            'patentGood',
+            { rules: [{ required: true, message: '转让效益不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="本人排名">
+        <a-input
+          placeholder="请输入本人排名"
+          v-decorator="[
+            'patentRanknum',
+            { rules: [{ required: true, message: '本人排名不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="审核意见">
+        <a-input
+          placeholder="请输入审核意见"
+          v-decorator="[
+            'auditSuggestion',
+            { rules: [{ required: true, message: '审核意见不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="附件（临床）">
+        <a-input
+          placeholder="请输入附件（临床）"
+          v-decorator="[
+            'fileIdLc',
+            { rules: [{ required: true, message: '附件（临床）不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="附件地址（临床）">
+        <a-input
+          placeholder="请输入附件地址（临床）"
+          v-decorator="[
+            'fileUrlLc',
+            {
+              rules: [{ required: true, message: '附件地址（临床）不能为空' }],
             },
           ]"
         />
@@ -319,33 +579,6 @@
             {
               rules: [{ required: true, message: '通过中级考核时间不能为空' }],
             },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="政治面貌">
-        <a-input
-          placeholder="请输入政治面貌"
-          v-decorator="[
-            'politicalStatus',
-            { rules: [{ required: true, message: '政治面貌不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="职员职级">
-        <a-input
-          placeholder="请输入职员职级"
-          v-decorator="[
-            'staffGrade',
-            { rules: [{ required: true, message: '职员职级不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="身份证号">
-        <a-input
-          placeholder="请输入身份证号"
-          v-decorator="[
-            'idCard',
-            { rules: [{ required: true, message: '身份证号不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -411,12 +644,12 @@
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="">
+      <a-form-item v-bind="formItemLayout" label="年度">
         <a-input
-          placeholder="请输入"
+          placeholder="请输入年度"
           v-decorator="[
             'dcaYear',
-            { rules: [{ required: true, message: '不能为空' }] },
+            { rules: [{ required: true, message: '年度不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -471,39 +704,64 @@ export default {
       let fields = [
         "bqName",
         "userType",
+        "userTypeName",
         "deptId",
         "telephone",
         "deptName",
         "positionName",
         "npPositionName",
+        "rylx",
+        "yggh",
+        "ghHk",
         "sexName",
+        "qualifyNo",
         "birthday",
         "schoolDate",
         "zyjsgw",
+        "bianhaoJx",
         "zyjsgwLc",
         "xcszyjzc",
         "appointedDate",
-        "patentRanknum",
-        "isAuthority",
-        "fileId",
-        "isZhuanrang",
-        "fileUrl",
-        "patentGood",
-        "auditSuggestion",
         "appointedDateLc",
-        "fileIdLc",
-        "fileUrlLc",
+        "zizu",
         "yuangongzu",
         "xrgwjb",
         "xrgwjbprsj",
+        "zhicheng",
+        "zyjsNp",
+        "zyjsDateNp",
+        "zyjsNpjx",
+        "zyjsDateNpjx",
+        "edu",
+        "eduSchool",
+        "guoji",
+        "minzu",
+        "jiguan",
+        "politicalStatus",
+        "bianhaoLc",
+        "xingzhengjiebie",
+        "idCard",
+        "workDate",
+        "yishiLb",
+        "yishiJb",
+        "yishiZhiyefanwei",
+        "yishiZgzsbianhao",
+        "yishiZiyebianhao",
+        "renshizifw",
+        "renshizfenlei",
+        "isAuthority",
+        "fileId",
+        "fileUrl",
+        "patentGood",
+        "patentRanknum",
+        "auditSuggestion",
+        "fileIdLc",
+        "fileUrlLc",
         "djrdzzw",
         "isChujikh",
         "chujikhDate",
         "isZhongjikh",
         "zhongjikhDate",
-        "politicalStatus",
-        "staffGrade",
-        "idCard",
         "staffDate",
         "pictureId",
         "pictureUrl",
