@@ -12,7 +12,7 @@ moment.locale('zh-cn')
 // 统一配置
 let FEBS_REQUEST = axios.create({
  // baseURL: 'https://whuhhrmapi.asclepius.whxh.com.cn/',
-  baseURL: 'http://192.168.64.115:1099/',
+  baseURL: 'http://localhost:1099/',
   responseType: 'json',
   validateStatus(status) {
     // 200 外的状态码都认定为失败

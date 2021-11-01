@@ -1,85 +1,68 @@
 <template>
   <a-drawer
-    title="修改"
+    :title="`排班：${startDate}至${endDate}`"
     :maskClosable="false"
-    width="650"
+    width="90%"
     placement="right"
     :closable="false"
     @close="onClose"
     :visible="editVisiable"
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
-    <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="科室">
-        <a-input
-          placeholder="请输入科室"
-          v-decorator="[
-            'deptName',
-            { rules: [{ required: true, message: '科室不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="院区">
-        <a-input
-          placeholder="请输入院区"
-          v-decorator="[
-            'yqName',
-            { rules: [{ required: true, message: '院区不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="科室ID">
-        <a-input
-          placeholder="请输入科室ID"
-          v-decorator="[
-            'deptId',
-            { rules: [{ required: true, message: '科室ID不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="院区ID">
-        <a-input
-          placeholder="请输入院区ID"
-          v-decorator="[
-            'yqId',
-            { rules: [{ required: true, message: '院区ID不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="开始日期">
-        <a-date-picker
-          v-decorator="[
-            'startDate',
-            { rules: [{ required: true, message: '开始日期不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="结束日期">
-        <a-date-picker
-          v-decorator="[
-            'endDate',
-            { rules: [{ required: true, message: '结束日期不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="备注">
-        <a-input
-          placeholder="请输入备注"
-          v-decorator="[
-            'note',
-            { rules: [{ required: true, message: '备注不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="审核时间">
-        <a-date-picker
-          v-decorator="[
-            'auditDate',
-            { rules: [{ required: true, message: '审核时间不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-    </a-form>
+    <a-table
+      ref="TableInfo"
+      :columns="columns"
+      :rowKey="(record) => record.id"
+      :dataSource="dataSource"
+      :loading="loading"
+      :bordered="bordered"
+      :pagination="false"
+      :scroll="{ x: 900 }"
+    >
+      <template
+        v-for="col in listAuditInfo"
+        :slot="col.filedName"
+        slot-scope="text, record"
+      >
+        <div :key="col.filedName">
+          <!-- <div :key="`B${col.banciId}_${countWeek}`"> -->
+          <!-- <template slot="user" slot-scope="text, record"> -->
+          <a-popover title="单元格数据处理">
+            <template slot="content">
+              <a-button
+                @click="handleCopy(record, col.filedName)"
+                :loading="loading"
+                >复制</a-button
+              >
+              <a-button @click="handlePaste(record, col)" :loading="loading"
+                >粘贴</a-button
+              >
+            </template>
+            <a-select
+              style="width: 100%"
+              mode="multiple"
+              v-if="col.isShow || record.state != 1"
+              :default-value="record[col.filedName]"
+              :filter-option="false"
+              @search="fetchUser"
+              placeholder="请选择排班人员"
+              @change="
+                (e, f) => handleSelectChange(e, f, record, col.filedName)
+              "
+            >
+              <a-select-option
+                v-for="item in handleUser(record)"
+                :key="item.userAccount"
+                :value="item.userAccount"
+              >
+                {{ item.userAccount + "_" + item.userAccountName }}
+              </a-select-option>
+            </a-select>
+          </a-popover>
+        </div>
+        <!-- </template> -->
+      </template>
+    </a-table>
     <div class="drawer-bootom-button">
       <a-popconfirm
         title="确定放弃编辑？"
@@ -113,66 +96,275 @@ export default {
     return {
       loading: false,
       formItemLayout,
+      dataSource: [],
       form: this.$form.createForm(this),
       sdlBSchedule: {},
+      columns: [
+        {
+          title: "值班类型",
+          dataIndex: "zizhiName",
+          width: 100,
+        },
+        {
+          title: "院区",
+          dataIndex: "yqName",
+          width: 100,
+        },
+      ],
+      listAuditInfo: [], // 当前用户包含的审核数据
+      colsCustom: [],
+      bordered: true,
+      userData: [],
+      optionData: [],
+      copyData: [], //复制的数据
+      startDate: "",
+      endDate: "",
+      startDate_hide: "",
+      baseId: ''
     };
   },
   methods: {
     reset() {
       this.loading = false;
       this.form.resetFields();
+      this.dataSource = [];
+      this.userData = [];
+      this.copyData = [];
+      this.optionData = [];
+      this.colsCustom = [];
+      this.listAuditInfo = [];
+      this.startDate='';
+      this.endDate= "";
+      this.startDate_hide="";
+      this.fetchBancibaseId='';
+       this.columns = [
+        {
+          title: "值班类型",
+          dataIndex: "zizhiName",
+          width: 120,
+        },
+        {
+          title: "病区",
+          dataIndex: "bqName",
+          width: 120,
+        },
+      ];
     },
     onClose() {
       this.reset();
       this.$emit("close");
     },
+   
+    handleUser(record){
+       var zizhiIds= record.subIds;
+       console.info(record)
+       var optionData= this.optionData.filter(p=>zizhiIds.indexOf(p.userType)>=0)
+     //  console.info(optionData)
+       return optionData;
+    },
     setFormValues({ ...sdlBSchedule }) {
-      let fields = [
-        "deptName",
-        "yqName",
-        "deptId",
-        "yqId",
-        "startDate",
-        "endDate",
-        "note",
-        "auditDate",
-      ];
-      let fieldDates = ["startDate", "endDate", "auditDate"];
-      Object.keys(sdlBSchedule).forEach((key) => {
-        if (fields.indexOf(key) !== -1) {
-          this.form.getFieldDecorator(key);
-          let obj = {};
-          if (fieldDates.indexOf(key) !== -1) {
-            if (sdlBSchedule[key] !== "") {
-              obj[key] = moment(sdlBSchedule[key]);
-            } else {
-              obj[key] = "";
-            }
-          } else {
-            obj[key] = sdlBSchedule[key];
-          }
-          this.form.setFieldsValue(obj);
-        }
+      this.startDate = moment(sdlBSchedule.startDate).format("YYYY-MM-DD");
+      this.startDate_hide = sdlBSchedule.startDate;
+      this.endDate = moment(sdlBSchedule.endDate).format("YYYY-MM-DD");
+      this.baseId =sdlBSchedule.id
+    },
+    fetchUser(value) {
+      this.optionData = [];
+      if (value == " ") {
+        this.optionData = this.userData;
+        return;
+      }
+      console.info(value);
+
+      const data = this.userData;
+      const options = data.filter(function (item, index, array) {
+        return item.userAccountName.indexOf(value) >= 0;
       });
-      this.sdlBSchedule.id = sdlBSchedule.id;
+      //  console.info(options);
+      this.optionData = options;
+    },
+    handleSelectChange(value, option, record, filedName) {
+      console.info(filedName);
+      record[filedName] = value;
+    },
+    handleCopy(record, filedName) {
+      console.info(record[filedName]);
+      this.copyData = record[filedName];
+    },
+    handlePaste(record, col) {
+      if (this.copyData == "") {
+        this.$message.success("复制数据为空，请重新复制");
+      } else {
+        let userAccounts= this.userData.filter(f=>record.subIds.indexOf(f.userType)>=0).map(p=>p.userAccount)
+        let intersection =this.copyData.filter(t=> userAccounts.indexOf(t)>=0) //取合集
+        // this.listAuditInfo =[]
+        //防止行和列刷新  这样同时定位到这个组件 进行刷新
+        record[col.filedName] = intersection;
+        col.isShow = false;
+        record.state = 1;
+        setTimeout(() => {
+          record.state = 0;
+          col.isShow = true;
+        }, 300);
+      }
+
+      // setTimeout(()=>{
+      //   this.listAuditInfo= this.colsCustom
+      // },300)
+      // const data= this.dataSource
+      // this.dataSource=[]
+      // setTimeout(()=>{
+      //   this.dataSource= data
+      // },300)
+    },
+    getWeekName(n) {
+      if (n == 1) {
+        return "周一";
+      }
+      if (n == 2) {
+        return "周二";
+      }
+      if (n == 3) {
+        return "周三";
+      }
+      if (n == 4) {
+        return "周四";
+      }
+      if (n == 5) {
+        return "周五";
+      }
+      if (n == 6) {
+        return "周六";
+      }
+      if (n == 7) {
+        return "周日";
+      }
     },
     handleSubmit() {
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          let sdlBSchedule = this.form.getFieldsValue();
-          sdlBSchedule.id = this.sdlBSchedule.id;
-          this.$put("sdlBSchedule", {
-            ...sdlBSchedule,
-          })
-            .then(() => {
-              this.reset();
-              this.$emit("success");
-            })
-            .catch(() => {
-              this.loading = false;
-            });
-        }
+      let dynamicData = [];
+      const data = this.dataSource;
+      const cols = this.listAuditInfo;
+      data.forEach((record) => {
+        cols.forEach((element) => {
+           var filedName = element.filedName;
+          if (record[filedName]!=null && record[filedName] != "") {
+            var weekIndex = parseInt(
+              filedName.substring(filedName.indexOf("_") + 1)
+            );
+            var obj = {
+              scheduleDate: moment(this.startDate_hide)
+                .add(weekIndex - 1, 'days')
+                .format("YYYY-MM-DD"),
+              banciId: filedName
+                .substring(0, filedName.indexOf("_"))
+                .replace("B", ""),
+              accountId: record[filedName],
+              bqId: record.bqId,
+              deptId: record.deptId,
+              bqName: record.bqName,
+              deptName: record.deptName,
+              zizhiId: record.zizhiId,
+              zizhiName: record.zizhiName,
+              baseId: this.baseId
+            };
+            dynamicData.push(obj);
+          }
+        });
       });
+      let jsonStr = JSON.stringify(dynamicData);
+      this.$post("sdlBScheduleD/add", {
+        jsonStr: jsonStr,
+        startDate: this.startDate,
+        endDate: this.endDate
+      })
+        .then(() => {
+          this.reset();
+          this.$emit("success");
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    fetchBanci() {
+      this.$get("sdlBScheduleD/banci", {}).then((r) => {
+        //.info(r.data)
+        // this.listAuditInfo = r.data;
+        const cols = [];
+        for (var i = 1; i < 8; i++) {
+          let clo = [];
+          r.data.forEach((element) => {
+            cols.push({
+              filedName: "B" + element.banciId + "_" + i,
+              isShow: true,
+            });
+            clo.push({
+              title: element.banciName,
+              dataIndex: "B" + element.banciId + "_" + i,
+              width: 250,
+              scopedSlots: { customRender: "B" + element.banciId + "_" + i },
+            });
+          });
+          this.columns.push({
+            title: this.getWeekName(i),
+            children: clo,
+          });
+        }
+        this.colsCustom = cols;
+        this.listAuditInfo = cols;
+        //  console.info(this.listAuditInfo)
+        // this.columns.push({
+        //   title: "操作",
+        //   dataIndex: "action",
+        //   width: 130,
+        //   scopedSlots: { customRender: "action" },
+        // });
+      });
+    },
+    fetch() {
+      this.$get("sdlBScheduleD/zizhi", {baseId: this.baseId}).then((r) => {
+        let data = r.data;
+        data.forEach(element => {
+          let auditList = element.dynamicData
+          //  console.info(auditList)
+          if (auditList == null || auditList.length == 0) {
+            
+          }
+          else {
+            
+            auditList.forEach(element2 => {
+              var week =moment(element2.scheduleDate).day()
+              if(week==0) {
+                week =week +7
+              }
+              element['B'+element2.banciId+"_"+week] = JSON.parse(element2.accountId)
+             // element.auditNote = element2.auditNote == 'null' ? "" : element2.auditNote
+            });
+          }
+
+        });
+        this.dataSource = data;
+      });
+    },
+    fetchDept() {
+      this.$get("sdlBUser/dept", {
+        pageSize: 10000,
+        page: 1,
+      }).then((r) => {
+        let data = r.data;
+        this.userData = data.rows;
+        this.optionData = data.rows;
+      });
+    },
+  },
+  watch: {
+    editVisiable() {
+      if (this.editVisiable) {
+        this.fetchBanci();
+        setTimeout(() => {
+          this.fetch();
+        }, 200);
+        this.fetchDept();
+      }
     },
   },
 };

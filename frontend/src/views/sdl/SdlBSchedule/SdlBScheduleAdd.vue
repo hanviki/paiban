@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="新增"
+    title="新增考勤周"
     :maskClosable="false"
     width="650"
     placement="right"
@@ -10,74 +10,19 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="科室">
-        <a-input
-          placeholder="请输入科室"
-          v-decorator="[
-            'deptName',
-            { rules: [{ required: true, message: '科室不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="院区">
-        <a-input
-          placeholder="请输入院区"
-          v-decorator="[
-            'yqName',
-            { rules: [{ required: true, message: '院区不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="科室ID">
-        <a-input
-          placeholder="请输入科室ID"
-          v-decorator="[
-            'deptId',
-            { rules: [{ required: true, message: '科室ID不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="院区ID">
-        <a-input
-          placeholder="请输入院区ID"
-          v-decorator="[
-            'yqId',
-            { rules: [{ required: true, message: '院区ID不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="开始日期">
-        <a-date-picker
-          v-decorator="[
-            'startDate',
-            { rules: [{ required: true, message: '开始日期不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="结束日期">
-        <a-date-picker
-          v-decorator="[
-            'endDate',
-            { rules: [{ required: true, message: '结束日期不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="备注">
-        <a-input
-          placeholder="请输入备注"
-          v-decorator="[
+    
+      <a-form-item v-bind="formItemLayout" label="考勤周">
+        <a-week-picker 
+        placeholder="请选择考勤周"
+         v-decorator="[
             'note',
-            { rules: [{ required: true, message: '备注不能为空' }] },
+            { rules: [{ required: true, message: '考勤周不能为空' }] },
           ]"
-        />
+        @change="handleWeekChange">
+        </a-week-picker>
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="审核时间">
-        <a-date-picker
-          v-decorator="[
-            'auditDate',
-            { rules: [{ required: true, message: '审核时间不能为空' }] },
-          ]"
-        />
+      <a-form-item v-bind="formItemLayout" label="已选择日期">
+        {{startDate}}-{{endDate}}
       </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
@@ -96,8 +41,9 @@
   </a-drawer>
 </template>
 <script>
+import moment from 'moment'
 const formItemLayout = {
-  labelCol: { span: 3 },
+  labelCol: { span: 6 },
   wrapperCol: { span: 18 },
 };
 export default {
@@ -111,14 +57,23 @@ export default {
     return {
       loading: false,
       formItemLayout,
+      dateFormat: "YYYY-MM",
       form: this.$form.createForm(this),
       sdlBSchedule: {},
+      startDate: '',
+      endDate: '',
     };
   },
   methods: {
+    handleWeekChange(weekData ) {
+　　this.startDate = moment(weekData).day(1).format('YYYY/MM/DD (dddd)'); // 周一日期
+　　this.endDate = moment(weekData).day(7).format('YYYY/MM/DD (dddd)'); // 周日日期
+},
     reset() {
       this.loading = false;
       this.sdlBSchedule = {};
+      this.startDate='';
+      this.endDate='';
       this.form.resetFields();
     },
     onClose() {
@@ -128,9 +83,10 @@ export default {
     handleSubmit() {
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.setFields();
+         // this.setFields();
           this.$post("sdlBSchedule", {
-            ...this.sdlBSchedule,
+            startDate: this.startDate,
+            endDate: this.endDate
           })
             .then(() => {
               this.reset();
@@ -144,14 +100,8 @@ export default {
     },
     setFields() {
       let values = this.form.getFieldsValue([
-        "deptName",
-        "yqName",
-        "deptId",
-        "yqId",
         "startDate",
         "endDate",
-        "note",
-        "auditDate",
       ]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {

@@ -100,12 +100,17 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             tree.setCreateTime(dept.getCreateTime());
             tree.setModifyTime(dept.getModifyTime());
             tree.setOrder(dept.getOrderNum());
+            tree.setType(deptTypeName(dept.getDeptType()));
             tree.setTitle(tree.getText());
             tree.setValue(tree.getId());
             trees.add(tree);
         });
     }
+ private  String deptTypeName(int type){
+        if(type==0) return "医师";
+        return  "医技";
 
+ }
     private void delete(List<String> deptIds) {
         removeByIds(deptIds);
 

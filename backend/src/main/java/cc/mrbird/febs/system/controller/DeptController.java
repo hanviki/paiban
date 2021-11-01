@@ -42,6 +42,16 @@ public class DeptController extends BaseController {
     @Autowired
     private DeptService deptService;
 
+    @GetMapping("list")
+    public List<Dept> deptList2(QueryRequest request, Dept dept) {
+        return this.deptService.findDepts( dept,request);
+    }
+    @GetMapping("listown")
+    public List<Dept> deptList3(QueryRequest request, Dept dept) {
+        User currentUser= FebsUtil.getCurrentUser();
+        dept.setDeptId(currentUser.getDeptId());
+        return this.deptService.findDepts( dept,request);
+    }
     @GetMapping
     public Map<String, Object> deptList(QueryRequest request, Dept dept) {
         return this.deptService.findDepts(request, dept);

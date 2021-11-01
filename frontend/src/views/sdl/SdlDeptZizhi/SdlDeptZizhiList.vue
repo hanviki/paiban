@@ -3,7 +3,13 @@
     <div :class="advanced ? 'search' : null">
       <a-form layout="horizontal">
         <a-row>
-          <div :class="advanced ? null : 'fold'"></div>
+         <div>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="科室名称" v-bind="formItemLayout">
+                <a-input v-model="queryParams.deptName" />
+              </a-form-item>
+            </a-col>
+          </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
@@ -139,19 +145,32 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "资质id",
-          dataIndex: "banciId",
+          title: "值班类型",
+          dataIndex: "zizhiName",
           width: 100,
         },
         {
-          title: "部门id",
-          dataIndex: "deptId",
+          title: "部门名称",
+          dataIndex: "deptName",
           width: 100,
         },
         {
           title: "是否到病区",
-          dataIndex: "isBq",
+          dataIndex: "isBq2",
           width: 100,
+          customRender: (text,row) => {
+            switch (row.isBq) {
+              case true:
+                return "是";
+                break;
+              case false:
+                return "否";
+                break;
+              default:
+                return "";
+                break;
+            }
+          },
         },
         {
           title: "操作",

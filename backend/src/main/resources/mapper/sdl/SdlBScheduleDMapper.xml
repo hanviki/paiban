@@ -20,8 +20,8 @@
                     <result column="banci" property="banci"/>
                     <result column="account_id" property="accountId"/>
                     <result column="account_name" property="accountName"/>
-                    <result column="rylx_id" property="rylxId"/>
-                    <result column="rylx_name" property="rylxName"/>
+                    <result column="zizhi_id" property="zizhiId"/>
+                    <result column="zizhi_name" property="zizhiName"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -32,7 +32,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, rylx_id, rylx_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateSdlBScheduleD" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleD">
         update sdl_b_schedule_d
@@ -52,8 +52,8 @@
 <if test="banci != null">banci=#{banci},</if>
 <if test="accountId != null">account_id=#{accountId},</if>
 <if test="accountName != null">account_name=#{accountName},</if>
-<if test="rylxId != null">rylx_id=#{rylxId},</if>
-<if test="rylxName != null">rylx_name=#{rylxName},</if>
+<if test="zizhiId != null">zizhi_id=#{zizhiId},</if>
+<if test="zizhiName != null">zizhi_name=#{zizhiName},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -88,8 +88,8 @@
             <if test="sdlBScheduleD.banci != null and sdlBScheduleD.banci != ''"> and  sdl_b_schedule_d.banci like concat('%', #{ sdlBScheduleD.banci} ,'%')</if>
             <if test="sdlBScheduleD.accountId != null and sdlBScheduleD.accountId != ''"> and  sdl_b_schedule_d.account_id like concat('%', #{ sdlBScheduleD.accountId} ,'%')</if>
             <if test="sdlBScheduleD.accountName != null and sdlBScheduleD.accountName != ''"> and  sdl_b_schedule_d.account_name like concat('%', #{ sdlBScheduleD.accountName} ,'%')</if>
-        <if test="sdlBScheduleD.rylxId != null"> and  sdl_b_schedule_d.rylx_id =#{ sdlBScheduleD.rylxId} </if>
-        <if test="sdlBScheduleD.rylxName != null"> and  sdl_b_schedule_d.rylx_name =#{ sdlBScheduleD.rylxName} </if>
+        <if test="sdlBScheduleD.zizhiId != null"> and  sdl_b_schedule_d.zizhi_id =#{ sdlBScheduleD.zizhiId} </if>
+        <if test="sdlBScheduleD.zizhiName != null"> and  sdl_b_schedule_d.zizhi_name =#{ sdlBScheduleD.zizhiName} </if>
         <if test="sdlBScheduleD.state != null"> and  sdl_b_schedule_d.state =#{ sdlBScheduleD.state} </if>
         <if test="sdlBScheduleD.isDeletemark != null"> and  sdl_b_schedule_d.IS_DELETEMARK =#{ sdlBScheduleD.isDeletemark} </if>
         <if test="sdlBScheduleD.createTimeFrom!= null">
@@ -107,5 +107,35 @@
         <if test="sdlBScheduleD.createUserId != null"> and  sdl_b_schedule_d.CREATE_USER_ID =#{ sdlBScheduleD.createUserId} </if>
         <if test="sdlBScheduleD.modifyUserId != null"> and  sdl_b_schedule_d.MODIFY_USER_ID =#{ sdlBScheduleD.modifyUserId} </if>
 </select>
+
+    <select id="getPaiBanZizhi" resultType="cc.mrbird.febs.sdl.entity.SdlBScheduleD" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleD">
+        SELECT
+        UUID() id,
+        CASE
+
+        WHEN
+        A.is_bq = 1 THEN
+        C.DEPT_ID ELSE A.DEPT_ID
+        END bq_id,
+        CASE
+
+        WHEN A.is_bq = 1 THEN
+        C.DEPT_NAME ELSE A.DEPT_NAME
+        END bq_name,
+        A.zizhi_name,
+        A.zizhi_id,
+        A.dept_id,
+        A.dept_name,
+        d.sub_ids
+        FROM
+        sdl_dept_zizhi A
+        INNER JOIN sdl_d_zizhi d on A.zizhi_id=d.id
+        LEFT JOIN t_dept C ON A.dept_id = C.PARENT_ID
+        AND A.is_bq = 1
+        WHERE
+        1 = 1
+        <if test="sdlBScheduleD.deptId != null and sdlBScheduleD.deptId != ''"> and  A.dept_id= #{ sdlBScheduleD.deptId }</if>
+         order by A.zizhi_id
+    </select>
 
 </mapper>

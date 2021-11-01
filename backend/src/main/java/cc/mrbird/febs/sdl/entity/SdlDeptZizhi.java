@@ -37,7 +37,7 @@ private static final long serialVersionUID=1L;
      */
         
         @ExcelField(value ="资质id")
-    private Long banciId;
+    private int zizhiId;
 
     /**
      * 部门id
@@ -47,11 +47,27 @@ private static final long serialVersionUID=1L;
     private String deptId;
 
     /**
+     * 部门名称
+     */
+
+    @ExcelField(value ="部门名称")
+    private String deptName;
+
+    /**
+     * 值班类型
+     */
+
+    @ExcelField(value ="值班类型")
+    private String zizhiName;
+
+    /**
      * 是否到病区
      */
         
         @ExcelField(value ="是否到病区")
     private Boolean isBq;
+
+
 
 
 

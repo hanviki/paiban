@@ -16,6 +16,20 @@
                     { max: 20, message: '长度不能超过20个字符'}
                   ]}]"/>
       </a-form-item>
+       <a-form-item label='科室类型' v-bind="formItemLayout">
+        <a-select
+        v-decorator="['deptType',
+                   {rules: [
+                    { required: true, message: '科室类型不能为空'}
+                  ]}]">
+          <a-select-option :value="0">
+             医师
+          </a-select-option>
+           <a-select-option :value="1">
+             医技
+          </a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item label='部门排序' v-bind="formItemLayout">
         <a-input-number v-decorator="['orderNum']" style="width: 100%"/>
       </a-form-item>
@@ -90,6 +104,8 @@ export default {
       this.form.setFieldsValue({'deptName': dept.text})
       this.form.getFieldDecorator('orderNum')
       this.form.setFieldsValue({'orderNum': dept.order})
+      this.form.getFieldDecorator('deptType')
+      this.form.setFieldsValue({'deptType': dept.deptType})
       if (dept.parentId !== '0') {
         this.defaultCheckedKeys.push(dept.parentId)
         this.checkedKeys = this.defaultCheckedKeys

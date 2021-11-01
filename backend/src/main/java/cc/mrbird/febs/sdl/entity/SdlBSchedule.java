@@ -2,6 +2,8 @@ package cc.mrbird.febs.sdl.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 
@@ -19,7 +21,7 @@ import cc.mrbird.febs.common.converter.*;
  * </p>
  *
  * @author viki
- * @since 2021-10-13
+ * @since 2021-10-27
  */
 
 @Excel("sdl_b_schedule")
@@ -134,6 +136,27 @@ private static final long serialVersionUID=1L;
     private Integer state;
 
     /**
+     * 是否做过补登
+     */
+        
+        @ExcelField(value ="是否做过补登")
+    private Integer stateBudeng;
+
+    /**
+     * 申请状态
+     */
+        
+        @ExcelField(value ="申请状态")
+    private Integer stateApply;
+
+    /**
+     * 申请状态（补登后删除）
+     */
+        
+        @ExcelField(value ="申请状态（补登后删除）")
+    private Integer stateApplyFlag;
+
+    /**
      * 是否删除
      */
     @TableField("IS_DELETEMARK")
@@ -167,7 +190,7 @@ private static final long serialVersionUID=1L;
     @TableField("CREATE_USER_ID")
         
         @ExcelField(value ="创建人")
-    private long createUserId;
+    private Long createUserId;
 
     /**
      * 修改人
@@ -175,7 +198,17 @@ private static final long serialVersionUID=1L;
     @TableField("MODIFY_USER_ID")
         
         @ExcelField(value ="修改人")
-    private long modifyUserId;
+    private Long modifyUserId;
+
+    private transient boolean isExpired;
+    public boolean getIsExpired(){
+        if(startDate.before(DateUtil.beginOfWeek(new Date()))){
+           return  true;
+        }
+        else{
+            return  false;
+        }
+    }
 
 
 
@@ -206,6 +239,12 @@ private static final long serialVersionUID=1L;
     public static final String AUDIT_DATE ="audit_date" ;
 
     public static final String STATE ="state" ;
+
+    public static final String STATE_BUDENG ="state_budeng" ;
+
+    public static final String STATE_APPLY ="state_apply" ;
+
+    public static final String STATE_APPLY_FLAG ="state_apply_flag" ;
 
     public static final String IS_DELETEMARK ="IS_DELETEMARK" ;
 

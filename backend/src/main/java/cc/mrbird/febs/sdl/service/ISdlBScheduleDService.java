@@ -1,5 +1,6 @@
 package cc.mrbird.febs.sdl.service;
 
+import cc.mrbird.febs.sdl.entity.SdlBSchedule;
 import cc.mrbird.febs.sdl.entity.SdlBScheduleD;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -29,4 +30,7 @@ public interface ISdlBScheduleDService extends IService<SdlBScheduleD> {
         void deleteSdlBScheduleDs(String[]Ids);
 
 
+        List<SdlBScheduleD> getPaiBanZizhi(SdlBScheduleD sdlBScheduleD);
+
+        void deleteByDeptAndDate(String deptId,String startDate,String endDate);
         }

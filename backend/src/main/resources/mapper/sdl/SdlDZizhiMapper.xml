@@ -6,6 +6,7 @@
         <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDZizhi">
                     <id column="id" property="id"/>
                     <result column="mudule_name" property="muduleName"/>
+            <result column="sub_ids" property="subIds"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -17,13 +18,14 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, mudule_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, parent_id
+        id, mudule_name, state, sub_ids, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, parent_id
     </sql>
     <update id="updateSdlDZizhi" parameterType="cc.mrbird.febs.sdl.entity.SdlDZizhi">
         update sdl_d_zizhi
         <trim prefix="set" suffixOverrides=",">
 <if test="muduleName != null">mudule_name=#{muduleName},</if>
 <if test="state != null">state=#{state},</if>
+            <if test="subIds != null">sub_ids=#{subIds},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
 <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>

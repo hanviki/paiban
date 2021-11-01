@@ -18,6 +18,9 @@
                     <result column="audit_suggestion" property="auditSuggestion"/>
                     <result column="audit_date" property="auditDate"/>
                     <result column="state" property="state"/>
+                    <result column="state_budeng" property="stateBudeng"/>
+                    <result column="state_apply" property="stateApply"/>
+                    <result column="state_apply_flag" property="stateApplyFlag"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
                     <result column="MODIFY_TIME" property="modifyTime"/>
@@ -27,7 +30,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, user_no, name, user_name, dept_name, yq_name, dept_id, yq_id, start_date, end_date, note, audit_suggestion, audit_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, user_no, name, user_name, dept_name, yq_name, dept_id, yq_id, start_date, end_date, note, audit_suggestion, audit_date, state, state_budeng, state_apply, state_apply_flag, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateSdlBSchedule" parameterType="cc.mrbird.febs.sdl.entity.SdlBSchedule">
         update sdl_b_schedule
@@ -45,6 +48,9 @@
 <if test="auditSuggestion != null">audit_suggestion=#{auditSuggestion},</if>
 <if test="auditDate != null">audit_date=#{auditDate},</if>
 <if test="state != null">state=#{state},</if>
+<if test="stateBudeng != null">state_budeng=#{stateBudeng},</if>
+<if test="stateApply != null">state_apply=#{stateApply},</if>
+<if test="stateApplyFlag != null">state_apply_flag=#{stateApplyFlag},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
 <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
@@ -86,6 +92,9 @@
             AND  sdl_b_schedule.audit_date <![CDATA[ <= ]]>  #{sdlBSchedule.auditDateTo}
         </if>
         <if test="sdlBSchedule.state != null"> and  sdl_b_schedule.state =#{ sdlBSchedule.state} </if>
+        <if test="sdlBSchedule.stateBudeng != null"> and  sdl_b_schedule.state_budeng =#{ sdlBSchedule.stateBudeng} </if>
+        <if test="sdlBSchedule.stateApply != null"> and  sdl_b_schedule.state_apply =#{ sdlBSchedule.stateApply} </if>
+        <if test="sdlBSchedule.stateApplyFlag != null"> and  sdl_b_schedule.state_apply_flag =#{ sdlBSchedule.stateApplyFlag} </if>
         <if test="sdlBSchedule.isDeletemark != null"> and  sdl_b_schedule.IS_DELETEMARK =#{ sdlBSchedule.isDeletemark} </if>
         <if test="sdlBSchedule.createTimeFrom!= null">
             AND sdl_b_schedule.CREATE_TIME <![CDATA[ >= ]]>  #{sdlBSchedule.createTimeFrom}

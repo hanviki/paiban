@@ -41,7 +41,10 @@ public class SdlDeptZizhiServiceImpl extends ServiceImpl<SdlDeptZizhiMapper, Sdl
 public IPage<SdlDeptZizhi> findSdlDeptZizhis(QueryRequest request, SdlDeptZizhi sdlDeptZizhi){
         try{
         LambdaQueryWrapper<SdlDeptZizhi> queryWrapper=new LambdaQueryWrapper<>();
-
+                if(StringUtils.isNotBlank(sdlDeptZizhi.getDeptName()))
+                {
+                        queryWrapper.like(SdlDeptZizhi::getDeptName,sdlDeptZizhi.getDeptName());
+                }
         Page<SdlDeptZizhi> page=new Page<>();
         SortUtil.handlePageSort(request,page,false);//true 是属性  false是数据库字段可两个
         return this.page(page,queryWrapper);

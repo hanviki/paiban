@@ -28,5 +28,7 @@ public interface ISdlBScheduleService extends IService<SdlBSchedule> {
 
         void deleteSdlBSchedules(String[]Ids);
 
+        void updateStateById(String id,int state);
+
 
         }

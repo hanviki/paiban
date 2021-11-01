@@ -4,43 +4,53 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-                <a-form-item label="排班周" v-bind="formItemLayout">
-              <a-week-picker 
-              :format="dateFormat"
-              style="width:100%"
-           @change="handleWeekChange" >
-        </a-week-picker>
-        </a-form-item>
+              <a-col :md="6" :sm="24">
+              <a-form-item v-bind="formItemLayout" label="排班科室">
+        <a-select
+         v-model="queryParams.deptId"
+        >
+          <a-select-option
+            v-for="d in deptData"
+            :key="d.deptId"
+            :value='`${d.deptId}`'
+          >
+            {{ d.deptName }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="排班状态" v-bind="formItemLayout">
-                 <a-select
-                    style="width: 100%"
-                    v-model="queryParams.state"
-                  >
-                 <a-select-option value="-1"> 全部 </a-select-option>
-                    <a-select-option value="0"> 未提交 </a-select-option>
-                    <a-select-option value="1"> 已提交 </a-select-option>
-                    <a-select-option value="2"> 审核未通过 </a-select-option>
-                    <a-select-option value="3"> 已审核 </a-select-option>
-                 </a-select>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="排班周" v-bind="formItemLayout">
+                <a-week-picker
+                  :format="dateFormat"
+                  style="width: 100%"
+                  @change="handleWeekChange"
+                >
+                </a-week-picker>
               </a-form-item>
             </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="补登申请状态" v-bind="formItemLayout">
-                  <a-select
-                    style="width: 100%"
-                    v-model="queryParams.stateApply"
-                  >
+            <a-col :md="6" :sm="24">
+              <a-form-item label="排班状态" v-bind="formItemLayout">
+                <a-select style="width: 100%" v-model="queryParams.state">
                   <a-select-option value="-1"> 全部 </a-select-option>
-                    <a-select-option value="1"> 未发起申请 </a-select-option>
-                    <a-select-option value="2"> 申请待审核 </a-select-option>
-                    <a-select-option value="3"> 申请未通过 </a-select-option>
-                    <a-select-option value="4"> 申请已通过 </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
+                  <a-select-option value="0"> 未提交 </a-select-option>
+                  <a-select-option value="1"> 已提交 </a-select-option>
+                  <a-select-option value="2"> 审核未通过 </a-select-option>
+                  <a-select-option value="3"> 已审核 </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="补登申请状态" v-bind="formItemLayout">
+                <a-select style="width: 100%" v-model="queryParams.stateApply">
+                  <a-select-option value="-1"> 全部 </a-select-option>
+                  <a-select-option value="1"> 未发起申请 </a-select-option>
+                  <a-select-option value="2"> 申请待审核 </a-select-option>
+                  <a-select-option value="3"> 申请未通过 </a-select-option>
+                  <a-select-option value="4"> 申请已通过 </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -53,73 +63,58 @@
         </a-row>
       </a-form>
     </div>
-    <div>
-      <div class="operator">
-        <a-button
-          v-hasPermission="['sdlBSchedule:add']"
-          type="primary"
-          ghost
-          @click="add"
-          >新增</a-button
-        >
-        <a-button v-hasPermission="['sdlBSchedule:delete']" @click="batchDelete"
-          >删除</a-button
-        >
-        <span style="color:red;">更改当前周之前的排班数据，均需要发起申请，通过后方可编辑</span>
-      </div>
-      </div>
-      <!-- 表格区域 -->
-      <a-table
-        ref="TableInfo"
-        :columns="columns"
-        :rowKey="(record) => record.id"
-        :dataSource="dataSource"
-        :pagination="pagination"
-        :loading="loading"
-        :rowSelection="{
-          selectedRowKeys: selectedRowKeys,
-          onChange: onSelectChange,
-        }"
-        @change="handleTableChange"
-        :bordered="bordered"
-        :scroll="{ x: 900 }"
-      >
-        <template slot="remark" slot-scope="text, record">
-          <a-popover placement="topLeft">
-            <template slot="content">
-              <div style="max-width: 200px">{{ text }}</div>
-            </template>
-            <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
-          </a-popover>
-        </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-icon
-            v-if="getButtonState(record) == 1"
-            type="edit"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="edit(record)"
-            title="编辑"
-          ></a-icon>
-          <a-icon
-            v-if="getButtonState(record) == 2"
-            type="form"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="apply(record)"
-            title="提交申请"
-          ></a-icon>
-          <a-icon
-            v-if="getButtonState(record) == 3"
-            type="setting"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="apply(record)"
-            title="改登"
-          ></a-icon>
-        </template>
-      </a-table>
-  
+    <!-- 表格区域 -->
+    <a-table
+      ref="TableInfo"
+      :columns="columns"
+      :rowKey="(record) => record.id"
+      :dataSource="dataSource"
+      :pagination="pagination"
+      :loading="loading"
+      :rowSelection="{
+        selectedRowKeys: selectedRowKeys,
+        onChange: onSelectChange,
+      }"
+      @change="handleTableChange"
+      :bordered="bordered"
+      :scroll="{ x: 900 }"
+    >
+      <template slot="remark" slot-scope="text, record">
+        <a-popover placement="topLeft">
+          <template slot="content">
+            <div style="max-width: 200px">{{ text }}</div>
+          </template>
+          <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
+        </a-popover>
+      </template>
+      <template slot="operation" slot-scope="text, record">
+        <a-icon
+          v-if="getButtonState(record) == 1"
+          type="edit"
+          theme="twoTone"
+          twoToneColor="#4a9ff5"
+          @click="edit(record)"
+          title="编辑"
+        ></a-icon>
+        <a-icon
+          v-if="getButtonState(record) == 2"
+          type="form"
+          theme="twoTone"
+          twoToneColor="#4a9ff5"
+          @click="apply(record)"
+          title="提交申请"
+        ></a-icon>
+        <a-icon
+          v-if="getButtonState(record) == 3"
+          type="setting"
+          theme="twoTone"
+          twoToneColor="#4a9ff5"
+          @click="apply(record)"
+          title="改登"
+        ></a-icon>
+      </template>
+    </a-table>
+
     <!-- 新增字典 -->
     <sdlBSchedule-add
       @close="handleAddClose"
@@ -187,8 +182,8 @@ export default {
       dataSource: [],
       selectedRowKeys: [],
       sortedInfo: {
-        order: 'descend',
-        field: 'start_date'
+        order: "descend",
+        field: "start_date",
       },
       paginationInfo: null,
       formItemLayout,
@@ -209,6 +204,7 @@ export default {
       bordered: true,
       applyVisiable: false,
       editRcordId: "", //申请ID
+      deptData: []
     };
   },
   computed: {
@@ -273,7 +269,7 @@ export default {
               case 4:
                 return <a-tag color="#f50">已通过申请</a-tag>;
               case 0:
-                return '';
+                return "";
               default:
                 return text;
             }
@@ -301,6 +297,7 @@ export default {
   },
   mounted() {
     this.search();
+    this.fetchDept();
   },
   methods: {
     onSelectChange(selectedRowKeys) {
@@ -312,13 +309,14 @@ export default {
         this.queryParams.comments = "";
       }
     },
-    handleWeekChange(weekData ) {
-      console.info(weekData)
-      if(weekData==null){
-        this.queryParams.startDateFrom= ''
-      }
-      else {
-　　    this.queryParams.startDateFrom = moment(weekData).day(1).format('YYYY-MM-DD'); // 周一日期
+    handleWeekChange(weekData) {
+      console.info(weekData);
+      if (weekData == null) {
+        this.queryParams.startDateFrom = "";
+      } else {
+        this.queryParams.startDateFrom = moment(weekData)
+          .day(1)
+          .format("YYYY-MM-DD"); // 周一日期
       }
     },
     hideModal() {
@@ -444,12 +442,15 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      let queryParams = { ...this.queryParams }
-      if(queryParams.state==-1){
-          delete queryParams.state
+      let queryParams = { ...this.queryParams };
+      if(queryParams.deptId=="-1"){
+          delete queryParams.deptId;
       }
-       if(queryParams.stateApply==-1){
-          delete queryParams.stateApply
+      if (queryParams.state == -1) {
+        delete queryParams.state;
+      }
+      if (queryParams.stateApply == -1) {
+        delete queryParams.stateApply;
       }
       this.fetch({
         sortField: sortField,
@@ -481,6 +482,16 @@ export default {
         sortOrder: sorter.order,
         ...this.queryParams,
       });
+    },
+    fetchDept() {
+        this.$get("dept/list",{parentId: '0'}).then((res) => {
+            this.deptData=[]
+            this.deptData.push({
+                deptId:"-1",
+                deptName: '全部'
+            })
+          this.deptData.push(...res.data);
+        });
     },
     fetch(params = {}) {
       this.loading = true;

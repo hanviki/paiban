@@ -4,7 +4,10 @@ import cc.mrbird.febs.sdl.entity.SdlBScheduleD;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,9 @@ import org.apache.ibatis.annotations.Param;
 public interface SdlBScheduleDMapper extends BaseMapper<SdlBScheduleD> {
         void updateSdlBScheduleD(SdlBScheduleD sdlBScheduleD);
         IPage<SdlBScheduleD> findSdlBScheduleD(Page page, @Param("sdlBScheduleD") SdlBScheduleD sdlBScheduleD);
+
+        List<SdlBScheduleD> getPaiBanZizhi(@Param("sdlBScheduleD") SdlBScheduleD sdlBScheduleD);
+
+        @Delete(" delete from sdl_b_schedule_d where dept_id=#{deptId} and schedule_date>=#{startDate} and schedule_date<=#{endDate}")
+        void deleteByDeptAndDate(@Param("deptId") String  deptId,@Param("startDate") String  startDate,@Param("endDate") String  endDate);
         }

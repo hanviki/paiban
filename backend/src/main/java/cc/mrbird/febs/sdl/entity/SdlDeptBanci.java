@@ -46,6 +46,19 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="部门id")
     private String deptId;
 
+    /**
+     * 部门名称
+     */
+
+    @ExcelField(value ="部门名称")
+    private String deptName;
+
+    /**
+     * 值班类型
+     */
+
+    @ExcelField(value ="班次")
+    private String banciName;
 
 
     public static final String ID ="id" ;

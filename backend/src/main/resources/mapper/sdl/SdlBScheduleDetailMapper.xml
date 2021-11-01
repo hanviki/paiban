@@ -18,10 +18,10 @@
                     <result column="schedule_date" property="scheduleDate"/>
                     <result column="banci_id" property="banciId"/>
                     <result column="banci" property="banci"/>
-                    <result column="user_account" property="userAccount"/>
-                    <result column="user_account_name" property="userAccountName"/>
-                    <result column="rylx_id" property="rylxId"/>
-                    <result column="rylx_name" property="rylxName"/>
+                    <result column="account_id" property="accountId"/>
+                    <result column="account_name" property="accountName"/>
+                    <result column="zizhi_id" property="zizhiId"/>
+                    <result column="zizhi_name" property="zizhiName"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -32,7 +32,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, user_account, user_account_name, rylx_id, rylx_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateSdlBScheduleDetail" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
         update sdl_b_schedule_detail
@@ -50,10 +50,10 @@
 <if test="scheduleDate != null">schedule_date=#{scheduleDate},</if>
 <if test="banciId != null">banci_id=#{banciId},</if>
 <if test="banci != null">banci=#{banci},</if>
-<if test="userAccount != null">user_account=#{userAccount},</if>
-<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
-<if test="rylxId != null">rylx_id=#{rylxId},</if>
-<if test="rylxName != null">rylx_name=#{rylxName},</if>
+<if test="accountId != null">account_id=#{accountId},</if>
+<if test="accountName != null">account_name=#{accountName},</if>
+<if test="zizhiId != null">zizhi_id=#{zizhiId},</if>
+<if test="zizhiName != null">zizhi_name=#{zizhiName},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -86,10 +86,10 @@
         </if>
         <if test="sdlBScheduleDetail.banciId != null"> and  sdl_b_schedule_detail.banci_id =#{ sdlBScheduleDetail.banciId} </if>
             <if test="sdlBScheduleDetail.banci != null and sdlBScheduleDetail.banci != ''"> and  sdl_b_schedule_detail.banci like concat('%', #{ sdlBScheduleDetail.banci} ,'%')</if>
-            <if test="sdlBScheduleDetail.userAccount != null and sdlBScheduleDetail.userAccount != ''"> and  sdl_b_schedule_detail.user_account like concat('%', #{ sdlBScheduleDetail.userAccount} ,'%')</if>
-            <if test="sdlBScheduleDetail.userAccountName != null and sdlBScheduleDetail.userAccountName != ''"> and  sdl_b_schedule_detail.user_account_name like concat('%', #{ sdlBScheduleDetail.userAccountName} ,'%')</if>
-        <if test="sdlBScheduleDetail.rylxId != null"> and  sdl_b_schedule_detail.rylx_id =#{ sdlBScheduleDetail.rylxId} </if>
-        <if test="sdlBScheduleDetail.rylxName != null"> and  sdl_b_schedule_detail.rylx_name =#{ sdlBScheduleDetail.rylxName} </if>
+            <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''"> and  sdl_b_schedule_detail.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+            <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''"> and  sdl_b_schedule_detail.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')</if>
+        <if test="sdlBScheduleDetail.zizhiId != null"> and  sdl_b_schedule_detail.zizhi_id =#{ sdlBScheduleDetail.zizhiId} </if>
+        <if test="sdlBScheduleDetail.zizhiName != null"> and  sdl_b_schedule_detail.zizhi_name =#{ sdlBScheduleDetail.zizhiName} </if>
         <if test="sdlBScheduleDetail.state != null"> and  sdl_b_schedule_detail.state =#{ sdlBScheduleDetail.state} </if>
         <if test="sdlBScheduleDetail.isDeletemark != null"> and  sdl_b_schedule_detail.IS_DELETEMARK =#{ sdlBScheduleDetail.isDeletemark} </if>
         <if test="sdlBScheduleDetail.createTimeFrom!= null">

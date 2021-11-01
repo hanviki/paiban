@@ -104,6 +104,10 @@ export default {
       return [{
         title: '名称',
         dataIndex: 'text'
+      },
+      {
+        title: '科室类型',
+        dataIndex: 'type'
       }, {
         title: '排序',
         dataIndex: 'order'

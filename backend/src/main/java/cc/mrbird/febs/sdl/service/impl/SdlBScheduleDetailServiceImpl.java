@@ -46,9 +46,7 @@ public IPage<SdlBScheduleDetail> findSdlBScheduleDetails(QueryRequest request, S
                                 if (StringUtils.isNotBlank(sdlBScheduleDetail.getUserName())) {
                                 queryWrapper.like(SdlBScheduleDetail::getUserName, sdlBScheduleDetail.getUserName());
                                 }
-            if (StringUtils.isNotBlank(sdlBScheduleDetail.getUserAccount())) {
-                queryWrapper.and( p->p.eq(SdlBScheduleDetail::getUserAccount, sdlBScheduleDetail.getUserAccount()).or().like(SdlBScheduleDetail::getUserAccountName, sdlBScheduleDetail.getUserAccount()));
-            }
+
                                 if (sdlBScheduleDetail.getState()!=null) {
                                 queryWrapper.eq(SdlBScheduleDetail::getState, sdlBScheduleDetail.getState());
                                 }

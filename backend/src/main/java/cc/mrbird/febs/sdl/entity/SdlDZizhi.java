@@ -42,6 +42,13 @@ private static final long serialVersionUID=1L;
     private String muduleName;
 
     /**
+     * 包含资质
+     */
+
+    @ExcelField(value ="包含资质")
+    private String subIds;
+
+    /**
      * 状态
      */
         
@@ -106,6 +113,8 @@ private static final long serialVersionUID=1L;
     public static final String MUDULE_NAME ="mudule_name" ;
 
     public static final String STATE ="state" ;
+
+    public static final String SUB_IDS ="subIds" ;
 
     public static final String IS_DELETEMARK ="IS_DELETEMARK" ;
 

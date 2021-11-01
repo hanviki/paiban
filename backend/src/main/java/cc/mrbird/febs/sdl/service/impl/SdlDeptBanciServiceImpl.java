@@ -41,7 +41,10 @@ public class SdlDeptBanciServiceImpl extends ServiceImpl<SdlDeptBanciMapper, Sdl
 public IPage<SdlDeptBanci> findSdlDeptBancis(QueryRequest request, SdlDeptBanci sdlDeptBanci){
         try{
         LambdaQueryWrapper<SdlDeptBanci> queryWrapper=new LambdaQueryWrapper<>();
-
+        if(StringUtils.isNotBlank(sdlDeptBanci.getDeptName()))
+        {
+                queryWrapper.like(SdlDeptBanci::getDeptName,sdlDeptBanci.getDeptName());
+        }
 
         Page<SdlDeptBanci> page=new Page<>();
         SortUtil.handlePageSort(request,page,false);//true 是属性  false是数据库字段可两个

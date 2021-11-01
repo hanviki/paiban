@@ -518,7 +518,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-       let queryParams = this.queryParams
+       let queryParams = { ...this.queryParams }
       if(queryParams.state==0){
           delete queryParams.state
       }

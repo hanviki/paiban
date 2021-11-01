@@ -10,24 +10,37 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="系列id">
-        <a-input
-          placeholder="请输入系列id"
-          v-decorator="[
-            'banciId',
-            { rules: [{ required: true, message: '系列id不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="部门id">
-        <a-input
-          placeholder="请输入部门id"
+      <a-form-item v-bind="formItemLayout" label="科室">
+        <a-select
+         @change="deptChange"
           v-decorator="[
             'deptId',
-            { rules: [{ required: true, message: '部门id不能为空' }] },
+            { rules: [{ required: true, message: '科室不能为空' }] },
           ]"
-        />
+        >
+          <a-select-option
+            v-for="d in deptData"
+            :key="d.deptId"
+            :value='`${d.deptId}`'
+          >
+            {{ d.deptName }}
+          </a-select-option>
+        </a-select>
       </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="班次">
+        <a-select
+          @change="banciChange"
+          v-decorator="[
+            'banciId',
+            { rules: [{ required: true, message: '班次不能为空' }] },
+          ]"
+        >
+          <a-select-option v-for="d in banciData" :key="d.id" :value="d.id">
+            {{ d.muduleName }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+
     </a-form>
     <div class="drawer-bootom-button">
       <a-popconfirm
@@ -46,11 +59,11 @@
 </template>
 <script>
 const formItemLayout = {
-  labelCol: { span: 3 },
+  labelCol: { span: 5 },
   wrapperCol: { span: 18 },
 };
 export default {
-  name: "SdlDeptBanciAdd",
+  name: "sdlDeptBanciAdd",
   props: {
     addVisiable: {
       default: false,
@@ -62,7 +75,22 @@ export default {
       formItemLayout,
       form: this.$form.createForm(this),
       sdlDeptBanci: {},
+      deptData: [],
+      banciData: [],
+      value: "",
     };
+  },
+  watch: {
+    addVisiable() {
+      if (this.addVisiable) {
+        this.$get("dept/list",{parentId: '0'}).then((res) => {
+          this.deptData = res.data;
+        });
+        this.$get("sdlDBanci").then((res) => {
+          this.banciData = res.data.rows;
+        });
+      }
+    },
   },
   methods: {
     reset() {
@@ -90,6 +118,14 @@ export default {
             });
         }
       });
+    },
+    banciChange(value) {
+      let data= this.banciData.filter(p=>p.id==value)
+      this.sdlDeptBanci["banciName"]=data[0].muduleName
+    },
+    deptChange(value) {
+      let data= this.deptData.filter(p=>p.deptId==value)
+      this.sdlDeptBanci["deptName"]=data[0].deptName
     },
     setFields() {
       let values = this.form.getFieldsValue(["banciId", "deptId"]);

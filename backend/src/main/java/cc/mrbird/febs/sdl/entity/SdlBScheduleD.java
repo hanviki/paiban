@@ -9,6 +9,8 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import java.util.Date;
+import java.util.List;
+
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import cc.mrbird.febs.common.converter.*;
@@ -19,7 +21,7 @@ import cc.mrbird.febs.common.converter.*;
  * </p>
  *
  * @author viki
- * @since 2021-10-13
+ * @since 2021-10-27
  */
 
 @Excel("sdl_b_schedule_d")
@@ -148,14 +150,14 @@ private static final long serialVersionUID=1L;
      */
         
         @ExcelField(value ="人员类型id 0是一值班")
-    private Integer rylxId;
+    private Integer zizhiId;
 
     /**
      * 人员类型
      */
         
         @ExcelField(value ="人员类型")
-    private Integer rylxName;
+    private String zizhiName;
 
     /**
      * 状态
@@ -198,7 +200,7 @@ private static final long serialVersionUID=1L;
     @TableField("CREATE_USER_ID")
         
         @ExcelField(value ="创建人")
-    private long createUserId;
+    private Long createUserId;
 
     /**
      * 修改人
@@ -206,8 +208,14 @@ private static final long serialVersionUID=1L;
     @TableField("MODIFY_USER_ID")
         
         @ExcelField(value ="修改人")
-    private long modifyUserId;
+    private Long modifyUserId;
 
+    private  transient List<SdlBScheduleD> dynamicData;
+
+    /**
+     * 包含的资质id
+     */
+    private  transient  String subIds;
 
 
     public static final String ID ="id" ;
@@ -242,9 +250,9 @@ private static final long serialVersionUID=1L;
 
     public static final String ACCOUNT_NAME ="account_name" ;
 
-    public static final String RYLX_ID ="rylx_id" ;
+    public static final String ZIZHI_ID ="zizhi_id" ;
 
-    public static final String RYLX_NAME ="rylx_name" ;
+    public static final String ZIZHI_NAME ="zizhi_name" ;
 
     public static final String STATE ="state" ;
 

@@ -10,32 +10,46 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="资质id">
-        <a-input
-          placeholder="请输入资质id"
-          v-decorator="[
-            'banciId',
-            { rules: [{ required: true, message: '资质id不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="部门id">
-        <a-input
-          placeholder="请输入部门id"
+      <a-form-item v-bind="formItemLayout" label="科室">
+        <a-select
+         @change="deptChange"
           v-decorator="[
             'deptId',
-            { rules: [{ required: true, message: '部门id不能为空' }] },
+            { rules: [{ required: true, message: '科室不能为空' }] },
           ]"
-        />
+        >
+          <a-select-option
+            v-for="d in deptData"
+            :key="d.deptId"
+            :value='`${d.deptId}`'
+          >
+            {{ d.deptName }}
+          </a-select-option>
+        </a-select>
       </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="资质类型">
+        <a-select
+          @change="zizhiChange"
+          v-decorator="[
+            'zizhiId',
+            { rules: [{ required: true, message: '资质类型不能为空' }] },
+          ]"
+        >
+          <a-select-option v-for="d in zizhiData" :key="d.id" :value="d.id">
+            {{ d.muduleName }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+
       <a-form-item v-bind="formItemLayout" label="是否到病区">
-        <a-input
-          placeholder="请输入是否到病区"
+        <a-checkbox
           v-decorator="[
             'isBq',
             { rules: [{ required: true, message: '是否到病区不能为空' }] },
           ]"
-        />
+        >
+          是否到病区
+        </a-checkbox>
       </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
@@ -55,7 +69,7 @@
 </template>
 <script>
 const formItemLayout = {
-  labelCol: { span: 3 },
+  labelCol: { span: 5 },
   wrapperCol: { span: 18 },
 };
 export default {
@@ -71,7 +85,22 @@ export default {
       formItemLayout,
       form: this.$form.createForm(this),
       sdlDeptZizhi: {},
+      deptData: [],
+      zizhiData: [],
+      value: "",
     };
+  },
+  watch: {
+    addVisiable() {
+      if (this.addVisiable) {
+        this.$get("dept/list",{parentId: '0'}).then((res) => {
+          this.deptData = res.data;
+        });
+        this.$get("sdlDZizhi").then((res) => {
+          this.zizhiData = res.data.rows;
+        });
+      }
+    },
   },
   methods: {
     reset() {
@@ -100,8 +129,16 @@ export default {
         }
       });
     },
+    zizhiChange(value) {
+      let data= this.zizhiData.filter(p=>p.id==value)
+      this.sdlDeptZizhi["zizhiName"]=data[0].muduleName
+    },
+    deptChange(value) {
+      let data= this.deptData.filter(p=>p.deptId==value)
+      this.sdlDeptZizhi["deptName"]=data[0].deptName
+    },
     setFields() {
-      let values = this.form.getFieldsValue(["banciId", "deptId", "isBq"]);
+      let values = this.form.getFieldsValue(["zizhiId", "deptId", "isBq"]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {
           this.sdlDeptZizhi[_key] = values[_key];
