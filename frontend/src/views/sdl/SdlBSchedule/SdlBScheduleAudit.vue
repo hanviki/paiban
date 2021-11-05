@@ -42,9 +42,9 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item label="补登申请状态" v-bind="formItemLayout">
-                <a-select style="width: 100%" v-model="queryParams.stateApply">
+                <a-select style="width: 100%" v-model="queryParams.stateApplyFlag">
                   <a-select-option value="-1"> 全部 </a-select-option>
-                  <a-select-option value="1"> 未发起申请 </a-select-option>
+                  <!-- <a-select-option value="1"> 未发起申请 </a-select-option> -->
                   <a-select-option value="2"> 申请待审核 </a-select-option>
                   <a-select-option value="3"> 申请未通过 </a-select-option>
                   <a-select-option value="4"> 申请已通过 </a-select-option>
@@ -88,41 +88,20 @@
         </a-popover>
       </template>
       <template slot="operation" slot-scope="text, record">
-        <a-icon
-          v-if="getButtonState(record) == 1"
-          type="edit"
-          theme="twoTone"
-          twoToneColor="#4a9ff5"
+        <a-button
+            icon="search"
+            @click="info(record)"
+          >查看</a-button>
+        <a-button
+          v-if="record.stateApplyFlag == 2"
+          icon="edit"
           @click="edit(record)"
-          title="编辑"
-        ></a-icon>
-        <a-icon
-          v-if="getButtonState(record) == 2"
-          type="form"
-          theme="twoTone"
-          twoToneColor="#4a9ff5"
-          @click="apply(record)"
-          title="提交申请"
-        ></a-icon>
-        <a-icon
-          v-if="getButtonState(record) == 3"
-          type="setting"
-          theme="twoTone"
-          twoToneColor="#4a9ff5"
-          @click="apply(record)"
-          title="改登"
-        ></a-icon>
+        >审核</a-button>
       </template>
     </a-table>
 
-    <!-- 新增字典 -->
-    <sdlBSchedule-add
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </sdlBSchedule-add>
-    <!-- 修改字典 -->
+   
+    <!-- 审核界面-->
     <sdlBSchedule-edit
       ref="sdlBScheduleEdit"
       @close="handleEditClose"
@@ -130,6 +109,12 @@
       :editVisiable="editVisiable"
     >
     </sdlBSchedule-edit>
+     <sdlBSchedule-info
+      ref="sdlBScheduleInfo"
+      @close="handleInfoClose"
+      :editVisiable="infoVisiable"
+    >
+     </sdlBSchedule-info>
     <a-modal
       v-model="applyVisiable"
       :centered="true"
@@ -164,8 +149,8 @@
 </template>
 
 <script>
-import SdlBScheduleAdd from "./SdlBScheduleAdd";
-import SdlBScheduleEdit from "./SdlBScheduleEdit";
+import SdlBScheduleEdit from "./SdlBScheduleApplyEdit";
+import SdlBScheduleInfo from "./SdlBScheduleInfo";
 import moment from "moment";
 
 const formItemLayout = {
@@ -174,7 +159,7 @@ const formItemLayout = {
 };
 export default {
   name: "SdlBSchedule",
-  components: { SdlBScheduleAdd, SdlBScheduleEdit },
+  components: { SdlBScheduleEdit, SdlBScheduleInfo },
   data() {
     return {
       advanced: false,
@@ -200,6 +185,7 @@ export default {
       form: this.$form.createForm(this),
       addVisiable: false,
       editVisiable: false,
+      infoVisiable: false,
       loading: false,
       bordered: true,
       applyVisiable: false,
@@ -256,14 +242,14 @@ export default {
         },
         {
           title: "补登申请状态",
-          dataIndex: "stateApply",
+          dataIndex: "stateApplyFlag",
           width: 100,
           customRender: (text, row, index) => {
             switch (text) {
               case 1:
                 return <a-tag color="red">未发起申请</a-tag>;
               case 2:
-                return <a-tag color="green">申请中</a-tag>;
+                return <a-tag color="green">待审核</a-tag>;
               case 3:
                 return <a-tag color="red">申请未通过</a-tag>;
               case 4:
@@ -282,7 +268,7 @@ export default {
         },
         {
           title: "补登审核意见",
-          dataIndex: "auditSuggestion",
+          dataIndex: "auditApplySuggestion",
           width: 200,
         },
         {
@@ -290,7 +276,7 @@ export default {
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" },
           fixed: "right",
-          width: 100,
+          width: 250,
         },
       ];
     },
@@ -393,6 +379,13 @@ export default {
     handleEditClose() {
       this.editVisiable = false;
     },
+    handleInfoClose() {
+      this.infoVisiable = false;
+    },
+    info(record){
+      this.$refs.sdlBScheduleInfo.setFormValues(record);
+      this.infoVisiable = true;
+    },
     edit(record) {
       this.$refs.sdlBScheduleEdit.setFormValues(record);
       this.editVisiable = true;
@@ -449,8 +442,8 @@ export default {
       if (queryParams.state == -1) {
         delete queryParams.state;
       }
-      if (queryParams.stateApply == -1) {
-        delete queryParams.stateApply;
+      if (queryParams.stateApplyFlag == -1) {
+        delete queryParams.stateApplyFlag;
       }
       this.fetch({
         sortField: sortField,
@@ -492,7 +485,7 @@ export default {
             })
           this.deptData.push(...res.data);
         });
-    },
+    }, 
     fetch(params = {}) {
       this.loading = true;
       if (this.paginationInfo) {
@@ -506,7 +499,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlBSchedule", {
+      this.$get("sdlBSchedule/audit", {
         ...params,
       }).then((r) => {
         let data = r.data;

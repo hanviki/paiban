@@ -10,21 +10,12 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="资质名称">
+      <a-form-item v-bind="formItemLayout" label="类型名称">
         <a-input
-          placeholder="请输入资质名称"
+          placeholder="请输入类型名称"
           v-decorator="[
             'muduleName',
-            { rules: [{ required: true, message: '资质名称不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="父ID">
-        <a-input
-          placeholder="请输入父ID"
-          v-decorator="[
-            'parentId',
-            { rules: [{ required: true, message: '父ID不能为空' }] },
+            { rules: [{ required: true, message: '类型名称不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -78,6 +69,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.setFields();
+          this.sdlDZizhi.parentId = 0
           this.$post("sdlDZizhi", {
             ...this.sdlDZizhi,
           })
@@ -92,7 +84,7 @@ export default {
       });
     },
     setFields() {
-      let values = this.form.getFieldsValue(["muduleName", "parentId"]);
+      let values = this.form.getFieldsValue(["muduleName"]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {
           this.sdlDZizhi[_key] = values[_key];

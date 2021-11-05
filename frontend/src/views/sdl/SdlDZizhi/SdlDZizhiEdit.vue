@@ -10,21 +10,21 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="资质名称">
+      <a-form-item v-bind="formItemLayout" label="类型名称">
         <a-input
-          placeholder="请输入资质名称"
+          placeholder="请输入类型名称"
           v-decorator="[
             'muduleName',
-            { rules: [{ required: true, message: '资质名称不能为空' }] },
+            { rules: [{ required: true, message: '类型名称不能为空' }] },
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="父ID">
+       <a-form-item v-bind="formItemLayout" label="包含类型">
         <a-input
-          placeholder="请输入父ID"
+          placeholder="请输入包含类型的ID值，逗号隔开"
           v-decorator="[
-            'parentId',
-            { rules: [{ required: true, message: '父ID不能为空' }] },
+            'subIds',
+            { rules: [{ required: true, message: '包含类型不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -76,7 +76,7 @@ export default {
       this.$emit("close");
     },
     setFormValues({ ...sdlDZizhi }) {
-      let fields = ["muduleName", "parentId"];
+      let fields = ["muduleName", "subIds"];
       let fieldDates = [];
       Object.keys(sdlDZizhi).forEach((key) => {
         if (fields.indexOf(key) !== -1) {

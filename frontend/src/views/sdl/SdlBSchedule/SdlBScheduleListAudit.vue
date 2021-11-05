@@ -4,132 +4,100 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-                <a-form-item label="排班周" v-bind="formItemLayout">
-              <a-week-picker 
-              :format="dateFormat"
-              style="width:100%"
-           @change="handleWeekChange" >
-        </a-week-picker>
-        </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="排班状态" v-bind="formItemLayout">
-                 <a-select
-                    style="width: 100%"
-                    v-model="queryParams.state"
+            <a-col :md="6" :sm="24">
+              <a-form-item v-bind="formItemLayout" label="排班科室">
+                <a-select v-model="queryParams.deptId">
+                  <a-select-option
+                    v-for="d in deptData"
+                    :key="d.deptId"
+                    :value="`${d.deptId}`"
                   >
-                 <a-select-option value="-1"> 全部 </a-select-option>
-                    <a-select-option value="0"> 未提交 </a-select-option>
-                    <a-select-option value="1"> 已提交 </a-select-option>
-                    <a-select-option value="2"> 审核未通过 </a-select-option>
-                    <a-select-option value="3"> 已审核 </a-select-option>
-                 </a-select>
+                    {{ d.deptName }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="补登申请状态" v-bind="formItemLayout">
-                  <a-select
-                    style="width: 100%"
-                    v-model="queryParams.stateApply"
-                  >
+            <a-col :md="6" :sm="24">
+              <a-form-item label="排班周" v-bind="formItemLayout">
+                <a-week-picker
+                  :format="dateFormat"
+                  style="width: 100%"
+                  @change="handleWeekChange"
+                >
+                </a-week-picker>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="排班状态" v-bind="formItemLayout">
+                <a-select style="width: 100%" v-model="queryParams.state">
                   <a-select-option value="-1"> 全部 </a-select-option>
-                    <a-select-option value="1"> 未发起申请 </a-select-option>
-                    <a-select-option value="2"> 申请待审核 </a-select-option>
-                    <a-select-option value="3"> 申请未通过 </a-select-option>
-                    <a-select-option value="4"> 申请已通过 </a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
+                  <a-select-option value="0"> 未提交 </a-select-option>
+                  <a-select-option value="1"> 已提交 </a-select-option>
+                  <a-select-option value="2"> 审核未通过 </a-select-option>
+                  <a-select-option value="3"> 已审核 </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="补登申请状态" v-bind="formItemLayout">
+                <a-select
+                  style="width: 100%"
+                  v-model="queryParams.stateApplyFlag"
+                >
+                  <a-select-option value="-1"> 全部 </a-select-option>
+                  <!-- <a-select-option value="1"> 未发起申请 </a-select-option> -->
+                  <a-select-option value="2"> 申请待审核 </a-select-option>
+                  <a-select-option value="3"> 申请未通过 </a-select-option>
+                  <a-select-option value="4"> 申请已通过 </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
-            <a @click="toggleAdvanced" style="margin-left: 8px">
-              {{ advanced ? "收起" : "展开" }}
-              <a-icon :type="advanced ? 'up' : 'down'" />
-            </a>
           </span>
         </a-row>
       </a-form>
     </div>
-    <div>
-      <div class="operator">
-        <a-button
-          v-hasPermission="['sdlBSchedule:add']"
-          type="primary"
-          ghost
-          @click="add"
-          >新增</a-button
-        >
-        <a-button v-hasPermission="['sdlBSchedule:delete']" @click="batchDelete"
-          >删除</a-button
-        >
-        <span style="color:red;">更改当前周之前的排班数据，均需要发起申请，通过后方可编辑</span>
-      </div>
-      </div>
-      <!-- 表格区域 -->
-      <a-table
-        ref="TableInfo"
-        :columns="columns"
-        :rowKey="(record) => record.id"
-        :dataSource="dataSource"
-        :pagination="pagination"
-        :loading="loading"
-        :rowSelection="{
-          selectedRowKeys: selectedRowKeys,
-          onChange: onSelectChange,
-        }"
-        @change="handleTableChange"
-        :bordered="bordered"
-        :scroll="{ x: 900 }"
-      >
-        <template slot="remark" slot-scope="text, record">
-          <a-popover placement="topLeft">
-            <template slot="content">
-              <div style="max-width: 200px">{{ text }}</div>
-            </template>
-            <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
-          </a-popover>
-        </template>
-        <template slot="operation" slot-scope="text, record">
-           <a-button
+    <!-- 表格区域 -->
+    <div class="operator">
+      <a-button type="primary" ghost @click="audit">批量审核通过</a-button>
+    </div>
+    <a-table
+      ref="TableInfo"
+      :columns="columns"
+      :rowKey="(record) => record.id"
+      :dataSource="dataSource"
+      :pagination="pagination"
+      :loading="loading"
+      :rowSelection="{
+        selectedRowKeys: selectedRowKeys,
+        onChange: onSelectChange,
+      }"
+      @change="handleTableChange"
+      :bordered="bordered"
+      :scroll="{ x: 900 }"
+    >
+      <template slot="remark" slot-scope="text, record">
+        <a-popover placement="topLeft">
+          <template slot="content">
+            <div style="max-width: 200px">{{ text }}</div>
+          </template>
+          <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
+        </a-popover>
+      </template>
+      <template slot="operation" slot-scope="text, record">
+         <a-button
             icon="search"
             @click="info(record)"
           >查看</a-button>
-          <a-button
-            v-if="getButtonState(record) == 1"
-            icon="edit"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="edit(record)"
-          >编辑</a-button>
-          <a-button
-            v-if="getButtonState(record) == 2"
-            icon="setting"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="apply(record)"
-          >提交申请</a-button>
-          <a-button
-            v-if="getButtonState(record) == 3"
-            icon="setting"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="apply(record)"
-          >改登</a-button>
-         
-        </template>
-      </a-table>
-  
-    <!-- 新增字典 -->
-    <sdlBSchedule-add
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </sdlBSchedule-add>
-    <!-- 修改字典 -->
+        <a-button v-if="record.state == 1" icon="edit" @click="edit(record)"
+          >审核</a-button>
+      </template>
+    </a-table>
+
+    <!-- 审核界面-->
     <sdlBSchedule-edit
       ref="sdlBScheduleEdit"
       @close="handleEditClose"
@@ -148,37 +116,28 @@
       :centered="true"
       :keyboard="false"
       :width="800"
-      ok-text="确认"
-      cancel-text="取消"
-      @ok="saveApply"
-      @cancel="hideModal"
-      title="发起申请"
+      title="批量审核数据"
     >
-      <a-form :form="form">
-        <a-form-item
-          v-bind="{
-            labelCol: { span: 3 },
-            wrapperCol: { span: 19, offset: 1 },
-          }"
-          label="申请理由"
+      <template slot="footer">
+        <a-button key="back" @click="hideModal"> 取消 </a-button>
+        <a-button @click="handleSubmit" type="primary" :loading="loading"
+          >审核通过</a-button
         >
-          <a-textarea
-            :rows="8"
-            placeholder="请输入申请理由"
-            v-decorator="[
-              'note',
-              { rules: [{ required: true, message: '申请理由不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-form>
+        <a-button @click="handleNoSubmit" type="danger" :loading="loading"
+          >审核不通过</a-button
+        >
+      </template>
+      <a-textarea
+        :rows="8"
+        placeholder="请输入审核意见"
+        v-model="auditSuggestion"
+      />
     </a-modal>
   </a-card>
 </template>
 
 <script>
-import SdlBScheduleAdd from "./SdlBScheduleAdd";
-import SdlBScheduleEdit from "./SdlBScheduleEdit";
+import SdlBScheduleEdit from "./SdlBScheduleListEdit";
 import SdlBScheduleInfo from "./SdlBScheduleInfo";
 import moment from "moment";
 
@@ -188,7 +147,7 @@ const formItemLayout = {
 };
 export default {
   name: "SdlBSchedule",
-  components: { SdlBScheduleAdd, SdlBScheduleEdit, SdlBScheduleInfo },
+  components: { SdlBScheduleEdit, SdlBScheduleInfo },
   data() {
     return {
       advanced: false,
@@ -196,8 +155,8 @@ export default {
       dataSource: [],
       selectedRowKeys: [],
       sortedInfo: {
-        order: 'descend',
-        field: 'start_date'
+        order: "descend",
+        field: "start_date",
       },
       paginationInfo: null,
       formItemLayout,
@@ -219,6 +178,9 @@ export default {
       bordered: true,
       applyVisiable: false,
       editRcordId: "", //申请ID
+      deptData: [],
+      auditSuggestion: "",
+      applyVisiable: false,
     };
   },
   computed: {
@@ -250,7 +212,7 @@ export default {
           },
         },
         {
-          title: "排班状态",
+          title: "考勤状态",
           dataIndex: "state",
           width: 100,
           customRender: (text, row, index) => {
@@ -268,11 +230,6 @@ export default {
             }
           },
         },
-         {
-          title: "排班状态审核意见",
-          dataIndex: "auditSuggestion",
-          width: 200,
-        },
         {
           title: "补登申请状态",
           dataIndex: "stateApplyFlag",
@@ -282,26 +239,26 @@ export default {
               case 1:
                 return <a-tag color="red">未发起申请</a-tag>;
               case 2:
-                return <a-tag color="green">申请中</a-tag>;
+                return <a-tag color="green">待审核</a-tag>;
               case 3:
                 return <a-tag color="red">申请未通过</a-tag>;
               case 4:
                 return <a-tag color="#f50">已通过申请</a-tag>;
               case 0:
-                return '';
+                return "";
               default:
                 return text;
             }
           },
         },
         {
-          title: "补登申请理由",
+          title: "申请理由",
           dataIndex: "note",
           width: 200,
         },
         {
-          title: "补登审核意见",
-          dataIndex: "auditApplySuggestion",
+          title: "审核意见",
+          dataIndex: "auditSuggestion",
           width: 200,
         },
         {
@@ -316,6 +273,7 @@ export default {
   },
   mounted() {
     this.search();
+    this.fetchDept();
   },
   methods: {
     onSelectChange(selectedRowKeys) {
@@ -327,18 +285,26 @@ export default {
         this.queryParams.comments = "";
       }
     },
-    handleWeekChange(weekData ) {
-      console.info(weekData)
-      if(weekData==null){
-        this.queryParams.startDateFrom= ''
-      }
-      else {
-　　    this.queryParams.startDateFrom = moment(weekData).day(1).format('YYYY-MM-DD'); // 周一日期
+    handleWeekChange(weekData) {
+      console.info(weekData);
+      if (weekData == null) {
+        this.queryParams.startDateFrom = "";
+      } else {
+        this.queryParams.startDateFrom = moment(weekData)
+          .day(1)
+          .format("YYYY-MM-DD"); // 周一日期
       }
     },
     hideModal() {
-      this.editRcordId = "";
       this.applyVisiable = false;
+    },
+    audit() {
+      if (!this.selectedRowKeys.length) {
+        this.$message.warning("请选择需要审核的记录");
+      } else {
+        this.auditSuggestion = '';
+        this.applyVisiable = true;
+      }
     },
     saveApply() {
       this.form.validateFields((err, values) => {
@@ -362,30 +328,26 @@ export default {
     },
     getButtonState(record) {
       //1是编辑 2是提交申请 3.改登  4.都不显示
-      if (record.stateApply != '0') {
+      if (record.stateApplyFlag != 0) {
         //只要是申请审核通过,都是编辑
-        if (record.stateApply == 4) {
+        if (record.stateApplyFlag == 4) {
           //申请审核通过
           return 1;
         }
-        if (record.stateApply == 3) {
+        if (record.stateApplyFlag == 3) {
           //申请审核不通过
           return 3;
         }
-        if (record.stateApply == 1) {
+        if (record.stateApplyFlag == 1) {
           //待发起审核
           return 2;
         }
-        if (record.stateApply == 2) {
+        if (record.stateApplyFlag == 2) {
           //申请中
           return 4;
         }
       }
       if (record.isExpired) {
-        //过期
-        return 3;
-      }
-      if (record.state==3) {
         //过期
         return 3;
       }
@@ -414,36 +376,87 @@ export default {
     handleEditClose() {
       this.editVisiable = false;
     },
-    handleInfoSuccess() {
-      this.infoVisiable = false;
-     // this.$message.success("修改成功");
-     // this.search();
-    },
     handleInfoClose() {
       this.infoVisiable = false;
-    },
-    edit(record) {
-      this.$refs.sdlBScheduleEdit.setFormValues(record);
-      this.editVisiable = true;
     },
     info(record){
       this.$refs.sdlBScheduleInfo.setFormValues(record);
       this.infoVisiable = true;
     },
+    handleSubmit() {
+      let that = this;
+      if (!this.selectedRowKeys.length) {
+        this.$message.warning("请选择需要审核通过的记录");
+        return;
+      }
+      that.$confirm({
+        title: "确定审核通过此记录?",
+        content: "当您点击确定按钮后，这些记录将会被审核",
+        centered: true,
+        onOk() {
+          let sdlBScheduleIds = that.selectedRowKeys.join(",");
+          that
+            .$put("sdlBSchedule/batch", {
+              ids: sdlBScheduleIds,
+              auditSuggestion: that.auditSuggestion,
+              state: 3,
+            })
+            .then(() => {
+              that.hideModal();
+              that.search();
+            })
+            .catch(() => {
+              that.loading = false;
+            });
+        },
+        onCancel() {
+          // that.selectedRowKeys = [];
+        },
+      });
+    },
+    handleNoSubmit() {
+      let that = this;
+      if (!this.selectedRowKeys.length) {
+        this.$message.warning("请选择需要审核不通过的记录");
+        return;
+      }
+      if (that.auditSuggestion == "") {
+        this.$message.warning("请输入审核意见");
+        return;
+      }
+
+      that.$confirm({
+        title: "确定审核不通过此记录?",
+        content: "当您点击确定按钮后，这些记录将会被审核不通过",
+        centered: true,
+        onOk() {
+          let sdlBScheduleIds = that.selectedRowKeys.join(",");
+          that
+            .$put("sdlBSchedule/batch", {
+              ids: sdlBScheduleIds,
+              auditSuggestion: that.auditSuggestion,
+              state: 2,
+            })
+            .then(() => {
+              that.hideModal();
+              that.search();
+            })
+            .catch(() => {
+              that.loading = false;
+            });
+        },
+        onCancel() {
+          // that.selectedRowKeys = [];
+        },
+      });
+    },
+    edit(record) {
+      this.$refs.sdlBScheduleEdit.setFormValues(record);
+      this.editVisiable = true;
+    },
     batchDelete() {
       if (!this.selectedRowKeys.length) {
         this.$message.warning("请选择需要删除的记录");
-        return;
-      }
-      var msg= true;
-      const data = this.dataSource.filter(p=>this.selectedRowKeys.indexOf(p.id)>=0);
-      data.forEach(el=>{
-        if(el.state!=0){
-          msg = false;
-        }
-      })
-      if(msg==false){
-        this.$message.warning("只有未提交的数据可以删除，请重新选择");
         return;
       }
       let that = this;
@@ -486,12 +499,15 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      let queryParams = { ...this.queryParams }
-      if(queryParams.state==-1){
-          delete queryParams.state
+      let queryParams = { ...this.queryParams };
+      if (queryParams.deptId == "-1") {
+        delete queryParams.deptId;
       }
-       if(queryParams.stateApply==-1){
-          delete queryParams.stateApply
+      if (queryParams.state == -1) {
+        delete queryParams.state;
+      }
+      if (queryParams.stateApplyFlag == -1) {
+        delete queryParams.stateApplyFlag;
       }
       this.fetch({
         sortField: sortField,
@@ -524,6 +540,16 @@ export default {
         ...this.queryParams,
       });
     },
+    fetchDept() {
+      this.$get("dept/list", { parentId: "0" }).then((res) => {
+        this.deptData = [];
+        this.deptData.push({
+          deptId: "-1",
+          deptName: "全部",
+        });
+        this.deptData.push(...res.data);
+      });
+    },
     fetch(params = {}) {
       this.loading = true;
       if (this.paginationInfo) {
@@ -537,7 +563,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlBSchedule", {
+      this.$get("sdlBSchedule/auditList", {
         ...params,
       }).then((r) => {
         let data = r.data;

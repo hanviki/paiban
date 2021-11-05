@@ -97,6 +97,25 @@ public class SdlBScheduleDController extends BaseController {
         );
         return zizhiList;
     }
+    @GetMapping("zizhidept")
+    public List<SdlBScheduleD> List_zizhi2(SdlBScheduleD sdlBScheduleD) {
+        User currentUser = FebsUtil.getCurrentUser();
+       // sdlBScheduleD.setDeptId(currentUser.getDeptId());
+        List<SdlBScheduleD> zizhiList = this.iSdlBScheduleDService.getPaiBanZizhi(sdlBScheduleD);
+        LambdaQueryWrapper<SdlBScheduleD> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SdlBScheduleD::getDeptId, sdlBScheduleD.getDeptId());
+        List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
+        zizhiList.forEach(p -> {
+                    List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
+                            t -> t.getBqId().equals(p.getBqId()) && t.getZizhiId().equals(p.getZizhiId())
+                                    &&  t.getBaseId().equals(sdlBScheduleD.getBaseId())
+                    ).collect(Collectors.toList());
+                    p.setDynamicData(subList);
+                }
+
+        );
+        return zizhiList;
+    }
 
     @GetMapping("banci")
     public List<SdlDeptBanci> List_banci(SdlBScheduleD sdlBScheduleD) {
@@ -105,6 +124,16 @@ public class SdlBScheduleDController extends BaseController {
 
         LambdaQueryWrapper<SdlDeptBanci> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SdlDeptBanci::getDeptId, currentUser.getDeptId());
+        List<SdlDeptBanci> sdlDeptBanciList = iSdlDeptBanciService.list(queryWrapper);
+        return sdlDeptBanciList;
+    }
+    @GetMapping("bancidept")
+    public List<SdlDeptBanci> List_banci2(SdlBScheduleD sdlBScheduleD) {
+        User currentUser = FebsUtil.getCurrentUser();
+       // sdlBScheduleD.setDeptId(currentUser.getDeptId());
+
+        LambdaQueryWrapper<SdlDeptBanci> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SdlDeptBanci::getDeptId, sdlBScheduleD.getDeptId());
         List<SdlDeptBanci> sdlDeptBanciList = iSdlDeptBanciService.list(queryWrapper);
         return sdlDeptBanciList;
     }
@@ -147,7 +176,7 @@ public class SdlBScheduleDController extends BaseController {
                 list.forEach(sdlBScheduleD -> {
                     sdlBScheduleD.setCreateUserId(currentUser.getUserId());
                     List<String> userAccounts = Arrays.asList(sdlBScheduleD.getAccountId().replace("[", "").replace("]", "").replace("\"", "").split(","));
-                    String userAccountNames = users.stream().filter(p -> userAccounts.contains(p.getUserAccount())).map(p -> p.getUserAccountName()).collect(Collectors.joining(",", "", ""));
+                    String userAccountNames = users.stream().filter(p -> userAccounts.contains(p.getUserAccount())).map(p ->p.getUserAccount()+"_"+ p.getUserAccountName()).collect(Collectors.joining(",", "", ""));
                     sdlBScheduleD.setAccountName(userAccountNames);
                     String banciName = banciList.stream().filter(p -> p.getId().equals(sdlBScheduleD.getBanciId())).map(p -> p.getMuduleName()).findFirst().get();
                     sdlBScheduleD.setBanci(banciName);
@@ -159,6 +188,7 @@ public class SdlBScheduleDController extends BaseController {
         } catch (Exception e) {
             message = "新增/按钮失败";
             log.error(message, e);
+
             throw new FebsException(message);
         }
     }

@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    :title="`排班：${startDate}至${endDate}`"
+    :title="`排班：${startDate}至${endDate}审核`"
     :maskClosable="false"
     width="90%"
     placement="right"
@@ -17,66 +17,24 @@
       :loading="loading"
       :bordered="bordered"
       :pagination="false"
-      :scroll="{
-        x: 900,
-        y: tableHeight- 200 - 100 ,
-      }"
+      :scroll="{ x: 900 }"
     >
-     <template slot="zizhiName" slot-scope="text, record">
-     <div >
-       {{text}}
-       </div>
-     </template>
-      <template slot="bqName" slot-scope="text, record">
-       <div>
-       {{text}}
-       </div>
-     </template>
       <template
         v-for="col in listAuditInfo"
         :slot="col.filedName"
         slot-scope="text, record"
       >
         <div :key="col.filedName">
-          <!-- <div :key="`B${col.banciId}_${countWeek}`"> -->
-          <!-- <template slot="user" slot-scope="text, record"> -->
-          <a-popover title="单元格数据处理" placement="right">
-            <template slot="content">
-              <a-button
-                @click="handleCopy(record, col.filedName)"
-                :loading="loading"
-                >复制</a-button
-              >
-              <a-button @click="handlePaste(record, col)" :loading="loading"
-                >粘贴</a-button
-              >
-            </template>
-            <a-select
-              style="width: 100%"
-              mode="multiple"
-              v-if="col.isShow || record.state != 1"
-              :default-value="record[col.filedName]"
-              :filter-option="false"
-              @search="fetchUser"
-              placeholder="请选择排班人员"
-              @change="
-                (e, f) => handleSelectChange(e, f, record, col.filedName)
-              "
-            >
-              <a-select-option
-                v-for="item in handleUser(record)"
-                :key="item.userAccount"
-                :value="item.userAccount"
-              >
-                {{ item.userAccount + "_" + item.userAccountName }}
-              </a-select-option>
-            </a-select>
-          </a-popover>
+            {{record[col.filedName]}}
         </div>
         <!-- </template> -->
       </template>
     </a-table>
     <div class="drawer-bootom-button">
+       
+                 
+      <a-input placeholder="请输入审核意见" style="width:400px;" v-model="auditSuggestion" />
+               
       <a-popconfirm
         title="确定放弃编辑？"
         @confirm="onClose"
@@ -86,7 +44,10 @@
         <a-button style="margin-right: 0.8rem">取消</a-button>
       </a-popconfirm>
       <a-button @click="handleSubmit" type="primary" :loading="loading"
-        >提交</a-button
+        >审核通过</a-button
+      >
+      <a-button @click="handleNoSubmit" type="danger" :loading="loading"
+        >审核不通过</a-button
       >
     </div>
   </a-drawer>
@@ -117,15 +78,11 @@ export default {
           title: "值班类型",
           dataIndex: "zizhiName",
           width: 100,
-          fixed: "left",
-          scopedSlots: {customRender: 'zizhiName'}
         },
         {
           title: "病区",
           dataIndex: "bqName",
           width: 100,
-          fixed: "left",
-           scopedSlots: {customRender: 'bqName'}
         },
       ],
       listAuditInfo: [], // 当前用户包含的审核数据
@@ -137,9 +94,9 @@ export default {
       startDate: "",
       endDate: "",
       startDate_hide: "",
-      baseId: "",
-      windowHeight: document.documentElement.clientHeight,
-      tableHeight: document.documentElement.clientHeight
+      baseId: '',
+      deptId: '',
+      auditSuggestion: ''
     };
   },
   methods: {
@@ -152,24 +109,21 @@ export default {
       this.optionData = [];
       this.colsCustom = [];
       this.listAuditInfo = [];
-      this.startDate = "";
-      this.endDate = "";
-      this.startDate_hide = "";
-      this.fetchBancibaseId = "";
-      this.columns = [
+      this.startDate='';
+      this.endDate= "";
+      this.startDate_hide="";
+      this.fetchBancibaseId='';
+      this.auditSuggestion ='';
+       this.columns = [
         {
           title: "值班类型",
           dataIndex: "zizhiName",
           width: 120,
-          fixed: "left",
-          scopedSlots: {customRender: 'zizhiName'}
         },
         {
           title: "病区",
           dataIndex: "bqName",
           width: 120,
-          fixed: "left",
-          scopedSlots: {customRender: 'bqName'}
         },
       ];
     },
@@ -177,21 +131,20 @@ export default {
       this.reset();
       this.$emit("close");
     },
-
-    handleUser(record) {
-      var zizhiIds = record.subIds;
-     // console.info(record);
-      var optionData = this.optionData.filter(
-        (p) => zizhiIds.indexOf(p.userType) >= 0
-      );
-      //  console.info(optionData)
-      return optionData;
+   
+    handleUser(record){
+       var zizhiIds= record.subIds;
+       console.info(record)
+       var optionData= this.optionData.filter(p=>zizhiIds.indexOf(p.userType)>=0)
+     //  console.info(optionData)
+       return optionData;
     },
     setFormValues({ ...sdlBSchedule }) {
       this.startDate = moment(sdlBSchedule.startDate).format("YYYY-MM-DD");
       this.startDate_hide = sdlBSchedule.startDate;
       this.endDate = moment(sdlBSchedule.endDate).format("YYYY-MM-DD");
-      this.baseId = sdlBSchedule.id;
+      this.baseId = sdlBSchedule.id
+      this.deptId = sdlBSchedule.deptId
     },
     fetchUser(value) {
       this.optionData = [];
@@ -199,8 +152,6 @@ export default {
         this.optionData = this.userData;
         return;
       }
-      console.info(value);
-
       const data = this.userData;
       const options = data.filter(function (item, index, array) {
         return item.userAccountName.indexOf(value) >= 0;
@@ -209,23 +160,17 @@ export default {
       this.optionData = options;
     },
     handleSelectChange(value, option, record, filedName) {
-      console.info(filedName);
       record[filedName] = value;
     },
     handleCopy(record, filedName) {
-      console.info(record[filedName]);
       this.copyData = record[filedName];
     },
     handlePaste(record, col) {
       if (this.copyData == "") {
         this.$message.success("复制数据为空，请重新复制");
       } else {
-        let userAccounts = this.userData
-          .filter((f) => record.subIds.indexOf(f.userType) >= 0)
-          .map((p) => p.userAccount);
-        let intersection = this.copyData.filter(
-          (t) => userAccounts.indexOf(t) >= 0
-        ); //取合集
+        let userAccounts= this.userData.filter(f=>record.subIds.indexOf(f.userType)>=0).map(p=>p.userAccount)
+        let intersection =this.copyData.filter(t=> userAccounts.indexOf(t)>=0) //取合集
         // this.listAuditInfo =[]
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
@@ -237,14 +182,7 @@ export default {
         }, 300);
       }
 
-      // setTimeout(()=>{
-      //   this.listAuditInfo= this.colsCustom
-      // },300)
-      // const data= this.dataSource
-      // this.dataSource=[]
-      // setTimeout(()=>{
-      //   this.dataSource= data
-      // },300)
+     
     },
     getWeekName(n) {
       if (n == 1) {
@@ -269,53 +207,77 @@ export default {
         return "周日";
       }
     },
-    handleSubmit() {
-      let dynamicData = [];
-      const data = this.dataSource;
-      const cols = this.listAuditInfo;
-      data.forEach((record) => {
-        cols.forEach((element) => {
-          var filedName = element.filedName;
-          if (record[filedName] != null && record[filedName] != "") {
-            var weekIndex = parseInt(
-              filedName.substring(filedName.indexOf("_") + 1)
-            );
-            var obj = {
-              scheduleDate: moment(this.startDate_hide)
-                .add(weekIndex - 1, "days")
-                .format("YYYY-MM-DD"),
-              banciId: filedName
-                .substring(0, filedName.indexOf("_"))
-                .replace("B", ""),
-              accountId: record[filedName],
-              bqId: record.bqId,
-              deptId: record.deptId,
-              bqName: record.bqName,
-              deptName: record.deptName,
-              zizhiId: record.zizhiId,
-              zizhiName: record.zizhiName,
-              baseId: this.baseId,
-            };
-            dynamicData.push(obj);
-          }
-        });
+  handleSubmit() {
+      let that = this;
+
+      that.form.validateFields((err, values) => {
+        if (!err) {
+          that.$confirm({
+            title: "确定审核通过此记录?",
+            content: "当您点击确定按钮后，这些记录将会被审核",
+            centered: true,
+            onOk() {
+              let sdlBSchedule = {};
+              sdlBSchedule.id = that.baseId;
+              sdlBSchedule.auditSuggestion = that.auditSuggestion
+              sdlBSchedule.state = 3;
+              that
+                .$put("sdlBSchedule", {
+                  ...sdlBSchedule,
+                })
+                .then(() => {
+                  that.reset();
+                  that.$emit("success");
+                })
+                .catch(() => {
+                  that.loading = false;
+                });
+            },
+            onCancel() {
+             // that.selectedRowKeys = [];
+            },
+          });
+        }
       });
-      let jsonStr = JSON.stringify(dynamicData);
-      this.$post("sdlBScheduleD/add", {
-        jsonStr: jsonStr,
-        startDate: this.startDate,
-        endDate: this.endDate,
-      })
-        .then(() => {
-          this.reset();
-          this.$emit("success");
-        })
-        .catch(() => {
-          this.loading = false;
-        });
+    },
+    handleNoSubmit() {
+      let that = this;
+   if(that.auditSuggestion==''){
+       this.$message.warning("请输入审核意见");
+       return;
+   }
+      that.form.validateFields((err, values) => {
+        if (!err) {
+          that.$confirm({
+            title: "确定审核不通过此记录?",
+            content: "当您点击确定按钮后，这些记录将会被审核不通过",
+            centered: true,
+            onOk() {
+              let sdlBSchedule = {};
+              sdlBSchedule.id = that.baseId;
+              sdlBSchedule.state = 2;
+              sdlBSchedule.auditSuggestion = that.auditSuggestion;
+              that
+                .$put("sdlBSchedule", {
+                  ...sdlBSchedule,
+                })
+                .then(() => {
+                  that.reset();
+                  that.$emit("success");
+                })
+                .catch(() => {
+                  that.loading = false;
+                });
+            },
+            onCancel() {
+             // that.selectedRowKeys = [];
+            },
+          });
+        }
+      });
     },
     fetchBanci() {
-      this.$get("sdlBScheduleD/banci", {}).then((r) => {
+      this.$get("sdlBScheduleD/bancidept", {deptId: this.deptId}).then((r) => {
         //.info(r.data)
         // this.listAuditInfo = r.data;
         const cols = [];
@@ -335,7 +297,6 @@ export default {
           });
           this.columns.push({
             title: this.getWeekName(i),
-
             children: clo,
           });
         }
@@ -351,44 +312,41 @@ export default {
       });
     },
     fetch() {
-      this.$get("sdlBScheduleD/zizhi", { baseId: this.baseId }).then((r) => {
+      this.$get("sdlBScheduleD/zizhidept", {baseId: this.baseId,deptId: this.deptId}).then((r) => {
         let data = r.data;
-        data.forEach((element) => {
-          let auditList = element.dynamicData;
+        data.forEach(element => {
+          let auditList = element.dynamicData
           //  console.info(auditList)
           if (auditList == null || auditList.length == 0) {
-          } else {
-            auditList.forEach((element2) => {
-              var week = moment(element2.scheduleDate).day();
-              if (week == 0) {
-                week = week + 7;
+            
+          }
+          else {
+            
+            auditList.forEach(element2 => {
+              var week =moment(element2.scheduleDate).day()
+              if(week==0) {
+                week =week +7
               }
-              element["B" + element2.banciId + "_" + week] = JSON.parse(
-                element2.accountId
-              );
-              // element.auditNote = element2.auditNote == 'null' ? "" : element2.auditNote
+              element['B'+element2.banciId+"_"+week] = element2.accountName
+             // element.auditNote = element2.auditNote == 'null' ? "" : element2.auditNote
             });
           }
+
         });
         this.dataSource = data;
       });
     },
     fetchDept() {
-      this.$get("sdlBUser/dept", {
+      this.$get("sdlBUser", {
         pageSize: 10000,
         page: 1,
+        deptId: this.deptId
       }).then((r) => {
         let data = r.data;
         this.userData = data.rows;
         this.optionData = data.rows;
       });
     },
-    resender() {
-       window.fullHeight = document.getElementsByClassName("ant-table-thead")[0].getBoundingClientRect().bottom;
-    //  this.windowHeight = window.fullHeight;
-    console.info(window.fullHeight)
-      this.tableHeight = window.fullHeight 
-    }
   },
   watch: {
     editVisiable() {
@@ -399,12 +357,7 @@ export default {
         }, 200);
         this.fetchDept();
       }
-    }
-  },
-  mounted() {
-    window.onresize = () => {
-    // this.resender()
-    };
+    },
   },
 };
 </script>

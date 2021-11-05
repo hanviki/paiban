@@ -21,6 +21,7 @@ public interface ISdlBScheduleService extends IService<SdlBSchedule> {
         IPage<SdlBSchedule> findSdlBSchedules(QueryRequest request, SdlBSchedule sdlBSchedule);
 
         IPage<SdlBSchedule> findSdlBScheduleList(QueryRequest request, SdlBSchedule sdlBSchedule);
+        IPage<SdlBSchedule> findSdlBScheduleList2(QueryRequest request, SdlBSchedule sdlBSchedule);
 
         void createSdlBSchedule(SdlBSchedule sdlBSchedule);
 

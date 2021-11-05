@@ -82,9 +82,81 @@ public class SdlBScheduleServiceImpl extends ServiceImpl<SdlBScheduleMapper, Sdl
     @Override
     public IPage<SdlBSchedule> findSdlBScheduleList(QueryRequest request, SdlBSchedule sdlBSchedule) {
         try {
+            LambdaQueryWrapper<SdlBSchedule> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SdlBSchedule::getIsDeletemark, 1);//1是未删 0是已删
+
+            if (StringUtils.isNotBlank(sdlBSchedule.getUserName())) {
+                queryWrapper.like(SdlBSchedule::getUserName, sdlBSchedule.getUserName());
+            }
+            if (StringUtils.isNotBlank(sdlBSchedule.getStartDateFrom())) {
+                queryWrapper
+                        .eq(SdlBSchedule::getStartDate, sdlBSchedule.getStartDateFrom())
+                ;
+            }
+            if (StringUtils.isNotBlank(sdlBSchedule.getEndDateFrom()) && StringUtils.isNotBlank(sdlBSchedule.getEndDateTo())) {
+                queryWrapper
+                        .ge(SdlBSchedule::getEndDate, sdlBSchedule.getEndDateFrom())
+                        .le(SdlBSchedule::getEndDate, sdlBSchedule.getEndDateTo());
+            }
+            if (sdlBSchedule.getState() != null) {
+                queryWrapper.eq(SdlBSchedule::getState, sdlBSchedule.getState());
+            }
+            if (sdlBSchedule.getStateApply() != null) {
+                queryWrapper.eq(SdlBSchedule::getStateApply, sdlBSchedule.getStateApply());
+            }
+            queryWrapper.gt(SdlBSchedule::getStateApplyFlag, 1);
+            if (sdlBSchedule.getStateApplyFlag() != null) {
+                queryWrapper.eq(SdlBSchedule::getStateApplyFlag, sdlBSchedule.getStateApplyFlag());
+            }
+            if (sdlBSchedule.getDeptId() != null) {
+                queryWrapper.eq(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId());
+            }
+
             Page<SdlBSchedule> page = new Page<>();
             SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
-            return this.baseMapper.findSdlBSchedule(page, sdlBSchedule);
+            return  this.page(page, queryWrapper);
+        } catch (Exception e) {
+            log.error("获取排班主表失败", e);
+            return null;
+        }
+    }
+
+    @Override
+    public IPage<SdlBSchedule> findSdlBScheduleList2(QueryRequest request, SdlBSchedule sdlBSchedule) {
+        try {
+            LambdaQueryWrapper<SdlBSchedule> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SdlBSchedule::getIsDeletemark, 1);//1是未删 0是已删
+
+            if (StringUtils.isNotBlank(sdlBSchedule.getUserName())) {
+                queryWrapper.like(SdlBSchedule::getUserName, sdlBSchedule.getUserName());
+            }
+            if (StringUtils.isNotBlank(sdlBSchedule.getStartDateFrom())) {
+                queryWrapper
+                        .eq(SdlBSchedule::getStartDate, sdlBSchedule.getStartDateFrom())
+                ;
+            }
+            if (StringUtils.isNotBlank(sdlBSchedule.getEndDateFrom()) && StringUtils.isNotBlank(sdlBSchedule.getEndDateTo())) {
+                queryWrapper
+                        .ge(SdlBSchedule::getEndDate, sdlBSchedule.getEndDateFrom())
+                        .le(SdlBSchedule::getEndDate, sdlBSchedule.getEndDateTo());
+            }
+            if (sdlBSchedule.getState() != null) {
+                queryWrapper.eq(SdlBSchedule::getState, sdlBSchedule.getState());
+            }
+            if (sdlBSchedule.getStateApply() != null) {
+                queryWrapper.eq(SdlBSchedule::getStateApply, sdlBSchedule.getStateApply());
+            }
+            queryWrapper.ge(SdlBSchedule::getState, 1);//已提交的 才可以玩
+            if (sdlBSchedule.getStateApplyFlag() != null) {
+                queryWrapper.eq(SdlBSchedule::getStateApplyFlag, sdlBSchedule.getStateApplyFlag());
+            }
+            if (sdlBSchedule.getDeptId() != null) {
+                queryWrapper.eq(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId());
+            }
+
+            Page<SdlBSchedule> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            return  this.page(page, queryWrapper);
         } catch (Exception e) {
             log.error("获取排班主表失败", e);
             return null;

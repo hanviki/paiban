@@ -68,6 +68,19 @@ public class SdlBScheduleController extends BaseController {
         sdlBSchedule.setDeptId(currentUser.getDeptId());
         return getDataTable(this.iSdlBScheduleService.findSdlBSchedules(request, sdlBSchedule));
     }
+    @GetMapping("audit")
+    @RequiresPermissions("sdlBSchedule:view")
+    public Map<String, Object> List_audit(QueryRequest request, SdlBSchedule sdlBSchedule) {
+        User currentUser = FebsUtil.getCurrentUser();
+        return getDataTable(this.iSdlBScheduleService.findSdlBScheduleList(request, sdlBSchedule));
+    }
+    @GetMapping("auditList")
+    @RequiresPermissions("sdlBSchedule:view")
+    public Map<String, Object> List_audit2(QueryRequest request, SdlBSchedule sdlBSchedule) {
+        User currentUser = FebsUtil.getCurrentUser();
+        return getDataTable(this.iSdlBScheduleService.findSdlBScheduleList2(request, sdlBSchedule));
+    }
+
 
     /**
      * 添加
@@ -97,8 +110,8 @@ public class SdlBScheduleController extends BaseController {
             sdlBSchedule.setUserNo(currentUser.getUsername());
             sdlBSchedule.setState(0);//未处理
             if (sdlBSchedule.getStartDate().before(DateUtil.beginOfWeek(new Date()))) {
-                sdlBSchedule.setStateApply(0);//未发起补登申请
-                sdlBSchedule.setStateApplyFlag(0);
+                sdlBSchedule.setStateApply(1);//未发起补登申请
+                sdlBSchedule.setStateApplyFlag(1);
                 sdlBSchedule.setStateBudeng(1);//补登
             } else {
                 sdlBSchedule.setStateBudeng(0);//正常
@@ -144,8 +157,8 @@ public class SdlBScheduleController extends BaseController {
         try {
             User currentUser = FebsUtil.getCurrentUser();
             sdlBSchedule.setModifyUserId(currentUser.getUserId());
-            sdlBSchedule.setStateApply(1);//申请中
-            sdlBSchedule.setStateApplyFlag(1);
+            sdlBSchedule.setStateApply(2);//申请中
+            sdlBSchedule.setStateApplyFlag(2);
             sdlBSchedule.setStateBudeng(1);//补登
 
             this.iSdlBScheduleService.updateSdlBSchedule(sdlBSchedule);
@@ -156,7 +169,30 @@ public class SdlBScheduleController extends BaseController {
         }
     }
 
-
+    /**
+     * 批量修改排班数据的状态
+     * @param ids
+     * @param state
+     * @throws FebsException
+     */
+    @PutMapping("batch")
+    public void batchAuditSdlBSchedules( String ids,int state,String auditSuggestion) throws FebsException {
+        try {
+            String[] arr_ids = ids.split(StringPool.COMMA);
+            for (String id:arr_ids
+                 ) {
+                SdlBSchedule sdlBSchedule =new SdlBSchedule();
+                sdlBSchedule.setState(state);
+                sdlBSchedule.setId(id);
+                sdlBSchedule.setAuditSuggestion(auditSuggestion);
+                this.iSdlBScheduleService.updateSdlBSchedule(sdlBSchedule);
+            }
+        } catch (Exception e) {
+            message = "批量审核失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
     @Log("删除")
     @DeleteMapping("/{ids}")
     @RequiresPermissions("sdlBSchedule:delete")

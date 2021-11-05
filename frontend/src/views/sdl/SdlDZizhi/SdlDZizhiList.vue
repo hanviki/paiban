@@ -145,13 +145,18 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "资质名称",
+          title: "类型名称",
           dataIndex: "muduleName",
           width: 100,
         },
+         {
+          title: "包含类型",
+          dataIndex: "subIds",
+          width: 100,
+        },
         {
-          title: "父ID",
-          dataIndex: "parentId",
+          title: "id",
+          dataIndex: "id",
           width: 100,
         },
         {

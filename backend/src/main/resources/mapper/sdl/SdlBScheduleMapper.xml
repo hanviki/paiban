@@ -17,6 +17,8 @@
                     <result column="note" property="note"/>
                     <result column="audit_suggestion" property="auditSuggestion"/>
                     <result column="audit_date" property="auditDate"/>
+            <result column="audit_apply_suggestion" property="auditApplySuggestion"/>
+            <result column="audit_apply_date" property="auditApplyDate"/>
                     <result column="state" property="state"/>
                     <result column="state_budeng" property="stateBudeng"/>
                     <result column="state_apply" property="stateApply"/>
@@ -30,7 +32,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, user_no, name, user_name, dept_name, yq_name, dept_id, yq_id, start_date, end_date, note, audit_suggestion, audit_date, state, state_budeng, state_apply, state_apply_flag, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, user_no, name, user_name, dept_name, yq_name, dept_id, yq_id, start_date, end_date, note, audit_suggestion, audit_date, audit_apply_suggestion, audit_apply_date,state, state_budeng, state_apply, state_apply_flag, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateSdlBSchedule" parameterType="cc.mrbird.febs.sdl.entity.SdlBSchedule">
         update sdl_b_schedule
@@ -47,6 +49,8 @@
 <if test="note != null">note=#{note},</if>
 <if test="auditSuggestion != null">audit_suggestion=#{auditSuggestion},</if>
 <if test="auditDate != null">audit_date=#{auditDate},</if>
+            <if test="auditApplySuggestion != null">audit_apply_suggestion=#{auditApplySuggestion},</if>
+            <if test="auditApplyDate != null">audit_apply_date=#{auditApplyDate},</if>
 <if test="state != null">state=#{state},</if>
 <if test="stateBudeng != null">state_budeng=#{stateBudeng},</if>
 <if test="stateApply != null">state_apply=#{stateApply},</if>

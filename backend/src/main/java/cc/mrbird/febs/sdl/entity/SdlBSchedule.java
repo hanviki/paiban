@@ -129,6 +129,19 @@ private static final long serialVersionUID=1L;
     private transient String auditDateTo;
 
     /**
+     * 审核意见
+     */
+
+    @ExcelField(value ="申请审核意见")
+    private String auditApplySuggestion;
+
+    /**
+     * 审核时间
+     */
+
+    @ExcelField(value ="申请审核时间", writeConverter = DateConverter.class)
+    private Date auditApplyDate;
+    /**
      * 状态
      */
         
