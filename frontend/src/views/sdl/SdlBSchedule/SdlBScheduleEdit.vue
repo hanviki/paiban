@@ -19,19 +19,19 @@
       :pagination="false"
       :scroll="{
         x: 900,
-        y: tableHeight- 200 - 100 ,
+        y: tableHeight - 200 - 100,
       }"
     >
-     <template slot="zizhiName" slot-scope="text, record">
-     <div >
-       {{text}}
-       </div>
-     </template>
+      <template slot="zizhiName" slot-scope="text, record">
+        <div>
+          {{ text }}
+        </div>
+      </template>
       <template slot="bqName" slot-scope="text, record">
-       <div>
-       {{text}}
-       </div>
-     </template>
+        <div>
+          {{ text }}
+        </div>
+      </template>
       <template
         v-for="col in listAuditInfo"
         :slot="col.filedName"
@@ -57,14 +57,14 @@
               v-if="col.isShow || record.state != 1"
               :default-value="record[col.filedName]"
               :filter-option="false"
-              @search="fetchUser"
+              @search="(v) => fetchUser(v, record, col.filedName)"
               placeholder="请选择排班人员"
               @change="
                 (e, f) => handleSelectChange(e, f, record, col.filedName)
               "
             >
               <a-select-option
-                v-for="item in handleUser(record)"
+                v-for="item in handleUser(record, col.filedName)"
                 :key="item.userAccount"
                 :value="item.userAccount"
               >
@@ -118,14 +118,14 @@ export default {
           dataIndex: "zizhiName",
           width: 100,
           fixed: "left",
-          scopedSlots: {customRender: 'zizhiName'}
+          scopedSlots: { customRender: "zizhiName" },
         },
         {
           title: "病区",
           dataIndex: "bqName",
           width: 100,
           fixed: "left",
-           scopedSlots: {customRender: 'bqName'}
+          scopedSlots: { customRender: "bqName" },
         },
       ],
       listAuditInfo: [], // 当前用户包含的审核数据
@@ -139,7 +139,7 @@ export default {
       startDate_hide: "",
       baseId: "",
       windowHeight: document.documentElement.clientHeight,
-      tableHeight: document.documentElement.clientHeight
+      tableHeight: window.innerHeight,
     };
   },
   methods: {
@@ -162,14 +162,14 @@ export default {
           dataIndex: "zizhiName",
           width: 120,
           fixed: "left",
-          scopedSlots: {customRender: 'zizhiName'}
+          scopedSlots: { customRender: "zizhiName" },
         },
         {
           title: "病区",
           dataIndex: "bqName",
           width: 120,
           fixed: "left",
-          scopedSlots: {customRender: 'bqName'}
+          scopedSlots: { customRender: "bqName" },
         },
       ];
     },
@@ -177,15 +177,23 @@ export default {
       this.reset();
       this.$emit("close");
     },
-
-    handleUser(record) {
-      var zizhiIds = record.subIds;
-     // console.info(record);
-      var optionData = this.optionData.filter(
-        (p) => zizhiIds.indexOf(p.userType) >= 0
-      );
-      //  console.info(optionData)
-      return optionData;
+    resertUser() {
+      this.optionData = this.userData;
+    },
+    handleUser(record, filedName) {
+      //  console.info(filedName+"_2")
+      let options = record[filedName + "_2"];
+      if (options != undefined && options.length > 0) {
+        var zizhiIds = record.subIds;
+        // console.info(record);
+        var optionData = options.filter(
+          (p) => zizhiIds.indexOf(p.userType) >= 0
+        );
+        //  console.info(optionData)
+        return optionData;
+      } else {
+        return [];
+      }
     },
     setFormValues({ ...sdlBSchedule }) {
       this.startDate = moment(sdlBSchedule.startDate).format("YYYY-MM-DD");
@@ -193,10 +201,10 @@ export default {
       this.endDate = moment(sdlBSchedule.endDate).format("YYYY-MM-DD");
       this.baseId = sdlBSchedule.id;
     },
-    fetchUser(value) {
-      this.optionData = [];
-      if (value == " ") {
-        this.optionData = this.userData;
+    fetchUser(value2, record, filedName) {
+      let value = value2.trim();
+      if (value == "") {
+        record[filedName + "_2"] = this.userData;
         return;
       }
       console.info(value);
@@ -206,7 +214,7 @@ export default {
         return item.userAccountName.indexOf(value) >= 0;
       });
       //  console.info(options);
-      this.optionData = options;
+      record[filedName + "_2"] = options;
     },
     handleSelectChange(value, option, record, filedName) {
       console.info(filedName);
@@ -220,6 +228,7 @@ export default {
       if (this.copyData == "") {
         this.$message.success("复制数据为空，请重新复制");
       } else {
+        this.optionData = this.userData;
         let userAccounts = this.userData
           .filter((f) => record.subIds.indexOf(f.userType) >= 0)
           .map((p) => p.userAccount);
@@ -355,8 +364,13 @@ export default {
         let data = r.data;
         data.forEach((element) => {
           let auditList = element.dynamicData;
+            console.info(this.colsCustom.length)
+            this.colsCustom.forEach((element2) => {
+              element[element2.filedName + "_2"] = this.userData; //存储用户数据
+            });
           //  console.info(auditList)
           if (auditList == null || auditList.length == 0) {
+           
           } else {
             auditList.forEach((element2) => {
               var week = moment(element2.scheduleDate).day();
@@ -366,10 +380,10 @@ export default {
               element["B" + element2.banciId + "_" + week] = JSON.parse(
                 element2.accountId
               );
-              // element.auditNote = element2.auditNote == 'null' ? "" : element2.auditNote
             });
           }
         });
+        console.info(data);
         this.dataSource = data;
       });
     },
@@ -382,28 +396,22 @@ export default {
         this.userData = data.rows;
         this.optionData = data.rows;
       });
-    },
-    resender() {
-       window.fullHeight = document.getElementsByClassName("ant-table-thead")[0].getBoundingClientRect().bottom;
-    //  this.windowHeight = window.fullHeight;
-    console.info(window.fullHeight)
-      this.tableHeight = window.fullHeight 
     }
   },
   watch: {
     editVisiable() {
       if (this.editVisiable) {
         this.fetchBanci();
+        this.fetchDept();
         setTimeout(() => {
           this.fetch();
         }, 200);
-        this.fetchDept();
       }
-    }
+    },
   },
   mounted() {
     window.onresize = () => {
-    // this.resender()
+      // this.resender()
     };
   },
 };
