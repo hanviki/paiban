@@ -6,22 +6,26 @@
         <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDeptBanci">
                     <id column="id" property="id"/>
                     <result column="banci_id" property="banciId"/>
-            <result column="banci_name" property="banciName"/>
                     <result column="dept_id" property="deptId"/>
-            <result column="dept_name" property="deptName"/>
+                    <result column="banci_name" property="banciName"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
         </resultMap>
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, banci_id, dept_id, dept_name, banci_name
+        id, banci_id, dept_id, banci_name, dept_name, start_date, end_date
     </sql>
     <update id="updateSdlDeptBanci" parameterType="cc.mrbird.febs.sdl.entity.SdlDeptBanci">
         update sdl_dept_banci
         <trim prefix="set" suffixOverrides=",">
 <if test="banciId != null">banci_id=#{banciId},</if>
-            <if test="banciName != null">banci_name=#{banciName},</if>
 <if test="deptId != null">dept_id=#{deptId},</if>
-            <if test="deptName != null">dept_name=#{deptName},</if>
+<if test="banciName != null">banci_name=#{banciName},</if>
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
         </trim>
                 where id=#{id}
 
@@ -29,7 +33,33 @@
     <select id="findSdlDeptBanci" resultType="cc.mrbird.febs.sdl.entity.SdlDeptBanci" parameterType="cc.mrbird.febs.sdl.entity.SdlDeptBanci">
         select  *  from sdl_dept_banci
         where  1=1
+        <if test="sdlDeptBanci.banciId != null"> and  sdl_dept_banci.banci_id =#{ sdlDeptBanci.banciId} </if>
             <if test="sdlDeptBanci.deptId != null and sdlDeptBanci.deptId != ''"> and  sdl_dept_banci.dept_id like concat('%', #{ sdlDeptBanci.deptId} ,'%')</if>
+            <if test="sdlDeptBanci.banciName != null and sdlDeptBanci.banciName != ''"> and  sdl_dept_banci.banci_name like concat('%', #{ sdlDeptBanci.banciName} ,'%')</if>
+            <if test="sdlDeptBanci.deptName != null and sdlDeptBanci.deptName != ''"> and  sdl_dept_banci.dept_name like concat('%', #{ sdlDeptBanci.deptName} ,'%')</if>
+        <if test="sdlDeptBanci.startDateFrom!= null">
+            AND sdl_dept_banci.start_date <![CDATA[ >= ]]>  #{sdlDeptBanci.startDateFrom}
+        </if>
+        <if test="sdlDeptBanci.startDateTo!= null">
+            AND  sdl_dept_banci.start_date <![CDATA[ <= ]]>  #{sdlDeptBanci.startDateTo}
+        </if>
+        <if test="sdlDeptBanci.endDateFrom!= null">
+            AND sdl_dept_banci.end_date <![CDATA[ >= ]]>  #{sdlDeptBanci.endDateFrom}
+        </if>
+        <if test="sdlDeptBanci.endDateTo!= null">
+            AND  sdl_dept_banci.end_date <![CDATA[ <= ]]>  #{sdlDeptBanci.endDateTo}
+        </if>
 </select>
+    <select id="findBanci" resultType="cc.mrbird.febs.sdl.entity.SdlDBanci" parameterType="cc.mrbird.febs.sdl.entity.SdlDeptBanci">
+        select B.*  from sdl_dept_banci A
+        inner join sdl_d_banci B
+        on A.banci_id=B.id
+        <if test="sdlDeptBanci.deptId != null and sdlDeptBanci.deptId != ''"> and  A.dept_id = #{ sdlDeptBanci.deptId}</if>
+        <if test="sdlDeptBanci.startDateFrom!= null">
+            AND A.end_date <![CDATA[ >= ]]>  #{sdlDeptBanci.startDateFrom}
+            AND  A.start_date <![CDATA[ <= ]]>  #{sdlDeptBanci.startDateFrom}
+        </if>
+        order by B.display_index
+    </select>
 
 </mapper>

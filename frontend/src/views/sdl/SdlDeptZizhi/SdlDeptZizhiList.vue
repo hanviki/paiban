@@ -3,7 +3,7 @@
     <div :class="advanced ? 'search' : null">
       <a-form layout="horizontal">
         <a-row>
-         <div>
+          <div>
             <a-col :md="8" :sm="24">
               <a-form-item label="科室名称" v-bind="formItemLayout">
                 <a-input v-model="queryParams.deptName" />
@@ -107,6 +107,7 @@
 <script>
 import SdlDeptZizhiAdd from "./SdlDeptZizhiAdd";
 import SdlDeptZizhiEdit from "./SdlDeptZizhiEdit";
+import moment from 'moment'
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -158,7 +159,7 @@ export default {
           title: "是否到病区",
           dataIndex: "isBq2",
           width: 100,
-          customRender: (text,row) => {
+          customRender: (text, row) => {
             switch (row.isBq) {
               case true:
                 return "是";
@@ -172,6 +173,30 @@ export default {
             }
           },
         },
+        {
+          title: "有效日期",
+          children: [
+            {
+              title: "开始时间",
+              dataIndex: "startDate",
+              width: 100,
+               customRender: (text, row, index) => {
+            if(text == null) return ''
+            return moment(text).format('YYYY-MM-DD')
+          },
+            },
+            {
+              title: "结束时间",
+              dataIndex: "endDate",
+              width: 100,
+               customRender: (text, row, index) => {
+            if(text == null) return ''
+            return moment(text).format('YYYY-MM-DD')
+          },
+            },
+          ],
+        },
+
         {
           title: "操作",
           dataIndex: "operation",

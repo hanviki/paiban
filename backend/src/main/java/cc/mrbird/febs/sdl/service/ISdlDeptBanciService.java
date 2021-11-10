@@ -1,5 +1,6 @@
 package cc.mrbird.febs.sdl.service;
 
+import cc.mrbird.febs.sdl.entity.SdlDBanci;
 import cc.mrbird.febs.sdl.entity.SdlDeptBanci;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -27,6 +28,8 @@ public interface ISdlDeptBanciService extends IService<SdlDeptBanci> {
         void updateSdlDeptBanci(SdlDeptBanci sdlDeptBanci);
 
         void deleteSdlDeptBancis(String[]Ids);
+
+        List<SdlDBanci> findBanci(SdlDeptBanci sdlDeptBanci);
 
 
         }

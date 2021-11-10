@@ -1,29 +1,37 @@
 <template>
   <a-drawer
-    title="修改"
+    title="新增"
     :maskClosable="false"
     width="650"
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="editVisiable"
+    :visible="addVisiable"
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="类型名称">
+      <a-form-item v-bind="formItemLayout" label="节假日名称">
         <a-input
-          placeholder="请输入类型名称"
+          placeholder="请输入节假日名称"
           v-decorator="[
-            'muduleName',
-            { rules: [{ required: true, message: '类型名称不能为空' }] },
+            'holidayName',
+            { rules: [{ required: true, message: '节假日名称不能为空' }] },
           ]"
         />
       </a-form-item>
-       <a-form-item v-bind="formItemLayout" label="包含类型">
-        <a-input
-          placeholder="请输入包含类型的ID值，逗号隔开"
+      <a-form-item v-bind="formItemLayout" label="开始日期">
+        <a-date-picker
           v-decorator="[
-            'subIds',
+            'startDate',
+            { rules: [{ required: true, message: '开始日期不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="结束日期">
+        <a-date-picker
+          v-decorator="[
+            'endDate',
+            { rules: [{ required: true, message: '结束日期不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -44,16 +52,14 @@
   </a-drawer>
 </template>
 <script>
-import moment from "moment";
-
 const formItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 18 },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 15 },
 };
 export default {
-  name: "SdlDZizhiEdit",
+  name: "SdlDHolidayAdd",
   props: {
-    editVisiable: {
+    addVisiable: {
       default: false,
     },
   },
@@ -62,46 +68,25 @@ export default {
       loading: false,
       formItemLayout,
       form: this.$form.createForm(this),
-      sdlDZizhi: {},
+      sdlDHoliday: {},
     };
   },
   methods: {
     reset() {
       this.loading = false;
+      this.sdlDHoliday = {};
       this.form.resetFields();
     },
     onClose() {
       this.reset();
       this.$emit("close");
     },
-    setFormValues({ ...sdlDZizhi }) {
-      let fields = ["muduleName", "subIds"];
-      let fieldDates = [];
-      Object.keys(sdlDZizhi).forEach((key) => {
-        if (fields.indexOf(key) !== -1) {
-          this.form.getFieldDecorator(key);
-          let obj = {};
-          if (fieldDates.indexOf(key) !== -1) {
-            if (sdlDZizhi[key] !== "") {
-              obj[key] = moment(sdlDZizhi[key]);
-            } else {
-              obj[key] = "";
-            }
-          } else {
-            obj[key] = sdlDZizhi[key];
-          }
-          this.form.setFieldsValue(obj);
-        }
-      });
-      this.sdlDZizhi.id = sdlDZizhi.id;
-    },
     handleSubmit() {
       this.form.validateFields((err, values) => {
         if (!err) {
-          let sdlDZizhi = this.form.getFieldsValue();
-          sdlDZizhi.id = this.sdlDZizhi.id;
-          this.$put("sdlDZizhi", {
-            ...sdlDZizhi,
+          this.setFields();
+          this.$post("sdlDHoliday", {
+            ...this.sdlDHoliday,
           })
             .then(() => {
               this.reset();
@@ -112,6 +97,18 @@ export default {
             });
         }
       });
+    },
+    setFields() {
+      let values = this.form.getFieldsValue([
+        "holidayName",
+        "startDate",
+        "endDate",
+      ]);
+      if (typeof values !== "undefined") {
+        Object.keys(values).forEach((_key) => {
+          this.sdlDHoliday[_key] = values[_key];
+        });
+      }
     },
   },
 };

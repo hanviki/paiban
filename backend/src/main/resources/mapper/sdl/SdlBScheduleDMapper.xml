@@ -135,7 +135,8 @@
         WHERE
         1 = 1
         <if test="sdlBScheduleD.deptId != null and sdlBScheduleD.deptId != ''"> and  A.dept_id= #{ sdlBScheduleD.deptId }</if>
-         order by A.zizhi_id
+        <if test="sdlBScheduleD.startDate != null"> and  A.start_date <![CDATA[ <= ]]> #{ sdlBScheduleD.startDate } and A.end_date <![CDATA[ >= ]]> #{ sdlBScheduleD.startDate }  </if>
+         order by A.zizhi_id,C.order_num
     </select>
 
 </mapper>

@@ -28,6 +28,46 @@
           ]"
         />
       </a-form-item>
+        <a-form-item v-bind="formItemLayout" label="次数">
+        <a-input-number
+           style="width:100%"
+          :precision="0"
+          placeholder="请输入次数"
+          v-decorator="[
+            'cishu',
+            { rules: [{ required: true, message: '次数不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="金额">
+        <a-input-number
+           style="width:100%"
+          :precision="2"
+          placeholder="请输入金额"
+          v-decorator="[
+            'amount',
+            { rules: [{ required: true, message: '金额不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="颜色值">
+        <a-input
+         style="width:100%"
+          placeholder="请输入颜色值"
+          v-decorator="[
+            'colorName',
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="排序值">
+        <a-input-number
+          placeholder="请输入排序值"
+          v-decorator="[
+            'displayIndex',
+            { rules: [{ required: true, message: '排序值不能为空' }] },
+          ]"
+        />
+      </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
       <a-popconfirm
@@ -92,7 +132,7 @@ export default {
       });
     },
     setFields() {
-      let values = this.form.getFieldsValue(["muduleName", "parentId"]);
+      let values = this.form.getFieldsValue(["muduleName", "parentId","colorName","displayIndex","amount","cishu"]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {
           this.sdlDBanci[_key] = values[_key];

@@ -23,12 +23,12 @@
       }"
     >
       <template slot="zizhiName" slot-scope="text, record">
-        <div>
+        <div v-if="record.state != 1">
           {{ text }}
         </div>
       </template>
       <template slot="bqName" slot-scope="text, record">
-        <div>
+        <div v-if="record.state != 1">
           {{ text }}
         </div>
       </template>
@@ -51,26 +51,28 @@
                 >粘贴</a-button
               >
             </template>
-            <a-select
-              style="width: 100%"
-              mode="multiple"
-              v-if="col.isShow || record.state != 1"
-              :default-value="record[col.filedName]"
-              :filter-option="false"
-              @search="(v) => fetchUser(v, record, col.filedName)"
-              placeholder="请选择排班人员"
-              @change="
-                (e, f) => handleSelectChange(e, f, record, col.filedName)
-              "
-            >
-              <a-select-option
-                v-for="item in handleUser(record, col.filedName)"
-                :key="item.userAccount"
-                :value="item.userAccount"
+            <div style="overflow-y: scroll; height: 80px">
+              <a-select
+                style="width: 100%;"
+                mode="multiple"
+                v-if="col.isShow || record.state != 1"
+                :default-value="record[col.filedName]"
+                :filter-option="false"
+                @search="(v) => fetchUser(v, record, col.filedName)"
+                placeholder="请选择排班人员"
+                @change="
+                  (e, f) => handleSelectChange(e, f, record, col.filedName)
+                "
               >
-                {{ item.userAccount + "_" + item.userAccountName }}
-              </a-select-option>
-            </a-select>
+                <a-select-option
+                  v-for="item in handleUser(record, col.filedName)"
+                  :key="item.userAccount"
+                  :value="item.userAccount"
+                >
+                  {{ item.userAccount + "_" + item.userAccountName }}
+                </a-select-option>
+              </a-select>
+            </div>
           </a-popover>
         </div>
         <!-- </template> -->
@@ -183,6 +185,9 @@ export default {
     handleUser(record, filedName) {
       //  console.info(filedName+"_2")
       let options = record[filedName + "_2"];
+      if(record.subIds==null || record.subIds==''){
+        return this.userData;
+      }
       if (options != undefined && options.length > 0) {
         var zizhiIds = record.subIds;
         // console.info(record);
@@ -192,7 +197,7 @@ export default {
         //  console.info(optionData)
         return optionData;
       } else {
-        return [];
+        return this.userData;
       }
     },
     setFormValues({ ...sdlBSchedule }) {
@@ -219,6 +224,10 @@ export default {
     handleSelectChange(value, option, record, filedName) {
       console.info(filedName);
       record[filedName] = value;
+      record.state = 1;
+      setTimeout(() => {
+        record.state = 0;
+      }, 300);
     },
     handleCopy(record, filedName) {
       console.info(record[filedName]);
@@ -229,12 +238,19 @@ export default {
         this.$message.success("复制数据为空，请重新复制");
       } else {
         this.optionData = this.userData;
+         let intersection= []
+
+ if(record.subIds==null || record.subIds==''){
+    intersection =this.copyData
+ }
+ else {
         let userAccounts = this.userData
           .filter((f) => record.subIds.indexOf(f.userType) >= 0)
           .map((p) => p.userAccount);
-        let intersection = this.copyData.filter(
+       intersection = this.copyData.filter(
           (t) => userAccounts.indexOf(t) >= 0
         ); //取合集
+ }
         // this.listAuditInfo =[]
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
@@ -256,26 +272,52 @@ export default {
       // },300)
     },
     getWeekName(n) {
+      let date2 = moment(this.startDate_hide)
+        .add(n - 1, "days")
+        .format("YYYY-MM-DD");
       if (n == 1) {
-        return "周一";
+        return "周一(" + date2 + ")";
       }
       if (n == 2) {
-        return "周二";
+        return "周二(" + date2 + ")";
       }
       if (n == 3) {
-        return "周三";
+        return "周三(" + date2 + ")";
       }
       if (n == 4) {
-        return "周四";
+        return "周四(" + date2 + ")";
       }
       if (n == 5) {
-        return "周五";
+        return "周五(" + date2 + ")";
       }
       if (n == 6) {
-        return "周六";
+        return "周六(" + date2 + ")";
       }
       if (n == 7) {
-        return "周日";
+        return "周日(" + date2 + ")";
+      }
+    },
+     getWeekHeaderColor(n) {
+      if (n == 1) {
+        return "LightCyan";
+      }
+      if (n == 2) {
+        return "lightGreen";
+      }
+      if (n == 3) {
+        return "orange";
+      }
+      if (n == 4) {
+        return "lavender";
+      }
+      if (n == 5) {
+        return "lightBlue";
+      }
+      if (n == 6) {
+        return "linen";
+      }
+      if (n == 7) {
+        return "LightSteelBlue";
       }
     },
     handleSubmit() {
@@ -324,53 +366,63 @@ export default {
         });
     },
     fetchBanci() {
-      this.$get("sdlBScheduleD/banci", {}).then((r) => {
-        //.info(r.data)
-        // this.listAuditInfo = r.data;
-        const cols = [];
-        for (var i = 1; i < 8; i++) {
-          let clo = [];
-          r.data.forEach((element) => {
-            cols.push({
-              filedName: "B" + element.banciId + "_" + i,
-              isShow: true,
+      this.$get("sdlBScheduleD/banci", { startDateFrom: this.startDate }).then(
+        (r) => {
+          //.info(r.data)
+          // this.listAuditInfo = r.data;
+          const cols = [];
+          for (var i = 1; i < 8; i++) {
+            let clo = [];
+            r.data.forEach((element) => {
+              cols.push({
+                filedName: "B" + element.id + "_" + i,
+                isShow: true,
+              });
+              clo.push({
+                title: element.muduleName,
+                dataIndex: "B" + element.id + "_" + i,
+                width: 250,
+                customHeaderCell: function () {
+                  return { style: { backgroundColor: element.colorName } };
+                },
+                scopedSlots: { customRender: "B" + element.id + "_" + i },
+              });
             });
-            clo.push({
-              title: element.banciName,
-              dataIndex: "B" + element.banciId + "_" + i,
-              width: 250,
-              scopedSlots: { customRender: "B" + element.banciId + "_" + i },
+            
+            this.columns.push({
+              title: this.getWeekName(i),
+               customHeaderCell: (h)=> {
+                  return { style: { backgroundColor: this.getWeekHeaderColor(h.key-1)} };
+                },
+              children: clo,
             });
-          });
-          this.columns.push({
-            title: this.getWeekName(i),
-
-            children: clo,
-          });
+          }
+          this.colsCustom = cols;
+          this.listAuditInfo = cols;
+          //  console.info(this.listAuditInfo)
+          // this.columns.push({
+          //   title: "操作",
+          //   dataIndex: "action",
+          //   width: 130,
+          //   scopedSlots: { customRender: "action" },
+          // });
         }
-        this.colsCustom = cols;
-        this.listAuditInfo = cols;
-        //  console.info(this.listAuditInfo)
-        // this.columns.push({
-        //   title: "操作",
-        //   dataIndex: "action",
-        //   width: 130,
-        //   scopedSlots: { customRender: "action" },
-        // });
-      });
+      );
     },
     fetch() {
-      this.$get("sdlBScheduleD/zizhi", { baseId: this.baseId }).then((r) => {
+      this.$get("sdlBScheduleD/zizhi", {
+        baseId: this.baseId,
+        startDate: this.startDate,
+      }).then((r) => {
         let data = r.data;
         data.forEach((element) => {
           let auditList = element.dynamicData;
-            console.info(this.colsCustom.length)
-            this.colsCustom.forEach((element2) => {
-              element[element2.filedName + "_2"] = this.userData; //存储用户数据
-            });
+          console.info(this.colsCustom.length);
+          this.colsCustom.forEach((element2) => {
+            element[element2.filedName + "_2"] = this.userData; //存储用户数据
+          });
           //  console.info(auditList)
           if (auditList == null || auditList.length == 0) {
-           
           } else {
             auditList.forEach((element2) => {
               var week = moment(element2.scheduleDate).day();
@@ -396,7 +448,7 @@ export default {
         this.userData = data.rows;
         this.optionData = data.rows;
       });
-    }
+    },
   },
   watch: {
     editVisiable() {

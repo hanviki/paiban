@@ -44,12 +44,31 @@
       <a-form-item v-bind="formItemLayout" label="是否到病区">
         <a-checkbox
           v-decorator="[
-            'isBq',
-            { rules: [{ required: true, message: '是否到病区不能为空' }] },
+            'isBq'
           ]"
         >
           是否到病区
         </a-checkbox>
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="开始时间">
+        <a-date-picker 
+        placeholder="请选择开始时间"
+        :dateFormat="dateFormat"
+         v-decorator="[
+            'startDate',
+            { rules: [{ required: true, message: '开始时间不能为空' }] },
+          ]">
+        </a-date-picker>
+      </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="结束时间">
+        <a-date-picker 
+        placeholder="请选择结束时间"
+        :dateFormat="dateFormat"
+         v-decorator="[
+            'endDate',
+            { rules: [{ required: true, message: '结束时间不能为空' }] },
+          ]">
+        </a-date-picker>
       </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
@@ -83,6 +102,7 @@ export default {
     return {
       loading: false,
       formItemLayout,
+      dateFormat: "YYYY-MM-DD",
       form: this.$form.createForm(this),
       sdlDeptZizhi: {},
       deptData: [],
@@ -138,7 +158,7 @@ export default {
       this.sdlDeptZizhi["deptName"]=data[0].deptName
     },
     setFields() {
-      let values = this.form.getFieldsValue(["zizhiId", "deptId", "isBq"]);
+      let values = this.form.getFieldsValue(["zizhiId", "deptId", "isBq","startDate","endDate"]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {
           this.sdlDeptZizhi[_key] = values[_key];

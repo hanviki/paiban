@@ -28,7 +28,48 @@
           ]"
         />
       </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="颜色值">
+        <a-input
+          placeholder="请输入颜色值"
+          v-decorator="[
+            'colorName',
+          ]"
+        />
+      </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="次数">
+        <a-input-number
+          style="width:100%"
+          :precision="0"
+          placeholder="请输入次数"
+          v-decorator="[
+            'cishu',
+            { rules: [{ required: true, message: '次数不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="金额">
+        <a-input-number
+           style="width:100%"
+          :precision="2"
+          placeholder="请输入金额"
+          v-decorator="[
+            'amount',
+            { rules: [{ required: true, message: '金额不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="排序值">
+        <a-input-number
+          style="width:100%"
+          placeholder="请输入排序值"
+          v-decorator="[
+            'displayIndex',
+            { rules: [{ required: true, message: '排序值不能为空' }] },
+          ]"
+        />
+      </a-form-item>
     </a-form>
+    
     <div class="drawer-bootom-button">
       <a-popconfirm
         title="确定放弃编辑？"
@@ -76,7 +117,7 @@ export default {
       this.$emit("close");
     },
     setFormValues({ ...sdlDBanci }) {
-      let fields = ["muduleName", "parentId"];
+      let fields = ["muduleName", "parentId","colorName","displayIndex", "cishu", "amount"];
       let fieldDates = [];
       Object.keys(sdlDBanci).forEach((key) => {
         if (fields.indexOf(key) !== -1) {

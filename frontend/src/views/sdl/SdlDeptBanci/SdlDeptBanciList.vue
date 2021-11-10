@@ -107,6 +107,7 @@
 <script>
 import SdlDeptBanciAdd from "./SdlDeptBanciAdd";
 import SdlDeptBanciEdit from "./SdlDeptBanciEdit";
+import moment from 'moment'
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -153,6 +154,30 @@ export default {
           title: "科室名称",
           dataIndex: "deptName",
           width: 100,
+        },
+        
+        {
+          title: "有效日期",
+          children: [
+            {
+              title: "开始时间",
+              dataIndex: "startDate",
+              width: 100,
+               customRender: (text, row, index) => {
+            if(text == null) return ''
+            return moment(text).format('YYYY-MM-DD')
+          },
+            },
+            {
+              title: "结束时间",
+              dataIndex: "endDate",
+              width: 100,
+               customRender: (text, row, index) => {
+            if(text == null) return ''
+            return moment(text).format('YYYY-MM-DD')
+          },
+            },
+          ],
         },
         {
           title: "操作",

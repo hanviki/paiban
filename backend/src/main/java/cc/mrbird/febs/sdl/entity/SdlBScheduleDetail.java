@@ -155,7 +155,7 @@ private static final long serialVersionUID=1L;
      */
         
         @ExcelField(value ="人员类型")
-    private Integer zizhiName;
+    private String zizhiName;
 
     /**
      * 状态

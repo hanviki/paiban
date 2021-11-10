@@ -185,26 +185,52 @@ export default {
      
     },
     getWeekName(n) {
+      let date2 = moment(this.startDate_hide)
+        .add(n - 1, "days")
+        .format("YYYY-MM-DD");
       if (n == 1) {
-        return "周一";
+        return "周一(" + date2 + ")";
       }
       if (n == 2) {
-        return "周二";
+        return "周二(" + date2 + ")";
       }
       if (n == 3) {
-        return "周三";
+        return "周三(" + date2 + ")";
       }
       if (n == 4) {
-        return "周四";
+        return "周四(" + date2 + ")";
       }
       if (n == 5) {
-        return "周五";
+        return "周五(" + date2 + ")";
       }
       if (n == 6) {
-        return "周六";
+        return "周六(" + date2 + ")";
       }
       if (n == 7) {
-        return "周日";
+        return "周日(" + date2 + ")";
+      }
+    },
+     getWeekHeaderColor(n) {
+      if (n == 1) {
+        return "LightCyan";
+      }
+      if (n == 2) {
+        return "lightGreen";
+      }
+      if (n == 3) {
+        return "orange";
+      }
+      if (n == 4) {
+        return "lavender";
+      }
+      if (n == 5) {
+        return "lightBlue";
+      }
+      if (n == 6) {
+        return "linen";
+      }
+      if (n == 7) {
+        return "LightSteelBlue";
       }
     },
   handleSubmit() {
@@ -277,7 +303,7 @@ export default {
       });
     },
     fetchBanci() {
-      this.$get("sdlBScheduleD/bancidept", {deptId: this.deptId}).then((r) => {
+      this.$get("sdlBScheduleD/bancidept", {deptId: this.deptId, startDateFrom: this.startDate}).then((r) => {
         //.info(r.data)
         // this.listAuditInfo = r.data;
         const cols = [];
@@ -285,18 +311,24 @@ export default {
           let clo = [];
           r.data.forEach((element) => {
             cols.push({
-              filedName: "B" + element.banciId + "_" + i,
+              filedName: "B" + element.id + "_" + i,
               isShow: true,
             });
             clo.push({
-              title: element.banciName,
-              dataIndex: "B" + element.banciId + "_" + i,
+              title: element.muduleName,
+              dataIndex: "B" + element.id + "_" + i,
               width: 250,
-              scopedSlots: { customRender: "B" + element.banciId + "_" + i },
+               customCell: function(){
+                 return { style: { backgroundColor: element.colorName  } }
+              },
+              scopedSlots: { customRender: "B" + element.id + "_" + i },
             });
           });
           this.columns.push({
             title: this.getWeekName(i),
+             customHeaderCell: (h)=> {
+                  return { style: { backgroundColor: this.getWeekHeaderColor(h.key-1)} };
+                },
             children: clo,
           });
         }
@@ -312,7 +344,7 @@ export default {
       });
     },
     fetch() {
-      this.$get("sdlBScheduleD/zizhidept", {baseId: this.baseId,deptId: this.deptId}).then((r) => {
+      this.$get("sdlBScheduleD/zizhidept", {baseId: this.baseId,deptId: this.deptId, startDate: this.startDate}).then((r) => {
         let data = r.data;
         data.forEach(element => {
           let auditList = element.dynamicData

@@ -2,6 +2,7 @@ package cc.mrbird.febs.sdl.service.impl;
 
 import cc.mrbird.febs.common.domain.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.sdl.entity.SdlDBanci;
 import cc.mrbird.febs.sdl.entity.SdlDeptBanci;
 import cc.mrbird.febs.sdl.dao.SdlDeptBanciMapper;
 import cc.mrbird.febs.sdl.service.ISdlDeptBanciService;
@@ -83,5 +84,9 @@ public void deleteSdlDeptBancis(String[]Ids){
         List<String> list=Arrays.asList(Ids);
         this.baseMapper.deleteBatchIds(list);
         }
-
+        @Override
+        @Transactional
+        public  List<SdlDBanci> findBanci(SdlDeptBanci sdlDeptBanci){
+           return  this.baseMapper.findBanci(sdlDeptBanci);
+        }
         }

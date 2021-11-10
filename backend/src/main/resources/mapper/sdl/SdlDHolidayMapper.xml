@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlDHolidayMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDHoliday">
+                    <id column="id" property="id"/>
+                    <result column="holiday_name" property="holidayName"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, holiday_name, start_date, end_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateSdlDHoliday" parameterType="cc.mrbird.febs.sdl.entity.SdlDHoliday">
+        update sdl_d_holiday
+        <trim prefix="set" suffixOverrides=",">
+<if test="holidayName != null">holiday_name=#{holidayName},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlDHoliday" resultType="cc.mrbird.febs.sdl.entity.SdlDHoliday" parameterType="cc.mrbird.febs.sdl.entity.SdlDHoliday">
+        select  *  from sdl_d_holiday
+        where  1=1
+            <if test="sdlDHoliday.id != null and sdlDHoliday.id != ''"> and  sdl_d_holiday.id =#{ sdlDHoliday.id} </if>
+            <if test="sdlDHoliday.holidayName != null and sdlDHoliday.holidayName != ''"> and  sdl_d_holiday.holiday_name like concat('%', #{ sdlDHoliday.holidayName} ,'%')</if>
+        <if test="sdlDHoliday.startDateFrom!= null">
+            AND sdl_d_holiday.start_date <![CDATA[ >= ]]>  #{sdlDHoliday.startDateFrom}
+        </if>
+        <if test="sdlDHoliday.startDateTo!= null">
+            AND  sdl_d_holiday.start_date <![CDATA[ <= ]]>  #{sdlDHoliday.startDateTo}
+        </if>
+        <if test="sdlDHoliday.endDateFrom!= null">
+            AND sdl_d_holiday.end_date <![CDATA[ >= ]]>  #{sdlDHoliday.endDateFrom}
+        </if>
+        <if test="sdlDHoliday.endDateTo!= null">
+            AND  sdl_d_holiday.end_date <![CDATA[ <= ]]>  #{sdlDHoliday.endDateTo}
+        </if>
+        <if test="sdlDHoliday.state != null"> and  sdl_d_holiday.state =#{ sdlDHoliday.state} </if>
+        <if test="sdlDHoliday.isDeletemark != null"> and  sdl_d_holiday.IS_DELETEMARK =#{ sdlDHoliday.isDeletemark} </if>
+        <if test="sdlDHoliday.createTimeFrom!= null">
+            AND sdl_d_holiday.CREATE_TIME <![CDATA[ >= ]]>  #{sdlDHoliday.createTimeFrom}
+        </if>
+        <if test="sdlDHoliday.createTimeTo!= null">
+            AND  sdl_d_holiday.CREATE_TIME <![CDATA[ <= ]]>  #{sdlDHoliday.createTimeTo}
+        </if>
+        <if test="sdlDHoliday.modifyTimeFrom!= null">
+            AND sdl_d_holiday.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlDHoliday.modifyTimeFrom}
+        </if>
+        <if test="sdlDHoliday.modifyTimeTo!= null">
+            AND  sdl_d_holiday.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlDHoliday.modifyTimeTo}
+        </if>
+        <if test="sdlDHoliday.createUserId != null"> and  sdl_d_holiday.CREATE_USER_ID =#{ sdlDHoliday.createUserId} </if>
+        <if test="sdlDHoliday.modifyUserId != null"> and  sdl_d_holiday.MODIFY_USER_ID =#{ sdlDHoliday.modifyUserId} </if>
+</select>
+
+</mapper>

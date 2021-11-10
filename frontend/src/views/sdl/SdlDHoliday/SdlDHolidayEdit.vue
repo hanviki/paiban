@@ -10,20 +10,28 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="类型名称">
+      <a-form-item v-bind="formItemLayout" label="节假日名称">
         <a-input
-          placeholder="请输入类型名称"
+          placeholder="请输入节假日名称"
           v-decorator="[
-            'muduleName',
-            { rules: [{ required: true, message: '类型名称不能为空' }] },
+            'holidayName',
+            { rules: [{ required: true, message: '节假日名称不能为空' }] },
           ]"
         />
       </a-form-item>
-       <a-form-item v-bind="formItemLayout" label="包含类型">
-        <a-input
-          placeholder="请输入包含类型的ID值，逗号隔开"
+      <a-form-item v-bind="formItemLayout" label="开始日期">
+        <a-date-picker
           v-decorator="[
-            'subIds',
+            'startDate',
+            { rules: [{ required: true, message: '开始日期不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="结束日期">
+        <a-date-picker
+          v-decorator="[
+            'endDate',
+            { rules: [{ required: true, message: '结束日期不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -47,11 +55,11 @@
 import moment from "moment";
 
 const formItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 18 },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 15 },
 };
 export default {
-  name: "SdlDZizhiEdit",
+  name: "SdlDHolidayEdit",
   props: {
     editVisiable: {
       default: false,
@@ -62,7 +70,7 @@ export default {
       loading: false,
       formItemLayout,
       form: this.$form.createForm(this),
-      sdlDZizhi: {},
+      sdlDHoliday: {},
     };
   },
   methods: {
@@ -74,34 +82,34 @@ export default {
       this.reset();
       this.$emit("close");
     },
-    setFormValues({ ...sdlDZizhi }) {
-      let fields = ["muduleName", "subIds"];
-      let fieldDates = [];
-      Object.keys(sdlDZizhi).forEach((key) => {
+    setFormValues({ ...sdlDHoliday }) {
+      let fields = ["holidayName", "startDate", "endDate"];
+      let fieldDates = ["startDate", "endDate"];
+      Object.keys(sdlDHoliday).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key);
           let obj = {};
           if (fieldDates.indexOf(key) !== -1) {
-            if (sdlDZizhi[key] !== "") {
-              obj[key] = moment(sdlDZizhi[key]);
+            if (sdlDHoliday[key] !== "") {
+              obj[key] = moment(sdlDHoliday[key]);
             } else {
               obj[key] = "";
             }
           } else {
-            obj[key] = sdlDZizhi[key];
+            obj[key] = sdlDHoliday[key];
           }
           this.form.setFieldsValue(obj);
         }
       });
-      this.sdlDZizhi.id = sdlDZizhi.id;
+      this.sdlDHoliday.id = sdlDHoliday.id;
     },
     handleSubmit() {
       this.form.validateFields((err, values) => {
         if (!err) {
-          let sdlDZizhi = this.form.getFieldsValue();
-          sdlDZizhi.id = this.sdlDZizhi.id;
-          this.$put("sdlDZizhi", {
-            ...sdlDZizhi,
+          let sdlDHoliday = this.form.getFieldsValue();
+          sdlDHoliday.id = this.sdlDHoliday.id;
+          this.$put("sdlDHoliday", {
+            ...sdlDHoliday,
           })
             .then(() => {
               this.reset();

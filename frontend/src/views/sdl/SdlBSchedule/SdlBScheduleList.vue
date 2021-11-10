@@ -551,7 +551,6 @@ export default {
   },
 };
 </script>
-
 <style lang="less" scoped>
 @import "../../../../static/less/Common";
 </style>

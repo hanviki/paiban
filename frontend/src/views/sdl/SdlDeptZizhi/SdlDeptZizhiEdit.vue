@@ -55,6 +55,26 @@
         >
         </a-checkbox>
       </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="开始时间">
+        <a-date-picker 
+        placeholder="请选择开始时间"
+        :dateFormat="dateFormat"
+         v-decorator="[
+            'startDate',
+            { rules: [{ required: true, message: '开始时间不能为空' }] },
+          ]">
+        </a-date-picker>
+      </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="结束时间">
+        <a-date-picker 
+        placeholder="请选择结束时间"
+        :dateFormat="dateFormat"
+         v-decorator="[
+            'endDate',
+            { rules: [{ required: true, message: '结束时间不能为空' }] },
+          ]">
+        </a-date-picker>
+      </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
       <a-popconfirm
@@ -89,6 +109,7 @@ export default {
     return {
       loading: false,
       formItemLayout,
+       dateFormat: "YYYY-MM-DD",
       form: this.$form.createForm(this),
       sdlDeptZizhi: {},
       deptData: [],
@@ -126,13 +147,21 @@ export default {
       this.sdlDeptZizhi["deptName"]=data[0].deptName
     },
     setFormValues({ ...sdlDeptZizhi }) {
-      let fields = ["isBq","zizhiId", "deptId"];
-      let fieldDates = [];
+      let fields = ["isBq","zizhiId", "deptId","startDate","endDate"];
+      let fieldDates = ["startDate","endDate"];
      let that =this
       Object.keys(sdlDeptZizhi).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
           that.form.getFieldDecorator(key);
           let obj = {};
+          if (fieldDates.indexOf(key) !== -1) {
+            if (sdlDeptZizhi[key] !== "") {
+              obj[key] = moment(sdlDeptZizhi[key]);
+            } else {
+              obj[key] = "";
+            }
+          }
+          else {
             if(key=="zizhiId"){
               obj[key] =  (sdlDeptZizhi[key]).toString();
             }
@@ -142,6 +171,7 @@ export default {
             else{
               obj[key] = sdlDeptZizhi[key];
             }
+          }
             that.form.setFieldsValue(obj);
         }
       

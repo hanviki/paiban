@@ -6,6 +6,9 @@
         <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDBanci">
                     <id column="id" property="id"/>
                     <result column="mudule_name" property="muduleName"/>
+                    <result column="color_name" property="colorName"/>
+                    <result column="cishu" property="cishu"/>
+                    <result column="amount" property="amount"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -13,16 +16,20 @@
                     <result column="CREATE_USER_ID" property="createUserId"/>
                     <result column="MODIFY_USER_ID" property="modifyUserId"/>
                     <result column="parent_id" property="parentId"/>
+                    <result column="display_index" property="displayIndex"/>
         </resultMap>
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, mudule_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, parent_id
+        id, mudule_name, color_name, cishu, amount, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, parent_id, display_index
     </sql>
     <update id="updateSdlDBanci" parameterType="cc.mrbird.febs.sdl.entity.SdlDBanci">
         update sdl_d_banci
         <trim prefix="set" suffixOverrides=",">
 <if test="muduleName != null">mudule_name=#{muduleName},</if>
+<if test="colorName != null">color_name=#{colorName},</if>
+<if test="cishu != null">cishu=#{cishu},</if>
+<if test="amount != null">amount=#{amount},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -30,6 +37,7 @@
 <if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
 <if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
 <if test="parentId != null">parent_id=#{parentId},</if>
+<if test="displayIndex != null">display_index=#{displayIndex},</if>
         </trim>
                 where id=#{id}
 
@@ -37,7 +45,10 @@
     <select id="findSdlDBanci" resultType="cc.mrbird.febs.sdl.entity.SdlDBanci" parameterType="cc.mrbird.febs.sdl.entity.SdlDBanci">
         select  *  from sdl_d_banci
         where  1=1
+        <if test="sdlDBanci.id != null"> and  sdl_d_banci.id =#{ sdlDBanci.id} </if>
             <if test="sdlDBanci.muduleName != null and sdlDBanci.muduleName != ''"> and  sdl_d_banci.mudule_name like concat('%', #{ sdlDBanci.muduleName} ,'%')</if>
+            <if test="sdlDBanci.colorName != null and sdlDBanci.colorName != ''"> and  sdl_d_banci.color_name like concat('%', #{ sdlDBanci.colorName} ,'%')</if>
+        <if test="sdlDBanci.cishu != null"> and  sdl_d_banci.cishu =#{ sdlDBanci.cishu} </if>
         <if test="sdlDBanci.state != null"> and  sdl_d_banci.state =#{ sdlDBanci.state} </if>
         <if test="sdlDBanci.isDeletemark != null"> and  sdl_d_banci.IS_DELETEMARK =#{ sdlDBanci.isDeletemark} </if>
         <if test="sdlDBanci.createTimeFrom!= null">
@@ -53,6 +64,7 @@
             AND  sdl_d_banci.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlDBanci.modifyTimeTo}
         </if>
         <if test="sdlDBanci.parentId != null"> and  sdl_d_banci.parent_id =#{ sdlDBanci.parentId} </if>
+        <if test="sdlDBanci.displayIndex != null"> and  sdl_d_banci.display_index =#{ sdlDBanci.displayIndex} </if>
 </select>
 
 </mapper>

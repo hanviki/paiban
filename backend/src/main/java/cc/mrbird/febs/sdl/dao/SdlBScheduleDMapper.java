@@ -1,6 +1,7 @@
 package cc.mrbird.febs.sdl.dao;
 
 import cc.mrbird.febs.sdl.entity.SdlBScheduleD;
+import cc.mrbird.febs.sdl.entity.SdlDBanci;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -23,6 +24,14 @@ public interface SdlBScheduleDMapper extends BaseMapper<SdlBScheduleD> {
 
         List<SdlBScheduleD> getPaiBanZizhi(@Param("sdlBScheduleD") SdlBScheduleD sdlBScheduleD);
 
-        @Delete(" delete from sdl_b_schedule_d where dept_id=#{deptId} and schedule_date>=#{startDate} and schedule_date<=#{endDate}")
+        /**
+         * 删除排班表的同时，删除排班表的详细个人排班数据
+         * @param deptId
+         * @param startDate
+         * @param endDate
+         */
+        @Delete(" delete from sdl_b_schedule_d where dept_id=#{deptId} and schedule_date>=#{startDate} and schedule_date<=#{endDate};" +
+                " delete from sdl_b_schedule_detail where dept_id=#{deptId} and schedule_date>=#{startDate} and schedule_date<=#{endDate}")
         void deleteByDeptAndDate(@Param("deptId") String  deptId,@Param("startDate") String  startDate,@Param("endDate") String  endDate);
+
         }

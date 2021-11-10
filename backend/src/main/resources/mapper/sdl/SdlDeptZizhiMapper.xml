@@ -6,24 +6,28 @@
         <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDeptZizhi">
                     <id column="id" property="id"/>
                     <result column="zizhi_id" property="zizhiId"/>
-            <result column="zizhi_name" property="zizhiName"/>
                     <result column="dept_id" property="deptId"/>
-            <result column="dept_name" property="deptName"/>
                     <result column="is_bq" property="isBq"/>
+                    <result column="zizhi_name" property="zizhiName"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
         </resultMap>
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, zizhi_id, dept_id, is_bq, zizhi_name, dept_name
+        id, zizhi_id, dept_id, is_bq, zizhi_name, dept_name, start_date, end_date
     </sql>
     <update id="updateSdlDeptZizhi" parameterType="cc.mrbird.febs.sdl.entity.SdlDeptZizhi">
         update sdl_dept_zizhi
         <trim prefix="set" suffixOverrides=",">
 <if test="zizhiId != null">zizhi_id=#{zizhiId},</if>
-            <if test="zizhiName != null">zizhi_name=#{zizhiName},</if>
 <if test="deptId != null">dept_id=#{deptId},</if>
-            <if test="deptName != null">dept_name=#{deptName},</if>
 <if test="isBq != null">is_bq=#{isBq},</if>
+<if test="zizhiName != null">zizhi_name=#{zizhiName},</if>
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
         </trim>
                 where id=#{id}
 
@@ -31,7 +35,22 @@
     <select id="findSdlDeptZizhi" resultType="cc.mrbird.febs.sdl.entity.SdlDeptZizhi" parameterType="cc.mrbird.febs.sdl.entity.SdlDeptZizhi">
         select  *  from sdl_dept_zizhi
         where  1=1
+        <if test="sdlDeptZizhi.zizhiId != null"> and  sdl_dept_zizhi.zizhi_id =#{ sdlDeptZizhi.zizhiId} </if>
             <if test="sdlDeptZizhi.deptId != null and sdlDeptZizhi.deptId != ''"> and  sdl_dept_zizhi.dept_id like concat('%', #{ sdlDeptZizhi.deptId} ,'%')</if>
+            <if test="sdlDeptZizhi.zizhiName != null and sdlDeptZizhi.zizhiName != ''"> and  sdl_dept_zizhi.zizhi_name like concat('%', #{ sdlDeptZizhi.zizhiName} ,'%')</if>
+            <if test="sdlDeptZizhi.deptName != null and sdlDeptZizhi.deptName != ''"> and  sdl_dept_zizhi.dept_name like concat('%', #{ sdlDeptZizhi.deptName} ,'%')</if>
+        <if test="sdlDeptZizhi.startDateFrom!= null">
+            AND sdl_dept_zizhi.start_date <![CDATA[ >= ]]>  #{sdlDeptZizhi.startDateFrom}
+        </if>
+        <if test="sdlDeptZizhi.startDateTo!= null">
+            AND  sdl_dept_zizhi.start_date <![CDATA[ <= ]]>  #{sdlDeptZizhi.startDateTo}
+        </if>
+        <if test="sdlDeptZizhi.endDateFrom!= null">
+            AND sdl_dept_zizhi.end_date <![CDATA[ >= ]]>  #{sdlDeptZizhi.endDateFrom}
+        </if>
+        <if test="sdlDeptZizhi.endDateTo!= null">
+            AND  sdl_dept_zizhi.end_date <![CDATA[ <= ]]>  #{sdlDeptZizhi.endDateTo}
+        </if>
 </select>
 
 </mapper>

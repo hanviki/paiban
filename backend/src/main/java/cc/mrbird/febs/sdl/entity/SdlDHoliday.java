@@ -1,8 +1,6 @@
 package cc.mrbird.febs.sdl.entity;
 
-import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
@@ -17,51 +15,51 @@ import cc.mrbird.febs.common.converter.*;
 
 /**
  * <p>
- * 系列名称
+ * 节假日
  * </p>
  *
  * @author viki
  * @since 2021-11-10
  */
 
-@Excel("sdl_d_banci")
+@Excel("sdl_d_holiday")
 @Data
 @Accessors(chain = true)
-public class SdlDBanci implements Serializable{
+public class SdlDHoliday implements Serializable{
 
 private static final long serialVersionUID=1L;
 
-                    @TableId(value = "id" , type = IdType.AUTO)
-                
-    private Integer id;
+    /**
+     * id
+     */
+                            
+        @ExcelField(value ="id")
+    private String id;
 
     /**
-     * 系列名称
+     * 节假日名称
      */
         
-        @ExcelField(value ="系列名称")
-    private String muduleName;
+        @ExcelField(value ="节假日名称")
+    private String holidayName;
 
     /**
-     * 列颜色
+     * 开始日期
      */
         
-        @ExcelField(value ="列颜色")
-    private String colorName;
+        @ExcelField(value ="开始日期", writeConverter = DateConverter.class)
+    private Date startDate;
+    private transient String startDateFrom;
+    private transient String startDateTo;
 
     /**
-     * 次数
+     * 结束日期
      */
         
-        @ExcelField(value ="次数")
-    private Integer cishu;
-
-    /**
-     * 金额
-     */
-        
-        @ExcelField(value ="金额")
-    private BigDecimal amount;
+        @ExcelField(value ="结束日期", writeConverter = DateConverter.class)
+    private Date endDate;
+    private transient String endDateFrom;
+    private transient String endDateTo;
 
     /**
      * 状态
@@ -114,31 +112,15 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="修改人")
     private Long modifyUserId;
 
-    /**
-     * 父ID
-     */
-        
-        @ExcelField(value ="父ID")
-    private Integer parentId;
-
-    /**
-     * 排序字段
-     */
-        
-        @ExcelField(value ="排序字段")
-    private Integer displayIndex;
-
 
 
     public static final String ID ="id" ;
 
-    public static final String MUDULE_NAME ="mudule_name" ;
+    public static final String HOLIDAY_NAME ="holiday_name" ;
 
-    public static final String COLOR_NAME ="color_name" ;
+    public static final String START_DATE ="start_date" ;
 
-    public static final String CISHU ="cishu" ;
-
-    public static final String AMOUNT ="amount" ;
+    public static final String END_DATE ="end_date" ;
 
     public static final String STATE ="state" ;
 
@@ -151,9 +133,5 @@ private static final long serialVersionUID=1L;
     public static final String CREATE_USER_ID ="CREATE_USER_ID" ;
 
     public static final String MODIFY_USER_ID ="MODIFY_USER_ID" ;
-
-    public static final String PARENT_ID ="parent_id" ;
-
-    public static final String DISPLAY_INDEX ="display_index" ;
 
         }

@@ -213,6 +213,16 @@ private static final long serialVersionUID=1L;
     private  transient List<SdlBScheduleD> dynamicData;
 
     /**
+     * 有效期开始时间
+     */
+    private transient String startDate;
+    /**
+     * 有效期结束时间
+     */
+
+    private transient String endDate;
+
+    /**
      * 包含的资质id
      */
     private  transient  String subIds;

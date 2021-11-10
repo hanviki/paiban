@@ -42,6 +42,8 @@ public class SdlBScheduleDController extends BaseController {
     private String message;
     @Autowired
     public ISdlBScheduleDService iSdlBScheduleDService;
+    @Autowired
+    public ISdlBScheduleDetailService iSdlBScheduleDetailService;
 
     @Autowired
     public ISdlDeptBanciService iSdlDeptBanciService;
@@ -118,23 +120,23 @@ public class SdlBScheduleDController extends BaseController {
     }
 
     @GetMapping("banci")
-    public List<SdlDeptBanci> List_banci(SdlBScheduleD sdlBScheduleD) {
+    public List<SdlDBanci> List_banci(SdlDeptBanci sdlDeptBanci) {
         User currentUser = FebsUtil.getCurrentUser();
-        sdlBScheduleD.setDeptId(currentUser.getDeptId());
+        sdlDeptBanci.setDeptId(currentUser.getDeptId());
 
-        LambdaQueryWrapper<SdlDeptBanci> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SdlDeptBanci::getDeptId, currentUser.getDeptId());
-        List<SdlDeptBanci> sdlDeptBanciList = iSdlDeptBanciService.list(queryWrapper);
+        List<SdlDBanci> sdlDeptBanciList = iSdlDeptBanciService.findBanci(sdlDeptBanci);
         return sdlDeptBanciList;
     }
     @GetMapping("bancidept")
-    public List<SdlDeptBanci> List_banci2(SdlBScheduleD sdlBScheduleD) {
+    public List<SdlDBanci> List_banci2(SdlDeptBanci sdlDeptBanci) {
         User currentUser = FebsUtil.getCurrentUser();
        // sdlBScheduleD.setDeptId(currentUser.getDeptId());
 
-        LambdaQueryWrapper<SdlDeptBanci> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SdlDeptBanci::getDeptId, sdlBScheduleD.getDeptId());
-        List<SdlDeptBanci> sdlDeptBanciList = iSdlDeptBanciService.list(queryWrapper);
+//        LambdaQueryWrapper<SdlDeptBanci> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(SdlDeptBanci::getDeptId, sdlBScheduleD.getDeptId());
+//        queryWrapper.le(SdlDeptBanci::getStartDate,sdlBScheduleD.getStartDate());
+//        queryWrapper.ge(SdlDeptBanci::getEndDate,sdlBScheduleD.getStartDate());
+        List<SdlDBanci> sdlDeptBanciList = iSdlDeptBanciService.findBanci(sdlDeptBanci);
         return sdlDeptBanciList;
     }
 
@@ -166,6 +168,8 @@ public class SdlBScheduleDController extends BaseController {
             User currentUser = FebsUtil.getCurrentUser();
             List<SdlBScheduleD> list = JSON.parseObject(jsonStr, new TypeReference<List<SdlBScheduleD>>() {
             });
+            List<SdlBScheduleDetail> list_detail = JSON.parseObject(jsonStr, new TypeReference<List<SdlBScheduleDetail>>() {
+            });
             if(list.size()>0) {
                 List<SdlDBanci> banciList = this.iSdlDBanciService.list();
                 LambdaQueryWrapper<SdlBUser> queryWrapper = new LambdaQueryWrapper<>();
@@ -181,6 +185,19 @@ public class SdlBScheduleDController extends BaseController {
                     String banciName = banciList.stream().filter(p -> p.getId().equals(sdlBScheduleD.getBanciId())).map(p -> p.getMuduleName()).findFirst().get();
                     sdlBScheduleD.setBanci(banciName);
                     this.iSdlBScheduleDService.createSdlBScheduleD(sdlBScheduleD);
+                });
+                list_detail.forEach(sdlBScheduleDetail -> {
+                    sdlBScheduleDetail.setCreateUserId(currentUser.getUserId());
+                    List<String> userAccounts = Arrays.asList(sdlBScheduleDetail.getAccountId().replace("[", "").replace("]", "").replace("\"", "").split(","));
+                    String banciName = banciList.stream().filter(p -> p.getId().equals(sdlBScheduleDetail.getBanciId())).map(p -> p.getMuduleName()).findFirst().get();
+                    sdlBScheduleDetail.setBanci(banciName);
+                    userAccounts.forEach(accounts->{
+                        sdlBScheduleDetail.setAccountId(accounts);
+                        String accountName = users.stream().filter(p -> accounts.equals(p.getUserAccount())).map(p->p.getUserAccountName()).findFirst().get();
+                        sdlBScheduleDetail.setAccountName(accountName);
+                        this.iSdlBScheduleDetailService.createSdlBScheduleDetail(sdlBScheduleDetail);
+                    });
+
                 });
                 this.iSdlBScheduleService.updateStateById(list.get(0).getBaseId(), 1);//更改状态为已提交，补登申请的状态改为NULL
             }

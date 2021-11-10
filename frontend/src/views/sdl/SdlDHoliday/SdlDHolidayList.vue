@@ -3,10 +3,10 @@
     <div :class="advanced ? 'search' : null">
       <a-form layout="horizontal">
         <a-row>
-          <div :class="advanced ? null : 'fold'">
+          <div>
             <a-col :md="8" :sm="24">
-              <a-form-item label="状态" v-bind="formItemLayout">
-                <a-input v-model="queryParams.state" />
+              <a-form-item label="节假日名称" v-bind="formItemLayout">
+                <a-input  v-model="queryParams.holidayName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -24,16 +24,16 @@
     <div>
       <div class="operator">
         <a-button
-          v-hasPermission="['sdlDBanci:add']"
+          v-hasPermission="['sdlDHoliday:add']"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button v-hasPermission="['sdlDBanci:delete']" @click="batchDelete"
+        <a-button v-hasPermission="['sdlDHoliday:delete']" @click="batchDelete"
           >删除</a-button
         >
-        <a-dropdown v-hasPermission="['sdlDBanci:export']">
+        <a-dropdown v-hasPermission="['sdlDHoliday:export']">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exportExcel"
               >导出Excel</a-menu-item
@@ -71,7 +71,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['sdlDBanci:update']"
+            v-hasPermission="['sdlDHoliday:update']"
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
@@ -79,7 +79,7 @@
             title="修改"
           ></a-icon>
           <a-badge
-            v-hasNoPermission="['sdlDBanci:update']"
+            v-hasNoPermission="['sdlDHoliday:update']"
             status="warning"
             text="无权限"
           ></a-badge>
@@ -87,34 +87,35 @@
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <sdlDBanci-add
+    <sdlDHoliday-add
       @close="handleAddClose"
       @success="handleAddSuccess"
       :addVisiable="addVisiable"
     >
-    </sdlDBanci-add>
+    </sdlDHoliday-add>
     <!-- 修改字典 -->
-    <sdlDBanci-edit
-      ref="sdlDBanciEdit"
+    <sdlDHoliday-edit
+      ref="sdlDHolidayEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </sdlDBanci-edit>
+    </sdlDHoliday-edit>
   </a-card>
 </template>
 
 <script>
-import SdlDBanciAdd from "./SdlDBanciAdd";
-import SdlDBanciEdit from "./SdlDBanciEdit";
+import SdlDHolidayAdd from "./SdlDHolidayAdd";
+import SdlDHolidayEdit from "./SdlDHolidayEdit";
+import moment from 'moment'
 
 const formItemLayout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "SdlDBanci",
-  components: { SdlDBanciAdd, SdlDBanciEdit },
+  name: "SdlDHoliday",
+  components: { SdlDHolidayAdd, SdlDHolidayEdit },
   data() {
     return {
       advanced: false,
@@ -145,34 +146,27 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "系列名称",
-          dataIndex: "muduleName",
+          title: "节假日名称",
+          dataIndex: "holidayName",
           width: 100,
         },
         {
-          title: "父ID",
-          dataIndex: "parentId",
+          title: "开始日期",
+          dataIndex: "startDate",
           width: 100,
+           customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
         },
-         {
-          title: "颜色值",
-          dataIndex: "colorName",
+        {
+          title: "结束日期",
+          dataIndex: "endDate",
           width: 100,
-        },
-         {
-          title: "次数",
-          dataIndex: "cishu",
-          width: 100,
-        },
-         {
-          title: "金额",
-          dataIndex: "amount",
-          width: 100,
-        },
-         {
-          title: "排序值",
-          dataIndex: "displayIndex",
-          width: 100,
+           customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
         },
         {
           title: "操作",
@@ -197,6 +191,18 @@ export default {
         this.queryParams.comments = "";
       }
     },
+    onstartDateFromChange(date, dateString) {
+      this.queryParams.startDateFrom = dateString;
+    },
+    onstartDateToChange(date, dateString) {
+      this.queryParams.startDateTo = dateString;
+    },
+    onendDateFromChange(date, dateString) {
+      this.queryParams.endDateFrom = dateString;
+    },
+    onendDateToChange(date, dateString) {
+      this.queryParams.endDateTo = dateString;
+    },
     handleAddSuccess() {
       this.addVisiable = false;
       this.$message.success("新增成功");
@@ -217,7 +223,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      this.$refs.sdlDBanciEdit.setFormValues(record);
+      this.$refs.sdlDHolidayEdit.setFormValues(record);
       this.editVisiable = true;
     },
     batchDelete() {
@@ -231,8 +237,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let sdlDBanciIds = that.selectedRowKeys.join(",");
-          that.$delete("sdlDBanci/" + sdlDBanciIds).then(() => {
+          let sdlDHolidayIds = that.selectedRowKeys.join(",");
+          that.$delete("sdlDHoliday/" + sdlDHolidayIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -251,7 +257,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("sdlDBanci/excel", {
+      this.$export("sdlDHoliday/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -309,7 +315,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlDBanci", {
+      this.$get("sdlDHoliday", {
         ...params,
       }).then((r) => {
         let data = r.data;
