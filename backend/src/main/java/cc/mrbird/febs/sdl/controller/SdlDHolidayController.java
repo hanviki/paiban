@@ -64,6 +64,10 @@ public ISdlDHolidayService iSdlDHolidayService;
 public Map<String, Object> List(QueryRequest request, SdlDHoliday sdlDHoliday){
         return getDataTable(this.iSdlDHolidayService.findSdlDHolidays(request, sdlDHoliday));
         }
+    @GetMapping("all")
+    public List<SdlDHoliday> List2(QueryRequest request, SdlDHoliday sdlDHoliday){
+        return this.iSdlDHolidayService.list();
+    }
 
 /**
  * 添加

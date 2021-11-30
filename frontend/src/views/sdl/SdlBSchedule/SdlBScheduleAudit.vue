@@ -93,7 +93,7 @@
             @click="info(record)"
           >查看</a-button>
         <a-button
-          v-if="record.stateApplyFlag == 2"
+          v-if="record.stateApplyFlag == 2 && record.state!=9"
           icon="edit"
           @click="edit(record)"
         >审核</a-button>
@@ -235,6 +235,8 @@ export default {
                 return <a-tag color="red">审核未通过</a-tag>;
               case 3:
                 return <a-tag color="#f50">已审核</a-tag>;
+                case 9:
+              return <a-tag color="orange">已完成</a-tag>;
               default:
                 return text;
             }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlBControlMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlBControl">
+                    <id column="id" property="id"/>
+                    <result column="year" property="year"/>
+                    <result column="month" property="month"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, year, month, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateSdlBControl" parameterType="cc.mrbird.febs.sdl.entity.SdlBControl">
+        update sdl_b_control
+        <trim prefix="set" suffixOverrides=",">
+<if test="year != null">year=#{year},</if>
+<if test="month != null">month=#{month},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlBControl" resultType="cc.mrbird.febs.sdl.entity.SdlBControl" parameterType="cc.mrbird.febs.sdl.entity.SdlBControl">
+        select  *  from sdl_b_control
+        where  1=1
+            <if test="sdlBControl.year != null and sdlBControl.year != ''"> and  sdl_b_control.year like concat('%', #{ sdlBControl.year} ,'%')</if>
+            <if test="sdlBControl.month != null and sdlBControl.month != ''"> and  sdl_b_control.month like concat('%', #{ sdlBControl.month} ,'%')</if>
+        <if test="sdlBControl.state != null"> and  sdl_b_control.state =#{ sdlBControl.state} </if>
+        <if test="sdlBControl.isDeletemark != null"> and  sdl_b_control.IS_DELETEMARK =#{ sdlBControl.isDeletemark} </if>
+        <if test="sdlBControl.createTimeFrom!= null">
+            AND sdl_b_control.CREATE_TIME <![CDATA[ >= ]]>  #{sdlBControl.createTimeFrom}
+        </if>
+        <if test="sdlBControl.createTimeTo!= null">
+            AND  sdl_b_control.CREATE_TIME <![CDATA[ <= ]]>  #{sdlBControl.createTimeTo}
+        </if>
+        <if test="sdlBControl.modifyTimeFrom!= null">
+            AND sdl_b_control.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlBControl.modifyTimeFrom}
+        </if>
+        <if test="sdlBControl.modifyTimeTo!= null">
+            AND  sdl_b_control.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlBControl.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

@@ -39,7 +39,7 @@
        <a-form-item v-bind="formItemLayout" label="次数">
         <a-input-number
           style="width:100%"
-          :precision="0"
+          :precision="2"
           placeholder="请输入次数"
           v-decorator="[
             'cishu',
@@ -48,9 +48,7 @@
         />
       </a-form-item>
       <a-form-item v-bind="formItemLayout" label="金额">
-        <a-input-number
-           style="width:100%"
-          :precision="2"
+        <a-input
           placeholder="请输入金额"
           v-decorator="[
             'amount',

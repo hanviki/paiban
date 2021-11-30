@@ -2,6 +2,7 @@ package cc.mrbird.febs.sdl.service.impl;
 
 import cc.mrbird.febs.common.domain.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
+import cc.mrbird.febs.rfc.CustomUser;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 import cc.mrbird.febs.sdl.dao.SdlBUserMapper;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
@@ -99,7 +100,7 @@ public void deleteSdlBUsers(String[]Ids){
         }
     @Override
     @Transactional
-    public  List<String> getUserAccounts(){
+    public  List<CustomUser> getUserAccounts(){
       return this.baseMapper.getUserAccounts();
     }
         }

@@ -1,5 +1,6 @@
 package cc.mrbird.febs.sdl.dao;
 
+import cc.mrbird.febs.rfc.CustomUser;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -21,6 +22,6 @@ public interface SdlBUserMapper extends BaseMapper<SdlBUser> {
         void updateSdlBUser(SdlBUser sdlBUser);
         IPage<SdlBUser> findSdlBUser(Page page, @Param("sdlBUser") SdlBUser sdlBUser);
 
-        @Select("select user_account from sdl_b_user")
-        List<String> getUserAccounts();
+        @Select("select id,user_account from sdl_b_user")
+        List<CustomUser> getUserAccounts();
         }

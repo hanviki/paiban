@@ -61,6 +61,7 @@
     <sdlUser-info
       ref="sdlBUserInfoAdd"
       @close="handleAddClose"
+      @succ="handleSucc"
       :userInfoVisiable="addVisiable"
     >
     </sdlUser-info>
@@ -345,6 +346,11 @@ export default {
       this.search();
     },
     handleAddClose() {
+      this.addVisiable = false;
+     // this.$message.success("移入成功");
+     // this.search();
+    },
+     handleSucc() {
       this.addVisiable = false;
       this.$message.success("移入成功");
       this.search();

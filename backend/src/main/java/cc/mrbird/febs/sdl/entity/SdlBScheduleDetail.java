@@ -19,7 +19,7 @@ import cc.mrbird.febs.common.converter.*;
  * </p>
  *
  * @author viki
- * @since 2021-10-27
+ * @since 2021-11-15
  */
 
 @Excel("sdl_b_schedule_detail")
@@ -158,6 +158,20 @@ private static final long serialVersionUID=1L;
     private String zizhiName;
 
     /**
+     * 当前职称
+     */
+        
+        @ExcelField(value ="当前职称")
+    private String zhicheng;
+
+    /**
+     * 医师序列
+     */
+        
+        @ExcelField(value ="医师序列")
+    private String xulie;
+
+    /**
      * 状态
      */
         
@@ -245,6 +259,10 @@ private static final long serialVersionUID=1L;
     public static final String ZIZHI_ID ="zizhi_id" ;
 
     public static final String ZIZHI_NAME ="zizhi_name" ;
+
+    public static final String ZHICHENG ="zhicheng" ;
+
+    public static final String XULIE ="xulie" ;
 
     public static final String STATE ="state" ;
 

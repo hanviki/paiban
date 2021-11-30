@@ -225,6 +225,8 @@ export default {
                 return <a-tag color="red">审核未通过</a-tag>;
               case 3:
                 return <a-tag color="#f50">已审核</a-tag>;
+              case 9:
+                return <a-tag color="orange">已完成</a-tag>;
               default:
                 return text;
             }

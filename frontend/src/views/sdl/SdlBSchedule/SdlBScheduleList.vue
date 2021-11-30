@@ -117,7 +117,7 @@
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="apply(record)"
-          >改登</a-button>
+          >排班修改申请</a-button>
          
         </template>
       </a-table>
@@ -263,6 +263,8 @@ export default {
                 return <a-tag color="red">审核未通过</a-tag>;
               case 3:
                 return <a-tag color="#f50">已审核</a-tag>;
+              case 9:
+                return <a-tag color="orange">已完成</a-tag>;
               default:
                 return text;
             }
@@ -361,6 +363,9 @@ export default {
       });
     },
     getButtonState(record) {
+      if(record.state==9){
+        return 5; //已经不能做任何操作
+      }
       //1是编辑 2是提交申请 3.改登  4.都不显示
       if (record.stateApply != '0') {
         //只要是申请审核通过,都是编辑

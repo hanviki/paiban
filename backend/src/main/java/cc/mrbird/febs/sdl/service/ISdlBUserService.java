@@ -1,5 +1,6 @@
 package cc.mrbird.febs.sdl.service;
 
+import cc.mrbird.febs.rfc.CustomUser;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -28,6 +29,6 @@ public interface ISdlBUserService extends IService<SdlBUser> {
 
         void deleteSdlBUsers(String[]Ids);
 
-        List<String> getUserAccounts();
+        List<CustomUser> getUserAccounts();
 
         }

@@ -247,4 +247,13 @@ tr.ant-table-expanded-row td > .ant-table-wrapper {
 .ant-table{
   font-size: 14px !important;
 }
+.ant-fullcalendar-column-header-inner{
+  font-size: 20px !important;
+  text-align: center;
+  font-weight: bold!important;
+}
+.ant-fullcalendar-value{
+ // font-weight: bold!important;
+  text-align: center!important;
+}
 </style>

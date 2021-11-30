@@ -25,13 +25,13 @@
         slot-scope="text, record"
       >
         <div :key="col.filedName">
-            {{record[col.filedName]}}
+          {{ record[col.filedName] }}
         </div>
         <!-- </template> -->
       </template>
     </a-table>
-     <div class="drawer-bootom-button">
-        <a-button style="margin-right: 0.8rem" @click="onClose">关闭</a-button>
+    <div class="drawer-bootom-button">
+      <a-button style="margin-right: 0.8rem" @click="onClose">关闭</a-button>
     </div>
   </a-drawer>
 </template>
@@ -61,13 +61,13 @@ export default {
           title: "值班类型",
           dataIndex: "zizhiName",
           width: 100,
-           fixed: "left",
+          fixed: "left",
         },
         {
           title: "病区",
           dataIndex: "bqName",
           width: 100,
-           fixed: "left",
+          fixed: "left",
         },
       ],
       listAuditInfo: [], // 当前用户包含的审核数据
@@ -79,9 +79,9 @@ export default {
       startDate: "",
       endDate: "",
       startDate_hide: "",
-      baseId: '',
-      deptId: '',
-      auditSuggestion: ''
+      baseId: "",
+      deptId: "",
+      auditSuggestion: "",
     };
   },
   methods: {
@@ -94,23 +94,23 @@ export default {
       this.optionData = [];
       this.colsCustom = [];
       this.listAuditInfo = [];
-      this.startDate='';
-      this.endDate= "";
-      this.startDate_hide="";
-      this.fetchBancibaseId='';
-      this.auditSuggestion ='';
-       this.columns = [
+      this.startDate = "";
+      this.endDate = "";
+      this.startDate_hide = "";
+      this.fetchBancibaseId = "";
+      this.auditSuggestion = "";
+      this.columns = [
         {
           title: "值班类型",
           dataIndex: "zizhiName",
           width: 120,
-           fixed: "left",
+          fixed: "left",
         },
         {
           title: "病区",
           dataIndex: "bqName",
           width: 120,
-           fixed: "left",
+          fixed: "left",
         },
       ];
     },
@@ -118,20 +118,22 @@ export default {
       this.reset();
       this.$emit("close");
     },
-   
-    handleUser(record){
-       var zizhiIds= record.subIds;
-       console.info(record)
-       var optionData= this.optionData.filter(p=>zizhiIds.indexOf(p.userType)>=0)
-     //  console.info(optionData)
-       return optionData;
+
+    handleUser(record) {
+      var zizhiIds = record.subIds;
+      console.info(record);
+      var optionData = this.optionData.filter(
+        (p) => zizhiIds.indexOf(p.userType) >= 0
+      );
+      //  console.info(optionData)
+      return optionData;
     },
     setFormValues({ ...sdlBSchedule }) {
       this.startDate = moment(sdlBSchedule.startDate).format("YYYY-MM-DD");
       this.startDate_hide = sdlBSchedule.startDate;
       this.endDate = moment(sdlBSchedule.endDate).format("YYYY-MM-DD");
-      this.baseId = sdlBSchedule.id
-      this.deptId = sdlBSchedule.deptId
+      this.baseId = sdlBSchedule.id;
+      this.deptId = sdlBSchedule.deptId;
     },
     fetchUser(value) {
       this.optionData = [];
@@ -156,8 +158,12 @@ export default {
       if (this.copyData == "") {
         this.$message.success("复制数据为空，请重新复制");
       } else {
-        let userAccounts= this.userData.filter(f=>record.subIds.indexOf(f.userType)>=0).map(p=>p.userAccount)
-        let intersection =this.copyData.filter(t=> userAccounts.indexOf(t)>=0) //取合集
+        let userAccounts = this.userData
+          .filter((f) => record.subIds.indexOf(f.userType) >= 0)
+          .map((p) => p.userAccount);
+        let intersection = this.copyData.filter(
+          (t) => userAccounts.indexOf(t) >= 0
+        ); //取合集
         // this.listAuditInfo =[]
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
@@ -168,8 +174,6 @@ export default {
           col.isShow = true;
         }, 300);
       }
-
-     
     },
     getWeekName(n) {
       let date2 = moment(this.startDate_hide)
@@ -197,7 +201,7 @@ export default {
         return "周日(" + date2 + ")";
       }
     },
-     getWeekHeaderColor(n) {
+    getWeekHeaderColor(n) {
       if (n == 1) {
         return "LightCyan";
       }
@@ -220,7 +224,7 @@ export default {
         return "LightSteelBlue";
       }
     },
-  handleSubmit() {
+    handleSubmit() {
       let that = this;
 
       that.form.validateFields((err, values) => {
@@ -232,7 +236,7 @@ export default {
             onOk() {
               let sdlBSchedule = {};
               sdlBSchedule.id = that.baseId;
-              sdlBSchedule.auditSuggestion = that.auditSuggestion
+              sdlBSchedule.auditSuggestion = that.auditSuggestion;
               sdlBSchedule.state = 3;
               that
                 .$put("sdlBSchedule", {
@@ -247,7 +251,7 @@ export default {
                 });
             },
             onCancel() {
-             // that.selectedRowKeys = [];
+              // that.selectedRowKeys = [];
             },
           });
         }
@@ -255,10 +259,10 @@ export default {
     },
     handleNoSubmit() {
       let that = this;
-   if(that.auditSuggestion==''){
-       this.$message.warning("请输入审核意见");
-       return;
-   }
+      if (that.auditSuggestion == "") {
+        this.$message.warning("请输入审核意见");
+        return;
+      }
       that.form.validateFields((err, values) => {
         if (!err) {
           that.$confirm({
@@ -283,39 +287,52 @@ export default {
                 });
             },
             onCancel() {
-             // that.selectedRowKeys = [];
+              // that.selectedRowKeys = [];
             },
           });
         }
       });
     },
     fetchBanci() {
-      this.$get("sdlBScheduleD/bancidept", {deptId: this.deptId,startDateFrom: this.startDate}).then((r) => {
+      this.$get("sdlBScheduleD/bancidept", {
+        deptId: this.deptId,
+        startDateFrom: this.startDate,
+        startDateTo: this.endDate,
+      }).then((r) => {
         //.info(r.data)
         // this.listAuditInfo = r.data;
         const cols = [];
         for (var i = 1; i < 8; i++) {
           let clo = [];
           r.data.forEach((element) => {
-            cols.push({
-              filedName: "B" + element.id + "_" + i,
-              isShow: true,
-            });
-            clo.push({
-              title: element.muduleName,
-              dataIndex: "B" + element.id + "_" + i,
-              width: 250,
-              customCell: function(){
-                 return { style: { backgroundColor: element.colorName  } }
-              },
-              scopedSlots: { customRender: "B" + element.id + "_" + i },
-            });
+            if (
+              (element.id == "4" ||
+                element.id == "5") &&
+              element.holiday.indexOf(i) < 0
+            ) {
+            } else {
+              cols.push({
+                filedName: "B" + element.id + "_" + i,
+                isShow: true,
+              });
+              clo.push({
+                title: element.muduleName,
+                dataIndex: "B" + element.id + "_" + i,
+                width: 250,
+                customCell: function () {
+                  return { style: { backgroundColor: element.colorName } };
+                },
+                scopedSlots: { customRender: "B" + element.id + "_" + i },
+              });
+            }
           });
           this.columns.push({
             title: this.getWeekName(i),
-             customHeaderCell: (h)=> {
-                  return { style: { backgroundColor: this.getWeekHeaderColor(h.key-1)} };
-                },
+            customHeaderCell: (h) => {
+              return {
+                style: { backgroundColor: this.getWeekHeaderColor(h.key - 1) },
+              };
+            },
             children: clo,
           });
         }
@@ -331,26 +348,27 @@ export default {
       });
     },
     fetch() {
-      this.$get("sdlBScheduleD/zizhidept", {baseId: this.baseId,deptId: this.deptId,startDate: this.startDate}).then((r) => {
+      this.$get("sdlBScheduleD/zizhidept", {
+        baseId: this.baseId,
+        deptId: this.deptId,
+        startDate: this.startDate,
+      }).then((r) => {
         let data = r.data;
-        data.forEach(element => {
-          let auditList = element.dynamicData
+        data.forEach((element) => {
+          let auditList = element.dynamicData;
           //  console.info(auditList)
           if (auditList == null || auditList.length == 0) {
-            
-          }
-          else {
-            
-            auditList.forEach(element2 => {
-              var week =moment(element2.scheduleDate).day()
-              if(week==0) {
-                week =week +7
+          } else {
+            auditList.forEach((element2) => {
+              var week = moment(element2.scheduleDate).day();
+              if (week == 0) {
+                week = week + 7;
               }
-              element['B'+element2.banciId+"_"+week] = element2.accountName
-             // element.auditNote = element2.auditNote == 'null' ? "" : element2.auditNote
+              element["B" + element2.banciId + "_" + week] =
+                element2.accountName;
+              // element.auditNote = element2.auditNote == 'null' ? "" : element2.auditNote
             });
           }
-
         });
         this.dataSource = data;
       });
@@ -359,7 +377,7 @@ export default {
       this.$get("sdlBUser", {
         pageSize: 10000,
         page: 1,
-        deptId: this.deptId
+        deptId: this.deptId,
       }).then((r) => {
         let data = r.data;
         this.userData = data.rows;

@@ -1,11 +1,11 @@
 package cc.mrbird.febs.common.utils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * 时间工具类
@@ -34,5 +34,60 @@ public class DateUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
         Date d = sdf.parse(date);
         return DateUtil.getDateFormat(d, format);
+    }
+    public static List<String> getDays(Date start, Date end) {
+
+        // 返回的日期集合
+        List<String> days = new ArrayList<String>();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+           // Date start = dateFormat.parse(startTime);
+           // Date end = dateFormat.parse(endTime);
+
+            Calendar tempStart = Calendar.getInstance();
+            tempStart.setTime(start);
+
+            Calendar tempEnd = Calendar.getInstance();
+            tempEnd.setTime(end);
+            tempEnd.add(Calendar.DATE, +1);// 日期加1(包含结束)
+            while (tempStart.before(tempEnd)) {
+                days.add(dateFormat.format(tempStart.getTime()));
+                tempStart.add(Calendar.DAY_OF_YEAR, 1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return days;
+    }
+
+    public static List<String> getDays(String startTime, String endTime) {
+
+        // 返回的日期集合
+        List<String> days = new ArrayList<String>();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date start = dateFormat.parse(startTime);
+            Date end = dateFormat.parse(endTime);
+
+            Calendar tempStart = Calendar.getInstance();
+            tempStart.setTime(start);
+
+            Calendar tempEnd = Calendar.getInstance();
+            tempEnd.setTime(end);
+            tempEnd.add(Calendar.DATE, +1);// 日期加1(包含结束)
+            while (tempStart.before(tempEnd)) {
+                days.add(dateFormat.format(tempStart.getTime()));
+                tempStart.add(Calendar.DAY_OF_YEAR, 1);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return days;
     }
 }

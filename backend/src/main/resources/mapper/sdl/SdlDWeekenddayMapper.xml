@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlDWeekenddayMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlDWeekendday">
+                    <id column="id" property="id"/>
+                    <result column="week_day" property="weekDay"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, week_day, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateSdlDWeekendday" parameterType="cc.mrbird.febs.sdl.entity.SdlDWeekendday">
+        update sdl_d_weekendday
+        <trim prefix="set" suffixOverrides=",">
+<if test="weekDay != null">week_day=#{weekDay},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlDWeekendday" resultType="cc.mrbird.febs.sdl.entity.SdlDWeekendday" parameterType="cc.mrbird.febs.sdl.entity.SdlDWeekendday">
+        select  *  from sdl_d_weekendday
+        where  1=1
+            <if test="sdlDWeekendday.id != null and sdlDWeekendday.id != ''"> and  sdl_d_weekendday.id =#{ sdlDWeekendday.id} </if>
+            <if test="sdlDWeekendday.weekDay != null and sdlDWeekendday.weekDay != ''"> and  sdl_d_weekendday.week_day like concat('%', #{ sdlDWeekendday.weekDay} ,'%')</if>
+        <if test="sdlDWeekendday.state != null"> and  sdl_d_weekendday.state =#{ sdlDWeekendday.state} </if>
+        <if test="sdlDWeekendday.isDeletemark != null"> and  sdl_d_weekendday.IS_DELETEMARK =#{ sdlDWeekendday.isDeletemark} </if>
+        <if test="sdlDWeekendday.createTimeFrom!= null">
+            AND sdl_d_weekendday.CREATE_TIME <![CDATA[ >= ]]>  #{sdlDWeekendday.createTimeFrom}
+        </if>
+        <if test="sdlDWeekendday.createTimeTo!= null">
+            AND  sdl_d_weekendday.CREATE_TIME <![CDATA[ <= ]]>  #{sdlDWeekendday.createTimeTo}
+        </if>
+        <if test="sdlDWeekendday.modifyTimeFrom!= null">
+            AND sdl_d_weekendday.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlDWeekendday.modifyTimeFrom}
+        </if>
+        <if test="sdlDWeekendday.modifyTimeTo!= null">
+            AND  sdl_d_weekendday.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlDWeekendday.modifyTimeTo}
+        </if>
+        <if test="sdlDWeekendday.createUserId != null"> and  sdl_d_weekendday.CREATE_USER_ID =#{ sdlDWeekendday.createUserId} </if>
+        <if test="sdlDWeekendday.modifyUserId != null"> and  sdl_d_weekendday.MODIFY_USER_ID =#{ sdlDWeekendday.modifyUserId} </if>
+</select>
+
+</mapper>

@@ -53,7 +53,7 @@
             </template>
             <div style="overflow-y: scroll; height: 80px">
               <a-select
-                style="width: 100%;"
+                style="width: 100%"
                 mode="multiple"
                 v-if="col.isShow || record.state != 1"
                 :default-value="record[col.filedName]"
@@ -110,6 +110,7 @@ export default {
   data() {
     return {
       loading: false,
+      spinning: true,
       formItemLayout,
       dataSource: [],
       form: this.$form.createForm(this),
@@ -185,7 +186,7 @@ export default {
     handleUser(record, filedName) {
       //  console.info(filedName+"_2")
       let options = record[filedName + "_2"];
-      if(record.subIds==null || record.subIds==''){
+      if (record.subIds == null || record.subIds == "") {
         return this.userData;
       }
       if (options != undefined && options.length > 0) {
@@ -238,19 +239,18 @@ export default {
         this.$message.success("复制数据为空，请重新复制");
       } else {
         this.optionData = this.userData;
-         let intersection= []
+        let intersection = [];
 
- if(record.subIds==null || record.subIds==''){
-    intersection =this.copyData
- }
- else {
-        let userAccounts = this.userData
-          .filter((f) => record.subIds.indexOf(f.userType) >= 0)
-          .map((p) => p.userAccount);
-       intersection = this.copyData.filter(
-          (t) => userAccounts.indexOf(t) >= 0
-        ); //取合集
- }
+        if (record.subIds == null || record.subIds == "") {
+          intersection = this.copyData;
+        } else {
+          let userAccounts = this.userData
+            .filter((f) => record.subIds.indexOf(f.userType) >= 0)
+            .map((p) => p.userAccount);
+          intersection = this.copyData.filter(
+            (t) => userAccounts.indexOf(t) >= 0
+          ); //取合集
+        }
         // this.listAuditInfo =[]
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
@@ -297,7 +297,7 @@ export default {
         return "周日(" + date2 + ")";
       }
     },
-     getWeekHeaderColor(n) {
+    getWeekHeaderColor(n) {
       if (n == 1) {
         return "LightCyan";
       }
@@ -324,6 +324,7 @@ export default {
       let dynamicData = [];
       const data = this.dataSource;
       const cols = this.listAuditInfo;
+       this.loading = true;
       data.forEach((record) => {
         cols.forEach((element) => {
           var filedName = element.filedName;
@@ -359,6 +360,7 @@ export default {
       })
         .then(() => {
           this.reset();
+           this.loading = false;
           this.$emit("success");
         })
         .catch(() => {
@@ -366,14 +368,22 @@ export default {
         });
     },
     fetchBanci() {
-      this.$get("sdlBScheduleD/banci", { startDateFrom: this.startDate }).then(
-        (r) => {
-          //.info(r.data)
-          // this.listAuditInfo = r.data;
-          const cols = [];
-          for (var i = 1; i < 8; i++) {
-            let clo = [];
-            r.data.forEach((element) => {
+      this.$get("sdlBScheduleD/banci", {
+        startDateFrom: this.startDate,
+        startDateTo: this.endDate,
+      }).then((r) => {
+        //.info(r.data)
+        // this.listAuditInfo = r.data;
+        const cols = [];
+        for (var i = 1; i < 8; i++) {
+          let clo = [];
+          r.data.forEach((element) => {
+            if (
+              (element.id == "4" ||
+                element.id == "5") &&
+              element.holiday.indexOf(i) < 0
+            ) {
+            } else {
               cols.push({
                 filedName: "B" + element.id + "_" + i,
                 isShow: true,
@@ -387,27 +397,29 @@ export default {
                 },
                 scopedSlots: { customRender: "B" + element.id + "_" + i },
               });
-            });
-            
-            this.columns.push({
-              title: this.getWeekName(i),
-               customHeaderCell: (h)=> {
-                  return { style: { backgroundColor: this.getWeekHeaderColor(h.key-1)} };
-                },
-              children: clo,
-            });
-          }
-          this.colsCustom = cols;
-          this.listAuditInfo = cols;
-          //  console.info(this.listAuditInfo)
-          // this.columns.push({
-          //   title: "操作",
-          //   dataIndex: "action",
-          //   width: 130,
-          //   scopedSlots: { customRender: "action" },
-          // });
+            }
+          });
+
+          this.columns.push({
+            title: this.getWeekName(i),
+            customHeaderCell: (h) => {
+              return {
+                style: { backgroundColor: this.getWeekHeaderColor(h.key - 1) },
+              };
+            },
+            children: clo,
+          });
         }
-      );
+        this.colsCustom = cols;
+        this.listAuditInfo = cols;
+        //  console.info(this.listAuditInfo)
+        // this.columns.push({
+        //   title: "操作",
+        //   dataIndex: "action",
+        //   width: 130,
+        //   scopedSlots: { customRender: "action" },
+        // });
+      });
     },
     fetch() {
       this.$get("sdlBScheduleD/zizhi", {
@@ -417,7 +429,7 @@ export default {
         let data = r.data;
         data.forEach((element) => {
           let auditList = element.dynamicData;
-          console.info(this.colsCustom.length);
+          
           this.colsCustom.forEach((element2) => {
             element[element2.filedName + "_2"] = this.userData; //存储用户数据
           });
@@ -435,8 +447,10 @@ export default {
             });
           }
         });
-        console.info(data);
         this.dataSource = data;
+       
+        this.spinning =false;
+       
       });
     },
     fetchDept() {

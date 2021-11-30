@@ -2,6 +2,7 @@ package cc.mrbird.febs.job.task;
 
 import cc.mrbird.febs.common.utils.WxMessage;
 
+import cc.mrbird.febs.rfc.CustomUser;
 import cc.mrbird.febs.rfc.RfcNoc;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -24,10 +26,13 @@ public class MsgValidTask {
     public void user() {
         RfcNoc rfcNoc = new RfcNoc();
         List<SdlBUser> sdlBUserList = rfcNoc.GetUserList();
-        List<String> sdlUserIds = iSdlBUserService.getUserAccounts();
+        List<CustomUser> sdlUserIds = iSdlBUserService.getUserAccounts();
+
         for (SdlBUser user : sdlBUserList
         ) {
-            if (sdlUserIds.contains(user.getUserAccount())) {
+           List<CustomUser> users= sdlUserIds.stream().filter(p->p.getUserAccount().equals(user.getUserAccount())).collect(Collectors.toList());
+            if (users.size()>0) {
+                user.setId(users.get(0).getId());
                 iSdlBUserService.updateSdlBUser(user);
             } else {
                 iSdlBUserService.createSdlBUser(user);

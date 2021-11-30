@@ -6,6 +6,8 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.sdl.entity.SdlBControl;
+import cc.mrbird.febs.sdl.service.ISdlBControlService;
 import cc.mrbird.febs.sdl.service.ISdlBScheduleService;
 import cc.mrbird.febs.sdl.entity.SdlBSchedule;
 
@@ -13,6 +15,7 @@ import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +46,8 @@ public class SdlBScheduleController extends BaseController {
     private String message;
     @Autowired
     public ISdlBScheduleService iSdlBScheduleService;
+    @Autowired
+    public ISdlBControlService iSdlBControlService;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
@@ -66,19 +71,36 @@ public class SdlBScheduleController extends BaseController {
     public Map<String, Object> List(QueryRequest request, SdlBSchedule sdlBSchedule) {
         User currentUser = FebsUtil.getCurrentUser();
         sdlBSchedule.setDeptId(currentUser.getDeptId());
-        return getDataTable(this.iSdlBScheduleService.findSdlBSchedules(request, sdlBSchedule));
+        return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBSchedules(request, sdlBSchedule)));
     }
+
+    private IPage<SdlBSchedule>  handleControlTime(IPage<SdlBSchedule> pageInfo){
+        List<SdlBSchedule> sdlBScheduleList= pageInfo.getRecords();
+        LambdaQueryWrapper<SdlBControl> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(SdlBControl::getState,2);
+        List<SdlBControl> controlList =iSdlBControlService.list(queryWrapper);
+        for (SdlBSchedule sdl:sdlBScheduleList
+             ) {
+           long c= controlList.stream().filter(p->(p.getYear()+p.getMonth())
+                    .equals(DateUtil.format(sdl.getStartDate(),"yyyyMM"))).count();
+           if(c>0){
+               sdl.setState(9);//代表不能处理
+           }
+        }
+        return pageInfo;
+    }
+
     @GetMapping("audit")
     @RequiresPermissions("sdlBSchedule:view")
     public Map<String, Object> List_audit(QueryRequest request, SdlBSchedule sdlBSchedule) {
         User currentUser = FebsUtil.getCurrentUser();
-        return getDataTable(this.iSdlBScheduleService.findSdlBScheduleList(request, sdlBSchedule));
+        return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBScheduleList(request, sdlBSchedule)));
     }
     @GetMapping("auditList")
     @RequiresPermissions("sdlBSchedule:view")
     public Map<String, Object> List_audit2(QueryRequest request, SdlBSchedule sdlBSchedule) {
         User currentUser = FebsUtil.getCurrentUser();
-        return getDataTable(this.iSdlBScheduleService.findSdlBScheduleList2(request, sdlBSchedule));
+        return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBScheduleList2(request, sdlBSchedule)));
     }
 
 

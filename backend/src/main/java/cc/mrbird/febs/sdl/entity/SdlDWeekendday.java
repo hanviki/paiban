@@ -1,8 +1,5 @@
 package cc.mrbird.febs.sdl.entity;
 
-import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
@@ -17,51 +14,33 @@ import cc.mrbird.febs.common.converter.*;
 
 /**
  * <p>
- * 系列名称
+ * 周六日表
  * </p>
  *
  * @author viki
- * @since 2021-11-10
+ * @since 2021-11-11
  */
 
-@Excel("sdl_d_banci")
+@Excel("sdl_d_weekendday")
 @Data
 @Accessors(chain = true)
-public class SdlDBanci implements Serializable{
+public class SdlDWeekendday implements Serializable{
 
 private static final long serialVersionUID=1L;
 
-                    @TableId(value = "id" , type = IdType.AUTO)
-                
-    private Integer id;
+    /**
+     * id
+     */
+                            
+        @ExcelField(value ="id")
+    private String id;
 
     /**
-     * 系列名称
+     * 周末日期
      */
         
-        @ExcelField(value ="系列名称")
-    private String muduleName;
-
-    /**
-     * 列颜色
-     */
-        
-        @ExcelField(value ="列颜色")
-    private String colorName;
-
-    /**
-     * 次数
-     */
-        
-        @ExcelField(value ="次数")
-    private BigDecimal cishu;
-
-    /**
-     * 金额
-     */
-        
-        @ExcelField(value ="金额")
-    private String amount;
+        @ExcelField(value ="周末日期")
+    private String weekDay;
 
     /**
      * 状态
@@ -114,35 +93,11 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="修改人")
     private Long modifyUserId;
 
-    /**
-     * 父ID
-     */
-        
-        @ExcelField(value ="父ID")
-    private Integer parentId;
-
-    /**
-     * 排序字段
-     */
-        
-        @ExcelField(value ="排序字段")
-    private Integer displayIndex;
-
-    /**
-     * 是否需要显示的列
-     */
-    private transient String holiday;
 
 
     public static final String ID ="id" ;
 
-    public static final String MUDULE_NAME ="mudule_name" ;
-
-    public static final String COLOR_NAME ="color_name" ;
-
-    public static final String CISHU ="cishu" ;
-
-    public static final String AMOUNT ="amount" ;
+    public static final String WEEK_DAY ="week_day" ;
 
     public static final String STATE ="state" ;
 
@@ -155,9 +110,5 @@ private static final long serialVersionUID=1L;
     public static final String CREATE_USER_ID ="CREATE_USER_ID" ;
 
     public static final String MODIFY_USER_ID ="MODIFY_USER_ID" ;
-
-    public static final String PARENT_ID ="parent_id" ;
-
-    public static final String DISPLAY_INDEX ="display_index" ;
 
         }

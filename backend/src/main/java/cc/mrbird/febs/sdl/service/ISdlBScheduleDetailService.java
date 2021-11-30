@@ -1,5 +1,6 @@
 package cc.mrbird.febs.sdl.service;
 
+import cc.mrbird.febs.sdl.entity.CustomData;
 import cc.mrbird.febs.sdl.entity.SdlBScheduleDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -27,6 +28,13 @@ public interface ISdlBScheduleDetailService extends IService<SdlBScheduleDetail>
         void updateSdlBScheduleDetail(SdlBScheduleDetail sdlBScheduleDetail);
 
         void deleteSdlBScheduleDetails(String[]Ids);
+
+        List<CustomData> findSdlBScheduleReport(SdlBScheduleDetail sdlBScheduleDetail);
+
+        List<CustomData>  findYeBanReport(SdlBScheduleDetail sdlBScheduleDetail);
+        List<CustomData>  findYeBanSubReport(SdlBScheduleDetail sdlBScheduleDetail);
+        List<CustomData>  findMenZhenReport(SdlBScheduleDetail sdlBScheduleDetail);
+        List<CustomData>  findMenZhenSubReport(SdlBScheduleDetail sdlBScheduleDetail);
 
 
         }

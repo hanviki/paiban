@@ -22,6 +22,8 @@
                     <result column="account_name" property="accountName"/>
                     <result column="zizhi_id" property="zizhiId"/>
                     <result column="zizhi_name" property="zizhiName"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="xulie" property="xulie"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -32,7 +34,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, zhicheng, xulie, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateSdlBScheduleDetail" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
         update sdl_b_schedule_detail
@@ -54,6 +56,8 @@
 <if test="accountName != null">account_name=#{accountName},</if>
 <if test="zizhiId != null">zizhi_id=#{zizhiId},</if>
 <if test="zizhiName != null">zizhi_name=#{zizhiName},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="xulie != null">xulie=#{xulie},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -89,7 +93,9 @@
             <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''"> and  sdl_b_schedule_detail.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
             <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''"> and  sdl_b_schedule_detail.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')</if>
         <if test="sdlBScheduleDetail.zizhiId != null"> and  sdl_b_schedule_detail.zizhi_id =#{ sdlBScheduleDetail.zizhiId} </if>
-        <if test="sdlBScheduleDetail.zizhiName != null"> and  sdl_b_schedule_detail.zizhi_name =#{ sdlBScheduleDetail.zizhiName} </if>
+            <if test="sdlBScheduleDetail.zizhiName != null and sdlBScheduleDetail.zizhiName != ''"> and  sdl_b_schedule_detail.zizhi_name like concat('%', #{ sdlBScheduleDetail.zizhiName} ,'%')</if>
+            <if test="sdlBScheduleDetail.zhicheng != null and sdlBScheduleDetail.zhicheng != ''"> and  sdl_b_schedule_detail.zhicheng like concat('%', #{ sdlBScheduleDetail.zhicheng} ,'%')</if>
+            <if test="sdlBScheduleDetail.xulie != null and sdlBScheduleDetail.xulie != ''"> and  sdl_b_schedule_detail.xulie like concat('%', #{ sdlBScheduleDetail.xulie} ,'%')</if>
         <if test="sdlBScheduleDetail.state != null"> and  sdl_b_schedule_detail.state =#{ sdlBScheduleDetail.state} </if>
         <if test="sdlBScheduleDetail.isDeletemark != null"> and  sdl_b_schedule_detail.IS_DELETEMARK =#{ sdlBScheduleDetail.isDeletemark} </if>
         <if test="sdlBScheduleDetail.createTimeFrom!= null">
@@ -107,5 +113,207 @@
         <if test="sdlBScheduleDetail.createUserId != null"> and  sdl_b_schedule_detail.CREATE_USER_ID =#{ sdlBScheduleDetail.createUserId} </if>
         <if test="sdlBScheduleDetail.modifyUserId != null"> and  sdl_b_schedule_detail.MODIFY_USER_ID =#{ sdlBScheduleDetail.modifyUserId} </if>
 </select>
+    <select id="findSdlBScheduleReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+
+        SELECT
+        A.dept_id,
+        A.dept_name,
+        A.schedule_date,
+        A.account_id,
+        A.account_name,
+        SUM( B.cishu ) cishu
+        FROM
+        sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
+        inner join sdl_b_schedule D on A.base_id =D.id
+        where B.cishu>0 and D.state=3
+        <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
+            and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+        <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
+            and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
+        </if>
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND A.schedule_date <![CDATA[ >= ]]>  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateTo!= null">
+            AND  A.schedule_date <![CDATA[ <= ]]>  #{sdlBScheduleDetail.scheduleDateTo}
+        </if>
+        GROUP BY
+        A.dept_id,
+        A.dept_name,
+        A.schedule_date,
+        A.account_id,
+        A.account_name
+    </select>
+    <select id="findYeBanReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+
+        SELECT
+        D.DEPT_ID,
+        D.DEPT_NAME,
+        SUM( C.cishu * ( C.amount + 0 ) ) amount,
+        SUM( C.cishu ) cishu
+        FROM
+        sdl_b_schedule_detail A
+        inner join sdl_b_schedule S on A.base_id =S.id
+       --  INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+        INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
+        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
+        WHERE
+        (A.xulie !='医技序列' or A.xulie is null) AND S.STATE=3
+        AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
+        AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
+        AND A.banci = '夜班'
+        <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
+            and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+        <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
+            and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
+        </if>
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        GROUP BY
+        D.DEPT_ID,
+        D.DEPT_NAME
+
+    </select>
+
+    <select id="findYeBanSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+
+        SELECT
+        A.account_id,
+        A.account_name,
+       --  A.bq_name,
+        B.renshizifw,
+        A.zhicheng,
+        SUM( C.cishu * ( C.amount + 0 ) ) amount,
+        SUM( C.cishu ) cishu
+        FROM
+        sdl_b_schedule_detail A
+        inner join sdl_b_schedule S on A.base_id =S.id
+        INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+        INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
+        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
+        WHERE
+        (A.xulie !='医技序列' or A.xulie is null) and s.state=3
+        AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
+        AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
+        AND A.banci = '夜班'
+        <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
+            and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+        <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
+            and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
+        </if>
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        GROUP BY
+        A.account_id,
+        A.account_name,
+      --   A.bq_name,
+        B.renshizifw,
+        A.zhicheng
+
+    </select>
+
+    <select id="findMenZhenReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+
+        SELECT
+        D.DEPT_ID,
+        D.DEPT_NAME,
+        SUM(
+        CASE
+        WHEN A.zhicheng = '正高' THEN
+        ( SUBSTRING_INDEX( C.amount, ',', 1 ) + 0 ) * C.cishu
+        WHEN A.zhicheng = '副高' THEN
+        ( SELECT SUBSTRING_INDEX( SUBSTRING_INDEX( C.amount, ',', 2 ), ',', '-1' ) + 0 ) * C.cishu ELSE ( SUBSTRING_INDEX( C.amount, ',',- 1 ) + 0 ) * C.cishu
+        END
+        ) amount,
+        SUM( C.cishu ) cishu
+        FROM
+        sdl_b_schedule_detail A
+        inner join sdl_b_schedule S on A.base_id =S.id
+       -- INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+        INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
+        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
+        WHERE
+        (A.xulie !='医技序列' or A.xulie is null) and S.state=3
+        AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' )
+        <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
+            and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+        <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
+            and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
+        </if>
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        GROUP BY
+        D.DEPT_ID,
+        D.DEPT_NAME
+
+    </select>
+
+    <select id="findMenZhenSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+
+        SELECT
+        A.account_id,
+        A.account_name,
+       --  A.bq_name,
+        B.renshizifw,
+        A.zhicheng,
+        SUM(
+        CASE
+        WHEN A.zhicheng = '正高' THEN
+        ( SUBSTRING_INDEX( C.amount, ',', 1 ) + 0 ) * C.cishu
+        WHEN A.zhicheng = '副高' THEN
+        ( SELECT SUBSTRING_INDEX( SUBSTRING_INDEX( C.amount, ',', 2 ), ',', '-1' ) + 0 ) * C.cishu ELSE ( SUBSTRING_INDEX( C.amount, ',',- 1 ) + 0 ) * C.cishu
+        END
+        ) amount,
+        SUM( C.cishu ) cishu
+        FROM
+        sdl_b_schedule_detail A
+        inner join sdl_b_schedule S on A.base_id =S.id
+        INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+        INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
+        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
+        WHERE
+        (A.xulie !='医技序列' or A.xulie is null) and S.state=3
+        AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' )
+        <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
+            and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+        <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
+            and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
+        </if>
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        GROUP BY
+        A.account_id,
+        A.account_name,
+      --   A.bq_name,
+        B.renshizifw,
+        A.zhicheng
+
+    </select>
 
 </mapper>

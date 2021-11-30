@@ -366,7 +366,7 @@ export default {
         .then(() => {
           this.dept_id = "";
           this.userAccount = "";
-          this.$emit("close");
+          this.$emit("succ");
         })
         .catch(() => {
           this.loading = false;
