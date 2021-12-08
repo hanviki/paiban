@@ -107,7 +107,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         });
     }
  private  String deptTypeName(int type){
-        if(type==0) return "医师";
+        if(type==0) return "临床";
         return  "医技";
 
  }

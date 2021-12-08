@@ -58,6 +58,7 @@
             </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
+             <a-button  @click="exportExcel">导出</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
           </span>
@@ -87,13 +88,26 @@
           :pagination="false"
           :rowKey="record2 => record2.accountId"
         >
+         <template slot="operation" slot-scope="text, record">
+        <a-button
+            icon="search"
+            @click="viewInfo(record)"
+          >查看</a-button>
+      </template>
         </a-table> 
       </a-table>
+      <sdl-account
+        :applyVisiable="viewInfoVisalboe"
+        @closeAccount="handleCloseAccount"
+        :queryParams="infoParams"
+      >
+      </sdl-account>
   </a-card>
 </template>
 
 <script>
 import moment from "moment";
+import SdlAccount from './SdlAccount.vue';
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -101,7 +115,7 @@ const formItemLayout = {
 };
 export default {
   name: "SdlBSchedule",
-  components: { },
+  components: {SdlAccount },
   data() {
     return {
       advanced: false,
@@ -137,6 +151,8 @@ export default {
         x: 900,
         // y: window.innerHeight - 200 - 100 - 20 - 15
       },
+      viewInfoVisalboe: false,
+      infoParams: {}
     };
   },
   computed: {
@@ -168,6 +184,11 @@ export default {
         {
           title: "排班天数",
           dataIndex: "cishu",
+        },
+        {
+          title: "查看",
+          dataIndex: "operation",
+          scopedSlots: { customRender: "operation" },
         },
       ];
     },
@@ -244,11 +265,20 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("sdlBSchedule/excel", {
+        let queryParams = { ...this.queryParams };
+        queryParams.flag= 0;
+      if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
+        this.$message.warning("节假日必选");
+      }
+      else {
+      let dataJson = JSON.stringify(this.columns)
+      this.$export("sdlBScheduleDetail/deptExcel", {
         sortField: sortField,
         sortOrder: sortOrder,
-        ...this.queryParams,
+        dataJson: dataJson,
+        ...queryParams,
       });
+      }
     },
     search() {
       let { sortedInfo } = this;
@@ -285,6 +315,15 @@ export default {
         sortOrder: sorter.order,
         ...this.queryParams,
       });
+    },
+    handleCloseAccount(){
+      this.viewInfoVisalboe= false;
+    },
+    viewInfo(record){
+       this.viewInfoVisalboe= true;
+       this.infoParams = { ...this.queryParams };
+       this.infoParams.accountId= record.accountId;
+       this.infoParams.flag= 0;
     },
     fetchDept() {
       this.$get("dept/list", { parentId: "0" }).then((res) => {

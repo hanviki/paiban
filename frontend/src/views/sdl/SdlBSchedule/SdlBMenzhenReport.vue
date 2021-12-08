@@ -36,6 +36,7 @@
             </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
+             <a-button  @click="exportExcel">导出</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
           </span>
@@ -66,13 +67,26 @@
           :rowKey="record2 => record2.accountId"
           :scroll="{y: 200}"
         >
+          <template slot="operation" slot-scope="text, record">
+        <a-button
+            icon="search"
+            @click="viewInfo(record)"
+          >查看</a-button>
+      </template>
         </a-table> 
       </a-table>
+        <sdl-account
+        :applyVisiable="viewInfoVisalboe"
+        @closeAccount="handleCloseAccount"
+        :queryParams="infoParams"
+      >
+      </sdl-account>
   </a-card>
 </template>
 
 <script>
 import moment from "moment";
+import SdlAccount from './SdlAccount.vue';
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -80,7 +94,7 @@ const formItemLayout = {
 };
 export default {
   name: "SdlBSchedule",
-  components: { },
+  components: {SdlAccount },
   data() {
     return {
       advanced: false,
@@ -114,6 +128,8 @@ export default {
         x: 900,
         // y: window.innerHeight - 200 - 100 - 20 - 15
       },
+       viewInfoVisalboe: false,
+      infoParams: {}
     };
   },
   computed: {
@@ -165,6 +181,11 @@ export default {
          {
           title: "金额",
           dataIndex: "amount",
+        },
+         {
+          title: "查看",
+          dataIndex: "operation",
+          scopedSlots: { customRender: "operation" },
         },
       ];
     },
@@ -226,11 +247,20 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("sdlBSchedule/excel", {
+      let queryParams = { ...this.queryParams };
+      if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
+        this.$message.warning("月份必选");
+      }
+      else {
+        queryParams.flag= 2;
+     let dataJson = JSON.stringify(this.columns)
+      this.$export("sdlBScheduleDetail/deptExcel", {
         sortField: sortField,
         sortOrder: sortOrder,
-        ...this.queryParams,
+        dataJson: dataJson,
+        ...queryParams,
       });
+      }
     },
     search() {
       let { sortedInfo } = this;
@@ -252,6 +282,15 @@ export default {
         ...queryParams,
       });
       }
+    },
+     handleCloseAccount(){
+      this.viewInfoVisalboe= false;
+    },
+    viewInfo(record){
+       this.viewInfoVisalboe= true;
+       this.infoParams = { ...this.queryParams };
+       this.infoParams.accountId= record.accountId;
+       this.infoParams.flag= 2;
     },
     reset() {
       // 取消选中

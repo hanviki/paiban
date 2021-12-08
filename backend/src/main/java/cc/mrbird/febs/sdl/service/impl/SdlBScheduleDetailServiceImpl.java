@@ -105,6 +105,12 @@ public class SdlBScheduleDetailServiceImpl extends ServiceImpl<SdlBScheduleDetai
 
     @Override
     @Transactional
+    public List<SdlBScheduleDetail> findSdlBScheduleReportAccount(SdlBScheduleDetail sdlBScheduleDetail) {
+        return this.baseMapper.findSdlBScheduleReportAccount(sdlBScheduleDetail);
+    }
+
+    @Override
+    @Transactional
     public List<CustomData> findYeBanReport(SdlBScheduleDetail sdlBScheduleDetail) {
         return this.baseMapper.findYeBanReport(sdlBScheduleDetail);
     }
@@ -113,6 +119,11 @@ public class SdlBScheduleDetailServiceImpl extends ServiceImpl<SdlBScheduleDetai
     @Transactional
     public List<CustomData> findYeBanSubReport(SdlBScheduleDetail sdlBScheduleDetail) {
         return this.baseMapper.findYeBanSubReport(sdlBScheduleDetail);
+    }
+    @Override
+    @Transactional
+    public List<SdlBScheduleDetail> findYeBanSubReportAccount(SdlBScheduleDetail sdlBScheduleDetail) {
+        return this.baseMapper.findYeBanSubReportAccount(sdlBScheduleDetail);
     }
 
     @Override
@@ -125,5 +136,10 @@ public class SdlBScheduleDetailServiceImpl extends ServiceImpl<SdlBScheduleDetai
     @Transactional
     public List<CustomData> findMenZhenSubReport(SdlBScheduleDetail sdlBScheduleDetail) {
         return this.baseMapper.findMenZhenSubReport(sdlBScheduleDetail);
+    }
+    @Override
+    @Transactional
+    public List<SdlBScheduleDetail> findMenZhenSubReportAccount(SdlBScheduleDetail sdlBScheduleDetail) {
+        return this.baseMapper.findMenZhenSubReportAccount(sdlBScheduleDetail);
     }
 }

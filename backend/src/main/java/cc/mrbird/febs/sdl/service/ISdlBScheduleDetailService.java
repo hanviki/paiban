@@ -35,6 +35,10 @@ public interface ISdlBScheduleDetailService extends IService<SdlBScheduleDetail>
         List<CustomData>  findYeBanSubReport(SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findMenZhenReport(SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findMenZhenSubReport(SdlBScheduleDetail sdlBScheduleDetail);
+        List<SdlBScheduleDetail> findSdlBScheduleReportAccount(SdlBScheduleDetail sdlBScheduleDetail);
+        List<SdlBScheduleDetail> findYeBanSubReportAccount(SdlBScheduleDetail sdlBScheduleDetail);
+
+        List<SdlBScheduleDetail> findMenZhenSubReportAccount(SdlBScheduleDetail sdlBScheduleDetail);
 
 
-        }
+}

@@ -23,7 +23,7 @@
                     { required: true, message: '科室类型不能为空'}
                   ]}]">
           <a-select-option :value="0">
-             医师
+             临床
           </a-select-option>
            <a-select-option :value="1">
              医技
@@ -105,7 +105,7 @@ export default {
       this.form.getFieldDecorator('orderNum')
       this.form.setFieldsValue({'orderNum': dept.order})
       this.form.getFieldDecorator('deptType')
-      this.form.setFieldsValue({'deptType': dept.deptType})
+      this.form.setFieldsValue({'deptType': (dept.type=="临床"?0:1)})
       if (dept.parentId !== '0') {
         this.defaultCheckedKeys.push(dept.parentId)
         this.checkedKeys = this.defaultCheckedKeys

@@ -23,7 +23,7 @@
                     { required: true, message: '科室类型不能为空'}
                   ]}]">
           <a-select-option :value="0">
-             医师
+             临床
           </a-select-option>
            <a-select-option :value="1">
              医技

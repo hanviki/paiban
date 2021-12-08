@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="补登申请审核"
+    title="排班修改申请审核"
     :maskClosable="false"
     width="60%"
     placement="right"

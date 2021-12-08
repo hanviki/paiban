@@ -6,6 +6,8 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.utils.ExportExcelUtils;
+import cc.mrbird.febs.rfc.CustomUser;
 import cc.mrbird.febs.sdl.entity.CustomData;
 import cc.mrbird.febs.sdl.service.ISdlBScheduleDetailService;
 import cc.mrbird.febs.sdl.entity.SdlBScheduleDetail;
@@ -143,12 +145,16 @@ public class SdlBScheduleDetailController extends BaseController {
     }
 
     /**
-     * 节假日考勤统计
+     * 节假日考勤统计  （不包含夜班）
      * @param sdlBScheduleDetail
      * @return
      */
     @GetMapping("dept")
     public List<CustomData> deptStatistic(SdlBScheduleDetail sdlBScheduleDetail) {
+        return getStatictid(sdlBScheduleDetail);
+    }
+
+    private List<CustomData> getStatictid(SdlBScheduleDetail sdlBScheduleDetail){
         List<CustomData> data = new ArrayList<>();
         List<CustomData> customDataList = this.iSdlBScheduleDetailService.findSdlBScheduleReport(sdlBScheduleDetail);
         Map<String, Double> mp = customDataList.stream().collect(
@@ -160,9 +166,8 @@ public class SdlBScheduleDetailController extends BaseController {
             nc.setCishu(entry.getValue());
             data.add(nc);
         });
-        return data;
+        return  data;
     }
-
     /**
      * 节假日考勤统计 子表
      * @param sdlBScheduleDetail
@@ -208,7 +213,7 @@ public class SdlBScheduleDetailController extends BaseController {
     }
 
     /**
-     * 门诊值班费统计
+     * 门诊值班费统计（不在法定节假日，且只取门诊上，门诊下）
      * @param sdlBScheduleDetail
      * @return
      */
@@ -226,5 +231,48 @@ public class SdlBScheduleDetailController extends BaseController {
     public List<CustomData> deptStatistic5(SdlBScheduleDetail sdlBScheduleDetail) {
         List<CustomData> customDataList = this.iSdlBScheduleDetailService.findMenZhenSubReport(sdlBScheduleDetail);
         return customDataList;
+    }
+
+    /**
+     * 个人明细
+     * @param sdlBScheduleDetail
+     * @param flag  0是节假日排班  1是夜班 2.门诊班
+     * @return
+     */
+    @GetMapping("accountDetail")
+    public List<SdlBScheduleDetail> deptStatisticSub(SdlBScheduleDetail sdlBScheduleDetail,int flag) {
+        List<SdlBScheduleDetail> customDataList= new ArrayList<>();
+        if(flag==0) {
+            customDataList = this.iSdlBScheduleDetailService.findSdlBScheduleReportAccount(sdlBScheduleDetail);
+        }
+        if(flag==1) {
+            customDataList = this.iSdlBScheduleDetailService.findYeBanSubReportAccount(sdlBScheduleDetail);
+        }
+        if(flag==2) {
+            customDataList = this.iSdlBScheduleDetailService.findMenZhenSubReportAccount(sdlBScheduleDetail);
+        }
+
+        return customDataList;
+    }
+
+    @PostMapping("deptExcel")
+    public void deptExport(QueryRequest request, SdlBScheduleDetail sdlBScheduleDetail, HttpServletResponse response,int flag,String dataJson) throws FebsException {
+        try {
+            List<CustomData> customDataList =new ArrayList<>();
+            if(flag==0){
+                customDataList= getStatictid(sdlBScheduleDetail);
+            }
+            if(flag==1){
+                customDataList= this.iSdlBScheduleDetailService.findYeBanReport(sdlBScheduleDetail);
+            }
+            if(flag==2){
+                customDataList= this.iSdlBScheduleDetailService.findMenZhenReport(sdlBScheduleDetail);
+            }
+            ExportExcelUtils.exportCustomExcel_han(response, customDataList,dataJson,"");
+        } catch (Exception e) {
+            message = "导出Excel失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
     }
 }
