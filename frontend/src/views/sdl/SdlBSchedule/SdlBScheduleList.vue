@@ -1,39 +1,133 @@
 <template>
   <a-card :bordered="false" class="card-area">
-    <div :class="advanced ? 'search' : null">
-      <a-form layout="horizontal">
-        <a-row>
-          <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
+    <template v-if="!showAdd">
+      <div style="text-align: center; font-size: 20px">
+        <div>
+          <a-card title="本部">
+            <a-row>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="发薪号">
+                  <a-input placeholder="请输入发薪号" v-model="userAccount_1" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="姓名">
+                  <a-input
+                    placeholder="请输入姓名"
+                    v-model="userAccountName_1"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="手机号">
+                  <a-input placeholder="请输入联系方式" v-model="telphone_1" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-card>
+          <a-card title="西院">
+            <a-row>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="发薪号">
+                  <a-input placeholder="请输入发薪号" v-model="userAccount_2" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="姓名">
+                  <a-input
+                    placeholder="请输入姓名"
+                    v-model="userAccountName_2"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="手机号">
+                  <a-input placeholder="请输入联系方式" v-model="telphone_2" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-card>
+          <a-card title="肿瘤">
+            <a-row>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="发薪号">
+                  <a-input placeholder="请输入发薪号" v-model="userAccount_3" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="姓名">
+                  <a-input
+                    placeholder="请输入姓名"
+                    v-model="userAccountName_3"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="手机号">
+                  <a-input placeholder="请输入联系方式" v-model="telphone_3" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-card>
+          <a-card title="金银湖">
+            <a-row>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="发薪号">
+                  <a-input placeholder="请输入发薪号" v-model="userAccount_4" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="姓名">
+                  <a-input
+                    placeholder="请输入姓名"
+                    v-model="userAccountName_4"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item v-bind="formItemLayout" label="手机号">
+                  <a-input placeholder="请输入联系方式" v-model="telphone_4" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-card>
+        </div>
+        <a-button @click="handlePromise" type="primary">本人确认</a-button>
+      </div>
+    </template>
+    <template v-if="showAdd">
+      <div :class="advanced ? 'search' : null">
+        <a-form layout="horizontal">
+          <a-row>
+            <div :class="advanced ? null : 'fold'">
+              <a-col :md="8" :sm="24">
                 <a-form-item label="排班周" v-bind="formItemLayout">
-              <a-week-picker 
-              :format="dateFormat"
-              style="width:100%"
-           @change="handleWeekChange" >
-        </a-week-picker>
-        </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="排班状态" v-bind="formItemLayout">
-                 <a-select
+                  <a-week-picker
+                    :format="dateFormat"
                     style="width: 100%"
-                    v-model="queryParams.state"
+                    @change="handleWeekChange"
                   >
-                 <a-select-option value="-1"> 全部 </a-select-option>
+                  </a-week-picker>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item label="排班状态" v-bind="formItemLayout">
+                  <a-select style="width: 100%" v-model="queryParams.state">
+                    <a-select-option value="-1"> 全部 </a-select-option>
                     <a-select-option value="0"> 未提交 </a-select-option>
                     <a-select-option value="1"> 已提交 </a-select-option>
                     <a-select-option value="2"> 审核未通过 </a-select-option>
                     <a-select-option value="3"> 已审核 </a-select-option>
-                 </a-select>
-              </a-form-item>
-            </a-col>
+                  </a-select>
+                </a-form-item>
+              </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="排班修改状态" v-bind="formItemLayout">
                   <a-select
                     style="width: 100%"
                     v-model="queryParams.stateApply"
                   >
-                  <a-select-option value="-1"> 全部 </a-select-option>
+                    <a-select-option value="-1"> 全部 </a-select-option>
                     <a-select-option value="1"> 未发起申请 </a-select-option>
                     <a-select-option value="2"> 申请待审核 </a-select-option>
                     <a-select-option value="3"> 申请未通过 </a-select-option>
@@ -41,32 +135,36 @@
                   </a-select>
                 </a-form-item>
               </a-col>
-          </div>
-          <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="search">查询</a-button>
-            <a-button style="margin-left: 8px" @click="reset">重置</a-button>
-            <a @click="toggleAdvanced" style="margin-left: 8px">
-              {{ advanced ? "收起" : "展开" }}
-              <a-icon :type="advanced ? 'up' : 'down'" />
-            </a>
-          </span>
-        </a-row>
-      </a-form>
-    </div>
-    <div>
-      <div class="operator">
-        <a-button
-          v-hasPermission="['sdlBSchedule:add']"
-          type="primary"
-          ghost
-          @click="add"
-          >新增</a-button
-        >
-        <a-button v-hasPermission="['sdlBSchedule:delete']" @click="batchDelete"
-          >删除</a-button
-        >
-        <span style="color:red;">更改当前周之前的排班数据，均需要发起申请，通过后方可编辑</span>
+            </div>
+            <span style="float: right; margin-top: 3px">
+              <a-button type="primary" @click="search">查询</a-button>
+              <a-button style="margin-left: 8px" @click="reset">重置</a-button>
+              <a @click="toggleAdvanced" style="margin-left: 8px">
+                {{ advanced ? "收起" : "展开" }}
+                <a-icon :type="advanced ? 'up' : 'down'" />
+              </a>
+            </span>
+          </a-row>
+        </a-form>
       </div>
+      <div>
+        <div class="operator">
+          <a-button
+            v-hasPermission="['sdlBSchedule:add']"
+            type="primary"
+            ghost
+            @click="add"
+            >新增</a-button
+          >
+          <a-button
+            v-hasPermission="['sdlBSchedule:delete']"
+            @click="batchDelete"
+            >删除</a-button
+          >
+          <span style="color: red"
+            >更改当前周之前的排班数据，均需要发起申请，通过后方可编辑</span
+          >
+        </div>
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -93,86 +191,86 @@
           </a-popover>
         </template>
         <template slot="operation" slot-scope="text, record">
-           <a-button
-            icon="search"
-            @click="info(record)"
-          >查看</a-button>
+          <a-button icon="search" @click="info(record)">查看</a-button>
           <a-button
             v-if="getButtonState(record) == 1"
             icon="edit"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
-          >编辑</a-button>
+            >编辑</a-button
+          >
           <a-button
             v-if="getButtonState(record) == 2"
             icon="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="apply(record)"
-          >提交申请</a-button>
+            >提交申请</a-button
+          >
           <a-button
             v-if="getButtonState(record) == 3"
             icon="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="apply(record)"
-          >排班修改申请</a-button>
-         
+            >排班修改申请</a-button
+          >
         </template>
       </a-table>
-  
-    <!-- 新增字典 -->
-    <sdlBSchedule-add
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </sdlBSchedule-add>
-    <!-- 修改字典 -->
-    <sdlBSchedule-edit
-      ref="sdlBScheduleEdit"
-      @close="handleEditClose"
-      @success="handleEditSuccess"
-      :editVisiable="editVisiable"
-    >
-    </sdlBSchedule-edit>
-     <sdlBSchedule-info
-      ref="sdlBScheduleInfo"
-      @close="handleInfoClose"
-      :editVisiable="infoVisiable"
-    >
-     </sdlBSchedule-info>
-    <a-modal
-      v-model="applyVisiable"
-      :centered="true"
-      :keyboard="false"
-      :width="800"
-      ok-text="确认"
-      cancel-text="取消"
-      @ok="saveApply"
-      @cancel="hideModal"
-      title="发起申请"
-    >
-      <a-form :form="form">
-        <a-form-item
-          v-bind="{
-            labelCol: { span: 3 },
-            wrapperCol: { span: 19, offset: 1 },
-          }"
-          label="申请理由"
-        >
-          <a-textarea
-            :rows="8"
-            placeholder="请输入申请理由"
-            v-decorator="[
-              'note',
-              { rules: [{ required: true, message: '申请理由不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-form>
-    </a-modal>
+
+      <!-- 新增字典 -->
+      <sdlBSchedule-add
+        @close="handleAddClose"
+        @success="handleAddSuccess"
+        :addVisiable="addVisiable"
+      >
+      </sdlBSchedule-add>
+      <!-- 修改字典 -->
+      <sdlBSchedule-edit
+        ref="sdlBScheduleEdit"
+        @close="handleEditClose"
+        @success="handleEditSuccess"
+        :editVisiable="editVisiable"
+      >
+      </sdlBSchedule-edit>
+      <sdlBSchedule-info
+        ref="sdlBScheduleInfo"
+        @close="handleInfoClose"
+        :editVisiable="infoVisiable"
+      >
+      </sdlBSchedule-info>
+      <a-modal
+        v-model="applyVisiable"
+        :centered="true"
+        :keyboard="false"
+        :width="800"
+        ok-text="确认"
+        cancel-text="取消"
+        @ok="saveApply"
+        @cancel="hideModal"
+        title="发起申请"
+      >
+        <a-form :form="form">
+          <a-form-item
+            v-bind="{
+              labelCol: { span: 3 },
+              wrapperCol: { span: 19, offset: 1 },
+            }"
+            label="申请理由"
+          >
+            <a-textarea
+              :rows="8"
+              placeholder="请输入申请理由"
+              v-decorator="[
+                'note',
+                { rules: [{ required: true, message: '申请理由不能为空' }] },
+              ]"
+            />
+          </a-form-item>
+        </a-form>
+      </a-modal>
+    </template>
   </a-card>
 </template>
 
@@ -186,6 +284,10 @@ const formItemLayout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 15, offset: 1 },
 };
+const formItemLayout2 = {
+  labelCol: { span: 3 },
+  wrapperCol: { span: 5 },
+};
 export default {
   name: "SdlBSchedule",
   components: { SdlBScheduleAdd, SdlBScheduleEdit, SdlBScheduleInfo },
@@ -196,11 +298,12 @@ export default {
       dataSource: [],
       selectedRowKeys: [],
       sortedInfo: {
-        order: 'descend',
-        field: 'start_date'
+        order: "descend",
+        field: "start_date",
       },
       paginationInfo: null,
       formItemLayout,
+      formItemLayout2,
       pagination: {
         pageSizeOptions: ["10", "20", "30", "40", "100"],
         defaultCurrent: 1,
@@ -219,6 +322,19 @@ export default {
       bordered: true,
       applyVisiable: false,
       editRcordId: "", //申请ID
+      showAdd: false,
+      userAccount_1: "",
+      userAccountName_1: "",
+      telphone_1: "",
+      userAccount_2: "",
+      userAccountName_2: "",
+      telphone_2: "",
+      userAccount_3: "",
+      userAccountName_3: "",
+      telphone_3: "",
+      userAccount_4: "",
+      userAccountName_4: "",
+      telphone_4: "",
     };
   },
   computed: {
@@ -270,7 +386,7 @@ export default {
             }
           },
         },
-         {
+        {
           title: "排班状态审核意见",
           dataIndex: "auditSuggestion",
           width: 200,
@@ -290,7 +406,7 @@ export default {
               case 4:
                 return <a-tag color="#f50">已通过申请</a-tag>;
               case 0:
-                return '';
+                return "";
               default:
                 return text;
             }
@@ -317,9 +433,62 @@ export default {
     },
   },
   mounted() {
+    this.fetchByDeptId();
     this.search();
   },
   methods: {
+    handlePromise() {
+      var person = [];
+      let flag= 0;
+      if(this.userAccountName_1!=''&&this.userAccount_1!=''&&this.telphone_1!=''){
+        flag =1;
+      }
+       if(this.userAccountName_2!=''&&this.userAccount_2!=''&&this.telphone_2!=''){
+        flag =1;
+      }
+       if(this.userAccountName_3!=''&&this.userAccount_3!=''&&this.telphone_3!=''){
+        flag =1;
+      }
+       if(this.userAccountName_4!=''&&this.userAccount_4!=''&&this.telphone_4!=''){
+        flag =1;
+      }
+      if(flag==0){
+         this.$message.warning("请完整必填其中一项");
+         return;
+      }
+      person.push({
+        userAccountName: this.userAccountName_1,
+        userAccount: this.userAccount_1,
+        telephone: this.telphone_1,
+        areaIndex: 0,
+      });
+      person.push({
+        userAccountName: this.userAccountName_2,
+        userAccount: this.userAccount_2,
+        telephone: this.telphone_2,
+        areaIndex: 1,
+      });
+      person.push({
+        userAccountName: this.userAccountName_3,
+        userAccount: this.userAccount_3,
+        telephone: this.telphone_3,
+        areaIndex: 2,
+      });
+      person.push({
+        userAccountName: this.userAccountName_4,
+        userAccount: this.userAccount_4,
+        telephone: this.telphone_4,
+        areaIndex: 3,
+      });
+      this.$post("sdlBPersoninfo", {
+        jsonStr: JSON.stringify(person),
+      })
+        .then(() => {})
+        .catch(() => {
+          this.loading = false;
+        });
+      this.showAdd = true;
+    },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
     },
@@ -329,13 +498,14 @@ export default {
         this.queryParams.comments = "";
       }
     },
-    handleWeekChange(weekData ) {
-      console.info(weekData)
-      if(weekData==null){
-        this.queryParams.startDateFrom= ''
-      }
-      else {
-　　    this.queryParams.startDateFrom = moment(weekData).day(1).format('YYYY-MM-DD'); // 周一日期
+    handleWeekChange(weekData) {
+      console.info(weekData);
+      if (weekData == null) {
+        this.queryParams.startDateFrom = "";
+      } else {
+        this.queryParams.startDateFrom = moment(weekData)
+          .day(1)
+          .format("YYYY-MM-DD"); // 周一日期
       }
     },
     hideModal() {
@@ -363,11 +533,11 @@ export default {
       });
     },
     getButtonState(record) {
-      if(record.state==9){
+      if (record.state == 9) {
         return 5; //已经不能做任何操作
       }
       //1是编辑 2是提交申请 3.改登  4.都不显示
-      if (record.stateApply != '0') {
+      if (record.stateApply != "0") {
         //只要是申请审核通过,都是编辑
         if (record.stateApply == 4) {
           //申请审核通过
@@ -390,7 +560,7 @@ export default {
         //过期
         return 3;
       }
-      if (record.state==3) {
+      if (record.state == 3) {
         //过期
         return 3;
       }
@@ -421,8 +591,8 @@ export default {
     },
     handleInfoSuccess() {
       this.infoVisiable = false;
-     // this.$message.success("修改成功");
-     // this.search();
+      // this.$message.success("修改成功");
+      // this.search();
     },
     handleInfoClose() {
       this.infoVisiable = false;
@@ -431,7 +601,7 @@ export default {
       this.$refs.sdlBScheduleEdit.setFormValues(record);
       this.editVisiable = true;
     },
-    info(record){
+    info(record) {
       this.$refs.sdlBScheduleInfo.setFormValues(record);
       this.infoVisiable = true;
     },
@@ -440,14 +610,16 @@ export default {
         this.$message.warning("请选择需要删除的记录");
         return;
       }
-      var msg= true;
-      const data = this.dataSource.filter(p=>this.selectedRowKeys.indexOf(p.id)>=0);
-      data.forEach(el=>{
-        if(el.state!=0){
+      var msg = true;
+      const data = this.dataSource.filter(
+        (p) => this.selectedRowKeys.indexOf(p.id) >= 0
+      );
+      data.forEach((el) => {
+        if (el.state != 0) {
           msg = false;
         }
-      })
-      if(msg==false){
+      });
+      if (msg == false) {
         this.$message.warning("只有未提交的数据可以删除，请重新选择");
         return;
       }
@@ -491,12 +663,12 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      let queryParams = { ...this.queryParams }
-      if(queryParams.state==-1){
-          delete queryParams.state
+      let queryParams = { ...this.queryParams };
+      if (queryParams.state == -1) {
+        delete queryParams.state;
       }
-       if(queryParams.stateApply==-1){
-          delete queryParams.stateApply
+      if (queryParams.stateApply == -1) {
+        delete queryParams.stateApply;
       }
       this.fetch({
         sortField: sortField,
@@ -527,6 +699,35 @@ export default {
         sortField: sorter.field,
         sortOrder: sorter.order,
         ...this.queryParams,
+      });
+    },
+    fetchByDeptId() {
+      this.$get("sdlBPersoninfo", {
+        deptId: this.$store.state.account.user.deptId,
+      }).then((r) => {
+        let data = r.data;
+
+        let dataDepts = data.rows;
+        if (dataDepts.length > 0) {
+          this.userAccount_1 = dataDepts[0].userAccount;
+          this.userAccountName_1 = dataDepts[0].userAccountName;
+          this.telphone_1 = dataDepts[0].telephone;
+        }
+        if (dataDepts.length > 1) {
+          this.userAccount_2 = dataDepts[1].userAccount;
+          this.userAccountName_2 = dataDepts[1].userAccountName;
+          this.telphone_2 = dataDepts[1].telephone;
+        }
+         if (dataDepts.length > 2) {
+          this.userAccount_3 = dataDepts[2].userAccount;
+          this.userAccountName_3 = dataDepts[2].userAccountName;
+          this.telphone_3 = dataDepts[2].telephone;
+        }
+         if (dataDepts.length > 3) {
+          this.userAccount_4 = dataDepts[3].userAccount;
+          this.userAccountName_4 = dataDepts[3].userAccountName;
+          this.telphone_4 = dataDepts[3].telephone;
+        }
       });
     },
     fetch(params = {}) {

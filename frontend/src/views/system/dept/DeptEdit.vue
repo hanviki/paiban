@@ -9,6 +9,9 @@
     :visible="deptEditVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form">
+      <a-form-item label='部门编码' v-bind="formItemLayout">
+        {{dept.deptId}}
+      </a-form-item>
       <a-form-item label='部门名称' v-bind="formItemLayout">
         <a-input v-decorator="['deptName',
                    {rules: [
@@ -74,7 +77,9 @@ export default {
       formItemLayout,
       form: this.$form.createForm(this),
       deptTreeKey: +new Date(),
-      dept: {},
+      dept: {
+        deptId: ''
+      },
       checkedKeys: [],
       expandedKeys: [],
       defaultCheckedKeys: [],

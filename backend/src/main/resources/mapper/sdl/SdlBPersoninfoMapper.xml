@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.sdl.dao.SdlBPersoninfoMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.sdl.entity.SdlBPersoninfo">
+                    <id column="id" property="id"/>
+                    <result column="dept_id" property="deptId"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="area_index" property="areaIndex"/>
+                    <result column="telephone" property="telephone"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, dept_id, dept_name, user_account_name, user_account, area_index, telephone, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateSdlBPersoninfo" parameterType="cc.mrbird.febs.sdl.entity.SdlBPersoninfo">
+        update sdl_b_personinfo
+        <trim prefix="set" suffixOverrides=",">
+<if test="deptId != null">dept_id=#{deptId},</if>
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="areaIndex != null">area_index=#{areaIndex},</if>
+<if test="telephone != null">telephone=#{telephone},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findSdlBPersoninfo" resultType="cc.mrbird.febs.sdl.entity.SdlBPersoninfo" parameterType="cc.mrbird.febs.sdl.entity.SdlBPersoninfo">
+        select  *  from sdl_b_personinfo
+        where  1=1
+            <if test="sdlBPersoninfo.deptId != null and sdlBPersoninfo.deptId != ''"> and  sdl_b_personinfo.dept_id like concat('%', #{ sdlBPersoninfo.deptId} ,'%')</if>
+            <if test="sdlBPersoninfo.deptName != null and sdlBPersoninfo.deptName != ''"> and  sdl_b_personinfo.dept_name like concat('%', #{ sdlBPersoninfo.deptName} ,'%')</if>
+            <if test="sdlBPersoninfo.userAccountName != null and sdlBPersoninfo.userAccountName != ''"> and  sdl_b_personinfo.user_account_name like concat('%', #{ sdlBPersoninfo.userAccountName} ,'%')</if>
+            <if test="sdlBPersoninfo.userAccount != null and sdlBPersoninfo.userAccount != ''"> and  sdl_b_personinfo.user_account like concat('%', #{ sdlBPersoninfo.userAccount} ,'%')</if>
+        <if test="sdlBPersoninfo.areaIndex != null"> and  sdl_b_personinfo.area_index =#{ sdlBPersoninfo.areaIndex} </if>
+            <if test="sdlBPersoninfo.telephone != null and sdlBPersoninfo.telephone != ''"> and  sdl_b_personinfo.telephone like concat('%', #{ sdlBPersoninfo.telephone} ,'%')</if>
+        <if test="sdlBPersoninfo.state != null"> and  sdl_b_personinfo.state =#{ sdlBPersoninfo.state} </if>
+        <if test="sdlBPersoninfo.isDeletemark != null"> and  sdl_b_personinfo.IS_DELETEMARK =#{ sdlBPersoninfo.isDeletemark} </if>
+        <if test="sdlBPersoninfo.createTimeFrom!= null">
+            AND sdl_b_personinfo.CREATE_TIME <![CDATA[ >= ]]>  #{sdlBPersoninfo.createTimeFrom}
+        </if>
+        <if test="sdlBPersoninfo.createTimeTo!= null">
+            AND  sdl_b_personinfo.CREATE_TIME <![CDATA[ <= ]]>  #{sdlBPersoninfo.createTimeTo}
+        </if>
+        <if test="sdlBPersoninfo.modifyTimeFrom!= null">
+            AND sdl_b_personinfo.MODIFY_TIME <![CDATA[ >= ]]>  #{sdlBPersoninfo.modifyTimeFrom}
+        </if>
+        <if test="sdlBPersoninfo.modifyTimeTo!= null">
+            AND  sdl_b_personinfo.MODIFY_TIME <![CDATA[ <= ]]>  #{sdlBPersoninfo.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

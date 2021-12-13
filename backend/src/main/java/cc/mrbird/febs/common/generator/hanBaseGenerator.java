@@ -65,7 +65,7 @@ public class hanBaseGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         //strategy.setTablePrefix(new String[] { "tlog_", "tsys_" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"sdl_b_control"}); // 需要生成的表
+        strategy.setInclude(new String[]{"sdl_b_personInfo"}); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -131,7 +131,7 @@ public class hanBaseGenerator {
         List<String> searchFiledsList = new ArrayList<>();
         searchFiledsList.add("start_date");
         searchFiledsList.add("end_date");
-        searchFiledsList.add("user_name");
+        searchFiledsList.add("dept_id");
         searchFiledsList.add("user_account_name");
         searchFiledsList.add("user_account");
         searchFiledsList.add("user_account_name");

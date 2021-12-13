@@ -20,7 +20,7 @@ public class Dept implements Serializable {
 
     private static final long serialVersionUID = -7790334862410409053L;
 
-    @TableId(value = "DEPT_ID", type = IdType.AUTO)
+    @TableId(value = "DEPT_ID")
     private String deptId;
 
     private String parentId;

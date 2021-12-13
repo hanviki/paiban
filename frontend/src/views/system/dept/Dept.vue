@@ -101,7 +101,11 @@ export default {
     columns () {
       let { sortedInfo } = this
       sortedInfo = sortedInfo || {}
-      return [{
+      return [
+        {
+        title: '编码',
+        dataIndex: 'id'
+      },{
         title: '名称',
         dataIndex: 'text'
       },

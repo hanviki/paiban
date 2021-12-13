@@ -71,7 +71,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Transactional
     public void createDept(Dept dept) {
         String parentId = dept.getParentId();
-        if (parentId == null)
+        if (StringUtils.isEmpty(parentId))
             dept.setParentId("0");
         dept.setCreateTime(new Date());
         this.save(dept);
@@ -112,6 +112,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
  }
     private void delete(List<String> deptIds) {
+//        for (String id:deptIds
+//             ) {
+//            this.baseMapper.deleteDeptById(id);
+//        }
         removeByIds(deptIds);
 
         LambdaQueryWrapper<Dept> queryWrapper = new LambdaQueryWrapper<>();

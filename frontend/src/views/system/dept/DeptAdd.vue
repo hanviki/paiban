@@ -9,6 +9,13 @@
     :visible="deptAddVisiable"
     style="height: calc(100% - 55px);overflow: auto;padding-bottom: 53px;">
     <a-form :form="form">
+       <a-form-item label='部门编码' v-bind="formItemLayout">
+        <a-input v-decorator="['deptId',
+                   {rules: [
+                    { required: true, message: '部门编码不能为空'},
+                    { max: 20, message: '长度不能超过20个字符'}
+                  ]}]"/>
+      </a-form-item>
       <a-form-item label='部门名称' v-bind="formItemLayout">
         <a-input v-decorator="['deptName',
                    {rules: [
@@ -124,7 +131,7 @@ export default {
       })
     },
     setDeptFields () {
-      let values = this.form.getFieldsValue(['deptName','deptType'])
+      let values = this.form.getFieldsValue(['deptId','deptName','deptType'])
       if (typeof values !== 'undefined') {
         Object.keys(values).forEach(_key => { this.dept[_key] = values[_key] })
       }
