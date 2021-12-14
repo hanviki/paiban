@@ -17,6 +17,7 @@
       :loading="loading"
       :bordered="bordered"
       :pagination="false"
+      :rowClassName="rowClassName"
       :scroll="{
         x: 900,
         y: tableHeight - 200 - 100,
@@ -40,7 +41,7 @@
         <div :key="col.filedName">
           <!-- <div :key="`B${col.banciId}_${countWeek}`"> -->
           <!-- <template slot="user" slot-scope="text, record"> -->
-          <a-popover title="单元格数据处理" placement="right">
+         <!-- <a-popover title="单元格数据处理" placement="right"> -->
             <template slot="content">
               <a-button
                 @click="handleCopy(record, col.filedName)"
@@ -73,7 +74,17 @@
                 </a-select-option>
               </a-select>
             </div>
-          </a-popover>
+            <div style="margin-top:1px;">
+              <a-button
+                @click="handleCopy(record, col.filedName)"
+                :loading="loading"
+                >复制</a-button
+              >
+              <a-button @click="handlePaste(record, col)" :loading="loading"
+                >粘贴</a-button
+              >
+            </div>
+       <!--   </a-popover>-->
         </div>
         <!-- </template> -->
       </template>
@@ -183,23 +194,41 @@ export default {
     resertUser() {
       this.optionData = this.userData;
     },
+    rowClassName(record,index){
+       let className="light"
+       if(index % 2===1) {
+         className="dark"
+       }
+       return className
+    },
     handleUser(record, filedName) {
       //  console.info(filedName+"_2")
       let options = record[filedName + "_2"];
+      if(record.subIds.length==0){
+         return [];
+      }
+      else {
+     
       if (record.subIds == null || record.subIds == "") {
         return this.userData;
       }
+      else {
       if (options != undefined && options.length > 0) {
         var zizhiIds = record.subIds;
-        // console.info(record);
+         
         var optionData = options.filter(
-          (p) => zizhiIds.indexOf(p.userType) >= 0
+          (p) => zizhiIds.indexOf(p.userType) >= 0 &&p.userType!=null &&p.userType!=''
         );
         //  console.info(optionData)
         return optionData;
       } else {
-        return this.userData;
+         return this.userData;
       }
+      }
+      }
+    },
+    handleUserData(record,filedName){
+
     },
     setFormValues({ ...sdlBSchedule }) {
       this.startDate = moment(sdlBSchedule.startDate).format("YYYY-MM-DD");
@@ -209,13 +238,15 @@ export default {
     },
     fetchUser(value2, record, filedName) {
       let value = value2.trim();
+      var dataSearch= this.userData
+            .filter((f) => record.subIds.indexOf(f.userType) >= 0 &&f.userType!=null &&f.userType!='');
       if (value == "") {
-        record[filedName + "_2"] = this.userData;
+        record[filedName + "_2"] = dataSearch;
         return;
       }
       console.info(value);
 
-      const data = this.userData;
+      const data = dataSearch;
       const options = data.filter(function (item, index, array) {
         return item.userAccountName.indexOf(value) >= 0;
       });
@@ -347,6 +378,7 @@ export default {
               zizhiId: record.zizhiId,
               zizhiName: record.zizhiName,
               baseId: this.baseId,
+              areaIndex: record.areaIndex
             };
             dynamicData.push(obj);
           }
@@ -471,7 +503,7 @@ export default {
         this.fetchDept();
         setTimeout(() => {
           this.fetch();
-        }, 200);
+        }, 500);
       }
     },
   },
@@ -482,3 +514,8 @@ export default {
   },
 };
 </script>
+<style  lang="less" scoped>
+   /deep/ .light{
+       background-color: #FFF5EE;
+    }
+</style>

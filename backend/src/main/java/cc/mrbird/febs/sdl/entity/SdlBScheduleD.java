@@ -227,6 +227,8 @@ private static final long serialVersionUID=1L;
      */
     private  transient  String subIds;
 
+    private transient  int areaIndex;
+
 
     public static final String ID ="id" ;
 

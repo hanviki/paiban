@@ -12,7 +12,7 @@ export default {
     isMobile: false,
     theme: db.get('THEME', 'light'),
     layout: db.get('LAYOUT', 'side'),
-    systemName: '人力资源管理平台',
+    systemName: '医务档案管理平台',
     copyright: `${new Date().getFullYear()}协和团队`,
     multipage: getBooleanValue(db.get('MULTIPAGE'), true), //之前是true
     fixSiderbar: getBooleanValue(db.get('FIX_SIDERBAR'), true),

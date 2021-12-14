@@ -126,7 +126,8 @@
         A.zizhi_id,
         A.dept_id,
         A.dept_name,
-        d.sub_ids
+        d.sub_ids,
+        C.area_index
         FROM
         sdl_dept_zizhi A
         INNER JOIN sdl_d_zizhi d on A.zizhi_id=d.id

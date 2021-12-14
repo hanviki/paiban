@@ -356,7 +356,7 @@ public class SdlBScheduleDController extends BaseController {
              */
             LambdaQueryWrapper<Dept> queryWrapper_dept =new LambdaQueryWrapper<>();
             queryWrapper_dept.eq(Dept::getParentId,currentUser.getDeptId());
-            List<Dept> deptList = this.deptService.list(queryWrapper_dept);
+            //List<Dept> deptList = this.deptService.list(queryWrapper_dept);
             
 
             List<SdlBScheduleDetail> list_detail = JSON.parseObject(jsonStr, new TypeReference<List<SdlBScheduleDetail>>() {
@@ -410,11 +410,16 @@ public class SdlBScheduleDController extends BaseController {
                         String dach= cn.hutool.core.date.DateUtil.format(bScheduleDS.get(0).getScheduleDate(),"yyyy-MM-dd");
                         SdlBUser user234 =users.stream().filter(p -> p.getUserAccount().equals(acc)).findFirst().get();
                         String useraccountNAme = user234.getUserAccountName();
-                        List<String> hh= bScheduleDS.stream().map(p->p.getBqId()).distinct().collect(Collectors.toList());//病区 对应 部门ID
-                        List<Integer> yuanqu= deptList.stream().filter(p->hh.contains(p.getDeptId())).map(p->p.getAreaIndex()).distinct().collect(Collectors.toList());
-                        if(yuanqu.size()>1){
-                            throw new  Exception(useraccountNAme+ " "+dach+" 出现不同院区一值班");
+                        List<String> hh= bScheduleDS.stream().map(p->p.getBanci()).distinct().collect(Collectors.toList());//病区 对应 部门ID
+                        //List<Integer> yuanqu= deptList.stream().filter(p->hh.contains(p.getDeptId())).map(p->p.getAreaIndex()).distinct().collect(Collectors.toList());
+                        for (String bc23:hh
+                             ) {
+                           long areaCount =bScheduleDS.stream().filter(p->p.getBanci().equals(bc23)).map(p->p.getAreaIndex()).distinct().count();
+                            if(areaCount>1){
+                                throw new  Exception(useraccountNAme+ " "+dach+" 出现不同院区同一班次一值班");
+                            }
                         }
+
                     }
                 }
                 this.iSdlBScheduleDService.deleteByDeptAndDate(currentUser.getDeptId(), startDate, endDate);

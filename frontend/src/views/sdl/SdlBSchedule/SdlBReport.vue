@@ -6,7 +6,10 @@
           <div :class="advanced ? null : 'fold'">
             <a-col :md="8" :sm="24">
               <a-form-item v-bind="formItemLayout" label="排班科室">
-                <a-select v-model="queryParams.deptId">
+                <a-select v-model="queryParams.deptId"
+                  option-filter-prop="children"
+         :filter-option="filterOption"
+         show-search>
                   <a-select-option
                     v-for="d in deptData"
                     :key="d.deptId"
@@ -227,6 +230,11 @@ export default {
        }
       
       
+    },
+        filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
     },
     handleHolidayChange(value){
        

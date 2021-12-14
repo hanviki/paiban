@@ -222,6 +222,8 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="修改人")
     private Long modifyUserId;
 
+    private transient  int areaIndex;
+
 
 
     public static final String ID ="id" ;

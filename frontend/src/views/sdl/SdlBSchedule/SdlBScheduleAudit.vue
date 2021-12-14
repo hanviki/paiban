@@ -8,6 +8,9 @@
               <a-form-item v-bind="formItemLayout" label="排班科室">
         <a-select
          v-model="queryParams.deptId"
+         option-filter-prop="children"
+         :filter-option="filterOption"
+         show-search
         >
           <a-select-option
             v-for="d in deptData"
@@ -190,7 +193,8 @@ export default {
       bordered: true,
       applyVisiable: false,
       editRcordId: "", //申请ID
-      deptData: []
+      deptData: [],
+      currentDeptData: []
     };
   },
   computed: {
@@ -310,6 +314,11 @@ export default {
     hideModal() {
       this.editRcordId = "";
       this.applyVisiable = false;
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
     },
     saveApply() {
       this.form.validateFields((err, values) => {
@@ -481,11 +490,13 @@ export default {
     fetchDept() {
         this.$get("dept/list",{parentId: '0'}).then((res) => {
             this.deptData=[]
+            this.currentDeptData= []
             this.deptData.push({
                 deptId:"-1",
                 deptName: '全部'
             })
           this.deptData.push(...res.data);
+           this.currentDeptData.push(...res.data);
         });
     }, 
     fetch(params = {}) {
