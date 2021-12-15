@@ -109,6 +109,10 @@ export default {
         title: '名称',
         dataIndex: 'text'
       },
+       {
+        title: '院区',
+        dataIndex: 'areaIndex'
+      }, 
       {
         title: '科室类型',
         dataIndex: 'type'

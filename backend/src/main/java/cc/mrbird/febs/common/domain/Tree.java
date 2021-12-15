@@ -52,5 +52,7 @@ public class Tree<T> {
 
     private SubTree scopedSlots;
 
+    private int areaIndex;
+
 }
 

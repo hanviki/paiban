@@ -103,6 +103,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
             tree.setType(deptTypeName(dept.getDeptType()));
             tree.setTitle(tree.getText());
             tree.setValue(tree.getId());
+            tree.setAreaIndex(dept.getAreaIndex());
             trees.add(tree);
         });
     }

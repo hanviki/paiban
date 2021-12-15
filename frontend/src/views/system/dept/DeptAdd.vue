@@ -23,6 +23,10 @@
                     { max: 20, message: '长度不能超过20个字符'}
                   ]}]"/>
       </a-form-item>
+      <a-form-item label='院区' v-bind="formItemLayout">
+        <a-input-number v-decorator="['areaIndex',
+                   {}]"/>
+      </a-form-item>
        <a-form-item label='科室类型' v-bind="formItemLayout">
         <a-select
         v-decorator="['deptType',
@@ -131,7 +135,7 @@ export default {
       })
     },
     setDeptFields () {
-      let values = this.form.getFieldsValue(['deptId','deptName','deptType'])
+      let values = this.form.getFieldsValue(['deptId','deptName','deptType','areaIndex'])
       if (typeof values !== 'undefined') {
         Object.keys(values).forEach(_key => { this.dept[_key] = values[_key] })
       }

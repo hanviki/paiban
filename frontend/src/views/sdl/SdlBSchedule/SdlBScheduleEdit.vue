@@ -58,8 +58,10 @@
                 mode="multiple"
                 v-if="col.isShow || record.state != 1"
                 :default-value="record[col.filedName]"
-                :filter-option="false"
-                @search="(v) => fetchUser(v, record, col.filedName)"
+                 option-filter-prop="children"
+         :filter-option="filterOption"
+         show-search
+                
                 placeholder="请选择排班人员"
                 @change="
                   (e, f) => handleSelectChange(e, f, record, col.filedName)
@@ -201,15 +203,17 @@ export default {
        }
        return className
     },
+        filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
+    },
     handleUser(record, filedName) {
       //  console.info(filedName+"_2")
-      let options = record[filedName + "_2"];
-      if(record.subIds.length==0){
-         return [];
-      }
-      else {
+      let options = this.userData;
      
-      if (record.subIds == null || record.subIds == "") {
+     
+      if (record.subIds == null || record.subIds == ""||record.subIds == 'null') {
         return this.userData;
       }
       else {
@@ -217,14 +221,14 @@ export default {
         var zizhiIds = record.subIds;
          
         var optionData = options.filter(
-          (p) => zizhiIds.indexOf(p.userType) >= 0 &&p.userType!=null &&p.userType!=''
+          (p) => zizhiIds.indexOf(p.userType) >= 0 &&p.userType!=null &&p.userType!=''&&p.userType!='null'
         );
         //  console.info(optionData)
         return optionData;
       } else {
          return this.userData;
       }
-      }
+      
       }
     },
     handleUserData(record,filedName){
@@ -239,7 +243,7 @@ export default {
     fetchUser(value2, record, filedName) {
       let value = value2.trim();
       var dataSearch= this.userData
-            .filter((f) => record.subIds.indexOf(f.userType) >= 0 &&f.userType!=null &&f.userType!='');
+            .filter((f) => record.subIds.indexOf(f.userType) >= 0 &&f.userType!=null &&f.userType!=''&&f.userType!='null');
       if (value == "") {
         record[filedName + "_2"] = dataSearch;
         return;
@@ -272,11 +276,11 @@ export default {
         this.optionData = this.userData;
         let intersection = [];
 
-        if (record.subIds == null || record.subIds == "") {
+        if (record.subIds == null || record.subIds == ""|| record.subIds == "null") {
           intersection = this.copyData;
         } else {
           let userAccounts = this.userData
-            .filter((f) => record.subIds.indexOf(f.userType) >= 0)
+            .filter((f) => record.subIds.indexOf(f.userType) >= 0  &&f.userType!=null &&f.userType!=''&&f.userType!='null')
             .map((p) => p.userAccount);
           intersection = this.copyData.filter(
             (t) => userAccounts.indexOf(t) >= 0
@@ -444,7 +448,7 @@ export default {
         }
         this.colsCustom = cols;
         this.listAuditInfo = cols;
-        //  console.info(this.listAuditInfo)
+          console.info(this.listAuditInfo)
         // this.columns.push({
         //   title: "操作",
         //   dataIndex: "action",
@@ -462,9 +466,9 @@ export default {
         data.forEach((element) => {
           let auditList = element.dynamicData;
           
-          this.colsCustom.forEach((element2) => {
-            element[element2.filedName + "_2"] = this.userData; //存储用户数据
-          });
+          // this.colsCustom.forEach((element2) => {
+          //   element[element2.filedName + "_2"] = this.userData; //存储用户数据
+          // });
           //  console.info(auditList)
           if (auditList == null || auditList.length == 0) {
           } else {

@@ -3,7 +3,7 @@
     <template v-if="!showAdd">
       <div style="text-align: center; font-size: 20px">
         <div>
-          <a-card title="本部">
+          <a-card title="本部排班管理员">
             <a-row>
               <a-col :md="8" :sm="24">
                 <a-form-item v-bind="formItemLayout" label="发薪号">
@@ -25,7 +25,7 @@
               </a-col>
             </a-row>
           </a-card>
-          <a-card title="西院">
+          <a-card title="西院排班管理员">
             <a-row>
               <a-col :md="8" :sm="24">
                 <a-form-item v-bind="formItemLayout" label="发薪号">
@@ -47,7 +47,7 @@
               </a-col>
             </a-row>
           </a-card>
-          <a-card title="肿瘤">
+          <a-card title="肿瘤排班管理员">
             <a-row>
               <a-col :md="8" :sm="24">
                 <a-form-item v-bind="formItemLayout" label="发薪号">
@@ -69,7 +69,7 @@
               </a-col>
             </a-row>
           </a-card>
-          <a-card title="金银湖">
+          <a-card title="金银湖排班管理员">
             <a-row>
               <a-col :md="8" :sm="24">
                 <a-form-item v-bind="formItemLayout" label="发薪号">

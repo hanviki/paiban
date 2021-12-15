@@ -19,6 +19,10 @@
                     { max: 20, message: '长度不能超过20个字符'}
                   ]}]"/>
       </a-form-item>
+       <a-form-item label='院区' v-bind="formItemLayout">
+        <a-input-number v-decorator="['areaIndex',
+                   {}]"/>
+      </a-form-item>
        <a-form-item label='科室类型' v-bind="formItemLayout">
         <a-select
         v-decorator="['deptType',
@@ -107,6 +111,8 @@ export default {
     setFormValues ({...dept}) {
       this.form.getFieldDecorator('deptName')
       this.form.setFieldsValue({'deptName': dept.text})
+      this.form.getFieldDecorator('areaIndex')
+      this.form.setFieldsValue({'areaIndex': dept.areaIndex})
       this.form.getFieldDecorator('orderNum')
       this.form.setFieldsValue({'orderNum': dept.order})
       this.form.getFieldDecorator('deptType')

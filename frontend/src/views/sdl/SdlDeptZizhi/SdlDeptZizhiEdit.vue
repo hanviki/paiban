@@ -13,6 +13,9 @@
       <a-form-item v-bind="formItemLayout" label="科室">
         <a-select
           @change="deptChange"
+           option-filter-prop="children"
+         :filter-option="filterOption"
+         show-search
           v-decorator="[
             'deptId',
             { rules: [{ required: true, message: '科室不能为空' }] },
@@ -137,6 +140,11 @@ export default {
     onClose() {
       this.reset();
       this.$emit("close");
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
     },
      zizhiChange(value) {
       let data= this.zizhiData.filter(p=>p.id==value)

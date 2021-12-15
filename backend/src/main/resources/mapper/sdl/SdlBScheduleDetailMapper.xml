@@ -124,8 +124,9 @@
         SUM( B.cishu ) cishu
         FROM
         sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
+        INNER JOIN sdl_b_user C ON A.account_id = C.user_account
         inner join sdl_b_schedule D on A.base_id =D.id
-        where B.cishu>0 and D.state=3 and A.banci!='夜班'
+        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='职工'
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -154,8 +155,9 @@
         A.*
         FROM
         sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
+        INNER JOIN sdl_b_user C ON A.account_id = C.user_account
         inner join sdl_b_schedule D on A.base_id =D.id
-        where B.cishu>0 and D.state=3 and A.banci!='夜班'
+        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='职工'
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -188,7 +190,7 @@
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         INNER JOIN sdl_d_banci C ON A.banci_id = C.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null) AND S.STATE=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') AND S.STATE=3
        -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
        -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
         AND A.banci = '夜班'
@@ -227,7 +229,7 @@
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         INNER JOIN sdl_d_banci C ON A.banci_id = C.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null) and s.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and s.state=3
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
         AND A.banci = '夜班'
@@ -260,7 +262,7 @@
         sdl_b_schedule_detail A
         inner join sdl_b_schedule S on A.base_id =S.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null) and s.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and s.state=3
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
         AND A.banci = '夜班'
@@ -299,7 +301,7 @@
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         INNER JOIN sdl_d_banci C ON A.banci_id = C.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null) and S.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
         AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
@@ -344,7 +346,7 @@
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         INNER JOIN sdl_d_banci C ON A.banci_id = C.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null) and S.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
         AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
