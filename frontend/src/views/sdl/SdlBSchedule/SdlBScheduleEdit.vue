@@ -39,20 +39,7 @@
         slot-scope="text, record"
       >
         <div :key="col.filedName">
-          <!-- <div :key="`B${col.banciId}_${countWeek}`"> -->
-          <!-- <template slot="user" slot-scope="text, record"> -->
-          <!-- <a-popover title="单元格数据处理" placement="right"> -->
-          <!-- <template slot="content">
-              <a-button
-                @click="handleCopy(record, col.filedName)"
-                :loading="loading"
-                >复制</a-button
-              >
-              <a-button @click="handlePaste(record, col)" :loading="loading"
-                >粘贴</a-button
-              >
-            </template> -->
-          <div style="overflow-y: scroll; height: 80px">
+          <div style="overflow-y: scroll; height: 80px" >
             <a-select
               style="width: 100%"
               mode="multiple"
@@ -80,16 +67,14 @@
           <div style="margin-top: 1px">
             <a-button
               @click="handleCopy(record, col.filedName)"
-              :loading="loading"
+              :loading="copyLoading"
               >复制</a-button
             >
-            <a-button @click="handlePaste(record, col)" :loading="loading"
+            <a-button @click="handlePaste(record, col)" :loading="copyLoading"
               >粘贴</a-button
             >
           </div>
-          <!--   </a-popover>-->
         </div>
-        <!-- </template> -->
       </template>
     </a-table>
     <div class="drawer-bootom-button">
@@ -101,7 +86,7 @@
       >
         <a-button style="margin-right: 0.8rem">取消</a-button>
       </a-popconfirm>
-      <a-button @click.stop="handleSubmit" type="primary" :loading="sumbitLoading"
+      <a-button @click="handleSubmit" type="primary" 
         >提交</a-button
       >
     </div>
@@ -124,8 +109,9 @@ export default {
   data() {
     return {
       loading: false,
+      copyLoading: false,
       sumbitLoading: false,
-      spinning: true,
+      //spinning: true,
       formItemLayout,
       dataSource: [],
       form: this.$form.createForm(this),
@@ -159,6 +145,7 @@ export default {
       windowHeight: document.documentElement.clientHeight,
       tableHeight: window.innerHeight,
       listDate: [],
+      showLower: false,
     };
   },
   methods: {
@@ -320,7 +307,7 @@ export default {
             .map((p) => p.userAccount);
           intersection = copyData.filter((t) => userAccounts.indexOf(t) >= 0); //取合集
         }
-        // this.listAuditInfo =[]
+       
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
         col.isShow = false;
@@ -369,14 +356,7 @@ export default {
         }, 300);
       }
 
-      // setTimeout(()=>{
-      //   this.listAuditInfo= this.colsCustom
-      // },300)
-      // const data= this.dataSource
-      // this.dataSource=[]
-      // setTimeout(()=>{
-      //   this.dataSource= data
-      // },300)
+     
     },
     getWeekName(n) {
       let date2 = moment(this.startDate_hide)
@@ -428,10 +408,10 @@ export default {
       }
     },
     handleSubmit() {
-      this.sumbitLoading = true;
+     this.sumbitLoading = true;
       let dynamicData = [];
       const data = this.dataSource;
-      const cols = this.listAuditInfo;
+      const cols = this.colsCustom;
       data.forEach((record) => {
         cols.forEach((element) => {
           var filedName = element.filedName;
@@ -536,10 +516,7 @@ export default {
         data.forEach((element) => {
           let auditList = element.dynamicData;
 
-          // this.colsCustom.forEach((element2) => {
-          //   element[element2.filedName + "_2"] = this.userData; //存储用户数据
-          // });
-          //  console.info(auditList)
+       
           if (auditList == null || auditList.length == 0) {
           } else {
             auditList.forEach((element2) => {
@@ -555,7 +532,8 @@ export default {
         });
         this.dataSource = data;
 
-        this.spinning = false;
+      //  this.spinning = false;
+        
       });
     },
     fetchDept() {
@@ -566,6 +544,7 @@ export default {
         let data = r.data;
         this.userData = data.rows;
         this.optionData = data.rows;
+        this.fetch();
       });
     },
   },
@@ -574,9 +553,7 @@ export default {
       if (this.editVisiable) {
         this.fetchBanci();
         this.fetchDept();
-        setTimeout(() => {
-          this.fetch();
-        }, 500);
+       
       }
     },
   }
