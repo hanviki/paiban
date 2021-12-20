@@ -338,6 +338,7 @@ export default {
     hideModal() {
       this.dept_id = "";
       this.userAccount = "";
+      this.selectedRowKeys= [];
       this.$emit("close");
     },
     saveDept() {
@@ -366,6 +367,7 @@ export default {
         .then(() => {
           this.dept_id = "";
           this.userAccount = "";
+          this.selectedRowKeys= [];
           this.$emit("succ");
         })
         .catch(() => {

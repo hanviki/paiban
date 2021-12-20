@@ -17,7 +17,7 @@
       :loading="loading"
       :bordered="bordered"
       :pagination="false"
-      :scroll="{ x: 900 }"
+      :scroll="{ x: 900 ,y: tableHeight - 200 - 100,}"
     >
       <template
         v-for="col in listAuditInfo"
@@ -82,6 +82,7 @@ export default {
       baseId: "",
       deptId: "",
       auditSuggestion: "",
+      tableHeight: window.innerHeight,
     };
   },
   methods: {
