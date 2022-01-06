@@ -217,7 +217,7 @@
             <a-textarea
               v-decorator="[
                 'auditSuggestion',
-                { rules: [{ required: true, message: '审核意见不能为空' }] },
+                { rules: [{ }] },
               ]"
               placeholder="请填写审核意见"
               :auto-size="{ minRows: 5,maxRows: 8 }"
@@ -461,6 +461,10 @@ export default {
             centered: true,
             onOk() {
               let sdlBZizhiapply = that.form.getFieldsValue();
+            
+              if(sdlBZizhiapply.auditSuggestion==null||sdlBZizhiapply.auditSuggestion==''){
+                sdlBZizhiapply.auditSuggestion ='同意'
+              }
               sdlBZizhiapply.id = that.sdlBZizhiapply.id;
               sdlBZizhiapply.state = 3;
               that

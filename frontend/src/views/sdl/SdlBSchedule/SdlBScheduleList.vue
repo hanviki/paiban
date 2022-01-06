@@ -392,7 +392,7 @@ export default {
           width: 200,
         },
         {
-          title: "排版修改状态",
+          title: "排班修改状态",
           dataIndex: "stateApplyFlag",
           width: 100,
           customRender: (text, row, index) => {

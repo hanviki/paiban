@@ -94,12 +94,24 @@ public class SdlBScheduleController extends BaseController {
     @RequiresPermissions("sdlBSchedule:view")
     public Map<String, Object> List_audit(QueryRequest request, SdlBSchedule sdlBSchedule) {
         User currentUser = FebsUtil.getCurrentUser();
+        if(currentUser.getUsername().toUpperCase().equals("MZBGS")){
+            sdlBSchedule.setDeptId("13000102");//门诊办公室 默认处理 急诊内科 2021.12.28
+        }
+        else{
+            sdlBSchedule.setDeptName("13000102"); //
+        }
         return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBScheduleList(request, sdlBSchedule)));
     }
     @GetMapping("auditList")
     @RequiresPermissions("sdlBSchedule:view")
     public Map<String, Object> List_audit2(QueryRequest request, SdlBSchedule sdlBSchedule) {
         User currentUser = FebsUtil.getCurrentUser();
+        if(currentUser.getUsername().toUpperCase().equals("MZBGS")){
+            sdlBSchedule.setDeptId("13000102");//门诊办公室 默认处理 急诊内科 2021.12.28
+        }
+        else{
+            sdlBSchedule.setDeptName("13000102");
+        }
         return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBScheduleList2(request, sdlBSchedule)));
     }
 

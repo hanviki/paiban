@@ -109,4 +109,10 @@ public void deleteSdlBPersoninfos(String[]Ids){
     public  void deleteByDeptId(String deptID){
         this.baseMapper.deleteByDeptId(deptID);
     }
+
+    @Override
+    @Transactional
+    public  List<SdlBPersoninfo> sendMess(String startDate){
+       return  this.baseMapper.telList(startDate);
+    }
         }

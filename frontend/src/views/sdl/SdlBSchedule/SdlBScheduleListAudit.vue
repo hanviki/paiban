@@ -43,7 +43,7 @@
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
-              <a-form-item label="排版修改状态" v-bind="formItemLayout">
+              <a-form-item label="排班修改状态" v-bind="formItemLayout">
                 <a-select
                   style="width: 100%"
                   v-model="queryParams.stateApplyFlag"
@@ -237,7 +237,7 @@ export default {
           },
         },
         {
-          title: "排版修改状态",
+          title: "排班修改状态",
           dataIndex: "stateApplyFlag",
           width: 100,
           customRender: (text, row, index) => {

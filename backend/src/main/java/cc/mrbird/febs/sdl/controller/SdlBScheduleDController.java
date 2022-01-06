@@ -357,7 +357,7 @@ public class SdlBScheduleDController extends BaseController {
             LambdaQueryWrapper<Dept> queryWrapper_dept =new LambdaQueryWrapper<>();
             queryWrapper_dept.eq(Dept::getParentId,currentUser.getDeptId());
             //List<Dept> deptList = this.deptService.list(queryWrapper_dept);
-            
+
 
             List<SdlBScheduleDetail> list_detail = JSON.parseObject(jsonStr, new TypeReference<List<SdlBScheduleDetail>>() {
             });
@@ -370,13 +370,16 @@ public class SdlBScheduleDController extends BaseController {
                 List<SdlBUser> users = this.iSdlBUserService.list(queryWrapper);
 
 
-                list_detail.forEach(sdlBScheduleDetail -> {
+              //  list_detail.forEach(sdlBScheduleDetail -> {
+                    for(SdlBScheduleDetail sdlBScheduleDetail : list_detail){
                     sdlBScheduleDetail.setCreateUserId(currentUser.getUserId());
                     List<String> userAccounts = Arrays.asList(sdlBScheduleDetail.getAccountId().replace("[", "").replace("]", "").replace("\"", "").split(","));
                     String banciName = banciList.stream().filter(p -> p.getId().equals(sdlBScheduleDetail.getBanciId())).map(p -> p.getMuduleName()).findFirst().get();
                     sdlBScheduleDetail.setBanci(banciName);
 
-                    userAccounts.forEach(accounts->{
+                 //   userAccounts.forEach(accounts->
+                        //
+                     for(String accounts : userAccounts){
                         SdlBScheduleDetail nDetail =new SdlBScheduleDetail();
                         try {
                             BeanUtil.copyProperties(sdlBScheduleDetail,nDetail, CopyOptions.create().setIgnoreNullValue(true));
@@ -386,7 +389,13 @@ public class SdlBScheduleDController extends BaseController {
                         }
 
                         nDetail.setAccountId(accounts);
-                        SdlBUser user =users.stream().filter(p -> accounts.equals(p.getUserAccount())).findFirst().get();
+                        List<SdlBUser> users1=users.stream().filter(p -> accounts.equals(p.getUserAccount())).collect(Collectors.toList());
+                        if(users1==null ||users1.size()==0){
+                                throw new Exception(accounts+":该发薪号不在本科室，请移入后重新提交");
+                        }
+
+                        SdlBUser user =users1.get(0);
+
                         String accountName = user.getUserAccountName();
 
                         nDetail.setXulie(user.getPatentGood());//序列
@@ -394,9 +403,9 @@ public class SdlBScheduleDController extends BaseController {
                         nDetail.setAccountName(accountName);
                         addListDetail.add(nDetail);
                        // this.iSdlBScheduleDetailService.createSdlBScheduleDetail(sdlBScheduleDetail);
-                    });
+                    }
 
-                });
+                }
 
                 Function<SdlBScheduleDetail, List<Object>> compositeKey = personRecord ->
                         Arrays.asList(personRecord.getAccountId(), personRecord.getScheduleDate());

@@ -30,5 +30,7 @@ public interface ISdlBPersoninfoService extends IService<SdlBPersoninfo> {
 
         void deleteByDeptId(String deptID);
 
+        List<SdlBPersoninfo> sendMess(String startDate);
+
 
         }

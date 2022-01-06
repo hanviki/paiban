@@ -111,6 +111,9 @@ public class SdlBScheduleServiceImpl extends ServiceImpl<SdlBScheduleMapper, Sdl
             if (sdlBSchedule.getDeptId() != null) {
                 queryWrapper.eq(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId());
             }
+            if(StringUtils.isNotEmpty(sdlBSchedule.getDeptName())){ //排除 急诊内科 2021.12.28
+                queryWrapper.ne(SdlBSchedule::getDeptId,sdlBSchedule.getDeptName());
+            }
 
             Page<SdlBSchedule> page = new Page<>();
             SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
@@ -153,7 +156,9 @@ public class SdlBScheduleServiceImpl extends ServiceImpl<SdlBScheduleMapper, Sdl
             if (sdlBSchedule.getDeptId() != null) {
                 queryWrapper.eq(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId());
             }
-
+            if(StringUtils.isNotEmpty(sdlBSchedule.getDeptName())){ //排除 急诊内科 2021.12.28
+                queryWrapper.ne(SdlBSchedule::getDeptId,sdlBSchedule.getDeptName());
+            }
             Page<SdlBSchedule> page = new Page<>();
             SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
             return  this.page(page, queryWrapper);

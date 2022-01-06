@@ -20,7 +20,7 @@
       :rowClassName="rowClassName"
       :scroll="{
         x: 900,
-        y: tableHeight - 200 - 100,
+        y: tableHeight - 200 - 60 ,
       }"
     >
       <template slot="zizhiName" slot-scope="text, record">
@@ -39,9 +39,10 @@
         slot-scope="text, record"
       >
         <div :key="col.filedName">
-          <div style="overflow-y: scroll; height: 80px" >
+          <div style="overflow-y: scroll; height: 60px" >
             <a-select
               style="width: 100%"
+              dropdownStyle="width:250px;"
               mode="multiple"
               v-if="col.isShow || record.state != 1"
               :default-value="record[col.filedName]"
@@ -50,7 +51,7 @@
                 (input, option) => filterOption(input, option, record, col)
               "
               show-search
-              placeholder="请选择排班人员"
+              placeholder=""
               @change="
                 (e, f) => handleSelectChange(e, f, record, col.filedName)
               "
@@ -60,7 +61,7 @@
                 :key="item.userAccount"
                 :value="item.userAccount"
               >
-                {{ item.userAccount + "_" + item.userAccountName }}
+                {{ item.userAccountName+"_"+item.userAccount  }}
               </a-select-option>
             </a-select>
           </div>
@@ -167,14 +168,14 @@ export default {
         {
           title: "值班类型",
           dataIndex: "zizhiName",
-          width: 120,
+          width: 100,
           fixed: "left",
           scopedSlots: { customRender: "zizhiName" },
         },
         {
           title: "病区",
           dataIndex: "bqName",
-          width: 120,
+          width: 100,
           fixed: "left",
           scopedSlots: { customRender: "bqName" },
         },
@@ -477,8 +478,11 @@ export default {
               clo.push({
                 title: element.muduleName,
                 dataIndex: "B" + element.id + "_" + i,
-                width: 250,
+                width: 200,
                 customHeaderCell: function () {
+                  return { style: { backgroundColor: element.colorName } };
+                },
+                customCell: function (record2,index2) {
                   return { style: { backgroundColor: element.colorName } };
                 },
                 scopedSlots: { customRender: "B" + element.id + "_" + i },

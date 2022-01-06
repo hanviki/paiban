@@ -66,8 +66,7 @@
           >
             <a-textarea
               v-decorator="[
-                'auditApplySuggestion',
-                { rules: [{ required: true, message: '审核意见不能为空' }] },
+                'auditApplySuggestion'
               ]"
               placeholder="请填写审核意见"
               :auto-size="{ minRows: 5,maxRows: 8 }"
@@ -176,6 +175,10 @@ export default {
               sdlBSchedule.id = that.sdlBSchedule.id;
               sdlBSchedule.stateApply = 4;
               sdlBSchedule.stateApplyFlag = 4;
+              console.info(sdlBSchedule.auditApplySuggestion)
+              if(sdlBSchedule.auditApplySuggestion==null||sdlBSchedule.auditApplySuggestion==''){
+                sdlBSchedule.auditApplySuggestion='同意'
+              }
               that
                 .$put("sdlBSchedule", {
                   ...sdlBSchedule,

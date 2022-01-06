@@ -44,7 +44,7 @@
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
-              <a-form-item label="排版修改状态" v-bind="formItemLayout">
+              <a-form-item label="排班修改状态" v-bind="formItemLayout">
                 <a-select style="width: 100%" v-model="queryParams.stateApplyFlag">
                   <a-select-option value="-1"> 全部 </a-select-option>
                   <!-- <a-select-option value="1"> 未发起申请 </a-select-option> -->
@@ -273,7 +273,7 @@ export default {
           width: 200,
         },
         {
-          title: "排版修改审核意见",
+          title: "排班修改审核意见",
           dataIndex: "auditApplySuggestion",
           width: 200,
         },

@@ -457,7 +457,7 @@ export default {
         onOk() {
           that.loading = true;
           that.$put("sdlBZizhiapply", {
-            auditSuggestion: that.auditSuggestion,
+            auditSuggestion: (that.auditSuggestion==''||that.auditSuggestion==null)?'同意':that.auditSuggestion,
             id: that.auditId,
             state: 3,
           })
