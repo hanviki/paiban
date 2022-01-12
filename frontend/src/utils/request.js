@@ -11,7 +11,7 @@ moment.locale('zh-cn')
 
 // 统一配置
 let FEBS_REQUEST = axios.create({
- // baseURL: 'https://whuhhrmapi.asclepius.whxh.com.cn/',
+ // baseURL: 'https://whuhmedical.qm.whuh.com:1099/',
   baseURL: 'http://whuhmedical.qm.whuh.com:1099/',
   responseType: 'json',
   validateStatus(status) {

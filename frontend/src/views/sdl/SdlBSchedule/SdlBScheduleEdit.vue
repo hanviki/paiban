@@ -42,7 +42,6 @@
           <div style="overflow-y: scroll; height: 60px" >
             <a-select
               style="width: 100%"
-              dropdownStyle="width:250px;"
               mode="multiple"
               v-if="col.isShow || record.state != 1"
               :default-value="record[col.filedName]"

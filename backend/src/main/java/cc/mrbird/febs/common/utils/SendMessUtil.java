@@ -20,7 +20,7 @@ public class SendMessUtil {
             String in4 = tel;
             String in5 = message;
             String sms = ssp.service(in0, in1, in2, in3, in4, in5);
-           log.info("已发送数据"+tel+":" +DateUtil.format(new Date(),"yyyyMMdd"));
+           log.info("已发送数据"+tel+":" +DateUtil.format(new Date(),"yyyyMMddHH"));
         } catch (Exception e) {
             log.error(DateUtil.format(new Date(),"yyyyMMdd")+":"+e.getMessage());
         }
