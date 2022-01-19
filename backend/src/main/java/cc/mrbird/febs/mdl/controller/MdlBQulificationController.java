@@ -1,15 +1,15 @@
 
-package ${package.Controller};
+package cc.mrbird.febs.mdl.controller;
 
-
+import cc.mrbird.febs.mdl.entity.*;
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
 import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
-import ${package.Service}.${table.serviceName};
-import ${package.Entity}.${entity};
+import cc.mrbird.febs.mdl.service.IMdlBQulificationService;
+import cc.mrbird.febs.mdl.entity.MdlBQulification;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
@@ -35,36 +35,36 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  *
- * @author ${author}
- * @since ${date}
+ * @author viki
+ * @since 2022-01-12
  */
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("${table.entityPath}")
+@RequestMapping("mdlBQulification")
 
-public class ${table.controllerName} extends BaseController{
+public class MdlBQulificationController extends BaseController{
 
 private String message;
 @Autowired
-public ${table.serviceName} i${entity}Service;
+public IMdlBQulificationService iMdlBQulificationService;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
- VALUES (0,'$!{table.comment}','/ass/${entity}/${entity}','ass/${entity}/${entity}','${table.entityPath}:view','fork',0,1,NOW());
+ VALUES (0,'','/ass/MdlBQulification/MdlBQulification','ass/MdlBQulification/MdlBQulification','mdlBQulification:view','fork',0,1,NOW());
  SELECT @maxId:=MAX(MENU_ID) from t_menu;
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}新增','${table.entityPath}:add',1,1,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}编辑','${table.entityPath}:update',1,2,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}删除','${table.entityPath}:delete',1,3,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}导出','${table.entityPath}:export',1,4,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}导入','${table.entityPath}:import',1,5,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'新增','mdlBQulification:add',1,1,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'编辑','mdlBQulification:update',1,2,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'删除','mdlBQulification:delete',1,3,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'导出','mdlBQulification:export',1,4,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'导入','mdlBQulification:import',1,5,NOW());
 */
 
 
@@ -72,28 +72,28 @@ public ${table.serviceName} i${entity}Service;
  * 分页查询数据
  *
  * @param  request 分页信息
- * @param ${table.entityPath} 查询条件
+ * @param mdlBQulification 查询条件
  * @return
  */
 @GetMapping
-@RequiresPermissions("${table.entityPath}:view")
-public Map<String, Object> List(QueryRequest request, ${entity} ${table.entityPath}){
-        return getDataTable(this.i${entity}Service.find${entity}s(request, ${table.entityPath}));
+@RequiresPermissions("mdlBQulification:view")
+public Map<String, Object> List(QueryRequest request, MdlBQulification mdlBQulification){
+        return getDataTable(this.iMdlBQulificationService.findMdlBQulifications(request, mdlBQulification));
         }
 
 /**
  * 添加
- * @param  ${table.entityPath}
+ * @param  mdlBQulification
  * @return
  */
 @Log("新增/按钮")
 @PostMapping
-@RequiresPermissions("${table.entityPath}:add")
-public void add${entity}(@Valid ${entity} ${table.entityPath})throws FebsException{
+@RequiresPermissions("mdlBQulification:add")
+public void addMdlBQulification(@Valid MdlBQulification mdlBQulification)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
-        ${table.entityPath}.setCreateUserId(currentUser.getUserId());
-        this.i${entity}Service.create${entity}(${table.entityPath});
+        mdlBQulification.setCreateUserId(currentUser.getUserId());
+        this.iMdlBQulificationService.createMdlBQulification(mdlBQulification);
         }catch(Exception e){
         message="新增/按钮失败" ;
         log.error(message,e);
@@ -103,17 +103,17 @@ public void add${entity}(@Valid ${entity} ${table.entityPath})throws FebsExcepti
 
 /**
  * 修改
- * @param ${table.entityPath}
+ * @param mdlBQulification
  * @return
  */
 @Log("修改")
 @PutMapping
-@RequiresPermissions("${table.entityPath}:update")
-public void update${entity}(@Valid ${entity} ${table.entityPath})throws FebsException{
+@RequiresPermissions("mdlBQulification:update")
+public void updateMdlBQulification(@Valid MdlBQulification mdlBQulification)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
-      ${table.entityPath}.setModifyUserId(currentUser.getUserId());
-        this.i${entity}Service.update${entity}(${table.entityPath});
+      mdlBQulification.setModifyUserId(currentUser.getUserId());
+        this.iMdlBQulificationService.updateMdlBQulification(mdlBQulification);
         }catch(Exception e){
         message="修改失败" ;
         log.error(message,e);
@@ -124,11 +124,11 @@ public void update${entity}(@Valid ${entity} ${table.entityPath})throws FebsExce
 
 @Log("删除")
 @DeleteMapping("/{ids}")
-@RequiresPermissions("${table.entityPath}:delete")
-public void delete${entity}s(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
+@RequiresPermissions("mdlBQulification:delete")
+public void deleteMdlBQulifications(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
         try{
         String[]arr_ids=ids.split(StringPool.COMMA);
-        this.i${entity}Service.delete${entity}s(arr_ids);
+        this.iMdlBQulificationService.deleteMdlBQulifications(arr_ids);
         }catch(Exception e){
         message="删除失败" ;
         log.error(message,e);
@@ -136,11 +136,11 @@ public void delete${entity}s(@NotBlank(message = "{required}") @PathVariable Str
         }
         }
 @PostMapping("excel")
-@RequiresPermissions("${table.entityPath}:export")
-public void export(QueryRequest request, ${entity} ${table.entityPath}, HttpServletResponse response) throws FebsException {
+@RequiresPermissions("mdlBQulification:export")
+public void export(QueryRequest request, MdlBQulification mdlBQulification, HttpServletResponse response) throws FebsException {
         try {
-        List<${entity}> ${table.entityPath}s = this.i${entity}Service.find${entity}s(request, ${table.entityPath}).getRecords();
-        ExcelKit.$Export(${entity}.class, response).downXlsx(${table.entityPath}s, false);
+        List<MdlBQulification> mdlBQulifications = this.iMdlBQulificationService.findMdlBQulifications(request, mdlBQulification).getRecords();
+        ExcelKit.$Export(MdlBQulification.class, response).downXlsx(mdlBQulifications, false);
         } catch (Exception e) {
         message = "导出Excel失败";
         log.error(message, e);
@@ -148,29 +148,29 @@ public void export(QueryRequest request, ${entity} ${table.entityPath}, HttpServ
         }
         }
 @RequestMapping(value = "downTemplate", method = RequestMethod.POST)
-@RequiresPermissions("${table.entityPath}:import")
+@RequiresPermissions("mdlBQulification:import")
 public void downTemplate(HttpServletResponse response) {
-        List<${entity}> publishList = new ArrayList<>();
-        ExcelKit.$Export(${entity}.class, response).downXlsx(publishList, true);
+        List<MdlBQulification> publishList = new ArrayList<>();
+        ExcelKit.$Export(MdlBQulification.class, response).downXlsx(publishList, true);
         }
 @RequestMapping(value = "import", method = RequestMethod.POST)
-@RequiresPermissions("${table.entityPath}:import")
+@RequiresPermissions("mdlBQulification:import")
 public ResponseEntity<?> importUser(@RequestParam MultipartFile file)
         throws IOException {
         long beginMillis = System.currentTimeMillis();
 
-        List<${entity}> successList = Lists.newArrayList();
+        List<MdlBQulification> successList = Lists.newArrayList();
         List<Map<String, Object>> errorList = Lists.newArrayList();
         List<Map<String, Object>> resultList = Lists.newArrayList();
 
         User currentUser=FebsUtil.getCurrentUser();
 
 
-        ExcelKit.$Import(${entity}.class)
-        .readXlsx(file.getInputStream(), new ExcelReadHandler<${entity}>() {
+        ExcelKit.$Import(MdlBQulification.class)
+        .readXlsx(file.getInputStream(), new ExcelReadHandler<MdlBQulification>() {
 
 @Override
-public void onSuccess(int sheetIndex, int rowIndex, ${entity} entity) {
+public void onSuccess(int sheetIndex, int rowIndex, MdlBQulification entity) {
         successList.add(entity); // 单行读取成功，加入入库队列。
         }
 
@@ -186,11 +186,11 @@ public void onError(int sheetIndex, int rowIndex,
 
         // TODO: 执行successList的入库操作。
         if(CollectionUtil.isEmpty(errorList)){
-        for (${entity} ${table.entityPath}Import:successList
+        for (MdlBQulification mdlBQulificationImport:successList
         ) {
-    ${entity} ${table.entityPath} =new ${entity}();
-        BeanUtil.copyProperties(${table.entityPath}Import,${table.entityPath}, CopyOptions.create().setIgnoreNullValue(true));
-        this.i${entity}Service.create${entity}(${table.entityPath});
+    MdlBQulification mdlBQulification =new MdlBQulification();
+        BeanUtil.copyProperties(mdlBQulificationImport,mdlBQulification, CopyOptions.create().setIgnoreNullValue(true));
+        this.iMdlBQulificationService.createMdlBQulification(mdlBQulification);
         }
         }
 
@@ -201,8 +201,8 @@ public void onError(int sheetIndex, int rowIndex,
         return ResponseEntity.ok(resultList);
         }
 @GetMapping("/{id}")
-public ${entity} detail(@NotBlank(message = "{required}") @PathVariable String id) {
-    ${entity} ${table.entityPath}=this.i${entity}Service.getById(id);
-        return ${table.entityPath};
+public MdlBQulification detail(@NotBlank(message = "{required}") @PathVariable String id) {
+    MdlBQulification mdlBQulification=this.iMdlBQulificationService.getById(id);
+        return mdlBQulification;
         }
         }

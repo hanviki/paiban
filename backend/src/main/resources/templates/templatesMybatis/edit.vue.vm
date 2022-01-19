@@ -2,7 +2,7 @@
     <a-drawer
             title="修改"
             :maskClosable="false"
-            width=650
+            width="80%"
             placement="right"
             :closable="false"
             @close="onClose"
@@ -80,8 +80,9 @@
                     let obj = {}
                     if(fieldDates.indexOf(key)!==-1)
                     {
-                        if(${table.entityPath}[key]!=='') {
+                        if(${table.entityPath}[key]!==null && ${table.entityPath}[key]!=='') {
                             obj[key] = moment(${table.entityPath}[key])
+                            this.form.setFieldsValue(obj)
                         }
                         else
                         {
@@ -89,8 +90,9 @@
                         }
                     } else {
                         obj[key] = ${table.entityPath}[key]
+                        this.form.setFieldsValue(obj)
                     }
-                    this.form.setFieldsValue(obj)
+
                 }
             })
                 this.${table.entityPath}.#foreach($field in ${table.fields}) #if(${field.keyFlag})${field.propertyName} #end #end = ${table.entityPath}.#foreach($field in ${table.fields}) #if(${field.keyFlag})${field.propertyName} #end #end

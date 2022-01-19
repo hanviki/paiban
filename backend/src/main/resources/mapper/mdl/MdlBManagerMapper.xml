@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBManagerMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBManager">
+                    <id column="id" property="id"/>
+                    <result column="dept_id" property="deptId"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="type" property="type"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="birthday" property="birthday"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, dept_id, dept_name, type, user_account, user_account_name, birthday, file_id, file_url, state, IS_DELETEMARK, start_date, end_date, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBManager" parameterType="cc.mrbird.febs.mdl.entity.MdlBManager">
+        update mdl_b_manager
+        <trim prefix="set" suffixOverrides=",">
+<if test="deptId != null">dept_id=#{deptId},</if>
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="type != null">type=#{type},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="birthday != null">birthday=#{birthday},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBManager" resultType="cc.mrbird.febs.mdl.entity.MdlBManager" parameterType="cc.mrbird.febs.mdl.entity.MdlBManager">
+        select  *  from mdl_b_manager
+        where  1=1
+            <if test="mdlBManager.deptId != null and mdlBManager.deptId != ''"> and  mdl_b_manager.dept_id like concat('%', #{ mdlBManager.deptId} ,'%')</if>
+            <if test="mdlBManager.deptName != null and mdlBManager.deptName != ''"> and  mdl_b_manager.dept_name like concat('%', #{ mdlBManager.deptName} ,'%')</if>
+            <if test="mdlBManager.type != null and mdlBManager.type != ''"> and  mdl_b_manager.type like concat('%', #{ mdlBManager.type} ,'%')</if>
+            <if test="mdlBManager.userAccount != null and mdlBManager.userAccount != ''"> and  mdl_b_manager.user_account like concat('%', #{ mdlBManager.userAccount} ,'%')</if>
+            <if test="mdlBManager.userAccountName != null and mdlBManager.userAccountName != ''"> and  mdl_b_manager.user_account_name like concat('%', #{ mdlBManager.userAccountName} ,'%')</if>
+            <if test="mdlBManager.birthday != null and mdlBManager.birthday != ''"> and  mdl_b_manager.birthday like concat('%', #{ mdlBManager.birthday} ,'%')</if>
+            <if test="mdlBManager.fileId != null and mdlBManager.fileId != ''"> and  mdl_b_manager.file_id like concat('%', #{ mdlBManager.fileId} ,'%')</if>
+            <if test="mdlBManager.fileUrl != null and mdlBManager.fileUrl != ''"> and  mdl_b_manager.file_url like concat('%', #{ mdlBManager.fileUrl} ,'%')</if>
+        <if test="mdlBManager.state != null"> and  mdl_b_manager.state =#{ mdlBManager.state} </if>
+        <if test="mdlBManager.isDeletemark != null"> and  mdl_b_manager.IS_DELETEMARK =#{ mdlBManager.isDeletemark} </if>
+        <if test="mdlBManager.startDateFrom!= null">
+            AND mdl_b_manager.start_date <![CDATA[ >= ]]>  #{mdlBManager.startDateFrom}
+        </if>
+        <if test="mdlBManager.startDateTo!= null">
+            AND  mdl_b_manager.start_date <![CDATA[ <= ]]>  #{mdlBManager.startDateTo}
+        </if>
+        <if test="mdlBManager.endDateFrom!= null">
+            AND mdl_b_manager.end_date <![CDATA[ >= ]]>  #{mdlBManager.endDateFrom}
+        </if>
+        <if test="mdlBManager.endDateTo!= null">
+            AND  mdl_b_manager.end_date <![CDATA[ <= ]]>  #{mdlBManager.endDateTo}
+        </if>
+        <if test="mdlBManager.createTimeFrom!= null">
+            AND mdl_b_manager.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBManager.createTimeFrom}
+        </if>
+        <if test="mdlBManager.createTimeTo!= null">
+            AND  mdl_b_manager.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBManager.createTimeTo}
+        </if>
+        <if test="mdlBManager.modifyTimeFrom!= null">
+            AND mdl_b_manager.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBManager.modifyTimeFrom}
+        </if>
+        <if test="mdlBManager.modifyTimeTo!= null">
+            AND  mdl_b_manager.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBManager.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

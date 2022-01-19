@@ -94,7 +94,7 @@ private static final long serialVersionUID=1L;
         private ${field.propertyType} ${field.propertyName};
     #else
         #if("$!field.comment" != "")
-        @ExcelField(value ="${field.comment}", writeConverter = DateConverter.class)
+        @ExcelField(value ="${field.comment}", writeConverter = DateConverter.class,readConverter = DateReadConverter.class)
         #end
     private Date ${field.propertyName};
     private transient String ${field.propertyName}From;

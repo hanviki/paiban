@@ -9,16 +9,20 @@ import store from '../store'
 import db from 'utils/localstorage'
 moment.locale('zh-cn')
 
+//let request_url= 'http://192.168.64.115:1099/';
+//let request_url= 'http://whuhmedical.qm.whuh.com:1099/';
+let request_url= 'http://localhost:1099/';
 // 统一配置
 let FEBS_REQUEST = axios.create({
- // baseURL: 'https://whuhmedical.qm.whuh.com:1099/',
-  baseURL: 'http://whuhmedical.qm.whuh.com:1099/',
+  //baseURL: 'http://whuhmedical.qm.whuh.com:1099/',
+  baseURL: request_url,
   responseType: 'json',
   validateStatus(status) {
     // 200 外的状态码都认定为失败
     return status === 200
   }
 })
+
 
 let isRefreshing = false
 
@@ -151,7 +155,8 @@ FEBS_REQUEST.interceptors.response.use((config) => {
   return Promise.reject(error)
 })
 const request = {
-  baseURL: 'http://whuhmedical.qm.whuh.com:1099/',
+ // baseURL: 'http://whuhmedical.qm.whuh.com:1099/',
+  baseURL: request_url,
   post(url, params) {
     return FEBS_REQUEST.post(url, params, {
       transformRequest: [(params) => {

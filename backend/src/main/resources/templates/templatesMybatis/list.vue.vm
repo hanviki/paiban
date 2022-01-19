@@ -151,6 +151,12 @@
                         <a-icon type="down"/>
                     </a-button>
                 </a-dropdown>
+                    <import-excel
+                            v-hasPermission="['${table.entityPath}:import']"
+                            templateUrl="${table.entityPath}/downTemplate"
+                            @succ="handleRefesh"
+                            url="${table.entityPath}/import">
+                    </import-excel>
             </div>
             <!-- 表格区域 -->
             <a-table ref="TableInfo"
@@ -197,6 +203,8 @@
 <script>
     import ${entity}Add from './${entity}Add'
     import ${entity}Edit from './${entity}Edit'
+    import ImportExcel from '../../common/ImportExcel'
+    import moment from 'moment'
 
     const formItemLayout = {
         labelCol: {span: 8},
@@ -204,7 +212,7 @@
     }
     export default {
         name: '${entity}',
-        components: {${entity}Add, ${entity}Edit},
+        components: {${entity}Add, ${entity}Edit, ImportExcel },
         data() {
             return {
                 advanced: false,
@@ -242,6 +250,12 @@
                                 title: '${field.comment}',
                             #end
                             dataIndex: '${field.propertyName}',
+                            #if($field.propertyType.indexOf("Date")!=-1)
+                                customRender: (text, row, index) => {
+                                if(text==null) return ''
+                                return moment(text).format('YYYY-MM-DD')
+                            },
+                                #end
                             width: 100
                         },
                     #end
@@ -259,6 +273,10 @@
             this.fetch()
         },
         methods: {
+            moment,
+            handleRefesh(){
+                this.search()
+            },
             onSelectChange(selectedRowKeys) {
                 this.selectedRowKeys = selectedRowKeys
             },

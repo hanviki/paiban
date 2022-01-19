@@ -7,6 +7,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.utils.ExportExcelUtils;
+import cc.mrbird.febs.sdl.entity.SdlBUserSearch;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 
@@ -26,6 +27,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -64,6 +66,23 @@ public ISdlBUserService iSdlBUserService;
 public Map<String, Object> List(QueryRequest request, SdlBUser sdlBUser){
         return getDataTable(this.iSdlBUserService.findSdlBUsers(request, sdlBUser));
         }
+    @GetMapping("search")
+    public List<SdlBUserSearch> List(SdlBUser sdlBUser){
+       List<SdlBUser> userList= this.iSdlBUserService.findSdlBUsers_search( sdlBUser);
+        List<SdlBUserSearch> list= userList.stream().map(p->{
+            SdlBUserSearch n= new SdlBUserSearch();
+            n.setId(p.getId());
+            n.setBirthday(p.getBirthday());
+            n.setUserAccount(p.getUserAccount());
+            n.setUserAccountName(p.getUserAccountName());
+            return  n;
+        }).collect(Collectors.toList());
+        return  list;
+    }
+    @GetMapping("ywc")
+    public Map<String, Object> List2(QueryRequest request, SdlBUser sdlBUser){
+        return getDataTable(this.iSdlBUserService.findSdlBUsersYwc(request, sdlBUser));
+    }
     @GetMapping("dept")
     public Map<String, Object> List_Dept(QueryRequest request, SdlBUser sdlBUser){
         User currentUser= FebsUtil.getCurrentUser();
@@ -149,7 +168,28 @@ public void deleteSdlBUsers(@NotBlank(message = "{required}") @PathVariable Stri
         }
     }
 
-@GetMapping("/{id}")
+    @PostMapping("excelYwc")
+    public void exportYwc(QueryRequest request, SdlBUser sdlBUser,String dataJson,HttpServletResponse response)throws FebsException{
+        try{
+            request.setPageNum(1);
+            request.setPageSize(20000);
+
+            sdlBUser.setIsDeletemark(1);
+            request.setSortField("user_account");
+            request.setSortOrder("ascend");
+            List<SdlBUser> sdlBUserList=  this.iSdlBUserService.findSdlBUsersYwc(request, sdlBUser).getRecords();
+
+
+            //ExcelKit.$Export(DcaBAuditdynamic.class,response).downXlsx(dcaBAuditdynamics,false);
+            ExportExcelUtils.exportCustomExcel_han(response, sdlBUserList,dataJson,"");
+        }catch(Exception e){
+            message="导出Excel失败";
+            log.error(message,e);
+            throw new FebsException(message);
+        }
+    }
+
+    @GetMapping("/{id}")
 public SdlBUser detail(@NotBlank(message = "{required}") @PathVariable String id) {
     SdlBUser sdlBUser=this.iSdlBUserService.getById(id);
         return sdlBUser;

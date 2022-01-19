@@ -1,54 +1,23 @@
 <template>
   <a-drawer
-    title="新增申请资质"
+    title="附件上传"
     :maskClosable="false"
-    width="90%"
+    width="80%"
     placement="right"
     :closable="false"
     @close="onClose"
-    :visible="addVisiable"
-    style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
+    :visible="editVisiable"
+    style="height: calc(100% - 55px); overflow: auto"
   >
-    <a-form layout="horizontal">
-      <div>
-        <a-row>
-          <a-col :sm="24">
-            <a-form-item
-              label="发薪号\姓名"
-              v-bind="{ labelCol: { span: 4 }, wrapperCol: { span: 20 } }"
-            >
-              <a-select
-                show-search
-                :value="value"
-                placeholder="输入发薪号\姓名"
-                style="width: 100%"
-                :default-active-first-option="false"
-                :show-arrow="false"
-                :filter-option="false"
-                :not-found-content="null"
-                @search="handleSearch"
-                @change="handleChange"
-              >
-                <a-select-option v-for="d in userData" :key="d.userAccount">
-                  {{ d.userAccount + "    "+d.userAccountName +"    "+d.sexName+ "    "+d.birthday }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-      </div>
-    </a-form>
-    <a-form :form="form">
-      <a-row>
-        <a-col :sm="6">
+    <a-form :form="form" :layout="formLayout">
+        <a-col :sm="5"  :offset="1">
           <a-form-item v-bind="formItemLayout" label="人事编号">
             <a-input
-              :disabled="true"
-              v-decorator="['userAccount' ,{ rules: [{ required: true, message: '人事编号不能为空' }] },]"
+              v-decorator="['userAccount' ,{ rules: [{  message: '人事编号不能为空' }] },]"
             />
           </a-form-item>
         </a-col>
-        <a-col :sm="6">
+        <a-col :sm="5"  :offset="1">
           <a-form-item v-bind="formItemLayout" label="姓名">
             <a-input
               :disabled="true"
@@ -56,7 +25,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :sm="6">
+        <a-col :sm="5"  :offset="1">
           <a-form-item v-bind="formItemLayout" label="科室">
             <a-input
               :disabled="true"
@@ -69,7 +38,7 @@
           </a-form-item>
         </a-col>
 
-        <a-col :sm="6">
+        <a-col :sm="5"  :offset="1">
           <a-form-item v-bind="formItemLayout" label="出生日期">
             <a-input
               :disabled="true"
@@ -77,9 +46,9 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :sm="16">
+        <a-col :sm="5"  :offset="1">
           <a-form-item
-            v-bind="{ labelCol: { span: 4 }, wrapperCol: { span: 20 } }"
+           v-bind="formItemLayout"
             label="病区"
           >
             <a-input
@@ -88,7 +57,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :sm="6">
+        <a-col :sm="5"  :offset="1">
           <a-form-item v-bind="formItemLayout" label="性别">
             <a-input
               :disabled="true"
@@ -97,7 +66,7 @@
           </a-form-item>
         </a-col>
 
-        <a-col :sm="6">
+        <a-col :sm="5"  :offset="1">
           <a-form-item v-bind="formItemLayout" label="人员类别">
             <a-input
               :disabled="true"
@@ -105,7 +74,7 @@
             />
           </a-form-item>
         </a-col>
-         <a-col :sm="6">
+         <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="员工组">
           <a-input
             :disabled="true"
@@ -115,7 +84,7 @@
           />
         </a-form-item>
       </a-col>
-       <a-col :sm="6">
+       <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="人事子范围">
           <a-input
           :disabled="true"
@@ -126,7 +95,7 @@
           />
         </a-form-item>
       </a-col>
-       <a-col :sm="6">
+       <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="职称">
           <a-input
             :disabled="true"
@@ -137,7 +106,7 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="临床职称">
           <a-input
           :disabled="true"
@@ -147,7 +116,7 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="临床聘任时间">
           <a-input
            :disabled="true"
@@ -158,7 +127,7 @@
           />
         </a-form-item>
       </a-col>
- <a-col :sm="6">
+ <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="教学职称">
           <a-input
             :disabled="true"
@@ -169,7 +138,7 @@
           />
         </a-form-item>
       </a-col>
-       <a-col :sm="6">
+       <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="教学聘任时间">
           <a-input
             :disabled="true"
@@ -180,7 +149,7 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="内聘临床职务">
           <a-input
             :disabled="true"
@@ -191,7 +160,7 @@
           />
         </a-form-item>
       </a-col>
-       <a-col :sm="6">
+       <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="内聘临床时间">
           <a-input
             :disabled="true"
@@ -203,7 +172,7 @@
         </a-form-item>
       </a-col>
 
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="内聘教学职务">
           <a-input
             :disabled="true"
@@ -214,7 +183,7 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="内聘教学时间">
           <a-input
             :disabled="true"
@@ -224,7 +193,7 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="学历">
           <a-input
             :disabled="true"
@@ -236,7 +205,7 @@
         </a-form-item>
       </a-col>
 
-       <a-col :sm="6">
+       <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="来校工作时间">
           <a-input
             
@@ -247,10 +216,10 @@
           />
         </a-form-item>
       </a-col>
-     <a-col :sm="6">
+     <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="医师类别">
           <a-input
-            :disabled="true"
+            
             v-decorator="[
               'yishiLb',
              
@@ -258,10 +227,10 @@
           />
         </a-form-item>
       </a-col>
-       <a-col :sm="6">
+       <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="医师级别">
           <a-input
-            :disabled="true"
+           
             v-decorator="[
               'yishiJb',
             
@@ -269,10 +238,10 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="医师执业范围">
           <a-input
-            :disabled="true"
+            
             v-decorator="[
               'yishiZhiyefanwei',
             
@@ -280,10 +249,10 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="医师资格证号">
           <a-input
-           :disabled="true"
+           
             v-decorator="[
               'yishiZgzsbianhao',
             
@@ -291,10 +260,10 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="6">
+      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="医师执业证号">
           <a-input
-            :disabled="true"
+           
             v-decorator="[
               'yishiZiyebianhao',
              
@@ -302,55 +271,38 @@
           />
         </a-form-item>
       </a-col>
-        <a-col :sm="6">
-          <a-form-item v-bind="formItemLayout" label="变更类型">
-            <a-select style="width: 100%"  v-decorator="['applyType',{ rules: [{ required: true, message: '变更类型不能为空' }] },]">
-              <a-select-option value="普通资质"> 普通资质 </a-select-option>
-              <a-select-option value="授权资质"> 授权资质 </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :sm="6">
-          <a-form-item v-bind="formItemLayout" label="原资质">
-            <a-input
-              :disabled="true"
-              v-decorator="['userTypeName']"
-            />
-             <a-input
-              type="hidden"
-              v-decorator="['userType']"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :sm="6">
-          <a-form-item v-bind="formItemLayout" label="新资质">
-            <a-select
-              style="width: 100%"
-              @change="usertypeChange"
-              v-decorator="[
-                'userNewType',
-                { rules: [{ required: true, message: '新资质不能为空' }] },
-              ]"
-            >
-              <a-select-option v-for="d in data" :key="d.id" :value="d.id">
-                {{ d.muduleName }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :sm="24">
-          <a-form-item
-            v-bind="{ labelCol: { span: 2 }, wrapperCol: { span: 22 } }"
-            label="申请理由"
+     
+      
+      <a-col :sm="5" :offset="1">
+        <a-form-item v-bind="formItemLayout" label="资格证书附件">
+          <upload-single-file
+            ref="fileagent1"
+            @uploadRemove="removeAgent_1"
+            @uploadSuc="uploadAgent_1"
           >
-            <a-textarea
-              v-decorator="['note']"
-              placeholder="请填写申请理由"
-              :auto-size="{ minRows: 5,maxRows: 8 }"
-            />
-          </a-form-item>
-        </a-col>
-      </a-row>
+          </upload-single-file>
+        </a-form-item>
+      </a-col>
+      <a-col :sm="5" :offset="1">
+        <a-form-item v-bind="formItemLayout" label="执业证书附件">
+          <upload-single-file
+            ref="fileagent2"
+            @uploadRemove="removeAgent_2"
+            @uploadSuc="uploadAgent_2"
+          >
+          </upload-single-file>
+        </a-form-item>
+      </a-col>
+      <a-col :sm="5" :offset="1">
+        <a-form-item v-bind="formItemLayout" label="电子证照">
+          <upload-single-file
+            ref="fileagent3"
+            @uploadRemove="removeAgent_3"
+            @uploadSuc="uploadAgent_3"
+          >
+          </upload-single-file>
+        </a-form-item>
+      </a-col>
     </a-form>
     <div class="drawer-bootom-button">
       <a-popconfirm
@@ -362,83 +314,89 @@
         <a-button style="margin-right: 0.8rem">取消</a-button>
       </a-popconfirm>
       <a-button @click="handleSubmit" type="primary" :loading="loading"
-        >提交</a-button
+        >保存</a-button
       >
     </div>
   </a-drawer>
 </template>
 <script>
+import moment from "moment";
+import UploadSingleFile from "../common/uploadSingleFile";
+
 const formItemLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
 };
 export default {
-  name: "SdlBZizhiapplyAdd",
+  name: "SdlBUserEdit",
   props: {
-    addVisiable: {
+    editVisiable: {
       default: false,
+    },
+  },
+  components: { UploadSingleFile },
+  computed: {
+    formItemLayout() {
+      const { formLayout } = this;
+      return formLayout === "horizontal" ? formItemLayout : {};
     },
   },
   data() {
     return {
       loading: false,
-      formItemLayout,
-      queryParams: {
-        userAccount: "",
-      },
       form: this.$form.createForm(this),
-      sdlBZizhiapply: {},
-      data: [],
-      userData: [],
-      value: ''
+      sdlBUser: {},
+      formLayout: "vertical",
     };
-  },
-  watch: {
-    addVisiable() {
-      if (this.addVisiable) {
-        this.$get("sdlDZizhi").then((res) => {
-          console.info(res.data.rows);
-          this.data = res.data.rows;
-        });
-      }
-    },
   },
   methods: {
     reset() {
       this.loading = false;
-      this.value=''
-      this.data=[]
-      this.userData=[]
-      this.sdlBZizhiapply = {};
+      this.$refs.fileagent1.reset();
+        this.$refs.fileagent2.reset();
+        this.$refs.fileagent3.reset();
       this.form.resetFields();
     },
     onClose() {
       this.reset();
       this.$emit("close");
     },
-    search(value) {
-      if(value!=''){
-      this.$get("sdlBUser/dept", {
-        userAccount: value,
-        pageSize: 10,
-        pageNum: 1
-      }).then((r) => {
-        this.userData=r.data.rows
-      });
-      }
+    uploadAgent_1(fileId, fileUrl) {
+      this.sdlBUser.fileId = fileId;
+      this.sdlBUser.fileUrl = fileUrl;
+    },
+    removeAgent_1() {
+      this.sdlBUser.fileId = "";
+      this.sdlBUser.fileUrl = "";
+    },
+    uploadAgent_2(fileId, fileUrl) {
+      this.sdlBUser.fileIdLc = fileId;
+      this.sdlBUser.fileUrlLc = fileUrl;
+    },
+    removeAgent_2() {
+      this.sdlBUser.fileIdLc = "";
+      this.sdlBUser.fileUrlLc = "";
+    },
+    uploadAgent_3(fileId, fileUrl) {
+      this.sdlBUser.pictureId = fileId;
+      this.sdlBUser.pictureUrl = fileUrl;
+    },
+    removeAgent_3() {
+      this.sdlBUser.pictureId = "";
+      this.sdlBUser.pictureUrl = "";
     },
     setFormValues({ ...sdlBUser }) {
       let fields = [
         "userAccount",
         "userAccountName",
-       "bqName",
+        "bqName",
         "userType",
         "userTypeName",
         "deptId",
         "telephone",
         "deptName",
         "positionName",
-        "zygwDate",
+        "npPositionName",
         "rylx",
         "yggh",
         "ghHk",
@@ -477,7 +435,27 @@ export default {
         "yishiZgzsbianhao",
         "yishiZiyebianhao",
         "renshizifw",
-        "renshizfenlei"
+        "renshizfenlei",
+        "isAuthority",
+        "fileId",
+        "fileUrl",
+        "patentGood",
+        "patentRanknum",
+        "auditSuggestion",
+        "fileIdLc",
+        "fileUrlLc",
+        "djrdzzw",
+        "isChujikh",
+        "chujikhDate",
+        "isZhongjikh",
+        "zhongjikhDate",
+        "staffDate",
+        "pictureId",
+        "pictureUrl",
+        "gqpxqk",
+        "gfhyspxqk",
+        "zjspnlceqk",
+        "dcaYear",
       ];
       let fieldDates = [];
       Object.keys(sdlBUser).forEach((key) => {
@@ -493,17 +471,41 @@ export default {
           } else {
             obj[key] = sdlBUser[key];
           }
-          this.sdlBZizhiapply[key] = obj[key]
           this.form.setFieldsValue(obj);
         }
       });
+      this.sdlBUser.id = sdlBUser.id;
+       this.sdlBUser.fileId = sdlBUser.fileId;
+      this.sdlBUser.fileUrl = sdlBUser.fileUrl;
+        this.sdlBUser.fileIdLc = sdlBUser.fileIdLc;
+      this.sdlBUser.fileUrlLc = sdlBUser.fileUrlLc;
+        this.sdlBUser.pictureId = sdlBUser.pictureId;
+      this.sdlBUser.pictureUrl = sdlBUser.pictureUrl;
+      var that =this
+      setTimeout(()=>{
+        that.$refs.fileagent1.setForm(sdlBUser.fileId);
+        that.$refs.fileagent2.setForm(sdlBUser.fileIdLc);
+        that.$refs.fileagent3.setForm(sdlBUser.pictureId);
+      },100)
     },
     handleSubmit() {
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.setFields();
-          this.$post("sdlBZizhiapply", {
-            ...this.sdlBZizhiapply,
+          let sdlBUser = {}; // this.form.getFieldsValue();
+          sdlBUser.yishiLb =  this.form.getFieldValue('yishiLb')
+          sdlBUser.yishiJb =  this.form.getFieldValue('yishiJb')
+          sdlBUser.yishiZhiyefanwei =  this.form.getFieldValue('yishiZhiyefanwei')
+          sdlBUser.yishiZgzsbianhao =  this.form.getFieldValue('yishiZgzsbianhao')
+          sdlBUser.yishiZiyebianhao =  this.form.getFieldValue('yishiZiyebianhao')
+          sdlBUser.id = this.sdlBUser.id;
+          sdlBUser.fileIdLc = this.sdlBUser.fileIdLc;
+          sdlBUser.fileUrlLc = this.sdlBUser.fileUrlLc;
+          sdlBUser.pictureId = this.sdlBUser.pictureId;
+          sdlBUser.pictureUrl = this.sdlBUser.pictureUrl;
+          sdlBUser.fileId = this.sdlBUser.fileId;
+          sdlBUser.fileUrl = this.sdlBUser.fileUrl;
+          this.$put("sdlBUser", {
+            ...sdlBUser,
           })
             .then(() => {
               this.reset();
@@ -515,37 +517,6 @@ export default {
         }
       });
     },
-    setFields() {
-      let values = this.form.getFieldsValue([
-        "userNewType",
-        "applyType",
-        "note"
-      ]);
-      if (typeof values !== "undefined") {
-        Object.keys(values).forEach((_key) => {
-          this.sdlBZizhiapply[_key] = values[_key];
-        });
-      }
-    },
-    handleSearch(value) {
-       this.search(value)
-    },
-    handleChange(value) {
-      
-      this.value = value;
-      let data= this.userData.filter(p=>p.userAccount==value)
-      this.setFormValues(data[0])
-    },
-    usertypeChange(value){
-      let data= this.data.filter(p=>p.id==value)
-       this.sdlBZizhiapply['userNewTypeName']=data[0].muduleName
-    }
   },
 };
 </script>
-<style lang="less" scoped>
-   .ant-input-disabled {
-  color: rgba(0, 0, 0, 0.65) !important;
-  background-color: #fff !important;
-}
-</style>

@@ -1,28 +1,15 @@
 <template>
     <a-upload
-      accept=".png,.jpg,.pdf,.bmp,.gif,.jpeg"
+      accept=".pdf"
       :fileList="fileList"
       :remove="handleRemove"
       :beforeUpload="beforeUpload"
-      @change="handleUpload"
-      :disabled="!(fileList.length === 0)"
+      @change="handleChange"
     >
-      <a-button>
-        <a-icon
-          type="upload"
-          v-show="!showFileOnly"
-        /> 选择文件 </a-button>
+      <a-button v-if="fileList.length === 0">
+        <a-icon type="upload"  /> 选择文件
+      </a-button>
     </a-upload>
-    <!-- <a-button
-      type="primary"
-      @click="handleUpload"
-      :disabled="fileList.length === 0 ||isShow===0"
-      :loading="uploading"
-      style="margin-top: 16px"
-      v-show="!showFileOnly"
-    >
-      {{uploading ? '上传中' : '开始上传' }}
-    </a-button> -->
 </template>
 <script>
 export default {
@@ -43,6 +30,10 @@ export default {
     showFileOnly: false
   },
   methods: {
+    reset() {
+       this.fileId =''
+       this.fileList = []
+    },
     handleRemove (file) {
       const index = this.fileList.indexOf(file)
       const newFileList = this.fileList.slice()
@@ -52,23 +43,39 @@ export default {
       this.$emit("uploadRemove")
     },
     beforeUpload (file) {
-      this.fileList = [...this.fileList, file]
-      return false
+      const isJPG = (file.type === 'application/pdf')
+      console.info(file.type)
+      if (!isJPG) {
+        this.$message.error('请只上传pdf文件!')
+      }
+      const isLt2M = file.size / 1024 / 1024 < 20
+      if (!isLt2M) {
+        this.$message.error('附件必须小于 20MB!')
+      }
+      if (isJPG && isLt2M) {
+        this.fileList = [...this.fileList, file]
+      }
+      return isJPG && isLt2M;
     },
     handleChange (info) {
-      if (info.file.status === 'done') {
+      console.info(info.file)
+      if (info.file.status === 'uploading') {
         this.handleUpload()
       }
     },
-    setForm (fileID, clientName, serverName) {
+    setForm (fileID) {
+      if(fileID!=null&&fileID!=''){
+     this.fetch(fileID)
+     }
+    },
+    fetch (fileId) {
+      this.fileId = fileId
       this.fileList=[]
-      this.fileList.push({
-        uid: fileID,
-        name: clientName,
-        status: 'done',
-        url: this.$baseUrl + 'uploadFile/' + serverName
-      });
-      this.fileId = fileID
+      this.$get('comFile/' + fileId).then((r) => {
+        let data = r.data
+        this.fileUrl =this.$baseUrl+ data.url
+        this.fileList.push(data)
+      })
     },
     handleUpload () {
       const { fileList } = this
@@ -78,13 +85,20 @@ export default {
 
       // You can use any AJAX library you like
       this.$upload('comFile/upload', formData).then((r) => {
-        let fileId = r.data.data
+        let comfile = r.data.data
+        this.fileId = comfile.uid
+        this.fileUrl =this.$baseUrl+ comfile.url
+        this.fileList=[]
+        this.fileList.push(comfile)
         //this.fileList = []
         this.isShow = 0
         this.uploading = false
         this.$message.success('上传成功.')
-        this.$emit("uploadSuc", fileId)
+        this.$emit("uploadSuc",this.fileId,comfile.url)
       }).catch(() => {
+        this.fileList= []
+        this.fileId = ''
+        this.isShow = 1
         this.uploading = false
         this.$message.error('上传失败.')
       })

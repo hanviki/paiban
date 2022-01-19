@@ -2,7 +2,7 @@
     <a-drawer
             title="新增"
             :maskClosable="false"
-            width=650
+            width="80%"
             placement="right"
             :closable="false"
             @close="onClose"

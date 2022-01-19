@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBQulificationMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBQulification">
+                    <id column="id" property="id"/>
+                    <result column="ql_name" property="qlName"/>
+                    <result column="fz_date" property="fzDate"/>
+                    <result column="bg_date" property="bgDate"/>
+                    <result column="bg_item" property="bgItem"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, ql_name, fz_date, bg_date, bg_item, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBQulification" parameterType="cc.mrbird.febs.mdl.entity.MdlBQulification">
+        update mdl_b_qulification
+        <trim prefix="set" suffixOverrides=",">
+<if test="qlName != null">ql_name=#{qlName},</if>
+<if test="fzDate != null">fz_date=#{fzDate},</if>
+<if test="bgDate != null">bg_date=#{bgDate},</if>
+<if test="bgItem != null">bg_item=#{bgItem},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBQulification" resultType="cc.mrbird.febs.mdl.entity.MdlBQulification" parameterType="cc.mrbird.febs.mdl.entity.MdlBQulification">
+        select  *  from mdl_b_qulification
+        where  1=1
+            <if test="mdlBQulification.qlName != null and mdlBQulification.qlName != ''"> and  mdl_b_qulification.ql_name like concat('%', #{ mdlBQulification.qlName} ,'%')</if>
+        <if test="mdlBQulification.fzDateFrom!= null">
+            AND mdl_b_qulification.fz_date <![CDATA[ >= ]]>  #{mdlBQulification.fzDateFrom}
+        </if>
+        <if test="mdlBQulification.fzDateTo!= null">
+            AND  mdl_b_qulification.fz_date <![CDATA[ <= ]]>  #{mdlBQulification.fzDateTo}
+        </if>
+        <if test="mdlBQulification.bgDateFrom!= null">
+            AND mdl_b_qulification.bg_date <![CDATA[ >= ]]>  #{mdlBQulification.bgDateFrom}
+        </if>
+        <if test="mdlBQulification.bgDateTo!= null">
+            AND  mdl_b_qulification.bg_date <![CDATA[ <= ]]>  #{mdlBQulification.bgDateTo}
+        </if>
+            <if test="mdlBQulification.bgItem != null and mdlBQulification.bgItem != ''"> and  mdl_b_qulification.bg_item like concat('%', #{ mdlBQulification.bgItem} ,'%')</if>
+            <if test="mdlBQulification.fileId != null and mdlBQulification.fileId != ''"> and  mdl_b_qulification.file_id like concat('%', #{ mdlBQulification.fileId} ,'%')</if>
+            <if test="mdlBQulification.fileUrl != null and mdlBQulification.fileUrl != ''"> and  mdl_b_qulification.file_url like concat('%', #{ mdlBQulification.fileUrl} ,'%')</if>
+        <if test="mdlBQulification.state != null"> and  mdl_b_qulification.state =#{ mdlBQulification.state} </if>
+        <if test="mdlBQulification.isDeletemark != null"> and  mdl_b_qulification.IS_DELETEMARK =#{ mdlBQulification.isDeletemark} </if>
+        <if test="mdlBQulification.createTimeFrom!= null">
+            AND mdl_b_qulification.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBQulification.createTimeFrom}
+        </if>
+        <if test="mdlBQulification.createTimeTo!= null">
+            AND  mdl_b_qulification.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBQulification.createTimeTo}
+        </if>
+        <if test="mdlBQulification.modifyTimeFrom!= null">
+            AND mdl_b_qulification.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBQulification.modifyTimeFrom}
+        </if>
+        <if test="mdlBQulification.modifyTimeTo!= null">
+            AND  mdl_b_qulification.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBQulification.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

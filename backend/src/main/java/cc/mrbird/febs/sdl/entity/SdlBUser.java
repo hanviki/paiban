@@ -167,7 +167,8 @@ private static final long serialVersionUID=1L;
         
         @ExcelField(value ="来校工作时间")
     private String schoolDate;
-
+        private  transient  String schoolDateFrom;
+    private  transient  String schoolDateTo;
     /**
      * 教学职称
      */

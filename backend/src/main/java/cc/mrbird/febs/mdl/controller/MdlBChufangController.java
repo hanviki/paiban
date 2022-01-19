@@ -1,6 +1,5 @@
 
-package ${package.Controller};
-
+package cc.mrbird.febs.mdl.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
@@ -8,8 +7,8 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
-import ${package.Service}.${table.serviceName};
-import ${package.Entity}.${entity};
+import cc.mrbird.febs.mdl.service.IMdlBChufangService;
+import cc.mrbird.febs.mdl.entity.MdlBChufang;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
@@ -35,36 +34,36 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  *
- * @author ${author}
- * @since ${date}
+ * @author viki
+ * @since 2022-01-19
  */
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("${table.entityPath}")
+@RequestMapping("mdlBChufang")
 
-public class ${table.controllerName} extends BaseController{
+public class MdlBChufangController extends BaseController{
 
 private String message;
 @Autowired
-public ${table.serviceName} i${entity}Service;
+public IMdlBChufangService iMdlBChufangService;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
- VALUES (0,'$!{table.comment}','/ass/${entity}/${entity}','ass/${entity}/${entity}','${table.entityPath}:view','fork',0,1,NOW());
+ VALUES (0,'','/ass/MdlBChufang/MdlBChufang','ass/MdlBChufang/MdlBChufang','mdlBChufang:view','fork',0,1,NOW());
  SELECT @maxId:=MAX(MENU_ID) from t_menu;
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}新增','${table.entityPath}:add',1,1,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}编辑','${table.entityPath}:update',1,2,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}删除','${table.entityPath}:delete',1,3,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}导出','${table.entityPath}:export',1,4,NOW());
- INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'$!{table.comment}导入','${table.entityPath}:import',1,5,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'新增','mdlBChufang:add',1,1,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'编辑','mdlBChufang:update',1,2,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'删除','mdlBChufang:delete',1,3,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'导出','mdlBChufang:export',1,4,NOW());
+ INSERT into t_menu(parent_id,MENU_NAME,perms,type,order_num,CREATE_time) VALUES(@maxId,'导入','mdlBChufang:import',1,5,NOW());
 */
 
 
@@ -72,28 +71,28 @@ public ${table.serviceName} i${entity}Service;
  * 分页查询数据
  *
  * @param  request 分页信息
- * @param ${table.entityPath} 查询条件
+ * @param mdlBChufang 查询条件
  * @return
  */
 @GetMapping
-@RequiresPermissions("${table.entityPath}:view")
-public Map<String, Object> List(QueryRequest request, ${entity} ${table.entityPath}){
-        return getDataTable(this.i${entity}Service.find${entity}s(request, ${table.entityPath}));
+@RequiresPermissions("mdlBChufang:view")
+public Map<String, Object> List(QueryRequest request, MdlBChufang mdlBChufang){
+        return getDataTable(this.iMdlBChufangService.findMdlBChufangs(request, mdlBChufang));
         }
 
 /**
  * 添加
- * @param  ${table.entityPath}
+ * @param  mdlBChufang
  * @return
  */
 @Log("新增/按钮")
 @PostMapping
-@RequiresPermissions("${table.entityPath}:add")
-public void add${entity}(@Valid ${entity} ${table.entityPath})throws FebsException{
+@RequiresPermissions("mdlBChufang:add")
+public void addMdlBChufang(@Valid MdlBChufang mdlBChufang)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
-        ${table.entityPath}.setCreateUserId(currentUser.getUserId());
-        this.i${entity}Service.create${entity}(${table.entityPath});
+        mdlBChufang.setCreateUserId(currentUser.getUserId());
+        this.iMdlBChufangService.createMdlBChufang(mdlBChufang);
         }catch(Exception e){
         message="新增/按钮失败" ;
         log.error(message,e);
@@ -103,17 +102,17 @@ public void add${entity}(@Valid ${entity} ${table.entityPath})throws FebsExcepti
 
 /**
  * 修改
- * @param ${table.entityPath}
+ * @param mdlBChufang
  * @return
  */
 @Log("修改")
 @PutMapping
-@RequiresPermissions("${table.entityPath}:update")
-public void update${entity}(@Valid ${entity} ${table.entityPath})throws FebsException{
+@RequiresPermissions("mdlBChufang:update")
+public void updateMdlBChufang(@Valid MdlBChufang mdlBChufang)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
-      ${table.entityPath}.setModifyUserId(currentUser.getUserId());
-        this.i${entity}Service.update${entity}(${table.entityPath});
+      mdlBChufang.setModifyUserId(currentUser.getUserId());
+        this.iMdlBChufangService.updateMdlBChufang(mdlBChufang);
         }catch(Exception e){
         message="修改失败" ;
         log.error(message,e);
@@ -124,11 +123,11 @@ public void update${entity}(@Valid ${entity} ${table.entityPath})throws FebsExce
 
 @Log("删除")
 @DeleteMapping("/{ids}")
-@RequiresPermissions("${table.entityPath}:delete")
-public void delete${entity}s(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
+@RequiresPermissions("mdlBChufang:delete")
+public void deleteMdlBChufangs(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
         try{
         String[]arr_ids=ids.split(StringPool.COMMA);
-        this.i${entity}Service.delete${entity}s(arr_ids);
+        this.iMdlBChufangService.deleteMdlBChufangs(arr_ids);
         }catch(Exception e){
         message="删除失败" ;
         log.error(message,e);
@@ -136,11 +135,11 @@ public void delete${entity}s(@NotBlank(message = "{required}") @PathVariable Str
         }
         }
 @PostMapping("excel")
-@RequiresPermissions("${table.entityPath}:export")
-public void export(QueryRequest request, ${entity} ${table.entityPath}, HttpServletResponse response) throws FebsException {
+@RequiresPermissions("mdlBChufang:export")
+public void export(QueryRequest request, MdlBChufang mdlBChufang, HttpServletResponse response) throws FebsException {
         try {
-        List<${entity}> ${table.entityPath}s = this.i${entity}Service.find${entity}s(request, ${table.entityPath}).getRecords();
-        ExcelKit.$Export(${entity}.class, response).downXlsx(${table.entityPath}s, false);
+        List<MdlBChufang> mdlBChufangs = this.iMdlBChufangService.findMdlBChufangs(request, mdlBChufang).getRecords();
+        ExcelKit.$Export(MdlBChufang.class, response).downXlsx(mdlBChufangs, false);
         } catch (Exception e) {
         message = "导出Excel失败";
         log.error(message, e);
@@ -148,29 +147,29 @@ public void export(QueryRequest request, ${entity} ${table.entityPath}, HttpServ
         }
         }
 @RequestMapping(value = "downTemplate", method = RequestMethod.POST)
-@RequiresPermissions("${table.entityPath}:import")
+@RequiresPermissions("mdlBChufang:import")
 public void downTemplate(HttpServletResponse response) {
-        List<${entity}> publishList = new ArrayList<>();
-        ExcelKit.$Export(${entity}.class, response).downXlsx(publishList, true);
+        List<MdlBChufang> publishList = new ArrayList<>();
+        ExcelKit.$Export(MdlBChufang.class, response).downXlsx(publishList, true);
         }
 @RequestMapping(value = "import", method = RequestMethod.POST)
-@RequiresPermissions("${table.entityPath}:import")
+@RequiresPermissions("mdlBChufang:import")
 public ResponseEntity<?> importUser(@RequestParam MultipartFile file)
         throws IOException {
         long beginMillis = System.currentTimeMillis();
 
-        List<${entity}> successList = Lists.newArrayList();
+        List<MdlBChufang> successList = Lists.newArrayList();
         List<Map<String, Object>> errorList = Lists.newArrayList();
         List<Map<String, Object>> resultList = Lists.newArrayList();
 
         User currentUser=FebsUtil.getCurrentUser();
 
 
-        ExcelKit.$Import(${entity}.class)
-        .readXlsx(file.getInputStream(), new ExcelReadHandler<${entity}>() {
+        ExcelKit.$Import(MdlBChufang.class)
+        .readXlsx(file.getInputStream(), new ExcelReadHandler<MdlBChufang>() {
 
 @Override
-public void onSuccess(int sheetIndex, int rowIndex, ${entity} entity) {
+public void onSuccess(int sheetIndex, int rowIndex, MdlBChufang entity) {
         successList.add(entity); // 单行读取成功，加入入库队列。
         }
 
@@ -186,11 +185,11 @@ public void onError(int sheetIndex, int rowIndex,
 
         // TODO: 执行successList的入库操作。
         if(CollectionUtil.isEmpty(errorList)){
-        for (${entity} ${table.entityPath}Import:successList
+        for (MdlBChufang mdlBChufangImport:successList
         ) {
-    ${entity} ${table.entityPath} =new ${entity}();
-        BeanUtil.copyProperties(${table.entityPath}Import,${table.entityPath}, CopyOptions.create().setIgnoreNullValue(true));
-        this.i${entity}Service.create${entity}(${table.entityPath});
+    MdlBChufang mdlBChufang =new MdlBChufang();
+        BeanUtil.copyProperties(mdlBChufangImport,mdlBChufang, CopyOptions.create().setIgnoreNullValue(true));
+        this.iMdlBChufangService.createMdlBChufang(mdlBChufang);
         }
         }
 
@@ -201,8 +200,8 @@ public void onError(int sheetIndex, int rowIndex,
         return ResponseEntity.ok(resultList);
         }
 @GetMapping("/{id}")
-public ${entity} detail(@NotBlank(message = "{required}") @PathVariable String id) {
-    ${entity} ${table.entityPath}=this.i${entity}Service.getById(id);
-        return ${table.entityPath};
+public MdlBChufang detail(@NotBlank(message = "{required}") @PathVariable String id) {
+    MdlBChufang mdlBChufang=this.iMdlBChufangService.getById(id);
+        return mdlBChufang;
         }
         }

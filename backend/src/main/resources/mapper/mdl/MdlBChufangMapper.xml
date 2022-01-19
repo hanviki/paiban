@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBChufangMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBChufang">
+                    <id column="id" property="id"/>
+                    <result column="type" property="type"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="train_date" property="trainDate"/>
+                    <result column="exiam_score" property="exiamScore"/>
+                    <result column="exiam_result" property="exiamResult"/>
+                    <result column="archive_id" property="archiveId"/>
+                    <result column="archive_name" property="archiveName"/>
+                    <result column="archive_code" property="archiveCode"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="is_chufang" property="isChufang"/>
+                    <result column="level" property="level"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, type, user_account_name, user_account, train_date, exiam_score, exiam_result, archive_id, archive_name, archive_code, file_id, file_url, is_chufang, level, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBChufang" parameterType="cc.mrbird.febs.mdl.entity.MdlBChufang">
+        update mdl_b_chufang
+        <trim prefix="set" suffixOverrides=",">
+<if test="type != null">type=#{type},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="trainDate != null">train_date=#{trainDate},</if>
+<if test="exiamScore != null">exiam_score=#{exiamScore},</if>
+<if test="exiamResult != null">exiam_result=#{exiamResult},</if>
+<if test="archiveId != null">archive_id=#{archiveId},</if>
+<if test="archiveName != null">archive_name=#{archiveName},</if>
+<if test="archiveCode != null">archive_code=#{archiveCode},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="isChufang != null">is_chufang=#{isChufang},</if>
+<if test="level != null">level=#{level},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBChufang" resultType="cc.mrbird.febs.mdl.entity.MdlBChufang" parameterType="cc.mrbird.febs.mdl.entity.MdlBChufang">
+        select  *  from mdl_b_chufang
+        where  1=1
+            <if test="mdlBChufang.type != null and mdlBChufang.type != ''"> and  mdl_b_chufang.type like concat('%', #{ mdlBChufang.type} ,'%')</if>
+            <if test="mdlBChufang.userAccountName != null and mdlBChufang.userAccountName != ''"> and  mdl_b_chufang.user_account_name like concat('%', #{ mdlBChufang.userAccountName} ,'%')</if>
+            <if test="mdlBChufang.userAccount != null and mdlBChufang.userAccount != ''"> and  mdl_b_chufang.user_account like concat('%', #{ mdlBChufang.userAccount} ,'%')</if>
+        <if test="mdlBChufang.trainDateFrom!= null">
+            AND mdl_b_chufang.train_date <![CDATA[ >= ]]>  #{mdlBChufang.trainDateFrom}
+        </if>
+        <if test="mdlBChufang.trainDateTo!= null">
+            AND  mdl_b_chufang.train_date <![CDATA[ <= ]]>  #{mdlBChufang.trainDateTo}
+        </if>
+            <if test="mdlBChufang.exiamScore != null and mdlBChufang.exiamScore != ''"> and  mdl_b_chufang.exiam_score like concat('%', #{ mdlBChufang.exiamScore} ,'%')</if>
+            <if test="mdlBChufang.exiamResult != null and mdlBChufang.exiamResult != ''"> and  mdl_b_chufang.exiam_result like concat('%', #{ mdlBChufang.exiamResult} ,'%')</if>
+            <if test="mdlBChufang.archiveName != null and mdlBChufang.archiveName != ''"> and  mdl_b_chufang.archive_name like concat('%', #{ mdlBChufang.archiveName} ,'%')</if>
+            <if test="mdlBChufang.archiveCode != null and mdlBChufang.archiveCode != ''"> and  mdl_b_chufang.archive_code like concat('%', #{ mdlBChufang.archiveCode} ,'%')</if>
+            <if test="mdlBChufang.fileId != null and mdlBChufang.fileId != ''"> and  mdl_b_chufang.file_id like concat('%', #{ mdlBChufang.fileId} ,'%')</if>
+            <if test="mdlBChufang.fileUrl != null and mdlBChufang.fileUrl != ''"> and  mdl_b_chufang.file_url like concat('%', #{ mdlBChufang.fileUrl} ,'%')</if>
+            <if test="mdlBChufang.isChufang != null and mdlBChufang.isChufang != ''"> and  mdl_b_chufang.is_chufang like concat('%', #{ mdlBChufang.isChufang} ,'%')</if>
+            <if test="mdlBChufang.level != null and mdlBChufang.level != ''"> and  mdl_b_chufang.level like concat('%', #{ mdlBChufang.level} ,'%')</if>
+        <if test="mdlBChufang.state != null"> and  mdl_b_chufang.state =#{ mdlBChufang.state} </if>
+        <if test="mdlBChufang.isDeletemark != null"> and  mdl_b_chufang.IS_DELETEMARK =#{ mdlBChufang.isDeletemark} </if>
+        <if test="mdlBChufang.createTimeFrom!= null">
+            AND mdl_b_chufang.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBChufang.createTimeFrom}
+        </if>
+        <if test="mdlBChufang.createTimeTo!= null">
+            AND  mdl_b_chufang.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBChufang.createTimeTo}
+        </if>
+        <if test="mdlBChufang.modifyTimeFrom!= null">
+            AND mdl_b_chufang.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBChufang.modifyTimeFrom}
+        </if>
+        <if test="mdlBChufang.modifyTimeTo!= null">
+            AND  mdl_b_chufang.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBChufang.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

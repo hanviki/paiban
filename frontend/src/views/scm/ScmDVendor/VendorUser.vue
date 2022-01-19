@@ -157,7 +157,7 @@
   </a-card>
 </template>
 <script>
-import UploadSingleFile from './uploadSingleFile'
+import UploadSingleFile from '../../common/uploadSingleFile'
 import { mapState } from 'vuex'
 import moment from 'moment'
 

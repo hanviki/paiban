@@ -21,6 +21,8 @@ public interface ISdlBUserService extends IService<SdlBUser> {
 
         IPage<SdlBUser> findSdlBUsers(QueryRequest request, SdlBUser sdlBUser);
 
+        IPage<SdlBUser> findSdlBUsersYwc(QueryRequest request, SdlBUser sdlBUser);
+
         IPage<SdlBUser> findSdlBUserList(QueryRequest request, SdlBUser sdlBUser);
 
         void createSdlBUser(SdlBUser sdlBUser);
@@ -30,5 +32,7 @@ public interface ISdlBUserService extends IService<SdlBUser> {
         void deleteSdlBUsers(String[]Ids);
 
         List<CustomUser> getUserAccounts();
+
+        List<SdlBUser> findSdlBUsers_search( SdlBUser sdlBUser);
 
         }
