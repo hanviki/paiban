@@ -267,6 +267,7 @@ export default {
       value: "",
       data: [],
       userData: [],
+      renshizifw: ''
     };
   },
   watch: {
@@ -274,7 +275,15 @@ export default {
       if (this.editVisiable) {
         this.$get("sdlDZizhi").then((res) => {
           console.info(res.data.rows);
-          this.data = res.data.rows;
+           if(this.renshizifw=='医师'){
+            this.data =res.data.rows.filter(p=> [1,2,3,4,5].indexOf(p.id)>=0);
+          }
+          else if(this.renshizifw=='技术'){
+            this.data = res.data.rows.filter(p=> [6,7,8].indexOf(p.id)>=0);
+          }
+          else {
+            this.data = res.data.rows
+          }
         });
       }
     },
@@ -376,6 +385,7 @@ export default {
           this.form.setFieldsValue(obj);
         }
       });
+      this.renshizifw =sdlBZizhiapply.renshizifw
       this.sdlBZizhiapply.id = sdlBZizhiapply.id;
     },
     setFormValues2({ ...sdlBUser }) {

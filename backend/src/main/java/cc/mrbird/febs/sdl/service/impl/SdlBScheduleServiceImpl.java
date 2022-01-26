@@ -109,10 +109,10 @@ public class SdlBScheduleServiceImpl extends ServiceImpl<SdlBScheduleMapper, Sdl
                 queryWrapper.eq(SdlBSchedule::getStateApplyFlag, sdlBSchedule.getStateApplyFlag());
             }
             if (sdlBSchedule.getDeptId() != null) {
-                queryWrapper.eq(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId());
+                queryWrapper.in(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId().split(","));
             }
             if(StringUtils.isNotEmpty(sdlBSchedule.getDeptName())){ //排除 急诊内科 2021.12.28
-                queryWrapper.ne(SdlBSchedule::getDeptId,sdlBSchedule.getDeptName());
+                queryWrapper.notIn(SdlBSchedule::getDeptId,sdlBSchedule.getDeptName().split(","));
             }
 
             Page<SdlBSchedule> page = new Page<>();
@@ -154,10 +154,10 @@ public class SdlBScheduleServiceImpl extends ServiceImpl<SdlBScheduleMapper, Sdl
                 queryWrapper.eq(SdlBSchedule::getStateApplyFlag, sdlBSchedule.getStateApplyFlag());
             }
             if (sdlBSchedule.getDeptId() != null) {
-                queryWrapper.eq(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId());
+                queryWrapper.in(SdlBSchedule::getDeptId, sdlBSchedule.getDeptId().split(","));
             }
             if(StringUtils.isNotEmpty(sdlBSchedule.getDeptName())){ //排除 急诊内科 2021.12.28
-                queryWrapper.ne(SdlBSchedule::getDeptId,sdlBSchedule.getDeptName());
+                queryWrapper.notIn(SdlBSchedule::getDeptId,sdlBSchedule.getDeptName().split(","));
             }
             Page<SdlBSchedule> page = new Page<>();
             SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个

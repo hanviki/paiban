@@ -31,6 +31,7 @@
 </template>
 <script>
 import MdlBManageList from "./MdlBManagerList.vue";
+
 export default {
   name: 'BaseInfo',
   data() {

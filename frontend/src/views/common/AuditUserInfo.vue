@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="用户申报基本资料"
+    title="用户基本资料"
     placement="left"
     :closable="true"
     :mask="false"
@@ -33,88 +33,28 @@
     </a-form-item>
     <a-form-item
       v-bind="formItemLayout"
-      label="教学岗位"
+      label="人事子范围"
     >
-      {{dcaBUser.zyjsgw}}
+      {{dcaBUser.rszfw}}
     </a-form-item>
     <a-form-item
       v-bind="formItemLayout"
-      label="聘任时间(教学)"
+      label="医师类别"
     >
-      {{dcaBUser.appointedDate==null?"":moment(dcaBUser.appointedDate).format('YYYY-MM-DD')}}
+      {{dcaBUser.yishiLb}}
     </a-form-item>
     <a-form-item
       v-bind="formItemLayout"
-      label="临床岗位"
+      label="医技"
     >
-      {{dcaBUser.zyjsgwLc}}
+      {{dcaBUser.patentGood}}
     </a-form-item>
     <a-form-item
       v-bind="formItemLayout"
-      label="聘任时间(临床)"
-    >
-      {{dcaBUser.appointedDateLc==null?"":moment(dcaBUser.appointedDateLc).format('YYYY-MM-DD')}}
-    </a-form-item>
-    <a-form-item
-      v-bind="formItemLayout"
-      label="拟聘岗位职务"
-    >
-      {{dcaBUser.npPositionName}}
-    </a-form-item>
-    <a-form-item
-      v-bind="formItemLayout"
-      label="博士毕业时间"
-    >
-      {{dcaBUser.doctorDesc}}
-    </a-form-item>
-    <a-form-item
-      v-bind="formItemLayout"
-      label="来院时间"
+      label="入职时间"
     >
       {{dcaBUser.schoolDate==null?"":moment(dcaBUser.schoolDate).format('YYYY-MM-DD')}}
     </a-form-item>
-    <a-form-item
-      v-bind="formItemLayout"
-      label="职员职级"
-    >
-      {{dcaBUser.staffGrade}}
-    </a-form-item>
-    <a-form-item
-      v-bind="formItemLayout"
-      label="职员聘任时间"
-    >
-      {{dcaBUser.staffDate==null?"":moment(dcaBUser.staffDate).format('YYYY-MM-DD')}}
-    </a-form-item>
-    <a-form-item
-      v-bind="formItemLayout"
-      label="现任岗位级别"
-    >
-      {{dcaBUser.xrgwjb}}
-    </a-form-item>
-    <a-form-item
-      v-bind="formItemLayout"
-      label="现任岗位聘任时间"
-    >
-      {{dcaBUser.xrgwjbprsj==null?"":moment(dcaBUser.xrgwjbprsj).format('YYYY-MM-DD')}}
-    </a-form-item>
-   <a-form-item
-      v-bind="formItemLayout"
-      label="个人照片"
-    >
-  
-    </a-form-item>
-      <img :src="dcaBUser.pictureUrl" width="120" height="120" />
-    <a-textarea
-      placeholder="请输入发送信息"
-      @blur="e => inputChange(e.target.value)"
-      :value="mess"
-    >
-    </a-textarea>
-    <a-button
-      style="margin-top: 5px"
-      type="primary"
-      @click="sendMess"
-    >发送消息</a-button>
   </a-drawer>
 
 </template>
@@ -184,7 +124,7 @@ export default {
     },
     getUserInfo (userAccount) {
       if (userAccount != '') {
-        this.$get('dcaBUser', {
+        this.$get('sdlBUser', {
           userAccount: userAccount
         }).then((r) => {
           let data = r.data

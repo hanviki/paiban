@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBProfessionMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBProfession">
+                    <id column="id" property="id"/>
+                    <result column="ql_name" property="qlName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, ql_name, user_account, user_account_name, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBProfession" parameterType="cc.mrbird.febs.mdl.entity.MdlBProfession">
+        update mdl_b_profession
+        <trim prefix="set" suffixOverrides=",">
+<if test="qlName != null">ql_name=#{qlName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBProfession" resultType="cc.mrbird.febs.mdl.entity.MdlBProfession" parameterType="cc.mrbird.febs.mdl.entity.MdlBProfession">
+        select  *  from mdl_b_profession
+        where  1=1
+            <if test="mdlBProfession.qlName != null and mdlBProfession.qlName != ''"> and  mdl_b_profession.ql_name like concat('%', #{ mdlBProfession.qlName} ,'%')</if>
+            <if test="mdlBProfession.userAccount != null and mdlBProfession.userAccount != ''"> and  mdl_b_profession.user_account like concat('%', #{ mdlBProfession.userAccount} ,'%')</if>
+            <if test="mdlBProfession.userAccountName != null and mdlBProfession.userAccountName != ''"> and  mdl_b_profession.user_account_name like concat('%', #{ mdlBProfession.userAccountName} ,'%')</if>
+            <if test="mdlBProfession.fileId != null and mdlBProfession.fileId != ''"> and  mdl_b_profession.file_id like concat('%', #{ mdlBProfession.fileId} ,'%')</if>
+            <if test="mdlBProfession.fileUrl != null and mdlBProfession.fileUrl != ''"> and  mdl_b_profession.file_url like concat('%', #{ mdlBProfession.fileUrl} ,'%')</if>
+        <if test="mdlBProfession.state != null"> and  mdl_b_profession.state =#{ mdlBProfession.state} </if>
+        <if test="mdlBProfession.isDeletemark != null"> and  mdl_b_profession.IS_DELETEMARK =#{ mdlBProfession.isDeletemark} </if>
+        <if test="mdlBProfession.createTimeFrom!= null">
+            AND mdl_b_profession.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBProfession.createTimeFrom}
+        </if>
+        <if test="mdlBProfession.createTimeTo!= null">
+            AND  mdl_b_profession.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBProfession.createTimeTo}
+        </if>
+        <if test="mdlBProfession.modifyTimeFrom!= null">
+            AND mdl_b_profession.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBProfession.modifyTimeFrom}
+        </if>
+        <if test="mdlBProfession.modifyTimeTo!= null">
+            AND  mdl_b_profession.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBProfession.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

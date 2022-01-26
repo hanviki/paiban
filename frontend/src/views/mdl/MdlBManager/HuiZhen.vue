@@ -4,11 +4,35 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
+            <a-col :md="7" :sm="24">
+              <a-form-item label="人事编号/姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
+            <a-col :md="7" :sm="24">
+              <a-form-item v-bind="formItemLayout" label="科室">
+                <a-select
+                  v-model="queryParams.deptId"
+                  option-filter-prop="children"
+                  :filter-option="filterOption"
+                  show-search
+                >
+                  <a-select-option
+                    v-for="d in deptData"
+                    :key="d.deptId"
+                    :value="`${d.deptId}`"
+                  >
+                    {{ d.deptName }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+             <a-col :md="10" :sm="24">
+                <a-form-item label="入职日期" v-bind="formItemLayout">
+                  <a-date-picker @change="onfzDateFromChange" />-
+                  <a-date-picker @change="onfzDateToChange" />
+                </a-form-item>
+              </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -23,16 +47,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button
-          v-hasPermission="['mdlBChufang:add']"
-          type="primary"
-          ghost
-          @click="add"
-          >新增{{ type }}</a-button
-        >
-        <a-button v-hasPermission="['mdlBChufang:delete']" @click="batchDelete"
-          >删除</a-button
-        >
+        <a-button type="primary" ghost @click="exportExcel">导出</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -50,63 +65,47 @@
         :bordered="bordered"
         :scroll="{ x: 900 }"
       >
-        <template slot="remark" slot-scope="text, record">
-          <a-popover placement="topLeft">
-            <template slot="content">
-              <div style="max-width: 200px">{{ text }}</div>
-            </template>
-            <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
-          </a-popover>
-        </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['mdlBChufang:update']"
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
-            title="修改"
+            title="查看"
           ></a-icon>
-          <a-badge
-            v-hasNoPermission="['mdlBChufang:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge>
         </template>
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <mdlBChufang-add
-      :type="type"
+    <!-- <sdlBUser-add
       @close="handleAddClose"
       @success="handleAddSuccess"
       :addVisiable="addVisiable"
     >
-    </mdlBChufang-add>
+    </sdlBUser-add> -->
     <!-- 修改字典 -->
-    <mdlBChufang-edit
-      :type="type"
-      ref="mdlBChufangEdit"
+    <user-info-view
+      ref="sdlBUserEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </mdlBChufang-edit>
+    </user-info-view>
   </a-card>
 </template>
 
 <script>
-import MdlBChufangAdd from "./MdlBChufangAdd";
-import MdlBChufangEdit from "./MdlBChufangEdit";
+//import SdlBUserAdd from "./SdlBUserAdd";
 import moment from "moment";
+import UserInfoView from "../UserInfoView";
 
 const formItemLayout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 15, offset: 1 },
+  labelCol: { span: 5 },
+  wrapperCol: { span: 19 },
 };
 export default {
-  name: "MdlBChufang",
-  components: { MdlBChufangAdd, MdlBChufangEdit },
+  name: "SdlBUser",
+  components: { UserInfoView },
   data() {
     return {
       advanced: false,
@@ -124,161 +123,117 @@ export default {
         showTotal: (total, range) =>
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
-      queryParams: {},
+      queryParams: {
+          sexName: this.type  //单科会诊、多学科会诊
+      },
       addVisiable: false,
       editVisiable: false,
       loading: false,
       bordered: true,
+      deptData: [],
     };
   },
   props: {
-    type: {
-      default: "",
-    },
+      type: {
+          default :''
+      }
   },
   computed: {
     columns() {
-      let { sortedInfo, type } = this;
+      let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
-      if (type === "基本处方权") {
-        return [
+      return [
+         {
+          title: "科室名称",
+          dataIndex: "deptName",
+          width: 150,
+        },
           {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
-          },
+          title: "姓名",
+          dataIndex: "userAccountName",
+          width: 100,
+        },
+           {
+          title: "发薪号",
+          dataIndex: "userAccount",
+          width: 120,
+        },
           {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-          {
-            title: "培训日期",
-            dataIndex: "trainDate",
-            customRender: (text, row, index) => {
-              if (text == null) return "";
-              return moment(text).format("YYYY-MM-DD");
-            },
-            width: 100,
-          },
-          {
-            title: "考核分数",
-            dataIndex: "exiamScore",
-            width: 100,
-          },
-          {
-            title: "考核结果",
-            dataIndex: "exiamResult",
-            width: 100,
-          },
-          {
-            title: "授权文件名称",
-            dataIndex: "archiveName",
-            width: 100,
-          },
-          {
-            title: "授权文件编码",
-            dataIndex: "archiveCode",
-            width: 100,
-          },
-          {
-            title: "附件ID",
-            dataIndex: "fileId",
-            width: 100,
-            customRender: (text, row, index) => {
-              if (text != null && text != "") {
-                return (
-                  <a href={this.handleUrl(row.fileUrl)} target="_blank">
-                    查看
-                  </a>
-                );
-              }
-              return "";
-            },
-          },
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      } else if (type === "麻精药物处方权") {
-        return [
-          {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
-          },
-          {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-
-          {
-            title: "是否处方",
-            dataIndex: "isChufang",
-            width: 100,
-          },
-
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      } else {
-        return [
-          {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
-          },
-          {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-
-          {
-            title: "级别",
-            dataIndex: "level",
-            width: 100,
-          },
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      }
+          title: "出生年月",
+          dataIndex: "birthday",
+          width: 100,
+        },
+           {
+          title: "身份证",
+          dataIndex: "idCard",
+          width: 150,
+        },
+        
+        {
+          title: "职称",
+          dataIndex: "zhicheng",
+          width: 100,
+        },
+        {
+          title: "操作",
+          dataIndex: "operation",
+          scopedSlots: { customRender: "operation" },
+          fixed: "right",
+          width: 100,
+        },
+      ];
     },
   },
   mounted() {
+    this.fetchDept();
     this.fetch();
   },
   methods: {
-    moment,
-    handleRefesh() {
-      this.search();
-    },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
+    },
+    onfzDateFromChange(date, dateString) {
+      this.queryParams.schoolDateFrom = dateString;
+    },
+    onfzDateToChange(date, dateString) {
+      this.queryParams.schoolDateTo = dateString;
+    },
+    onChang_zg(e) {
+      if (e.target.checked) {
+        this.queryParams.yishiZgzsbianhao = "1";
+      } else {
+        delete this.queryParams.yishiZgzsbianhao;
+      }
+    },
+    onChang_zy(e) {
+      if (e.target.checked) {
+        this.queryParams.yishiZiyebianhao = "1";
+      } else {
+        delete this.queryParams.yishiZiyebianhao;
+      }
+    },
+    fetchDept() {
+      this.$get("dept/list", { parentId: "0" }).then((res) => {
+        this.deptData = [];
+        this.deptData.push({
+          deptId: "-1",
+          deptName: "全部",
+        });
+        this.deptData.push(...res.data);
+      });
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     },
     toggleAdvanced() {
       this.advanced = !this.advanced;
       if (!this.advanced) {
         this.queryParams.comments = "";
       }
-    },
-    handleUrl(url) {
-      return this.$baseUrl + url;
     },
     handleAddSuccess() {
       this.addVisiable = false;
@@ -300,7 +255,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      this.$refs.mdlBChufangEdit.setFormValues(record);
+      this.$refs.sdlBUserEdit.setFormValues(record);
       this.editVisiable = true;
     },
     batchDelete() {
@@ -314,8 +269,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let mdlBChufangIds = that.selectedRowKeys.join(",");
-          that.$delete("mdlBChufang/" + mdlBChufangIds).then(() => {
+          let sdlBUserIds = that.selectedRowKeys.join(",");
+          that.$delete("sdlBUser/" + sdlBUserIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -334,10 +289,20 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("mdlBChufang/excel", {
+      let json = [...this.columns];
+      json.splice(this.columns.length - 1, 1); //移出第一个
+      console.info(json);
+      let dataJson = JSON.stringify(json);
+      let queryParams ={...this.queryParams};
+      if(queryParams.deptId=='-1'){
+        delete queryParams.deptId
+      }
+
+      this.$export("sdlBUser/excelYwc", {
         sortField: sortField,
         sortOrder: sortOrder,
-        ...this.queryParams,
+        dataJson,
+        ...queryParams,
       });
     },
     search() {
@@ -348,10 +313,14 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
+      let queryParams ={...this.queryParams};
+      if(queryParams.deptId=='-1'){
+        delete queryParams.deptId
+      }
       this.fetch({
         sortField: sortField,
         sortOrder: sortOrder,
-        ...this.queryParams,
+        ...queryParams,
       });
     },
     reset() {
@@ -392,8 +361,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("mdlBChufang", {
-        type: this.type,
+      this.$get("sdlBUser/ywc", {
         ...params,
       }).then((r) => {
         let data = r.data;

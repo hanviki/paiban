@@ -10,29 +10,27 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <template v-if="handleType('基本处方权')">
-        <a-form-item v-bind="formItemLayout" label="人员">
-          <a-select
-            v-decorator="[
-              'userAccount',
-              { rules: [{ required: true, message: '人员必填' }] },
-            ]"
-            @search="handleSearch"
-            :filter-option="false"
-            show-search
-            @change="userChange"
+      <a-form-item v-bind="formItemLayout" label="人员">
+        <a-select
+          v-decorator="[
+            'userAccount',
+            { rules: [{ required: true, message: '人员必填' }] },
+          ]"
+          @search="handleSearch"
+          :filter-option="false"
+          show-search
+          @change="userChange"
+        >
+          <a-select-option
+            v-for="d2 in userData"
+            :key="d2"
+            :value="`${d2.userAccount}`"
           >
-            <a-select-option
-              v-for="d2 in userData"
-              :key="d2"
-              :value="`${d2.userAccount}`"
-            >
-              {{
-                d2.userAccountName + " " + d2.userAccount + " " + d2.birthday
-              }}
-            </a-select-option>
-          </a-select>
-        </a-form-item>
+            {{ d2.userAccountName + " " + d2.userAccount + " " + d2.birthday }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <template v-if="handleType('基本处方权')">
         <a-form-item v-bind="formItemLayout" label="培训日期">
           <a-date-picker
             v-decorator="[
@@ -89,17 +87,18 @@
           </a-select>
         </a-form-item>
       </template>
-      <template
-        v-else
-      >
+      <template v-else>
         <a-form-item v-bind="formItemLayout" label="级别">
-          <a-input
-            placeholder="请输入级别"
+          <a-select
             v-decorator="[
               'level',
               { rules: [{ required: true, message: '级别不能为空' }] },
             ]"
-          />
+          >
+            <a-select-option value="限制级"> 限制级 </a-select-option>
+            <a-select-option value="非限制级"> 非限制级 </a-select-option>
+            <a-select-option value="特殊使用"> 特殊使用 </a-select-option>
+          </a-select>
         </a-form-item>
       </template>
     </a-form>
@@ -154,9 +153,9 @@ export default {
     },
   },
   methods: {
-      handleType (type){
-          return this.type==type
-      },
+    handleType(type) {
+      return this.type == type;
+    },
     reset() {
       this.loading = false;
       this.mdlBChufang = {};

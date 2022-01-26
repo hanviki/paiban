@@ -31,76 +31,79 @@
         </a-select>
       </a-form-item>
       <a-form-item v-bind="formItemLayout" label="姓名">
-         <a-input
-          disabled
-          v-decorator="[
-            'userAccountName',
-          ]"
-        />
+        <a-input disabled v-decorator="['userAccountName']" />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="培训日期">
-        <a-date-picker
-          v-decorator="[
-            'trainDate',
-            { rules: [{ required: true, message: '培训日期不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="考核分数">
-        <a-input
-          placeholder="请输入考核分数"
-          v-decorator="[
-            'exiamScore',
-            { rules: [{ required: true, message: '考核分数不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="考核结果">
-        <a-input
-          placeholder="请输入考核结果"
-          v-decorator="[
-            'exiamResult',
-            { rules: [{ required: true, message: '考核结果不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="授权文件">
-        <a-select
-          v-decorator="[
-            'archiveId',
-            { rules: [{ required: true, message: '授权文件不能为空' }] },
-          ]"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          show-search
-          @change="fileChange"
-        >
-          <a-select-option v-for="d in fileData" :key="d" :value="`${d.id}`">
-            {{ d.fileName + " " + d.fileCode }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-
-      <a-form-item v-bind="formItemLayout" label="是否处方">
-        <a-select
-          v-decorator="[
-            'isChufang',
-            { rules: [{ required: true, message: '是否处方不能为空' }] },
-          ]"
-        >
-          <a-select-option value="是"> 是 </a-select-option>
-          <a-select-option value="否"> 否 </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="级别">
-        <a-input
-          placeholder="请输入级别"
-          v-decorator="[
-            'level',
-            { rules: [{ required: true, message: '级别不能为空' }] },
-          ]"
-        />
-      </a-form-item>
+      <template v-if="handleType('基本处方权')">
+        <a-form-item v-bind="formItemLayout" label="培训日期">
+          <a-date-picker
+            v-decorator="[
+              'trainDate',
+              { rules: [{ required: true, message: '培训日期不能为空' }] },
+            ]"
+          />
+        </a-form-item>
+        <a-form-item v-bind="formItemLayout" label="考核分数">
+          <a-input
+            placeholder="请输入考核分数"
+            v-decorator="[
+              'exiamScore',
+              { rules: [{ required: true, message: '考核分数不能为空' }] },
+            ]"
+          />
+        </a-form-item>
+        <a-form-item v-bind="formItemLayout" label="考核结果">
+          <a-input
+            placeholder="请输入考核结果"
+            v-decorator="[
+              'exiamResult',
+              { rules: [{ required: true, message: '考核结果不能为空' }] },
+            ]"
+          />
+        </a-form-item>
+        <a-form-item v-bind="formItemLayout" label="授权文件">
+          <a-select
+            v-decorator="[
+              'archiveId',
+              { rules: [{ required: true, message: '授权文件不能为空' }] },
+            ]"
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            show-search
+            @change="fileChange"
+          >
+            <a-select-option v-for="d in fileData" :key="d" :value="`${d.id}`">
+              {{ d.fileName + " " + d.fileCode }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+      </template>
+      <template v-else-if="handleType('麻精药物处方权')">
+        <a-form-item v-bind="formItemLayout" label="是否处方">
+          <a-select
+            v-decorator="[
+              'isChufang',
+              { rules: [{ required: true, message: '是否处方不能为空' }] },
+            ]"
+          >
+            <a-select-option value="是"> 是 </a-select-option>
+            <a-select-option value="否"> 否 </a-select-option>
+          </a-select>
+        </a-form-item>
+      </template>
+      <template v-else>
+        <a-form-item v-bind="formItemLayout" label="级别">
+          <a-select
+            v-decorator="[
+              'level',
+              { rules: [{ required: true, message: '级别不能为空' }] },
+            ]"
+          >
+            <a-select-option value="限制级"> 限制级 </a-select-option>
+            <a-select-option value="非限制级"> 非限制级 </a-select-option>
+            <a-select-option value="特殊使用"> 特殊使用 </a-select-option>
+          </a-select>
+        </a-form-item>
+      </template>
     </a-form>
     <div class="drawer-bootom-button">
       <a-popconfirm
@@ -165,6 +168,9 @@ export default {
     handleSearch(value) {
       this.fetchUser(value);
     },
+     handleType(type) {
+      return this.type == type;
+    },
     fetchFile() {
       this.$get("mdlBArchive/list", { parentId: "0" }).then((res) => {
         this.fileData = [];
@@ -193,8 +199,8 @@ export default {
     },
     setFormValues({ ...mdlBChufang }) {
       let fields = [
-          "userAccount",
-          "userAccountName",
+        "userAccount",
+        "userAccountName",
         "trainDate",
         "exiamScore",
         "exiamResult",
@@ -215,13 +221,18 @@ export default {
               obj[key] = "";
             }
           } else {
-              if(key=="archiveId"){
-                obj[key] = mdlBChufang[key].toString();
+            if (key == "archiveId") {
+              if( mdlBChufang[key]==null){
+                obj[key] = "";
               }
               else {
-                  obj[key] = mdlBChufang[key];
+              obj[key] = mdlBChufang[key].toString();
               }
-            
+
+            } else {
+              obj[key] = mdlBChufang[key];
+            }
+
             this.form.setFieldsValue(obj);
           }
         }

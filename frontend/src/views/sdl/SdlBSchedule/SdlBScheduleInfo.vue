@@ -383,6 +383,7 @@ export default {
         let data = r.data;
         this.userData = data.rows;
         this.optionData = data.rows;
+        this.fetch()
       });
     },
   },
@@ -390,9 +391,9 @@ export default {
     editVisiable() {
       if (this.editVisiable) {
         this.fetchBanci();
-        setTimeout(() => {
-          this.fetch();
-        }, 200);
+        // setTimeout(() => {
+        //   this.fetch();
+        // }, 200);
         this.fetchDept();
       }
     },

@@ -83,6 +83,10 @@ public Map<String, Object> List(QueryRequest request, SdlBUser sdlBUser){
     public Map<String, Object> List2(QueryRequest request, SdlBUser sdlBUser){
         return getDataTable(this.iSdlBUserService.findSdlBUsersYwc(request, sdlBUser));
     }
+    @GetMapping("hz")
+    public Map<String, Object> List3(QueryRequest request, SdlBUser sdlBUser){
+        return getDataTable(this.iSdlBUserService.findSdlBUsersHz(request, sdlBUser));
+    }
     @GetMapping("dept")
     public Map<String, Object> List_Dept(QueryRequest request, SdlBUser sdlBUser){
         User currentUser= FebsUtil.getCurrentUser();

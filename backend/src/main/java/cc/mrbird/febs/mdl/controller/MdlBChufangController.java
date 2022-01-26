@@ -75,7 +75,6 @@ public IMdlBChufangService iMdlBChufangService;
  * @return
  */
 @GetMapping
-@RequiresPermissions("mdlBChufang:view")
 public Map<String, Object> List(QueryRequest request, MdlBChufang mdlBChufang){
         return getDataTable(this.iMdlBChufangService.findMdlBChufangs(request, mdlBChufang));
         }
@@ -87,7 +86,6 @@ public Map<String, Object> List(QueryRequest request, MdlBChufang mdlBChufang){
  */
 @Log("新增/按钮")
 @PostMapping
-@RequiresPermissions("mdlBChufang:add")
 public void addMdlBChufang(@Valid MdlBChufang mdlBChufang)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
@@ -107,7 +105,6 @@ public void addMdlBChufang(@Valid MdlBChufang mdlBChufang)throws FebsException{
  */
 @Log("修改")
 @PutMapping
-@RequiresPermissions("mdlBChufang:update")
 public void updateMdlBChufang(@Valid MdlBChufang mdlBChufang)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
@@ -123,7 +120,6 @@ public void updateMdlBChufang(@Valid MdlBChufang mdlBChufang)throws FebsExceptio
 
 @Log("删除")
 @DeleteMapping("/{ids}")
-@RequiresPermissions("mdlBChufang:delete")
 public void deleteMdlBChufangs(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
         try{
         String[]arr_ids=ids.split(StringPool.COMMA);

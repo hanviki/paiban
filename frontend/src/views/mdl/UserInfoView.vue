@@ -13,6 +13,7 @@
         <a-col :sm="5"  :offset="1">
           <a-form-item v-bind="formItemLayout" label="人事编号">
             <a-input
+            :disabled="true"
               v-decorator="['userAccount' ,{ rules: [{  message: '人事编号不能为空' }] },]"
             />
           </a-form-item>

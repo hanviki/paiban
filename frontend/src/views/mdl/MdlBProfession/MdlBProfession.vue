@@ -4,8 +4,8 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
+               <a-col :md="8" :sm="24">
+              <a-form-item label="人事编号/姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
@@ -24,15 +24,35 @@
     <div>
       <div class="operator">
         <a-button
-          v-hasPermission="['mdlBChufang:add']"
+          v-hasPermission="['mdlBProfession:add']"
           type="primary"
           ghost
           @click="add"
-          >新增{{ type }}</a-button
+          >新增</a-button
         >
-        <a-button v-hasPermission="['mdlBChufang:delete']" @click="batchDelete"
+        <a-button
+          v-hasPermission="['mdlBProfession:delete']"
+          @click="batchDelete"
           >删除</a-button
         >
+        <a-dropdown v-hasPermission="['mdlBProfession:export']">
+          <a-menu slot="overlay">
+            <a-menu-item key="export-data" @click="exportExcel"
+              >导出Excel</a-menu-item
+            >
+          </a-menu>
+          <a-button>
+            更多操作
+            <a-icon type="down" />
+          </a-button>
+        </a-dropdown>
+        <import-excel
+          v-hasPermission="['mdlBProfession:import']"
+          templateUrl="mdlBProfession/downTemplate"
+          @succ="handleRefesh"
+          url="mdlBProfession/import"
+        >
+        </import-excel>
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -58,9 +78,18 @@
             <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
           </a-popover>
         </template>
+         <template
+                slot="userAccount"
+                slot-scope="text, record"
+              >
+                <a
+                  href="#"
+                  @click="showUserInfo(text)"
+                >{{text}}</a>
+              </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['mdlBChufang:update']"
+            v-hasPermission="['mdlBProfession:update']"
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
@@ -68,7 +97,7 @@
             title="修改"
           ></a-icon>
           <a-badge
-            v-hasNoPermission="['mdlBChufang:update']"
+            v-hasNoPermission="['mdlBProfession:update']"
             status="warning"
             text="无权限"
           ></a-badge>
@@ -76,37 +105,44 @@
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <mdlBChufang-add
-      :type="type"
+    <mdlBProfession-add
       @close="handleAddClose"
       @success="handleAddSuccess"
       :addVisiable="addVisiable"
     >
-    </mdlBChufang-add>
+    </mdlBProfession-add>
     <!-- 修改字典 -->
-    <mdlBChufang-edit
-      :type="type"
-      ref="mdlBChufangEdit"
+    <mdlBProfession-edit
+      ref="mdlBProfessionEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </mdlBChufang-edit>
+    </mdlBProfession-edit>
+        <audit-userInfo
+      ref="userinfo"
+      @close="onCloseUserInfo"
+      :visibleUserInfo="visibleUserInfo"
+      :userAccount="userAccount"
+    ></audit-userInfo>
   </a-card>
 </template>
 
 <script>
-import MdlBChufangAdd from "./MdlBChufangAdd";
-import MdlBChufangEdit from "./MdlBChufangEdit";
+import MdlBProfessionAdd from "./MdlBProfessionAdd";
+import MdlBProfessionEdit from "./MdlBProfessionEdit";
+import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
+import AuditUserInfo from '../../common/AuditUserInfo'
+
 
 const formItemLayout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "MdlBChufang",
-  components: { MdlBChufangAdd, MdlBChufangEdit },
+  name: "MdlBProfession",
+  components: { MdlBProfessionAdd, MdlBProfessionEdit, ImportExcel, AuditUserInfo },
   data() {
     return {
       advanced: false,
@@ -129,135 +165,54 @@ export default {
       editVisiable: false,
       loading: false,
       bordered: true,
+       visibleUserInfo: false,
+      userAccount: '',
     };
-  },
-  props: {
-    type: {
-      default: "",
-    },
   },
   computed: {
     columns() {
-      let { sortedInfo, type } = this;
+      let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
-      if (type === "基本处方权") {
-        return [
+      return [
           {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
+          title: "姓名",
+          dataIndex: "userAccountName",
+          width: 100,
+        },
+           {
+          title: "发薪号",
+          dataIndex: "userAccount",
+          width: 120,
+          scopedSlots: { customRender: 'userAccount' }
+        },
+        {
+          title: "行业资质名称",
+          dataIndex: "qlName",
+          width: 100,
+        },
+        {
+          title: "附件",
+          dataIndex: "fileId",
+          customRender: (text, row, index) => {
+            if (text != null && text != "") {
+              return (
+                <a href={this.$baseUrl + row.fileUrl} target="_blank">
+                  查看
+                </a>
+              );
+            }
+            return "";
           },
-          {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-          {
-            title: "培训日期",
-            dataIndex: "trainDate",
-            customRender: (text, row, index) => {
-              if (text == null) return "";
-              return moment(text).format("YYYY-MM-DD");
-            },
-            width: 100,
-          },
-          {
-            title: "考核分数",
-            dataIndex: "exiamScore",
-            width: 100,
-          },
-          {
-            title: "考核结果",
-            dataIndex: "exiamResult",
-            width: 100,
-          },
-          {
-            title: "授权文件名称",
-            dataIndex: "archiveName",
-            width: 100,
-          },
-          {
-            title: "授权文件编码",
-            dataIndex: "archiveCode",
-            width: 100,
-          },
-          {
-            title: "附件ID",
-            dataIndex: "fileId",
-            width: 100,
-            customRender: (text, row, index) => {
-              if (text != null && text != "") {
-                return (
-                  <a href={this.handleUrl(row.fileUrl)} target="_blank">
-                    查看
-                  </a>
-                );
-              }
-              return "";
-            },
-          },
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      } else if (type === "麻精药物处方权") {
-        return [
-          {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
-          },
-          {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-
-          {
-            title: "是否处方",
-            dataIndex: "isChufang",
-            width: 100,
-          },
-
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      } else {
-        return [
-          {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
-          },
-          {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-
-          {
-            title: "级别",
-            dataIndex: "level",
-            width: 100,
-          },
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      }
+          width: 100,
+        },
+        // {
+        //   title: "操作",
+        //   dataIndex: "operation",
+        //   scopedSlots: { customRender: "operation" },
+        //   fixed: "right",
+        //   width: 100,
+        // },
+      ];
     },
   },
   mounted() {
@@ -268,6 +223,16 @@ export default {
     handleRefesh() {
       this.search();
     },
+     showUserInfo (text) {
+      //debugger
+      this.visibleUserInfo = true
+      this.userAccount = text
+    },
+
+
+    onCloseUserInfo () {
+      this.visibleUserInfo = false
+    },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
     },
@@ -276,9 +241,6 @@ export default {
       if (!this.advanced) {
         this.queryParams.comments = "";
       }
-    },
-    handleUrl(url) {
-      return this.$baseUrl + url;
     },
     handleAddSuccess() {
       this.addVisiable = false;
@@ -300,7 +262,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      this.$refs.mdlBChufangEdit.setFormValues(record);
+      this.$refs.mdlBProfessionEdit.setFormValues(record);
       this.editVisiable = true;
     },
     batchDelete() {
@@ -314,8 +276,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let mdlBChufangIds = that.selectedRowKeys.join(",");
-          that.$delete("mdlBChufang/" + mdlBChufangIds).then(() => {
+          let mdlBProfessionIds = that.selectedRowKeys.join(",");
+          that.$delete("mdlBProfession/" + mdlBProfessionIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -334,7 +296,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("mdlBChufang/excel", {
+      this.$export("mdlBProfession/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -392,8 +354,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("mdlBChufang", {
-        type: this.type,
+      this.$get("mdlBProfession", {
         ...params,
       }).then((r) => {
         let data = r.data;

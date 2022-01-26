@@ -86,7 +86,7 @@
       >
         <a-button style="margin-right: 0.8rem">取消</a-button>
       </a-popconfirm>
-      <a-button @click="handleSubmit" type="primary" 
+      <a-button @click="handleSubmit" type="primary"  :loading="sumbitLoading"
         >提交</a-button
       >
     </div>
@@ -408,7 +408,7 @@ export default {
       }
     },
     handleSubmit() {
-     this.sumbitLoading = true;
+      this.sumbitLoading = true;
       let dynamicData = [];
       const data = this.dataSource;
       const cols = this.colsCustom;

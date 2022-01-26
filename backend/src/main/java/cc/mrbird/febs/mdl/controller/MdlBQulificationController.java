@@ -76,7 +76,6 @@ public IMdlBQulificationService iMdlBQulificationService;
  * @return
  */
 @GetMapping
-@RequiresPermissions("mdlBQulification:view")
 public Map<String, Object> List(QueryRequest request, MdlBQulification mdlBQulification){
         return getDataTable(this.iMdlBQulificationService.findMdlBQulifications(request, mdlBQulification));
         }
@@ -88,7 +87,6 @@ public Map<String, Object> List(QueryRequest request, MdlBQulification mdlBQulif
  */
 @Log("新增/按钮")
 @PostMapping
-@RequiresPermissions("mdlBQulification:add")
 public void addMdlBQulification(@Valid MdlBQulification mdlBQulification)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
@@ -108,7 +106,6 @@ public void addMdlBQulification(@Valid MdlBQulification mdlBQulification)throws 
  */
 @Log("修改")
 @PutMapping
-@RequiresPermissions("mdlBQulification:update")
 public void updateMdlBQulification(@Valid MdlBQulification mdlBQulification)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
@@ -124,7 +121,6 @@ public void updateMdlBQulification(@Valid MdlBQulification mdlBQulification)thro
 
 @Log("删除")
 @DeleteMapping("/{ids}")
-@RequiresPermissions("mdlBQulification:delete")
 public void deleteMdlBQulifications(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
         try{
         String[]arr_ids=ids.split(StringPool.COMMA);

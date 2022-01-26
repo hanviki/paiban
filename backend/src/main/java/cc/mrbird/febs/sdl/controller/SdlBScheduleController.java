@@ -19,6 +19,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -97,8 +98,20 @@ public class SdlBScheduleController extends BaseController {
         if(currentUser.getUsername().toUpperCase().equals("MZBGS")){
             sdlBSchedule.setDeptId("13000102");//门诊办公室 默认处理 急诊内科 2021.12.28
         }
+        else if(currentUser.getUsername().toUpperCase().equals("ZLYHB")){
+            if(StringUtils.isNotEmpty(sdlBSchedule.getDeptId())) {
+                if ("30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111".contains(sdlBSchedule.getDeptId())) {
+                }
+                else{
+                    sdlBSchedule.setDeptId("30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111");//门诊办公室 默认处理 急诊内科 2021.12.28
+                }
+            }
+            else {
+                sdlBSchedule.setDeptId("30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111");//门诊办公室 默认处理 急诊内科 2021.12.28
+            }
+        }
         else{
-            sdlBSchedule.setDeptName("13000102"); //
+            sdlBSchedule.setDeptName("13000102,30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111"); //
         }
         return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBScheduleList(request, sdlBSchedule)));
     }
@@ -109,8 +122,20 @@ public class SdlBScheduleController extends BaseController {
         if(currentUser.getUsername().toUpperCase().equals("MZBGS")){
             sdlBSchedule.setDeptId("13000102");//门诊办公室 默认处理 急诊内科 2021.12.28
         }
+        else if(currentUser.getUsername().toUpperCase().equals("ZLYHB")){
+            if(StringUtils.isNotEmpty(sdlBSchedule.getDeptId())) {
+                if ("30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111".contains(sdlBSchedule.getDeptId())) {
+                }
+                else{
+                    sdlBSchedule.setDeptId("30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111");//门诊办公室 默认处理 急诊内科 2021.12.28
+                }
+            }
+            else {
+                sdlBSchedule.setDeptId("30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111");//门诊办公室 默认处理 急诊内科 2021.12.28
+            }
+        }
         else{
-            sdlBSchedule.setDeptName("13000102");
+            sdlBSchedule.setDeptName("13000102,30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111"); //
         }
         return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBScheduleList2(request, sdlBSchedule)));
     }

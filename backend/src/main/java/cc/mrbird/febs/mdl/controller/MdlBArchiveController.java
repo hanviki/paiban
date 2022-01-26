@@ -77,7 +77,6 @@ public IMdlBArchiveService iMdlBArchiveService;
  * @return
  */
 @GetMapping
-@RequiresPermissions("mdlBArchive:view")
 public Map<String, Object> List(QueryRequest request, MdlBArchive mdlBArchive){
         return getDataTable(this.iMdlBArchiveService.findMdlBArchives(request, mdlBArchive));
         }
@@ -101,7 +100,6 @@ public Map<String, Object> List(QueryRequest request, MdlBArchive mdlBArchive){
  */
 @Log("新增/按钮")
 @PostMapping
-@RequiresPermissions("mdlBArchive:add")
 public void addMdlBArchive(@Valid MdlBArchive mdlBArchive)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
@@ -121,7 +119,6 @@ public void addMdlBArchive(@Valid MdlBArchive mdlBArchive)throws FebsException{
  */
 @Log("修改")
 @PutMapping
-@RequiresPermissions("mdlBArchive:update")
 public void updateMdlBArchive(@Valid MdlBArchive mdlBArchive)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
@@ -137,7 +134,6 @@ public void updateMdlBArchive(@Valid MdlBArchive mdlBArchive)throws FebsExceptio
 
 @Log("删除")
 @DeleteMapping("/{ids}")
-@RequiresPermissions("mdlBArchive:delete")
 public void deleteMdlBArchives(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
         try{
         String[]arr_ids=ids.split(StringPool.COMMA);

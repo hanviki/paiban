@@ -23,6 +23,8 @@ public interface ISdlBUserService extends IService<SdlBUser> {
 
         IPage<SdlBUser> findSdlBUsersYwc(QueryRequest request, SdlBUser sdlBUser);
 
+        IPage<SdlBUser> findSdlBUsersHz(QueryRequest request, SdlBUser sdlBUser);
+
         IPage<SdlBUser> findSdlBUserList(QueryRequest request, SdlBUser sdlBUser);
 
         void createSdlBUser(SdlBUser sdlBUser);

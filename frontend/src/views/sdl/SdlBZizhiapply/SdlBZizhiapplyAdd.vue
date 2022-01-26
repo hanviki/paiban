@@ -390,7 +390,8 @@ export default {
       sdlBZizhiapply: {},
       data: [],
       userData: [],
-      value: ''
+      value: '',
+      renshizifw: ''
     };
   },
   watch: {
@@ -398,7 +399,7 @@ export default {
       if (this.addVisiable) {
         this.$get("sdlDZizhi").then((res) => {
           console.info(res.data.rows);
-          this.data = res.data.rows;
+           this.data =res.data.rows
         });
       }
     },
@@ -494,6 +495,9 @@ export default {
             obj[key] = sdlBUser[key];
           }
           this.sdlBZizhiapply[key] = obj[key]
+          if(key=='renshizifw'){
+            this.renshizifw = obj[key]
+          }
           this.form.setFieldsValue(obj);
         }
       });
@@ -535,6 +539,13 @@ export default {
       this.value = value;
       let data= this.userData.filter(p=>p.userAccount==value)
       this.setFormValues(data[0])
+         if(this.renshizifw=='医师'){
+            this.data =this.data .filter(p=> [1,2,3,4,5].indexOf(p.id)>=0);
+          }
+          else if(this.renshizifw=='技术'){
+            this.data = this.data.filter(p=> [6,7,8].indexOf(p.id)>=0);
+          }
+         
     },
     usertypeChange(value){
       let data= this.data.filter(p=>p.id==value)
