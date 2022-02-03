@@ -126,7 +126,7 @@
         sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
         INNER JOIN sdl_b_user C ON A.account_id = C.user_account
         inner join sdl_b_schedule D on A.base_id =D.id
-        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='职工'
+        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='职工'  AND A.zizhi_id in (1,2,6,7)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -157,7 +157,7 @@
         sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
         INNER JOIN sdl_b_user C ON A.account_id = C.user_account
         inner join sdl_b_schedule D on A.base_id =D.id
-        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='职工'
+        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='职工'  AND A.zizhi_id in (1,2,6,7)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -173,27 +173,32 @@
         <if test="sdlBScheduleDetail.scheduleDateTo!= null">
             AND  A.schedule_date <![CDATA[ <= ]]>  #{sdlBScheduleDetail.scheduleDateTo}
         </if>
+        ORDER BY A.schedule_date asc
     </select>
 
 
     <select id="findYeBanReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
 
         SELECT
-        D.DEPT_ID,
-        D.DEPT_NAME,
+        G.DEPT_ID,
+        G.DEPT_NAME,
         SUM( C.cishu * ( C.amount + 0 ) ) amount,
         SUM( C.cishu ) cishu
         FROM
+        (
+        SELECT
+        D.DEPT_ID,
+        D.DEPT_NAME,
+        A.banci_id
+        FROM
         sdl_b_schedule_detail A
-        inner join sdl_b_schedule S on A.base_id =S.id
-       --  INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+        INNER JOIN sdl_b_schedule S ON A.base_id = S.id --  INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
-        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
         WHERE
         (A.xulie !='医技序列' or A.xulie is null or A.xulie='') AND S.STATE=3
        -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
        -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
-        AND A.banci = '夜班'
+        AND A.banci = '夜班' AND A.zizhi_id in (1,2)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -208,31 +213,47 @@
         </if>
         GROUP BY
         D.DEPT_ID,
-        D.DEPT_NAME
+        D.DEPT_NAME,
+        A.account_id,
+        A.schedule_date
+        ) G
+        INNER JOIN sdl_d_banci C ON G.banci_id = C.id
+        GROUP BY
+        G.DEPT_ID,
+        G.DEPT_NAME
 
     </select>
 
     <select id="findYeBanSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
 
         SELECT
-        A.account_id,
-        A.account_name,
-       --  A.bq_name,
-        B.renshizifw,
-        A.zhicheng,
+        G.dept_id,
+        G.account_id,
+        G.account_name,--  A.bq_name,
+        G.renshizifw,
+        G.zhicheng,
         SUM( C.cishu * ( C.amount + 0 ) ) amount,
         SUM( C.cishu ) cishu
         FROM
+        (
+        SELECT
+        A.dept_id,
+        A.account_id,
+        A.account_name,--  A.bq_name,
+        B.renshizifw,
+        A.zhicheng,
+        A.banci_id
+        FROM
         sdl_b_schedule_detail A
-        inner join sdl_b_schedule S on A.base_id =S.id
+        INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
-        INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
-        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
+        INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID -- INNER JOIN sdl_d_banci C ON A.banci_id = C.id
+
         WHERE
         (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and s.state=3
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
-        AND A.banci = '夜班'
+        AND A.banci = '夜班' AND A.zizhi_id in (1,2)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -246,11 +267,20 @@
             AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
+        A.dept_id,
         A.account_id,
         A.account_name,
-      --   A.bq_name,
+        --   A.bq_name,
         B.renshizifw,
-        A.zhicheng
+        A.schedule_date,
+        A.zhicheng )G INNER JOIN sdl_d_banci C ON G.banci_id = C.id
+        GROUP BY
+        G.dept_id,
+        G.account_id,
+        G.account_name,
+        --   A.bq_name,
+        G.renshizifw,
+        G.zhicheng
 
     </select>
 
@@ -265,7 +295,7 @@
         (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and s.state=3
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
-        AND A.banci = '夜班'
+        AND A.banci = '夜班' AND A.zizhi_id in (1,2)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -278,32 +308,38 @@
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
             AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
+        ORDER BY A.schedule_date asc
     </select>
 
     <select id="findMenZhenReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
 
         SELECT
-        D.DEPT_ID,
-        D.DEPT_NAME,
+        G.DEPT_ID,
+        G.DEPT_NAME,
         SUM(
         CASE
-        WHEN A.zhicheng = '正高' THEN
+        WHEN G.zhicheng = '正高' THEN
         ( SUBSTRING_INDEX( C.amount, ',', 1 ) + 0 ) * C.cishu
-        WHEN A.zhicheng = '副高' THEN
+        WHEN G.zhicheng = '副高' THEN
         ( SELECT SUBSTRING_INDEX( SUBSTRING_INDEX( C.amount, ',', 2 ), ',', '-1' ) + 0 ) * C.cishu ELSE ( SUBSTRING_INDEX( C.amount, ',',- 1 ) + 0 ) * C.cishu
         END
         ) amount,
         SUM( C.cishu ) cishu
         FROM
+        (
+        SELECT
+        D.DEPT_ID,
+        D.DEPT_NAME,
+        A.zhicheng,
+        A.banci_id
+        FROM
         sdl_b_schedule_detail A
-        inner join sdl_b_schedule S on A.base_id =S.id
-       -- INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+        INNER JOIN sdl_b_schedule S ON A.base_id = S.id -- INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
-        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
         WHERE
         (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
-        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' )
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND A.zizhi_id=1
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -318,37 +354,55 @@
         </if>
         GROUP BY
         D.DEPT_ID,
-        D.DEPT_NAME
+        D.DEPT_NAME,
+        A.account_id,
+        A.schedule_date,
+        A.zhicheng,
+        A.banci_id
+        ) G
+        INNER JOIN sdl_d_banci C ON G.banci_id = C.id
+        GROUP BY
+        G.DEPT_ID,
+        G.DEPT_NAME
 
     </select>
 
     <select id="findMenZhenSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
 
         SELECT
-        A.account_id,
-        A.account_name,
-       --  A.bq_name,
-        B.renshizifw,
-        A.zhicheng,
+        G.dept_id,
+        G.account_id,
+        G.account_name,--  G.bq_name,
+        G.renshizifw,
+        G.zhicheng,
         SUM(
         CASE
-        WHEN A.zhicheng = '正高' THEN
+
+        WHEN G.zhicheng = '正高' THEN
         ( SUBSTRING_INDEX( C.amount, ',', 1 ) + 0 ) * C.cishu
-        WHEN A.zhicheng = '副高' THEN
+        WHEN G.zhicheng = '副高' THEN
         ( SELECT SUBSTRING_INDEX( SUBSTRING_INDEX( C.amount, ',', 2 ), ',', '-1' ) + 0 ) * C.cishu ELSE ( SUBSTRING_INDEX( C.amount, ',',- 1 ) + 0 ) * C.cishu
         END
         ) amount,
         SUM( C.cishu ) cishu
         FROM
+        (
+        SELECT
+        A.dept_id,
+        A.account_id,
+        A.account_name,
+        A.banci_id,
+        B.renshizifw,
+        A.zhicheng
+        FROM
         sdl_b_schedule_detail A
-        inner join sdl_b_schedule S on A.base_id =S.id
+        INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
-        INNER JOIN sdl_d_banci C ON A.banci_id = C.id
         WHERE
         (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
-        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' )
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND A.zizhi_id=1
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -362,11 +416,21 @@
             AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
+        A.dept_id,
         A.account_id,
         A.account_name,
-      --   A.bq_name,
+        A.schedule_date,
+        A.banci_id,--   A.bq_name,
         B.renshizifw,
         A.zhicheng
+        ) G
+        INNER JOIN sdl_d_banci C ON G.banci_id = C.id
+        GROUP BY
+        G.dept_id,
+        G.account_id,
+        G.account_name,--   A.bq_name,
+        G.renshizifw,
+        G.zhicheng
 
     </select>
 
@@ -381,7 +445,7 @@
         WHERE
         (A.xulie !='医技序列' or A.xulie is null) and S.state=3
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
-        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' )
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND A.zizhi_id=1
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -394,7 +458,7 @@
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
             AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
-
+        ORDER BY A.schedule_date asc
     </select>
 
 </mapper>

@@ -36,6 +36,6 @@ public interface SdlBPersoninfoMapper extends BaseMapper<SdlBPersoninfo> {
                 "\tINNER JOIN sdl_b_personinfo ON t_user.dept_id = sdl_b_personinfo.dept_id \n" +
                 "\tAND sdl_b_personinfo.telephone != '' \n" +
                 "WHERE\n" +
-                "\tt_user.USERNAME NOT IN ( SELECT user_no FROM sdl_b_schedule WHERE sdl_b_schedule.state = 1 AND sdl_b_schedule.start_date = #{startDate} )")
+                "\tt_user.USERNAME NOT IN ( SELECT user_no FROM sdl_b_schedule WHERE (sdl_b_schedule.state = 1 or sdl_b_schedule.state = 3) AND sdl_b_schedule.start_date = #{startDate} )")
         List<SdlBPersoninfo> telList(@Param("startDate") String startDate);
         }

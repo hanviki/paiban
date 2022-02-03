@@ -171,7 +171,7 @@ export default {
         },
         {
           title: "职位类型",
-          dataIndex: "renshizfw",
+          dataIndex: "renshizifw",
         },
          {
           title: "职称",
@@ -299,6 +299,7 @@ export default {
        this.infoParams = { ...this.queryParams };
        this.infoParams.accountId= record.accountId;
        this.infoParams.flag= 2;
+       this.infoParams.deptId = record.deptId;
     },
     reset() {
       // 取消选中

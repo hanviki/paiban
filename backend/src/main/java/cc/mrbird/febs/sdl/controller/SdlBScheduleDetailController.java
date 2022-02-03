@@ -184,6 +184,7 @@ public class SdlBScheduleDetailController extends BaseController {
             nc.setAccountId(entry.getKey().substring(0,entry.getKey().indexOf("_")));
             nc.setAccountName(entry.getKey().substring(entry.getKey().indexOf("_")+1));
             nc.setCishu(entry.getValue());
+            nc.setDeptId(sdlBScheduleDetail.getDeptId());
             data.add(nc);
         });
         return data;

@@ -332,6 +332,7 @@ export default {
        this.infoParams = { ...this.queryParams };
        this.infoParams.accountId= record.accountId;
        this.infoParams.flag= 0;
+       this.infoParams.deptId = record.deptId
     },
     fetchDept() {
       this.$get("dept/list", { parentId: "0" }).then((res) => {
