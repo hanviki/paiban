@@ -43,7 +43,6 @@
             <a-select
               style="width: 100%"
               mode="multiple"
-              v-if="col.isShow || record.state != 1"
               :default-value="record[col.filedName]"
               option-filter-prop="children"
               :filter-option="
@@ -261,10 +260,10 @@ export default {
     handleSelectChange(value, option, record, filedName) {
       console.info(filedName);
       record[filedName] = value;
-      record.state = 1;
-      setTimeout(() => {
-        record.state = 0;
-      }, 300);
+      // record.state = 1;
+      // setTimeout(() => {
+      //   record.state = 0;
+      // }, 300);
     },
     handleCopy(record, filedName) {
       console.info(record[filedName]);
@@ -310,12 +309,12 @@ export default {
        
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
-        col.isShow = false;
-        record.state = 1;
-        setTimeout(() => {
-          record.state = 0;
-          col.isShow = true;
-        }, 300);
+        // col.isShow = false;
+        // record.state = 1;
+        // setTimeout(() => {
+        //   record.state = 0;
+        //   col.isShow = true;
+        // }, 300);
       }
     },
     handlePaste(record, col) {
@@ -348,12 +347,12 @@ export default {
         // this.listAuditInfo =[]
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
-        col.isShow = false;
-        record.state = 1;
-        setTimeout(() => {
-          record.state = 0;
-          col.isShow = true;
-        }, 300);
+        // col.isShow = false;
+        // record.state = 1;
+        // setTimeout(() => {
+        //   record.state = 0;
+        //   col.isShow = true;
+        // }, 300);
       }
 
      

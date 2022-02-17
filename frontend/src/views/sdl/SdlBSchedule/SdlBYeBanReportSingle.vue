@@ -4,23 +4,7 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="6" :sm="24">
-              <a-form-item v-bind="formItemLayout" label="排班科室">
-                <a-select v-model="queryParams.deptId"
-                  option-filter-prop="children"
-         :filter-option="filterOption"
-         show-search
-                >
-                  <a-select-option
-                    v-for="d in deptData"
-                    :key="d.deptId"
-                    :value="`${d.deptId}`"
-                  >
-                    {{ d.deptName }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+         
             <a-col :md="6" :sm="24">
               <a-form-item label="发薪号" v-bind="formItemLayout">
                 <a-input v-model="queryParams.accountId" />
@@ -122,7 +106,9 @@ export default {
         showTotal: (total, range) =>
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
-      queryParams: {},
+      queryParams: {
+          deptId: this.$store.state.account.user.deptId
+      },
       form: this.$form.createForm(this),
       loading: false,
       bordered: true,

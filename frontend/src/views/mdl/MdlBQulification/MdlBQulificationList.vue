@@ -97,18 +97,14 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['mdlBQulification:update']"
+         
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-          <a-badge
-            v-hasNoPermission="['mdlBQulification:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge>
+         
         </template>
       </a-table>
     </div>

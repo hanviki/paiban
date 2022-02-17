@@ -11,11 +11,13 @@ import cc.mrbird.febs.sdl.entity.SdlBPersoninfo;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,9 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author viki
@@ -65,6 +66,50 @@ public class SdlBPersoninfoController extends BaseController {
         return getDataTable(this.iSdlBPersoninfoService.findSdlBPersoninfos(request, sdlBPersoninfo));
     }
 
+    private List<SdlBPersoninfo> getDeptNameNo(String startDate2,String endDate2){
+        Date startDate = cn.hutool.core.date.DateUtil.parseDate(startDate2);
+        Date endDate= new Date();
+        if(StringUtils.isNotEmpty(endDate2)){
+            endDate = cn.hutool.core.date.DateUtil.parseDate(endDate2);
+        }
+        List<SdlBPersoninfo> sdlBPersoninfoList = new ArrayList<>();
+        Calendar tempStart = Calendar.getInstance();
+        tempStart.setTime(startDate);
+
+        Calendar tempEnd = Calendar.getInstance();
+        tempEnd.setTime(endDate);
+        tempEnd.add(Calendar.DATE, +1);// 日期加1(包含结束)
+        while (tempStart.before(tempEnd)) {
+            Date zhouyi_date = cn.hutool.core.date.DateUtil.beginOfWeek(tempStart.getTime());
+            Date zhouri_date = cn.hutool.core.date.DateUtil.endOfWeek(tempStart.getTime());
+            String zhouyi = DateUtil.format(zhouyi_date, "yyyy-MM-dd");
+            String zhouri = DateUtil.format(zhouri_date, "yyyy-MM-dd");
+            sdlBPersoninfoList.addAll(this.iSdlBPersoninfoService.getNoSubmit(zhouyi, zhouri));
+            tempStart.setTime(zhouri_date);
+            tempStart.add(Calendar.DATE, +1);// 日期加1(包含结束)
+        }
+        sdlBPersoninfoList = sdlBPersoninfoList.stream().sorted(
+                Comparator.comparing(SdlBPersoninfo::getDeptName)
+        ).collect(Collectors.toList());
+        return  sdlBPersoninfoList;
+    }
+
+    @GetMapping("noSubmit")
+    public List<SdlBPersoninfo> List2(String startDate2,String endDate2) {
+        return  getDeptNameNo(startDate2,endDate2);
+    }
+
+    @PostMapping("excelNoSubmit")
+    public void export2(String startDate2,String endDate2, HttpServletResponse response) throws FebsException {
+        try {
+            List<SdlBPersoninfo> sdlBPersoninfos = getDeptNameNo(startDate2,endDate2);
+            ExcelKit.$Export(SdlBPersoninfo.class, response).downXlsx(sdlBPersoninfos, false);
+        } catch (Exception e) {
+            message = "导出Excel失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
 
     @Log("新增/按钮")
     @PostMapping

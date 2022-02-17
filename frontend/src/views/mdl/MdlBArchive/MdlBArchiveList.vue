@@ -29,13 +29,13 @@
     <div>
       <div class="operator">
         <a-button
-          v-hasPermission="['mdlBArchive:add']"
+         
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button v-hasPermission="['mdlBArchive:delete']" @click="batchDelete"
+        <a-button  @click="batchDelete"
           >删除</a-button
         >
         <a-dropdown v-hasPermission="['mdlBArchive:export']">
@@ -83,18 +83,14 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['mdlBArchive:update']"
+           
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-          <a-badge
-            v-hasNoPermission="['mdlBArchive:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge>
+         
         </template>
       </a-table>
     </div>

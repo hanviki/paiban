@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -177,16 +178,27 @@ public class SdlBScheduleDetailController extends BaseController {
     public List<CustomData> deptStatisticSub(SdlBScheduleDetail sdlBScheduleDetail) {
         List<CustomData> data = new ArrayList<>();
         List<CustomData> customDataList = this.iSdlBScheduleDetailService.findSdlBScheduleReport(sdlBScheduleDetail);
-        Map<String, Double> mp = customDataList.stream().collect(
-                Collectors.groupingBy(p->p.getAccountId()+"_"+p.getAccountName(), Collectors.summingDouble(p -> (p.getCishu() > 1 ? 1d : p.getCishu()))));
-        mp.entrySet().forEach(entry -> {
-            CustomData nc = new CustomData();
-            nc.setAccountId(entry.getKey().substring(0,entry.getKey().indexOf("_")));
-            nc.setAccountName(entry.getKey().substring(entry.getKey().indexOf("_")+1));
-            nc.setCishu(entry.getValue());
-            nc.setDeptId(sdlBScheduleDetail.getDeptId());
-            data.add(nc);
-        });
+
+        if(customDataList.size()>0) {
+            //final String dept_name = customDataList.get(0).getDeptName();
+
+            Map<String, Double> mp = customDataList.stream().collect(
+                    Collectors.groupingBy(p -> p.getDeptName()+"_"+p.getDeptId()+"_"+p.getAccountId() + "_" + p.getAccountName(), Collectors.summingDouble(p -> (p.getCishu() > 1 ? 1d : p.getCishu()))));
+            //for(String key in mp.entrySet())
+            for (Map.Entry<String,Double> entry:mp.entrySet())
+               {
+                CustomData nc = new CustomData();
+                String[] arr=entry.getKey().split("_");
+                nc.setAccountId(arr[2]);
+                nc.setAccountName(arr[3]);
+                nc.setCishu(entry.getValue());
+                nc.setDeptId(arr[1]);
+                nc.setDeptName(arr[0]);
+                data.add(nc);
+            };
+           //
+        }
+        data= data.stream().sorted(Comparator.comparing(CustomData::getDeptName)).collect(Collectors.toList());
         return data;
     }
 
@@ -276,4 +288,26 @@ public class SdlBScheduleDetailController extends BaseController {
             throw new FebsException(message);
         }
     }
+
+    @PostMapping("deptExcelDetail")
+    public void deptExportDetail(QueryRequest request, SdlBScheduleDetail sdlBScheduleDetail, HttpServletResponse response,int flag,String dataJson) throws FebsException {
+        try {
+            List<CustomData> customDataList =new ArrayList<>();
+            if(flag==0){
+                customDataList= deptStatisticSub(sdlBScheduleDetail);
+            }
+            if(flag==1){
+                customDataList= this.iSdlBScheduleDetailService.findYeBanSubReport(sdlBScheduleDetail);
+            }
+            if(flag==2){
+                customDataList= this.iSdlBScheduleDetailService.findMenZhenSubReport(sdlBScheduleDetail);
+            }
+            ExportExcelUtils.exportCustomExcel_han(response, customDataList,dataJson,"");
+        } catch (Exception e) {
+            message = "导出Excel失败";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
 }

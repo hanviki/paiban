@@ -24,13 +24,13 @@
     <div>
       <div class="operator">
         <a-button
-          v-hasPermission="['mdlBChufang:add']"
+         
           type="primary"
           ghost
           @click="add"
           >新增{{ type }}</a-button
         >
-        <a-button v-hasPermission="['mdlBChufang:delete']" @click="batchDelete"
+        <a-button  @click="batchDelete"
           >删除</a-button
         >
       </div>
@@ -60,18 +60,14 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['mdlBChufang:update']"
+           
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-          <a-badge
-            v-hasNoPermission="['mdlBChufang:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge>
+         
         </template>
       </a-table>
     </div>

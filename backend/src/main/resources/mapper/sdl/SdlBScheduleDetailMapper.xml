@@ -178,7 +178,15 @@
 
 
     <select id="findYeBanReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-
+        SET GLOBAL group_concat_max_len=102400;
+        SET SESSION group_concat_max_len=102400;
+        SELECT
+        GROUP_CONCAT( id )
+        FROM
+        sdl_b_schedule
+        WHERE
+        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} )
+        AND state = 3 INTO @baseids;
         SELECT
         G.DEPT_ID,
         G.DEPT_NAME,
@@ -192,13 +200,13 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
-        INNER JOIN sdl_b_schedule S ON A.base_id = S.id --  INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+       --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id --  INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') AND S.STATE=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') AND LOCATE(A.base_id,@baseids)>0
        -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
        -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
-        AND A.banci = '夜班' AND A.zizhi_id in (1,2)
+        AND A.banci = '夜班' AND A.zizhi_id in (1,2,6,7)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -220,13 +228,22 @@
         INNER JOIN sdl_d_banci C ON G.banci_id = C.id
         GROUP BY
         G.DEPT_ID,
-        G.DEPT_NAME
+        G.DEPT_NAME;
 
     </select>
 
     <select id="findYeBanSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-
+        SET GLOBAL group_concat_max_len=102400;
+        SET SESSION group_concat_max_len=102400;
         SELECT
+        GROUP_CONCAT( id )
+        FROM
+        sdl_b_schedule
+        WHERE
+        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom})
+        AND state = 3 INTO @baseids;
+        SELECT
+        G.dept_name,
         G.dept_id,
         G.account_id,
         G.account_name,--  A.bq_name,
@@ -237,6 +254,7 @@
         FROM
         (
         SELECT
+        A.dept_name,
         A.dept_id,
         A.account_id,
         A.account_name,--  A.bq_name,
@@ -245,15 +263,15 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
-        INNER JOIN sdl_b_schedule S ON A.base_id = S.id
+       --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID -- INNER JOIN sdl_d_banci C ON A.banci_id = C.id
 
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and s.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and LOCATE(A.base_id,@baseids)>0
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
-        AND A.banci = '夜班' AND A.zizhi_id in (1,2)
+        AND A.banci = '夜班' AND A.zizhi_id in (1,2,6,7)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -267,6 +285,7 @@
             AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
+        A.dept_name,
         A.dept_id,
         A.account_id,
         A.account_name,
@@ -275,6 +294,7 @@
         A.schedule_date,
         A.zhicheng )G INNER JOIN sdl_d_banci C ON G.banci_id = C.id
         GROUP BY
+        G.dept_name,
         G.dept_id,
         G.account_id,
         G.account_name,
@@ -292,10 +312,10 @@
         sdl_b_schedule_detail A
         inner join sdl_b_schedule S on A.base_id =S.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and s.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
-        AND A.banci = '夜班' AND A.zizhi_id in (1,2)
+        AND A.banci = '夜班' AND A.zizhi_id in (1,2,6,7)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -312,6 +332,15 @@
     </select>
 
     <select id="findMenZhenReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+        SET GLOBAL group_concat_max_len=102400;
+        SET SESSION group_concat_max_len=102400;
+        SELECT
+        GROUP_CONCAT( id )
+        FROM
+        sdl_b_schedule
+        WHERE
+        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom})
+        AND state = 3 INTO @baseids;
 
         SELECT
         G.DEPT_ID,
@@ -334,12 +363,12 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
-        INNER JOIN sdl_b_schedule S ON A.base_id = S.id -- INNER JOIN sdl_b_user B ON A.account_id = B.user_account
+       --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id -- INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and LOCATE(A.base_id,@baseids)>0
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
-        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND A.zizhi_id=1
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND (A.zizhi_id=1 or A.zizhi_id=6 )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -368,8 +397,18 @@
     </select>
 
     <select id="findMenZhenSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+        SET GLOBAL group_concat_max_len=102400;
+        SET SESSION group_concat_max_len=102400;
+        SELECT
+        GROUP_CONCAT( id )
+        FROM
+        sdl_b_schedule
+        WHERE
+        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom})
+        AND state = 3 INTO @baseids;
 
         SELECT
+        G.dept_name,
         G.dept_id,
         G.account_id,
         G.account_name,--  G.bq_name,
@@ -388,6 +427,7 @@
         FROM
         (
         SELECT
+        A.dept_name,
         A.dept_id,
         A.account_id,
         A.account_name,
@@ -396,13 +436,13 @@
         A.zhicheng
         FROM
         sdl_b_schedule_detail A
-        INNER JOIN sdl_b_schedule S ON A.base_id = S.id
+        -- INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and LOCATE(A.base_id,@baseids)>0
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
-        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND A.zizhi_id=1
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND (A.zizhi_id=1 or A.zizhi_id=6 )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -416,6 +456,7 @@
             AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
+        A.dept_name,
         A.dept_id,
         A.account_id,
         A.account_name,
@@ -426,6 +467,7 @@
         ) G
         INNER JOIN sdl_d_banci C ON G.banci_id = C.id
         GROUP BY
+        G.dept_name,
         G.dept_id,
         G.account_id,
         G.account_name,--   A.bq_name,
@@ -445,7 +487,7 @@
         WHERE
         (A.xulie !='医技序列' or A.xulie is null) and S.state=3
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
-        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND A.zizhi_id=1
+        AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND (A.zizhi_id=1 or A.zizhi_id=6 )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">

@@ -5,23 +5,6 @@
         <a-row>
           <div :class="advanced ? null : 'fold'">
             <a-col :md="6" :sm="24">
-              <a-form-item v-bind="formItemLayout" label="排班科室">
-                <a-select v-model="queryParams.deptId"
-                  option-filter-prop="children"
-         :filter-option="filterOption"
-         show-search
-                >
-                  <a-select-option
-                    v-for="d in deptData"
-                    :key="d.deptId"
-                    :value="`${d.deptId}`"
-                  >
-                    {{ d.deptName }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
               <a-form-item label="发薪号" v-bind="formItemLayout">
                 <a-input v-model="queryParams.accountId" />
               </a-form-item>
@@ -41,7 +24,7 @@
           </div>
           <span style="float: right; margin-top: 3px">
              <a-button  @click="exportExcel">导出汇总</a-button>
-              <a-button  @click="exportExcelDetail">导出明细</a-button>
+             <a-button  @click="exportExcelDetail">导出明细</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
           </span>
@@ -99,7 +82,7 @@ const formItemLayout = {
 };
 export default {
   name: "SdlBSchedule",
-  components: { SdlAccount},
+  components: {SdlAccount },
   data() {
     return {
       advanced: false,
@@ -122,7 +105,9 @@ export default {
         showTotal: (total, range) =>
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
-      queryParams: {},
+      queryParams: {
+        deptId: this.$store.state.account.user.deptId
+      },
       form: this.$form.createForm(this),
       loading: false,
       bordered: true,
@@ -159,7 +144,7 @@ export default {
     },
     innerColumns() {
       return [
-         {
+        {
           title: "科室",
           dataIndex: "deptName",
         },
@@ -187,7 +172,7 @@ export default {
           title: "金额",
           dataIndex: "amount",
         },
-        {
+         {
           title: "查看",
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" },
@@ -201,6 +186,7 @@ export default {
    // this.fetchHoliday();
   },
   methods: {
+    moment,
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
     },
@@ -220,6 +206,11 @@ export default {
     handleMonthChange(value){
        this.queryParams.scheduleDateFrom = moment(value).format("YYYY-MM")
     },
+        filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
+    },
      expandSubGrid (expanded, record) {//获取供应计划的数量
       if (expanded) {
         this.expandedRowKeys.push(record.deptId)
@@ -229,17 +220,12 @@ export default {
         this.expandedRowKeys = expandedRowKeys
       }
     },
-        filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      );
-    },
     handleSubData (record) {
       this.loading = true
       let deptId= record.deptId
       let queryParams = { ...this.queryParams };
       queryParams.deptId = record.deptId
-      this.$get('sdlBScheduleDetail/yebanSub', {
+      this.$get('sdlBScheduleDetail/menzhenSub', {
         ...queryParams,
         pageSize: 100000
       }).then((r) => {
@@ -256,12 +242,12 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-        let queryParams = { ...this.queryParams };
+      let queryParams = { ...this.queryParams };
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
         this.$message.warning("月份必选");
       }
       else {
-       queryParams.flag= 1;
+        queryParams.flag= 2;
      let dataJson = JSON.stringify(this.columns)
       this.$export("sdlBScheduleDetail/deptExcel", {
         sortField: sortField,
@@ -279,13 +265,13 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-        let queryParams = { ...this.queryParams };
+      let queryParams = { ...this.queryParams };
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
         this.$message.warning("月份必选");
       }
       else {
-       queryParams.flag= 1;
-       let cls=[...this.innerColumns]
+        queryParams.flag= 2;
+         let cls=[...this.innerColumns]
        cls= cls.slice(0,cls.length-1)
      let dataJson = JSON.stringify(cls)
       this.$export("sdlBScheduleDetail/deptExcelDetail", {
@@ -305,9 +291,6 @@ export default {
         sortOrder = sortedInfo.order;
       }
       let queryParams = { ...this.queryParams };
-       if(queryParams.deptId=="-1"){
-        delete queryParams.deptId
-      }
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
         this.$message.warning("月份必选");
       }
@@ -327,7 +310,7 @@ export default {
        this.viewInfoVisalboe= true;
        this.infoParams = { ...this.queryParams };
        this.infoParams.accountId= record.accountId;
-       this.infoParams.flag= 1;
+       this.infoParams.flag= 2;
        this.infoParams.deptId = record.deptId;
     },
     reset() {
@@ -362,7 +345,7 @@ export default {
     },
     fetch(params = {}) {
       this.loading = true;
-      this.$get("sdlBScheduleDetail/yeban", {
+      this.$get("sdlBScheduleDetail/menzhen", {
         ...params,
       }).then((r) => {
           this.loading = false;

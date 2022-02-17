@@ -115,4 +115,9 @@ public void deleteSdlBPersoninfos(String[]Ids){
     public  List<SdlBPersoninfo> sendMess(String startDate){
        return  this.baseMapper.telList(startDate);
     }
+    @Override
+    @Transactional
+    public  List<SdlBPersoninfo> getNoSubmit(String startDate,String zhouri){
+        return  this.baseMapper.getNoSubmit(startDate,zhouri);
+    }
         }

@@ -9,22 +9,24 @@
       <div style="font-size:30px;color:white" @click="openQulifaction(1)">医师执业资质</div>
     </a-card> -->
      <a-card
+          class="cu"
           @click="openQulifaction(0,'机构执业资质')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="file-text" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; color: green; margin-top: 10px">
+          <div style="font-size: 20px;  margin-top: 10px">
             机构执业资质
           </div>
         </a-card>
      <a-card
+     class="cu"
           @click="openQulifaction(1,'医师执业资质')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="file-done" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; color: green; margin-top: 10px">
+          <div style="font-size: 20px;  margin-top: 10px">
             医师执业资质
           </div>
         </a-card>
@@ -75,6 +77,14 @@ export default {
 <style lang="less" scoped>
 .cuhov:hover{
    background: linear-gradient(to bottom left,#1c998c,#24ada0)
+}
+.cu{
+  width:200px;
+  color: #08c;
+}
+.cu:hover {
+    background-color: #1c998c;
+    color: #fff;
 }
 </style>
 <style lang="less" scoped>

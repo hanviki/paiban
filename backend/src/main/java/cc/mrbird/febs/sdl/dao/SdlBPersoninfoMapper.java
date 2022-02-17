@@ -38,4 +38,21 @@ public interface SdlBPersoninfoMapper extends BaseMapper<SdlBPersoninfo> {
                 "WHERE\n" +
                 "\tt_user.USERNAME NOT IN ( SELECT user_no FROM sdl_b_schedule WHERE (sdl_b_schedule.state = 1 or sdl_b_schedule.state = 3) AND sdl_b_schedule.start_date = #{startDate} )")
         List<SdlBPersoninfo> telList(@Param("startDate") String startDate);
+
+        @Select("SELECT DISTINCT\n" +
+                "\tsdl_b_personinfo.area_index,\n" +
+                "\tsdl_b_personinfo.dept_name,\n" +
+                "\tsdl_b_personinfo.user_account_name,\n" +
+                "\tsdl_b_personinfo.telephone, " +
+                "\t#{startDate} createTimeFrom, " +
+                "\t#{endDate} createTimeTo " +
+                "FROM\n" +
+                "\tt_user\n" +
+                "\tINNER JOIN t_user_role ON t_user.USER_ID = t_user_role.USER_ID \n" +
+                "\tAND t_user_role.ROLE_ID = 6\n" +
+                "\tINNER JOIN sdl_b_personinfo ON t_user.dept_id = sdl_b_personinfo.dept_id \n" +
+                "\tAND sdl_b_personinfo.telephone != '' \n" +
+                "WHERE\n" +
+                "\tt_user.USERNAME NOT IN ( SELECT user_no FROM sdl_b_schedule WHERE (sdl_b_schedule.state = 1 or sdl_b_schedule.state = 3) AND sdl_b_schedule.start_date = #{startDate} )")
+        List<SdlBPersoninfo> getNoSubmit(@Param("startDate") String startDate,@Param("endDate") String endDate);
         }

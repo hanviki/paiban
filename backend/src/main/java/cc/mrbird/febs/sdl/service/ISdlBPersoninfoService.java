@@ -32,5 +32,7 @@ public interface ISdlBPersoninfoService extends IService<SdlBPersoninfo> {
 
         List<SdlBPersoninfo> sendMess(String startDate);
 
+        List<SdlBPersoninfo> getNoSubmit(String startDate,String zhouri);
+
 
         }

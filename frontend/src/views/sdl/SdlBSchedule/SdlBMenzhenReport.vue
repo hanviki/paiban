@@ -39,7 +39,8 @@
             </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
-             <a-button  @click="exportExcel">导出</a-button>
+             <a-button  @click="exportExcel">导出汇总</a-button>
+             <a-button  @click="exportExcelDetail">导出明细</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
           </span>
@@ -157,10 +158,10 @@ export default {
     },
     innerColumns() {
       return [
-        //   {
-        //   title: "病区",
-        //   dataIndex: "bqName",
-        // },
+        {
+          title: "科室",
+          dataIndex: "deptName",
+        },
         {
           title: "发薪号",
           dataIndex: "accountId",
@@ -270,6 +271,31 @@ export default {
       });
       }
     },
+     exportExcelDetail() {
+      let { sortedInfo } = this;
+      let sortField, sortOrder;
+      // 获取当前列的排序和列的过滤规则
+      if (sortedInfo) {
+        sortField = sortedInfo.field;
+        sortOrder = sortedInfo.order;
+      }
+      let queryParams = { ...this.queryParams };
+      if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
+        this.$message.warning("月份必选");
+      }
+      else {
+        queryParams.flag= 2;
+         let cls=[...this.innerColumns]
+       cls= cls.slice(0,cls.length-1)
+     let dataJson = JSON.stringify(cls)
+      this.$export("sdlBScheduleDetail/deptExcelDetail", {
+        sortField: sortField,
+        sortOrder: sortOrder,
+        dataJson: dataJson,
+        ...queryParams,
+      });
+      }
+    },
     search() {
       let { sortedInfo } = this;
       let sortField, sortOrder;
@@ -279,6 +305,9 @@ export default {
         sortOrder = sortedInfo.order;
       }
       let queryParams = { ...this.queryParams };
+      if(queryParams.deptId=="-1"){
+        delete queryParams.deptId
+      }
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
         this.$message.warning("月份必选");
       }

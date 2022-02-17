@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.utils.ExportExcelUtils;
 import cc.mrbird.febs.sdl.entity.SdlBControl;
 import cc.mrbird.febs.sdl.service.ISdlBControlService;
 import cc.mrbird.febs.sdl.service.ISdlBScheduleService;
@@ -271,7 +272,7 @@ public class SdlBScheduleController extends BaseController {
     public void export(QueryRequest request, SdlBSchedule sdlBSchedule, HttpServletResponse response) throws FebsException {
         try {
             List<SdlBSchedule> sdlBSchedules = this.iSdlBScheduleService.findSdlBSchedules(request, sdlBSchedule).getRecords();
-            ExcelKit.$Export(SdlBSchedule.class, response).downXlsx(sdlBSchedules, false);
+         //   ExportExcelUtils.exportCustomExcel_han(response,sdlBSchedules,);
         } catch (Exception e) {
             message = "导出Excel失败";
             log.error(message, e);

@@ -4,38 +4,44 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="6" :sm="24">
-              <a-form-item v-bind="formItemLayout" label="排班科室">
-                <a-select v-model="queryParams.deptId"
-                  option-filter-prop="children"
-         :filter-option="filterOption"
-         show-search
-                >
-                  <a-select-option
-                    v-for="d in deptData"
-                    :key="d.deptId"
-                    :value="`${d.deptId}`"
-                  >
-                    {{ d.deptName }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="6" :sm="24">
+           
+            <a-col :md="8" :sm="24">
               <a-form-item label="发薪号" v-bind="formItemLayout">
                 <a-input v-model="queryParams.accountId" />
               </a-form-item>
             </a-col>
-             <a-col :md="6" :sm="24">
+             <a-col :md="8" :sm="24">
               <a-form-item label="姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.accountName" />
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="月份" v-bind="formItemLayout">
-                <a-month-picker
-          @change="handleMonthChange"
-        />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="年度" v-bind="formItemLayout">
+                <a-select style="width: 100%" @change="handleChange" 
+                :defaultValue="currentYear">
+                  <a-select-option value="2021"> 2021 </a-select-option>
+                <a-select-option value="2022"> 2022 </a-select-option>
+                <a-select-option value="2023"> 2023 </a-select-option>
+                <a-select-option value="2024"> 2024 </a-select-option>
+                <a-select-option value="2025"> 2025 </a-select-option>
+                <a-select-option value="2026"> 2026 </a-select-option>
+                <a-select-option value="2027"> 2027 </a-select-option>
+                <a-select-option value="2028"> 2028 </a-select-option>
+                <a-select-option value="2029"> 2029 </a-select-option>
+                <a-select-option value="2030"> 2030 </a-select-option>
+                <a-select-option value="2031"> 2031 </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="节假日" v-bind="formItemLayout">
+                <a-select
+                  style="width: 100%"
+                  @change="handleHolidayChange"
+                  v-model="holidaysName"
+                >
+                  <a-select-option v-for="item in selectHolidays" :key="item.id" :value="item.id"> {{item.holidayName}} </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </div>
@@ -70,9 +76,8 @@
           :dataSource="record.innerData"
           :pagination="false"
           :rowKey="record2 => record2.accountId"
-          :scroll="{y: 200}"
         >
-          <template slot="operation" slot-scope="text, record">
+         <template slot="operation" slot-scope="text, record">
         <a-button
             icon="search"
             @click="viewInfo(record)"
@@ -80,7 +85,7 @@
       </template>
         </a-table> 
       </a-table>
-        <sdl-account
+      <sdl-account
         :applyVisiable="viewInfoVisalboe"
         @closeAccount="handleCloseAccount"
         :queryParams="infoParams"
@@ -99,11 +104,11 @@ const formItemLayout = {
 };
 export default {
   name: "SdlBSchedule",
-  components: { SdlAccount},
+  components: {SdlAccount },
   data() {
     return {
       advanced: false,
-      dateFormat: "YYYY-MM",
+      dateFormat: "YYYY-MM-DD",
       dataSource: [],
       selectedRowKeys: [],
       expandedRowKeys: [],
@@ -122,18 +127,22 @@ export default {
         showTotal: (total, range) =>
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
-      queryParams: {},
+      queryParams: {
+          deptId: this.$store.state.account.user.deptId
+      },
       form: this.$form.createForm(this),
       loading: false,
       bordered: true,
       holidaysData: [],
       selectHolidays: [],
       deptData: [],
+      holidaysName: '',
+      currentYear: moment().format("YYYY"),
       scroll: {
         x: 900,
         // y: window.innerHeight - 200 - 100 - 20 - 15
       },
-       viewInfoVisalboe: false,
+      viewInfoVisalboe: false,
       infoParams: {}
     };
   },
@@ -148,12 +157,8 @@ export default {
         },
         
         {
-          title: "次数",
+          title: "排班天数",
           dataIndex: "cishu",
-        },
-         {
-          title: "金额",
-          dataIndex: "amount",
         },
       ];
     },
@@ -172,20 +177,8 @@ export default {
           dataIndex: "accountName",
         },
         {
-          title: "职位类型",
-          dataIndex: "renshizifw",
-        },
-         {
-          title: "职称",
-          dataIndex: "zhicheng",
-        },
-        {
-          title: "次数",
+          title: "排班天数",
           dataIndex: "cishu",
-        },
-         {
-          title: "金额",
-          dataIndex: "amount",
         },
         {
           title: "查看",
@@ -198,7 +191,8 @@ export default {
   mounted() {
    // this.search();
     this.fetchDept();
-   // this.fetchHoliday();
+    this.fetchHoliday();
+   
   },
   methods: {
     onSelectChange(selectedRowKeys) {
@@ -211,14 +205,34 @@ export default {
       }
     },
     handleChange(year) {
-       this.selectHolidays =this.holidaysData.filter(
+       let hods =this.holidaysData.filter(
            p=>moment(p.startDate).format("YYYY")==year
        );
-       this.queryParams.scheduleDateFrom = ""
-       this.queryParams.scheduleDateTo = ""
+       console.info(hods)
+       if(hods.length==0){
+        this.holidaysName = ''
+        this.selectHolidays =[]
+        this.queryParams.scheduleDateFrom = ""
+        this.queryParams.scheduleDateTo = ""
+       }
+       else{
+         this.holidaysName= hods[0].id
+         this.selectHolidays =hods;
+         this.handleHolidayChange(hods[0].id)
+       }
+      
+      
     },
-    handleMonthChange(value){
-       this.queryParams.scheduleDateFrom = moment(value).format("YYYY-MM")
+        filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+      );
+    },
+    handleHolidayChange(value){
+       
+       let record = this.selectHolidays.filter(p=>p.id==value);
+       this.queryParams.scheduleDateFrom = moment(record[0].startDate).format("YYYY-MM-DD")
+       this.queryParams.scheduleDateTo = moment(record[0].endDate).format("YYYY-MM-DD")
     },
      expandSubGrid (expanded, record) {//获取供应计划的数量
       if (expanded) {
@@ -229,19 +243,14 @@ export default {
         this.expandedRowKeys = expandedRowKeys
       }
     },
-        filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      );
-    },
     handleSubData (record) {
       this.loading = true
       let deptId= record.deptId
       let queryParams = { ...this.queryParams };
       queryParams.deptId = record.deptId
-      this.$get('sdlBScheduleDetail/yebanSub', {
+      this.$get('sdlBScheduleDetail/deptSub', {
         ...queryParams,
-        pageSize: 100000
+        pageSize: 10000
       }).then((r) => {
         let data = r.data
         this.loading = false
@@ -257,12 +266,12 @@ export default {
         sortOrder = sortedInfo.order;
       }
         let queryParams = { ...this.queryParams };
+        queryParams.flag= 0;
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
-        this.$message.warning("月份必选");
+        this.$message.warning("节假日必选");
       }
       else {
-       queryParams.flag= 1;
-     let dataJson = JSON.stringify(this.columns)
+      let dataJson = JSON.stringify(this.columns)
       this.$export("sdlBScheduleDetail/deptExcel", {
         sortField: sortField,
         sortOrder: sortOrder,
@@ -271,7 +280,7 @@ export default {
       });
       }
     },
-     exportExcelDetail() {
+      exportExcelDetail() {
       let { sortedInfo } = this;
       let sortField, sortOrder;
       // 获取当前列的排序和列的过滤规则
@@ -280,12 +289,12 @@ export default {
         sortOrder = sortedInfo.order;
       }
         let queryParams = { ...this.queryParams };
+        queryParams.flag= 0;
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
-        this.$message.warning("月份必选");
+        this.$message.warning("节假日必选");
       }
       else {
-       queryParams.flag= 1;
-       let cls=[...this.innerColumns]
+     let cls=[...this.innerColumns]
        cls= cls.slice(0,cls.length-1)
      let dataJson = JSON.stringify(cls)
       this.$export("sdlBScheduleDetail/deptExcelDetail", {
@@ -309,7 +318,7 @@ export default {
         delete queryParams.deptId
       }
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
-        this.$message.warning("月份必选");
+        this.$message.warning("节假日必选");
       }
       else {
      
@@ -319,16 +328,6 @@ export default {
         ...queryParams,
       });
       }
-    },
-     handleCloseAccount(){
-      this.viewInfoVisalboe= false;
-    },
-    viewInfo(record){
-       this.viewInfoVisalboe= true;
-       this.infoParams = { ...this.queryParams };
-       this.infoParams.accountId= record.accountId;
-       this.infoParams.flag= 1;
-       this.infoParams.deptId = record.deptId;
     },
     reset() {
       // 取消选中
@@ -345,6 +344,16 @@ export default {
         ...this.queryParams,
       });
     },
+    handleCloseAccount(){
+      this.viewInfoVisalboe= false;
+    },
+    viewInfo(record){
+       this.viewInfoVisalboe= true;
+       this.infoParams = { ...this.queryParams };
+       this.infoParams.accountId= record.accountId;
+       this.infoParams.flag= 0;
+       this.infoParams.deptId = record.deptId
+    },
     fetchDept() {
       this.$get("dept/list", { parentId: "0" }).then((res) => {
         this.deptData = [];
@@ -358,11 +367,12 @@ export default {
     fetchHoliday() {
       this.$get("sdlDHoliday/all", {}).then((res) => {
         this.holidaysData = res.data;
+        this.handleChange(this.currentYear)
       });
     },
     fetch(params = {}) {
       this.loading = true;
-      this.$get("sdlBScheduleDetail/yeban", {
+      this.$get("sdlBScheduleDetail/dept", {
         ...params,
       }).then((r) => {
           this.loading = false;

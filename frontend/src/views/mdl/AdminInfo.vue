@@ -10,49 +10,53 @@
           >
             <a-space>
               <a-card
+              class="cu"
                 @click="openQulifaction(7, '基本处方权')"
                 style="width: 200px"
                 :bordered="false"
               >
                 <a-icon type="home" style="font-size: 60px" :bordered="false" />
-                <div style="font-size: 20px; color: green; margin-top: 10px">
+                <div style="font-size: 20px;  margin-top: 10px">
                   基本处方权
                 </div>
               </a-card>
               <a-card
-                @click="openQulifaction(1, '麻精药物处方权')"
+              class="cu"
+                @click="openQulifaction(8, '麻精药物处方权')"
                 style="width: 200px"
                 :bordered="false"
               >
                 <a-icon type="appstore" style="font-size: 60px" />
                 <div
-                  style="font-size: 20px; color: green; margin-top: 10px"
+                  style="font-size: 20px;  margin-top: 10px"
                  
                 >
                   麻精药物处方权
                 </div>
               </a-card>
               <a-card
+              class="cu"
                 @click="openQulifaction(9, '抗菌药物分级管理')"
                 style="width: 220px"
                 :bordered="false"
               >
                 <a-icon type="control" style="font-size: 60px" />
                 <div
-                  style="font-size: 20px; color: green; margin-top: 10px"
+                  style="font-size: 20px;  margin-top: 10px"
                  
                 >
                   抗菌药物分级管理
                 </div>
               </a-card>
               <a-card
+              class="cu"
                @click="openQulifaction(10, '抗肿瘤药物分级管理')"
                 style="width: 240px"
                 :bordered="false"
               >
                 <a-icon type="read" style="font-size: 60px" />
                 <div
-                  style="font-size: 20px; color: green; margin-top: 10px"
+                  style="font-size: 20px; margin-top: 10px"
                   
                 >
                   抗肿瘤药物分级管理
@@ -69,6 +73,7 @@
           >
             <a-space>
               <a-card
+              class="cu"
                 @click="openQulifaction(20, '单科会诊')"
                 style="width: 200px"
                 :bordered="false"
@@ -78,18 +83,19 @@
                   style="font-size: 60px"
                   :bordered="false"
                 />
-                <div style="font-size: 20px; color: green; margin-top: 10px">
+                <div style="font-size: 20px;  margin-top: 10px">
                   单科会诊
                 </div>
               </a-card>
               <a-card
+              class="cu"
                 @click="openQulifaction(21, '多单科会诊')"
                 style="width: 200px"
                 :bordered="false"
               >
                 <a-icon type="block" style="font-size: 60px"  />
                 <div
-                  style="font-size: 20px; color: green; margin-top: 10px"
+                  style="font-size: 20px;  margin-top: 10px"
                 >
                   多单科会诊
                 </div>
@@ -101,52 +107,57 @@
 
       <a-space>
         <a-card
+        class="cu"
           @click="openQulifaction(1, '值班资质')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="profile" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; color: green; margin-top: 10px">
+          <div style="font-size: 20px;  margin-top: 10px">
             值班资质
           </div>
         </a-card>
         <a-card
+        class="cu"
           @click="openQulifaction(3, 'MDT团队管理')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="project" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; color: green; margin-top: 10px">
+          <div style="font-size: 20px;  margin-top: 10px">
             MDT团队管理
           </div>
         </a-card>
         <a-card
+          class="cu"
           @click="openQulifaction(4, '专业类资质')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="wallet" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; color: green; margin-top: 10px">
+          <div style="font-size: 20px;  margin-top: 10px">
             专业类资质
           </div>
         </a-card>
         <a-card
+        class="cu"
           @click="openQulifaction(5, '行业类资质')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="global" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; color: green; margin-top: 10px">
+          <div style="font-size: 20px;  margin-top: 10px">
             行业类资质
           </div>
         </a-card>
         <a-card
+        class="cu"
           @click="openQulifaction(6, '授权文件')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="file-done" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; color: green; margin-top: 10px">
+          <div style="font-size: 20px;  margin-top: 10px">
             授权文件
           </div>
         </a-card>
@@ -220,6 +231,14 @@ export default {
 <style lang="less" scoped>
 .cuhov:hover {
   background: linear-gradient(to bottom left, #1c998c, #24ada0);
+}
+.cu{
+  width:200px;
+  color: #08c;
+}
+.cu:hover {
+    background-color: #1c998c;
+    color: #fff;
 }
 </style>
 <style lang="less" scoped>
