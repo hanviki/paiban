@@ -121,6 +121,35 @@ public class SdlBScheduleDController extends BaseController {
         );
         return zizhiList;
     }
+    @GetMapping("zizhi_edit")
+    public Map<String, Object> List_zizhiForEdit(SdlBScheduleD sdlBScheduleD) {
+        User currentUser = FebsUtil.getCurrentUser();
+        sdlBScheduleD.setDeptId(currentUser.getDeptId());
+        List<SdlBScheduleD> zizhiList = this.iSdlBScheduleDService.getPaiBanZizhi(sdlBScheduleD);
+        LambdaQueryWrapper<SdlBScheduleD> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SdlBScheduleD::getDeptId, currentUser.getDeptId());
+        List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
+        zizhiList.forEach(p -> {
+                    List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
+                            t -> t.getBqId().equals(p.getBqId()) && t.getZizhiId().equals(p.getZizhiId())
+                                    &&  t.getBaseId().equals(sdlBScheduleD.getBaseId())
+                    ).collect(Collectors.toList());
+                    p.setDynamicData(subList);
+                }
+
+        );
+        SdlBUser sdlBUser =new SdlBUser();
+        sdlBUser.setDeptId(currentUser.getDeptId());
+
+        List<CustomUser> list= this.iSdlBUserService.findSdlBUsers(sdlBUser);
+
+        Map<String, Object> rspData = new HashMap<>();
+        rspData.put("user", list);
+        rspData.put("zizhi", zizhiList);
+       // return rspData;
+       // return list;
+        return rspData;
+    }
     @GetMapping("zizhidept")
     public List<SdlBScheduleD> List_zizhi2(SdlBScheduleD sdlBScheduleD) {
         User currentUser = FebsUtil.getCurrentUser();

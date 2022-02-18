@@ -7,12 +7,15 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.utils.ExportExcelUtils;
+import cc.mrbird.febs.sdl.entity.CustomUser;
 import cc.mrbird.febs.sdl.entity.SdlBUserSearch;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
@@ -92,6 +95,15 @@ public Map<String, Object> List(QueryRequest request, SdlBUser sdlBUser){
         User currentUser= FebsUtil.getCurrentUser();
         sdlBUser.setDeptId(currentUser.getDeptId());
         return getDataTable(this.iSdlBUserService.findSdlBUsers(request, sdlBUser));
+    }
+    @GetMapping("dept2")
+    public List<CustomUser> List_Dept2(SdlBUser sdlBUser){
+        User currentUser= FebsUtil.getCurrentUser();
+        sdlBUser.setDeptId(currentUser.getDeptId());
+
+        List<CustomUser> list= this.iSdlBUserService.findSdlBUsers(sdlBUser);
+
+        return list;
     }
 
 /**

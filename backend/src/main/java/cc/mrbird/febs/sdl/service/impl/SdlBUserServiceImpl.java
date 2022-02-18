@@ -77,6 +77,21 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
         }
     }
 
+
+    @Override
+    public List<cc.mrbird.febs.sdl.entity.CustomUser> findSdlBUsers(SdlBUser sdlBUser) {
+        try {
+            List<String> deptIds = this.deptMapper.getListIds(sdlBUser.getDeptId());
+
+
+            return  this.baseMapper.findSdlBUserByDeptId(deptIds);
+
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
+
+        }
+    }
     @Override
     public List<SdlBUser> findSdlBUsers_search( SdlBUser sdlBUser) {
         try {

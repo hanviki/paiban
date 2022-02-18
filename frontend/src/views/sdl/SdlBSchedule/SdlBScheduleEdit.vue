@@ -45,6 +45,7 @@
               mode="multiple"
               :default-value="record[col.filedName]"
               option-filter-prop="children"
+              v-if="col.isShow || record.state != 1"
               :filter-option="
                 (input, option) => filterOption(input, option, record, col)
               "
@@ -260,10 +261,10 @@ export default {
     handleSelectChange(value, option, record, filedName) {
       console.info(filedName);
       record[filedName] = value;
-      // record.state = 1;
-      // setTimeout(() => {
-      //   record.state = 0;
-      // }, 300);
+      record.state = 1;
+      setTimeout(() => {
+        record.state = 0;
+      }, 300);
     },
     handleCopy(record, filedName) {
       console.info(record[filedName]);
@@ -309,12 +310,12 @@ export default {
        
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
-        // col.isShow = false;
-        // record.state = 1;
-        // setTimeout(() => {
-        //   record.state = 0;
-        //   col.isShow = true;
-        // }, 300);
+        col.isShow = false;
+        record.state = 1;
+        setTimeout(() => {
+          record.state = 0;
+          col.isShow = true;
+        }, 300);
       }
     },
     handlePaste(record, col) {
@@ -347,12 +348,12 @@ export default {
         // this.listAuditInfo =[]
         //防止行和列刷新  这样同时定位到这个组件 进行刷新
         record[col.filedName] = intersection;
-        // col.isShow = false;
-        // record.state = 1;
-        // setTimeout(() => {
-        //   record.state = 0;
-        //   col.isShow = true;
-        // }, 300);
+        col.isShow = false;
+        record.state = 1;
+        setTimeout(() => {
+          record.state = 0;
+          col.isShow = true;
+        }, 300);
       }
 
      
@@ -510,11 +511,14 @@ export default {
       });
     },
     fetch() {
-      this.$get("sdlBScheduleD/zizhi", {
+      this.$get("sdlBScheduleD/zizhi_edit", {
         baseId: this.baseId,
         startDate: this.startDate,
       }).then((r) => {
-        let data = r.data;
+        let data = r.data.zizhi;
+        this.userData = r.data.user;
+        this.optionData = r.data.user;
+
         data.forEach((element) => {
           let auditList = element.dynamicData;
 
@@ -539,13 +543,12 @@ export default {
       });
     },
     fetchDept() {
-      this.$get("sdlBUser/dept", {
-        pageSize: 10000,
-        page: 1,
+      this.$get("sdlBUser/dept2", {
+      
       }).then((r) => {
         let data = r.data;
-        this.userData = data.rows;
-        this.optionData = data.rows;
+        this.userData = data;
+        this.optionData = data;
         this.fetch();
       });
     },
@@ -554,7 +557,7 @@ export default {
     editVisiable() {
       if (this.editVisiable) {
         this.fetchBanci();
-        this.fetchDept();
+        this.fetch();
        
       }
     },

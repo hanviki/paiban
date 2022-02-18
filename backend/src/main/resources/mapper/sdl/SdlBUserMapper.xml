@@ -273,5 +273,14 @@
             <if test="sdlBUser.zjspnlceqk != null and sdlBUser.zjspnlceqk != ''"> and  sdl_b_user.zjspnlceqk like concat('%', #{ sdlBUser.zjspnlceqk} ,'%')</if>
             <if test="sdlBUser.dcaYear != null and sdlBUser.dcaYear != ''"> and  sdl_b_user.dca_year like concat('%', #{ sdlBUser.dcaYear} ,'%')</if>
 </select>
+    <select id="findSdlBUserByDeptId" resultType="cc.mrbird.febs.sdl.entity.CustomUser">
+        select  user_account_name, user_account, user_type,user_type_name  from sdl_b_user
+        where  1=1
+        and dept_id in
+        <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and state!=0
 
+    </select>
 </mapper>

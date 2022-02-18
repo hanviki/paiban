@@ -24,4 +24,6 @@ public interface SdlBUserMapper extends BaseMapper<SdlBUser> {
 
         @Select("select id,user_account from sdl_b_user")
         List<CustomUser> getUserAccounts();
+
+        List<cc.mrbird.febs.sdl.entity.CustomUser> findSdlBUserByDeptId(@Param("typeList") List<String> typeList);
         }

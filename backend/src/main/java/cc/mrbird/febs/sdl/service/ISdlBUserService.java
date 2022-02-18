@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 public interface ISdlBUserService extends IService<SdlBUser> {
 
         IPage<SdlBUser> findSdlBUsers(QueryRequest request, SdlBUser sdlBUser);
+        List<cc.mrbird.febs.sdl.entity.CustomUser> findSdlBUsers(SdlBUser sdlBUser);
 
         IPage<SdlBUser> findSdlBUsersYwc(QueryRequest request, SdlBUser sdlBUser);
 
