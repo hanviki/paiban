@@ -35,6 +35,11 @@ public class DateUtil {
         Date d = sdf.parse(date);
         return DateUtil.getDateFormat(d, format);
     }
+    public static List<String> getDays(String month){
+        Date startDate= cn.hutool.core.date.DateUtil.parseDate(month+"-01");
+        Date endDate= cn.hutool.core.date.DateUtil.endOfMonth(startDate);
+        return  getDays(startDate,endDate);
+    }
     public static List<String> getDays(Date start, Date end) {
 
         // 返回的日期集合

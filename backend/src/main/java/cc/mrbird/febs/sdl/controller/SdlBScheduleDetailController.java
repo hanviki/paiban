@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.ExportExcelUtils;
 import cc.mrbird.febs.rfc.CustomUser;
 import cc.mrbird.febs.sdl.entity.CustomData;
@@ -15,6 +16,7 @@ import cc.mrbird.febs.sdl.entity.SdlBScheduleDetail;
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -202,7 +204,6 @@ public class SdlBScheduleDetailController extends BaseController {
         return data;
     }
 
-
     /**
      * 全院夜班统计
      * @param sdlBScheduleDetail
@@ -210,6 +211,10 @@ public class SdlBScheduleDetailController extends BaseController {
      */
     @GetMapping("yeban")
     public List<CustomData> deptStatistic2(SdlBScheduleDetail sdlBScheduleDetail) {
+//        if(StringUtils.isNotEmpty(sdlBScheduleDetail.getScheduleDateFrom())){
+//            List<String> monthDays= DateUtil.getDays(sdlBScheduleDetail.getScheduleDateFrom());
+//            sdlBScheduleDetail.setScheduleDateTo(monthDays.stream().map(p->"\'"+p+"\'").collect(Collectors.joining(",")));
+//        }
         List<CustomData> customDataList = this.iSdlBScheduleDetailService.findYeBanReport(sdlBScheduleDetail);
         return customDataList;
     }

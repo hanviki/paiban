@@ -514,6 +514,7 @@ export default {
       this.$get("sdlBScheduleD/zizhi_edit", {
         baseId: this.baseId,
         startDate: this.startDate,
+        endDate: this.endDate,
       }).then((r) => {
         let data = r.data.zizhi;
         this.userData = r.data.user;

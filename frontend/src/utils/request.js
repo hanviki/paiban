@@ -147,7 +147,7 @@ FEBS_REQUEST.interceptors.response.use((config) => {
         notification.error({
           message: '系统提示',
           description: errorMessage,
-          duration: 4
+          duration: null
         })
         break
     }

@@ -362,6 +362,10 @@ export default {
     },
     fetch(params = {}) {
       this.loading = true;
+      
+       if(params.deptId=="-1"){
+        delete params.deptId
+      }
       this.$get("sdlBScheduleDetail/yeban", {
         ...params,
       }).then((r) => {

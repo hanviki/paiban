@@ -353,6 +353,7 @@ export default {
         baseId: this.baseId,
         deptId: this.deptId,
         startDate: this.startDate,
+        endDate: this.endDate,
       }).then((r) => {
         let data = r.data;
         data.forEach((element) => {

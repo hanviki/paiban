@@ -693,11 +693,12 @@ export default {
       this.fetch();
     },
     handleTableChange(pagination, filters, sorter) {
-      this.sortedInfo = sorter;
+     // this.sortedInfo = sorter;
+      
       this.paginationInfo = pagination;
       this.fetch({
-        sortField: sorter.field,
-        sortOrder: sorter.order,
+        sortField: this.sortedInfo.field,
+        sortOrder: this.sortedInfo.order,
         ...this.queryParams,
       });
     },
@@ -742,6 +743,12 @@ export default {
         // 如果分页信息为空，则设置为默认值
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
+      }
+       if (params.state == -1) {
+        delete params.state;
+      }
+      if (params.stateApply == -1) {
+        delete params.stateApply;
       }
       this.$get("sdlBSchedule", {
         ...params,

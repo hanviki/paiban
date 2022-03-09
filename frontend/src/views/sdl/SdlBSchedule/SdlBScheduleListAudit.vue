@@ -574,6 +574,15 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
+       if (params.deptId == "-1") {
+        delete params.deptId;
+      }
+      if (params.state == -1) {
+        delete params.state;
+      }
+      if (params.stateApplyFlag == -1) {
+        delete params.stateApplyFlag;
+      }
       this.$get("sdlBSchedule/auditList", {
         ...params,
       }).then((r) => {

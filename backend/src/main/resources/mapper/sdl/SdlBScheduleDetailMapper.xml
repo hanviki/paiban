@@ -25,6 +25,7 @@
                     <result column="zhicheng" property="zhicheng"/>
                     <result column="xulie" property="xulie"/>
                     <result column="state" property="state"/>
+            <result column="month" property="month"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
                     <result column="MODIFY_TIME" property="modifyTime"/>
@@ -34,7 +35,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, zhicheng, xulie, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, zhicheng, xulie, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, month
     </sql>
     <update id="updateSdlBScheduleDetail" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
         update sdl_b_schedule_detail
@@ -59,6 +60,7 @@
 <if test="zhicheng != null">zhicheng=#{zhicheng},</if>
 <if test="xulie != null">xulie=#{xulie},</if>
 <if test="state != null">state=#{state},</if>
+            <if test="month != null">month=#{month},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
 <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
@@ -217,7 +219,7 @@
         </if>
 
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+            AND A.month=  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
         D.DEPT_ID,
@@ -282,7 +284,7 @@
         </if>
 
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
         A.dept_name,
@@ -326,7 +328,7 @@
         </if>
 
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         ORDER BY A.schedule_date asc
     </select>
@@ -379,7 +381,7 @@
         </if>
 
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
         D.DEPT_ID,
@@ -453,7 +455,7 @@
         </if>
 
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         GROUP BY
         A.dept_name,
@@ -498,7 +500,7 @@
         </if>
 
         <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND date_format(A.schedule_date,'%Y-%m')=  #{sdlBScheduleDetail.scheduleDateFrom}
+            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
         </if>
         ORDER BY A.schedule_date asc
     </select>

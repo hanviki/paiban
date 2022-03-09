@@ -372,6 +372,9 @@ export default {
     },
     fetch(params = {}) {
       this.loading = true;
+       if(params.deptId=="-1"){
+        delete params.deptId
+      }
       this.$get("sdlBScheduleDetail/dept", {
         ...params,
       }).then((r) => {

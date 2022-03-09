@@ -12,6 +12,7 @@ import java.util.Date;
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import cc.mrbird.febs.common.converter.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -115,6 +116,7 @@ private static final long serialVersionUID=1L;
     private transient String scheduleDateFrom;
     private transient String scheduleDateTo;
 
+
     /**
      * 班次id
      */
@@ -128,6 +130,8 @@ private static final long serialVersionUID=1L;
         
         @ExcelField(value ="班次")
     private String banci;
+    @ExcelField(value ="月度")
+        private  String month;
 
     /**
      * 排班人员账号

@@ -109,6 +109,8 @@ public class SdlBScheduleDController extends BaseController {
         List<SdlBScheduleD> zizhiList = this.iSdlBScheduleDService.getPaiBanZizhi(sdlBScheduleD);
         LambdaQueryWrapper<SdlBScheduleD> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SdlBScheduleD::getDeptId, currentUser.getDeptId());
+        queryWrapper.ge(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getStartDate());
+        queryWrapper.le(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getEndDate());
         List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
         zizhiList.forEach(p -> {
                     List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
@@ -128,6 +130,8 @@ public class SdlBScheduleDController extends BaseController {
         List<SdlBScheduleD> zizhiList = this.iSdlBScheduleDService.getPaiBanZizhi(sdlBScheduleD);
         LambdaQueryWrapper<SdlBScheduleD> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SdlBScheduleD::getDeptId, currentUser.getDeptId());
+        queryWrapper.ge(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getStartDate());
+        queryWrapper.le(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getEndDate());
         List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
         zizhiList.forEach(p -> {
                     List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
@@ -157,6 +161,8 @@ public class SdlBScheduleDController extends BaseController {
         List<SdlBScheduleD> zizhiList = this.iSdlBScheduleDService.getPaiBanZizhi(sdlBScheduleD);
         LambdaQueryWrapper<SdlBScheduleD> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SdlBScheduleD::getDeptId, sdlBScheduleD.getDeptId());
+        queryWrapper.ge(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getStartDate());
+        queryWrapper.le(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getEndDate());
         List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
         zizhiList.forEach(p -> {
                     List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
@@ -380,6 +386,7 @@ public class SdlBScheduleDController extends BaseController {
             User currentUser = FebsUtil.getCurrentUser();
             List<SdlBScheduleD> list = JSON.parseObject(jsonStr, new TypeReference<List<SdlBScheduleD>>() {
             });
+
             /**
              * 查询是否一直班 再同一天 不能跨院区
              */
@@ -416,7 +423,7 @@ public class SdlBScheduleDController extends BaseController {
                         catch (Exception exr){
 
                         }
-
+                        nDetail.setMonth(cn.hutool.core.date.DateUtil.format(sdlBScheduleDetail.getScheduleDate(),"yyyy-MM"));
                         nDetail.setAccountId(accounts);
                         List<SdlBUser> users1=users.stream().filter(p -> accounts.equals(p.getUserAccount())).collect(Collectors.toList());
                         if(users1==null ||users1.size()==0){
