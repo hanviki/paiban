@@ -654,6 +654,6 @@ export default {
 <style lang="less" scoped>
    .ant-input-disabled {
   color: rgba(0, 0, 0, 0.65) !important;
-  background-color: #fff !important;
+  background-color: #f5f5f5 !important;
 }
 </style>

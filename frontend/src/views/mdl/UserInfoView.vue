@@ -1,6 +1,7 @@
 <template>
   <a-drawer
     title="附件上传"
+    class="cuHan"
     :maskClosable="false"
     width="80%"
     placement="right"
@@ -521,3 +522,10 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped >
+  
+   .ant-input-disabled {
+       background-color: #f5f5f5 !important;
+     }
+   
+</style>

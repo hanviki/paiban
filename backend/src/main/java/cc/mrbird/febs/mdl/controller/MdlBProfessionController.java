@@ -79,6 +79,10 @@ public IMdlBProfessionService iMdlBProfessionService;
 public Map<String, Object> List(QueryRequest request, MdlBProfession mdlBProfession){
         return getDataTable(this.iMdlBProfessionService.findMdlBProfessions(request, mdlBProfession));
         }
+    @GetMapping("all")
+    public Map<String, Object> List2(QueryRequest request, MdlBProfession mdlBProfession){
+        return getDataTable(this.iMdlBProfessionService.findMdlBProfessionList(request, mdlBProfession));
+    }
 
 /**
  * 添加

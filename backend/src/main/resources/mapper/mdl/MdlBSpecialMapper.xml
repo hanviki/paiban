@@ -45,7 +45,8 @@
 
     </update>
     <select id="findMdlBSpecial" resultType="cc.mrbird.febs.mdl.entity.MdlBSpecial" parameterType="cc.mrbird.febs.mdl.entity.MdlBSpecial">
-        select  *  from mdl_b_special
+        select  mdl_b_special.*, sdl_b_user.dept_new dept_new from mdl_b_special
+        inner join sdl_b_user on mdl_b_special.user_account= sdl_b_user.user_account
         where  1=1
             <if test="mdlBSpecial.qlName != null and mdlBSpecial.qlName != ''"> and  mdl_b_special.ql_name like concat('%', #{ mdlBSpecial.qlName} ,'%')</if>
         <if test="mdlBSpecial.qlDateFrom!= null">

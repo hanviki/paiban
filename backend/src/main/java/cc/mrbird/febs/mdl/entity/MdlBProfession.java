@@ -72,6 +72,9 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="姓名")
     private String userAccountName;
 
+    @ExcelField(value ="科室")
+    private transient String deptNew;
+
     /**
      * 附件ID
      */

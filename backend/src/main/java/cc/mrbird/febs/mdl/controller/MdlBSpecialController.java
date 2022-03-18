@@ -80,6 +80,11 @@ public Map<String, Object> List(QueryRequest request, MdlBSpecial mdlBSpecial){
         return getDataTable(this.iMdlBSpecialService.findMdlBSpecials(request, mdlBSpecial));
         }
 
+    @GetMapping("all")
+    public Map<String, Object> List3(QueryRequest request, MdlBSpecial mdlBSpecial){
+        return getDataTable(this.iMdlBSpecialService.findMdlBSpecialList(request, mdlBSpecial));
+    }
+
 /**
  * 添加
  * @param  mdlBSpecial

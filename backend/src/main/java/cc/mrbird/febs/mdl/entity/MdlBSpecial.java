@@ -42,6 +42,8 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="专业资质名称")
     private String qlName;
 
+    @ExcelField(value ="科室")
+    private transient String deptNew;
     /**
      * 获得时间
      */

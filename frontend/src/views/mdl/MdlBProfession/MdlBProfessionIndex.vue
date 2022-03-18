@@ -1,26 +1,5 @@
 <template>
-  <a-card :bordered="false" class="card-area">
-    <div :class="advanced ? 'search' : null">
-      <a-form layout="horizontal">
-        <a-row>
-          <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-             <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccount" />
-              </a-form-item>
-            </a-col>
-          </div>
-          <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="search">查询</a-button>
-            <a-button style="margin-left: 8px" @click="reset">重置</a-button>
-            <a @click="toggleAdvanced" style="margin-left: 8px">
-              {{ advanced ? "收起" : "展开" }}
-              <a-icon :type="advanced ? 'up' : 'down'" />
-            </a>
-          </span>
-        </a-row>
-      </a-form>
-    </div>
+  <div>
     <div>
       <div class="operator">
         <a-button
@@ -106,7 +85,7 @@
       :editVisiable="editVisiable"
     >
     </mdlBProfession-edit>
-  </a-card>
+  </div>
 </template>
 
 <script>
@@ -337,6 +316,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
+       params.userAccount= this.$store.state.account.user.username;
       this.$get("mdlBProfession", {
         ...params,
       }).then((r) => {

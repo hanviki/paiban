@@ -137,6 +137,11 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
+         {
+          title: "科室",
+          dataIndex: "deptNew",
+          width: 100,
+        },
           {
           title: "发薪号",
           dataIndex: "userAccount",
@@ -317,7 +322,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("mdlBSpecial", {
+      this.$get("mdlBSpecial/all", {
         ...params,
       }).then((r) => {
         let data = r.data;

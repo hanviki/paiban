@@ -111,6 +111,11 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
          {
+          title: "科室",
+          dataIndex: "deptNew",
+          width: 100,
+        },
+         {
           title: "发薪号",
           dataIndex: "userAccount",
           width: 100,
@@ -290,7 +295,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("mdlBProfession", {
+      this.$get("mdlBProfession/all", {
         ...params,
       }).then((r) => {
         let data = r.data;
