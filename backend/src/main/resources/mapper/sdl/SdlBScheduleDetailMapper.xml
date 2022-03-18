@@ -26,6 +26,7 @@
                     <result column="xulie" property="xulie"/>
                     <result column="state" property="state"/>
             <result column="month" property="month"/>
+            <result column="sch" property="sch"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
                     <result column="MODIFY_TIME" property="modifyTime"/>
@@ -35,7 +36,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, zhicheng, xulie, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, month
+        id, base_id, user_no, name, user_name, dept_name, yq_name, bq_name, dept_id, yq_id, bq_id, schedule_date, banci_id, banci, account_id, account_name, zizhi_id, zizhi_name, zhicheng, xulie, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, month, sch
     </sql>
     <update id="updateSdlBScheduleDetail" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
         update sdl_b_schedule_detail
@@ -61,6 +62,7 @@
 <if test="xulie != null">xulie=#{xulie},</if>
 <if test="state != null">state=#{state},</if>
             <if test="month != null">month=#{month},</if>
+            <if test="sch != null">sch=#{sch},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
 <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
@@ -180,15 +182,15 @@
 
 
     <select id="findYeBanReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        SET GLOBAL group_concat_max_len=102400;
-        SET SESSION group_concat_max_len=102400;
+        drop table if EXISTS tb;
+        CREATE TEMPORARY TABLE tb AS
         SELECT
-        GROUP_CONCAT( id )
+        DISTINCT id
         FROM
         sdl_b_schedule
         WHERE
-        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} )
-        AND state = 3 INTO @baseids;
+        ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
+        AND state = 3 ;
         SELECT
         G.DEPT_ID,
         G.DEPT_NAME,
@@ -202,10 +204,19 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
+        inner join tb on A.base_id =tb.id
        --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id --  INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') AND LOCATE(A.base_id,@baseids)>0
+
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='')
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            and A.month = #{ sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+       --  AND LOCATE(A.base_id,@baseids)>0
        -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
        -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
         AND A.banci = '夜班' AND A.zizhi_id in (1,2,6,7)
@@ -214,13 +225,9 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
-            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
-        </if>
 
-        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND A.month=  #{sdlBScheduleDetail.scheduleDateFrom}
-        </if>
+
+
         GROUP BY
         D.DEPT_ID,
         D.DEPT_NAME,
@@ -235,15 +242,15 @@
     </select>
 
     <select id="findYeBanSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        SET GLOBAL group_concat_max_len=102400;
-        SET SESSION group_concat_max_len=102400;
+        drop table if EXISTS tb;
+        CREATE TEMPORARY TABLE tb AS
         SELECT
-        GROUP_CONCAT( id )
+        DISTINCT id
         FROM
         sdl_b_schedule
         WHERE
-        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom})
-        AND state = 3 INTO @baseids;
+        ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
+        AND state = 3 ;
         SELECT
         G.dept_name,
         G.dept_id,
@@ -265,12 +272,20 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
+        inner join tb on A.base_id =tb.id
        --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID -- INNER JOIN sdl_d_banci C ON A.banci_id = C.id
 
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and LOCATE(A.base_id,@baseids)>0
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='')
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            and A.month = #{ sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        -- and LOCATE(A.base_id,@baseids)>0
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
         AND A.banci = '夜班' AND A.zizhi_id in (1,2,6,7)
@@ -279,13 +294,9 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
-            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
-        </if>
 
-        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
-        </if>
+
+
         GROUP BY
         A.dept_name,
         A.dept_id,
@@ -314,7 +325,14 @@
         sdl_b_schedule_detail A
         inner join sdl_b_schedule S on A.base_id =S.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and S.state=3
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='')
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            and A.month = #{ sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        and S.state=3
         -- AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date <![CDATA[ <= ]]> A.schedule_date
         -- AND h.end_date  <![CDATA[ >= ]]>  A.schedule_date )
         AND A.banci = '夜班' AND A.zizhi_id in (1,2,6,7)
@@ -323,26 +341,22 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
-            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
-        </if>
 
-        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
-        </if>
+
+
         ORDER BY A.schedule_date asc
     </select>
 
     <select id="findMenZhenReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        SET GLOBAL group_concat_max_len=102400;
-        SET SESSION group_concat_max_len=102400;
+        drop table if EXISTS tb2;
+        CREATE TEMPORARY TABLE tb2 AS
         SELECT
-        GROUP_CONCAT( id )
+        DISTINCT id
         FROM
         sdl_b_schedule
         WHERE
-        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom})
-        AND state = 3 INTO @baseids;
+        ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
+        AND state = 3 ;
 
         SELECT
         G.DEPT_ID,
@@ -365,10 +379,18 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
+        inner join tb2 on A.base_id =tb2.id
        --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id -- INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and LOCATE(A.base_id,@baseids)>0
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='')
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            and A.month = #{ sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        -- and LOCATE(A.base_id,@baseids)>0
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
         AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND (A.zizhi_id=1 or A.zizhi_id=6 )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
@@ -376,13 +398,9 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
-            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
-        </if>
 
-        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
-        </if>
+
+
         GROUP BY
         D.DEPT_ID,
         D.DEPT_NAME,
@@ -399,15 +417,15 @@
     </select>
 
     <select id="findMenZhenSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        SET GLOBAL group_concat_max_len=102400;
-        SET SESSION group_concat_max_len=102400;
+        drop table if EXISTS tb2;
+        CREATE TEMPORARY TABLE tb2 AS
         SELECT
-        GROUP_CONCAT( id )
+        DISTINCT id
         FROM
         sdl_b_schedule
         WHERE
-        ( date_format( start_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{sdlBScheduleDetail.scheduleDateFrom})
-        AND state = 3 INTO @baseids;
+        ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
+        AND state = 3 ;
 
         SELECT
         G.dept_name,
@@ -438,11 +456,19 @@
         A.zhicheng
         FROM
         sdl_b_schedule_detail A
+        inner join tb2 on A.base_id =tb2.id
         -- INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null or A.xulie='') and LOCATE(A.base_id,@baseids)>0
+        (A.xulie !='医技序列' or A.xulie is null or A.xulie='')
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            and A.month = #{ sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        -- and LOCATE(A.base_id,@baseids)>0
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
         AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND (A.zizhi_id=1 or A.zizhi_id=6 )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
@@ -450,13 +476,9 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
-            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
-        </if>
 
-        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
-        </if>
+
+
         GROUP BY
         A.dept_name,
         A.dept_id,
@@ -487,7 +509,14 @@
         sdl_b_schedule_detail A
         inner join sdl_b_schedule S on A.base_id =S.id
         WHERE
-        (A.xulie !='医技序列' or A.xulie is null) and S.state=3
+        (A.xulie !='医技序列' or A.xulie is null)
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND A.month = #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        and S.state=3
         AND NOT EXISTS ( SELECT h.id FROM sdl_d_holiday h WHERE h.start_date  <![CDATA[ <= ]]>  A.schedule_date AND h.end_date <![CDATA[ >= ]]> A.schedule_date )
         AND ( A.banci = '门诊班（上午）' || A.banci = '门诊班（下午）' ) AND (A.zizhi_id=1 or A.zizhi_id=6 )
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
@@ -495,13 +524,9 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
-            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
-        </if>
 
-        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
-            AND A.month =  #{sdlBScheduleDetail.scheduleDateFrom}
-        </if>
+
+
         ORDER BY A.schedule_date asc
     </select>
 

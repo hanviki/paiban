@@ -133,6 +133,9 @@ private static final long serialVersionUID=1L;
     @ExcelField(value ="月度")
         private  String month;
 
+    @ExcelField(value ="排班日期字符串")
+    private  String sch;
+
     /**
      * 排班人员账号
      */

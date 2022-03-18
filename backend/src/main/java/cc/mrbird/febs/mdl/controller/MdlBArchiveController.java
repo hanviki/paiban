@@ -87,7 +87,10 @@ public Map<String, Object> List(QueryRequest request, MdlBArchive mdlBArchive){
             queryWrapper.like(MdlBArchive::getFileName,mdlBArchive.getFileName());
         }
         if(StringUtils.isNotEmpty(mdlBArchive.getFileCode())){
-            queryWrapper.like(MdlBArchive::getFileCode,mdlBArchive.getFileCode());
+            queryWrapper.eq(MdlBArchive::getFileCode,mdlBArchive.getFileCode());
+        }
+        if(StringUtils.isNotEmpty(mdlBArchive.getFileType())){
+            queryWrapper.eq(MdlBArchive::getFileType,mdlBArchive.getFileType());
         }
         queryWrapper.eq(MdlBArchive::getIsDeletemark,1);
         return this.iMdlBArchiveService.list(queryWrapper);

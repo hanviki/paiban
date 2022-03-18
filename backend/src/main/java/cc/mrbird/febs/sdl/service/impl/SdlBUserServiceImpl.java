@@ -3,6 +3,7 @@ package cc.mrbird.febs.sdl.service.impl;
 import cc.mrbird.febs.common.domain.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.rfc.CustomUser;
+import cc.mrbird.febs.sdl.entity.CustomDept;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 import cc.mrbird.febs.sdl.dao.SdlBUserMapper;
 import cc.mrbird.febs.sdl.service.ISdlBControlService;
@@ -107,7 +108,8 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
             if (sdlBUser.getState() != null) {
                 queryWrapper.eq(SdlBUser::getState, sdlBUser.getState());
             }
-
+           // queryWrapper.eq(SdlBUser::getRylx,"职工");
+            queryWrapper.apply("sdl_b_user.yuangongzu!='规培' and sdl_b_user.yuangongzu!='博士后' and (sdl_b_user.renshizifw ='医师' or  (sdl_b_user.renshizifw='技术' and sdl_b_user.renshizfenlei='卫生'))");
             queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
             IPage<SdlBUser> page = new Page<>();
             page.setPages(1L);
@@ -132,9 +134,7 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
                         .like(SdlBUser::getUserAccountName, sdlBUser.getUserAccount()));
 
             }
-//            if (sdlBUser.getState()!=null) {
-//                queryWrapper.eq(SdlBUser::getState, sdlBUser.getState());
-//            }
+
             if (StringUtils.isNotBlank(sdlBUser.getDeptId())) {
                 queryWrapper.in(SdlBUser::getDeptId, deptIds);
                 // queryWrapper.apply("sdl_b_user.dept_id in (select t_dept.dept_id from t_dept where t_dept.DEPT_ID='"+sdlBUser.getDeptId()+"' or t_dept.PARENT_ID='"+sdlBUser.getDeptId()+"' )");
@@ -158,7 +158,61 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
                 List<String> states = Arrays.asList(sdlBUser.getAuditMan().replace("[", "").replace("]", "").replace("\"", "").split(","));
                 queryWrapper.in(SdlBUser::getState, states);
             }
-            //queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
+            queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
+
+
+            Page<SdlBUser> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            return this.page(page, queryWrapper);
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
+        }
+    }
+
+    /**
+     * 医师执业资质
+     * @param request
+     * @param sdlBUser
+     * @return
+     */
+    @Override
+    public IPage<SdlBUser> findSdlBUsersYwc2(QueryRequest request, SdlBUser sdlBUser) {
+        try {
+           // List<String> deptIds = this.deptMapper.getListIds(sdlBUser.getDeptId());
+            LambdaQueryWrapper<SdlBUser> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SdlBUser::getIsDeletemark, 1);//1是未删 0是已删
+
+            if (StringUtils.isNotBlank(sdlBUser.getUserAccount())) {
+                queryWrapper.and(wrap -> wrap.eq(SdlBUser::getUserAccount, sdlBUser.getUserAccount()).or()
+                        .like(SdlBUser::getUserAccountName, sdlBUser.getUserAccount()));
+
+            }
+
+            if (StringUtils.isNotBlank(sdlBUser.getDeptId())) {
+                queryWrapper.eq(SdlBUser::getDeptNew, sdlBUser.getDeptId());
+                // queryWrapper.apply("sdl_b_user.dept_id in (select t_dept.dept_id from t_dept where t_dept.DEPT_ID='"+sdlBUser.getDeptId()+"' or t_dept.PARENT_ID='"+sdlBUser.getDeptId()+"' )");
+            }
+            if (StringUtils.isNotBlank(sdlBUser.getSchoolDateFrom())) {
+                queryWrapper
+                        .ge(SdlBUser::getSchoolDate, sdlBUser.getSchoolDateFrom())
+                ;
+            }
+            if (StringUtils.isNotBlank(sdlBUser.getYishiZgzsbianhao())) {
+                queryWrapper.apply("(sdl_b_user.yishi_zgzsbianhao is null or sdl_b_user.yishi_zgzsbianhao='')");
+            }
+            if (StringUtils.isNotBlank(sdlBUser.getYishiZiyebianhao())) {
+                queryWrapper.apply("(sdl_b_user.yishi_ziyebianhao is null or sdl_b_user.yishi_ziyebianhao='')");
+            }
+            if (StringUtils.isNotBlank(sdlBUser.getSchoolDateTo())) {
+                queryWrapper.le(SdlBUser::getSchoolDate, sdlBUser.getSchoolDateTo());
+            }
+            queryWrapper.apply("sdl_b_user.yuangongzu!='规培' and sdl_b_user.yuangongzu!='博士后' and (sdl_b_user.renshizifw ='医师' or  (sdl_b_user.renshizifw='技术' and sdl_b_user.renshizfenlei='卫生'))");
+            if (StringUtils.isNotBlank(sdlBUser.getAuditMan())) {
+                List<String> states = Arrays.asList(sdlBUser.getAuditMan().replace("[", "").replace("]", "").replace("\"", "").split(","));
+                queryWrapper.in(SdlBUser::getState, states);
+            }
+            queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
 
 
             Page<SdlBUser> page = new Page<>();
@@ -173,7 +227,7 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
     @Override
     public IPage<SdlBUser> findSdlBUsersHz(QueryRequest request, SdlBUser sdlBUser) {
         try {
-            List<String> deptIds = this.deptMapper.getListIds(sdlBUser.getDeptId());
+           // List<String> deptIds = this.deptMapper.getListIds(sdlBUser.getDeptId());
             LambdaQueryWrapper<SdlBUser> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(SdlBUser::getIsDeletemark, 1);//1是未删 0是已删
 
@@ -186,7 +240,7 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
 //                queryWrapper.eq(SdlBUser::getState, sdlBUser.getState());
 //            }
             if (StringUtils.isNotBlank(sdlBUser.getDeptId())) {
-                queryWrapper.in(SdlBUser::getDeptId, deptIds);
+                queryWrapper.eq(SdlBUser::getDeptNew, sdlBUser.getDeptId());
                 // queryWrapper.apply("sdl_b_user.dept_id in (select t_dept.dept_id from t_dept where t_dept.DEPT_ID='"+sdlBUser.getDeptId()+"' or t_dept.PARENT_ID='"+sdlBUser.getDeptId()+"' )");
             }
             if (StringUtils.isNotBlank(sdlBUser.getSchoolDateFrom())) {
@@ -196,10 +250,10 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
             }
             if (StringUtils.isNotBlank(sdlBUser.getSexName())) { //单科会诊、多学科会诊
                 if(sdlBUser.getSexName().equals("单科会诊")){
-                    queryWrapper.in(SdlBUser::getZhicheng,"副高".split(","));
+                    queryWrapper.in(SdlBUser::getZhicheng,"副高,正高,中级".split(","));
                 }
                 else if(sdlBUser.getSexName().equals("多学科会诊")){
-                    queryWrapper.in(SdlBUser::getZhicheng,"正高".split(","));
+                    queryWrapper.apply(" (zhicheng in ('副高','正高') or  (doc_type ='医技' and zhicheng ='中级' )  or LENGTH(zyjs_np)>0 or  LENGTH(zyjs_npjx)>0) ");
                 }
             }
             if (StringUtils.isNotBlank(sdlBUser.getYishiZgzsbianhao())) {
@@ -216,7 +270,7 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
                 List<String> states = Arrays.asList(sdlBUser.getAuditMan().replace("[", "").replace("]", "").replace("\"", "").split(","));
                 queryWrapper.in(SdlBUser::getState, states);
             }
-            //queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
+            queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
 
 
             Page<SdlBUser> page = new Page<>();
@@ -262,7 +316,11 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
         List<String> list = Arrays.asList(Ids);
         this.baseMapper.deleteBatchIds(list);
     }
-
+    @Override
+    @Transactional
+    public List<CustomDept> getDeptNew(){
+        return this.baseMapper.getDeptNew();
+    }
     @Override
     @Transactional
     public List<CustomUser> getUserAccounts() {

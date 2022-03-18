@@ -177,6 +177,8 @@ public class RfcNoc {
                 user.setYishiZgzsbianhao((rfcReturn.getString("ZHRZGZS")).replace("0000-00-00",""));
                 user.setYishiZiyebianhao((rfcReturn.getString("ZHRZYZS")).replace("0000-00-00",""));
                 user.setPatentGood((rfcReturn.getString("KHXL")).replace("0000-00-00",""));
+                user.setDocType((rfcReturn.getString("DOC_TYPE")).replace("0000-00-00",""));
+                user.setDeptNew((rfcReturn.getString("DEPT_NEW")).replace("0000-00-00",""));
                 user.setState(Convert.toInt(rfcReturn.getString("STAT2")));
                 if(rfcReturn.getString("STAT2").equals("0")){
                     user.setDeptId("");

@@ -46,7 +46,9 @@ public IPage<MdlBArchive> findMdlBArchives(QueryRequest request, MdlBArchive mdl
         if (mdlBArchive.getState()!=null) {
         queryWrapper.eq(MdlBArchive::getState, mdlBArchive.getState());
         }
-
+                if (StringUtils.isNotBlank(mdlBArchive.getFileType())) {
+                        queryWrapper.eq(MdlBArchive::getFileType, mdlBArchive.getFileType());
+                }
                                 if (StringUtils.isNotBlank(mdlBArchive.getFileName())) {
                                 queryWrapper.like(MdlBArchive::getFileName, mdlBArchive.getFileName());
                                 }

@@ -11,6 +11,8 @@
                     <result column="user_account" property="userAccount"/>
                     <result column="user_account_name" property="userAccountName"/>
                     <result column="birthday" property="birthday"/>
+            <result column="tel" property="tel"/>
+            <result column="email" property="email"/>
                     <result column="file_id" property="fileId"/>
                     <result column="file_url" property="fileUrl"/>
                     <result column="state" property="state"/>
@@ -25,7 +27,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, dept_id, dept_name, type, user_account, user_account_name, birthday, file_id, file_url, state, IS_DELETEMARK, start_date, end_date, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, dept_id, dept_name, type, user_account, user_account_name, birthday, email, tel, file_id, file_url, state, IS_DELETEMARK, start_date, end_date, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBManager" parameterType="cc.mrbird.febs.mdl.entity.MdlBManager">
         update mdl_b_manager
@@ -36,6 +38,8 @@
 <if test="userAccount != null">user_account=#{userAccount},</if>
 <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
 <if test="birthday != null">birthday=#{birthday},</if>
+            <if test="tel != null">tel=#{tel},</if>
+            <if test="email != null">email=#{email},</if>
 <if test="fileId != null">file_id=#{fileId},</if>
 <if test="fileUrl != null">file_url=#{fileUrl},</if>
 <if test="state != null">state=#{state},</if>

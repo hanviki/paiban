@@ -19,8 +19,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.beust.jcommander.internal.Lists;
 import com.wuwenze.poi.ExcelKit;
@@ -45,7 +43,7 @@ import java.util.Map;
 /**
  *
  * @author viki
- * @since 2022-01-20
+ * @since 2022-03-16
  */
 @Slf4j
 @Validated
@@ -82,44 +80,6 @@ public Map<String, Object> List(QueryRequest request, MdlBSpecial mdlBSpecial){
         return getDataTable(this.iMdlBSpecialService.findMdlBSpecials(request, mdlBSpecial));
         }
 
-    @GetMapping("custom")
-    public Map<String, Object> ListCustom(QueryRequest request, MdlBSpecial mdlBSpecial){
-        User currentUser= FebsUtil.getCurrentUser();
-        mdlBSpecial.setUserAccount(currentUser.getUsername());
-        mdlBSpecial.setIsDeletemark(1);
-        request.setPageSize(100);
-        return getDataTable(this.iMdlBSpecialService.findMdlBSpecials(request, mdlBSpecial));
-    }
-    @Log("新增/按钮")
-    @PostMapping("addNew")
-    public void addDcaBAcademicCustom(@Valid String jsonStr,int state)throws FebsException{
-        try{
-            User currentUser=FebsUtil.getCurrentUser();
-            List<MdlBSpecial> list= JSON.parseObject(jsonStr,new TypeReference<List<MdlBSpecial>>(){
-            });
-            for(MdlBSpecial mdlBSpecial:list
-            ){
-                if(mdlBSpecial.getId()==null) {
-                    mdlBSpecial.setCreateUserId(currentUser.getUserId());
-                    mdlBSpecial.setUserAccount(currentUser.getUsername());
-                    mdlBSpecial.setUserAccountName(currentUser.getRealname());
-                    mdlBSpecial.setState(state);
-                    this.iMdlBSpecialService.createMdlBSpecial(mdlBSpecial);
-                }
-                else{
-                    mdlBSpecial.setModifyUserId(currentUser.getUserId());
-                    mdlBSpecial.setUserAccount(currentUser.getUsername());
-                    mdlBSpecial.setUserAccountName(currentUser.getRealname());
-                    mdlBSpecial.setState(state);
-                    this.iMdlBSpecialService.updateMdlBSpecial(mdlBSpecial);
-                }
-            }
-        }catch(Exception e){
-            message="新增/按钮失败";
-            log.error(message,e);
-            throw new FebsException(message);
-        }
-    }
 /**
  * 添加
  * @param  mdlBSpecial
@@ -131,6 +91,8 @@ public void addMdlBSpecial(@Valid MdlBSpecial mdlBSpecial)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
         mdlBSpecial.setCreateUserId(currentUser.getUserId());
+            mdlBSpecial.setUserAccount(currentUser.getUsername());
+            mdlBSpecial.setUserAccountName(currentUser.getRealname());
         this.iMdlBSpecialService.createMdlBSpecial(mdlBSpecial);
         }catch(Exception e){
         message="新增/按钮失败" ;
@@ -150,6 +112,8 @@ public void updateMdlBSpecial(@Valid MdlBSpecial mdlBSpecial)throws FebsExceptio
         try{
         User currentUser= FebsUtil.getCurrentUser();
       mdlBSpecial.setModifyUserId(currentUser.getUserId());
+            mdlBSpecial.setUserAccount(currentUser.getUsername());
+            mdlBSpecial.setUserAccountName(currentUser.getRealname());
         this.iMdlBSpecialService.updateMdlBSpecial(mdlBSpecial);
         }catch(Exception e){
         message="修改失败" ;

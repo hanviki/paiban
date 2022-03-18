@@ -10,6 +10,21 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
    <a-form :form="form">
+     <a-form-item v-bind="formItemLayout" label="文件类型">
+       <a-select
+        v-decorator="[
+            'fileType',
+            { rules: [{ required: true, message: '文件类型不能为空' }] },
+          ]"
+       >
+       <a-select-option value="麻精药物">
+         麻精药物
+       </a-select-option>
+        <a-select-option value="抗菌药物">
+         抗菌药物
+       </a-select-option>
+       </a-select>
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="文件名称">
         <a-input
           placeholder="请输入文件名称"
@@ -113,6 +128,7 @@ export default {
     },
     setFormValues({ ...mdlBArchive }) {
       let fields = [
+         "fileType",
         "fileName",
         "fileCode",
         "fileDate",

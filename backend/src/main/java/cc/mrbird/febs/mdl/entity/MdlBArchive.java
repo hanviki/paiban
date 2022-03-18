@@ -58,6 +58,10 @@ private static final long serialVersionUID=1L;
     private transient String fileDateFrom;
     private transient String fileDateTo;
 
+
+    @ExcelField(value ="文件类型")
+    private String fileType;
+
     /**
      * 备注
      */

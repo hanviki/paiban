@@ -138,7 +138,7 @@ export default {
       return [
          {
           title: "科室名称",
-          dataIndex: "deptName",
+          dataIndex: "deptNew",
           width: 150,
         },
           {
@@ -205,14 +205,16 @@ export default {
         delete this.queryParams.yishiZiyebianhao;
       }
     },
-    fetchDept() {
-      this.$get("dept/list", { parentId: "0" }).then((res) => {
+   fetchDept() {
+      this.$get("sdlBUser/deptNew", {  }).then((res) => {
         this.deptData = [];
-        this.deptData.push({
+         this.deptData.push({
           deptId: "-1",
           deptName: "全部",
         });
-        this.deptData.push(...res.data);
+       if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
       });
     },
     filterOption(input, option) {
@@ -354,7 +356,10 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlBUser/ywc", {
+       if(params.deptId=="-1"){
+        delete params.deptId
+      }
+      this.$get("sdlBUser/ywc2", {
         ...params,
       }).then((r) => {
         let data = r.data;

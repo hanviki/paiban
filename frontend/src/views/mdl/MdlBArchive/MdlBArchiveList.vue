@@ -14,6 +14,23 @@
                 <a-input v-model="queryParams.fileCode" />
               </a-form-item>
             </a-col>
+             <a-col :md="8" :sm="24">
+              <a-form-item label="文件类型" v-bind="formItemLayout">
+                <a-select
+         v-model="queryParams.fileType"
+       >
+        <a-select-option value="-1">
+         全部
+       </a-select-option>
+       <a-select-option value="麻精药物">
+         麻精药物
+       </a-select-option>
+        <a-select-option value="抗菌药物">
+         抗菌药物
+       </a-select-option>
+       </a-select>
+              </a-form-item>
+            </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -154,6 +171,11 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
+         {
+          title: "文件类型",
+          dataIndex: "fileType",
+          width: 100,
+        },
         {
           title: "文件名称",
           dataIndex: "fileName",
@@ -331,6 +353,9 @@ export default {
         // 如果分页信息为空，则设置为默认值
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
+      }
+      if(params.fileType=="-1"){
+        delete params.fileType
       }
       this.$get("mdlBArchive", {
         ...params,

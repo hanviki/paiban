@@ -1,6 +1,7 @@
 package cc.mrbird.febs.mdl.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -20,7 +21,7 @@ import cc.mrbird.febs.common.converter.*;
  * </p>
  *
  * @author viki
- * @since 2022-01-20
+ * @since 2022-03-16
  */
 
 @Excel("mdl_b_profession")
@@ -40,6 +41,22 @@ private static final long serialVersionUID=1L;
         
         @ExcelField(value ="行业资质名称")
     private String qlName;
+
+    /**
+     * 获得时间
+     */
+        
+        @ExcelField(value ="获得时间", writeConverter = DateConverter.class,readConverter = DateReadConverter.class)
+    private Date qlDate;
+    private transient String qlDateFrom;
+    private transient String qlDateTo;
+
+    /**
+     * 证书编号
+     */
+        
+        @ExcelField(value ="证书编号")
+    private String qlCode;
 
     /**
      * 发薪号
@@ -125,6 +142,10 @@ private static final long serialVersionUID=1L;
     public static final String ID ="id" ;
 
     public static final String QL_NAME ="ql_name" ;
+
+    public static final String QL_DATE ="ql_date" ;
+
+    public static final String QL_CODE ="ql_code" ;
 
     public static final String USER_ACCOUNT ="user_account" ;
 

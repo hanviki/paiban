@@ -9,40 +9,41 @@
     :visible="editVisiable"
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
-    <a-form :form="form">
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="专业资质名称">
-          <a-input
-            placeholder="请输入专业资质名称"
-            v-decorator="[
-              'qlName',
-              { rules: [{ required: true, message: '专业资质名称不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="附件ID">
-          <a-input
-            placeholder="请输入附件ID"
-            v-decorator="[
-              'fileId',
-              { rules: [{ required: true, message: '附件ID不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="附件地址">
-          <a-input
-            placeholder="请输入附件地址"
-            v-decorator="[
-              'fileUrl',
-              { rules: [{ required: true, message: '附件地址不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-col>
+ <a-form :form="form">
+      <a-form-item v-bind="formItemLayout" label="专业资质名称">
+        <a-input
+          placeholder="请输入专业资质名称"
+          v-decorator="[
+            'qlName',
+            { rules: [{ required: true, message: '专业资质名称不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="获得时间">
+        <a-date-picker
+          v-decorator="[
+            'qlDate',
+            { rules: [{ required: true, message: '获得时间不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="证书编号">
+        <a-input
+          placeholder="请输入证书编号"
+          v-decorator="[
+            'qlCode',
+            { rules: [{ required: true, message: '证书编号不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="附件">
+        <upload-single-file
+            ref="fileagent"
+            @uploadRemove="removeAgent_1"
+            @uploadSuc="uploadAgent_1"
+          >
+          </upload-single-file>
+      </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
       <a-popconfirm
@@ -61,18 +62,20 @@
 </template>
 <script>
 import moment from "moment";
+import UploadSingleFile from "../../common/uploadSingleFile"
 
 const formItemLayout = {
   labelCol: { span: 3 },
   wrapperCol: { span: 18 },
 };
 export default {
-  name: "MdlBSpecialEdit",
+  name: "mdlBSpecialEdit",
   props: {
     editVisiable: {
       default: false,
     },
   },
+  components: {UploadSingleFile},
   data() {
     return {
       loading: false,
@@ -84,15 +87,24 @@ export default {
   methods: {
     reset() {
       this.loading = false;
+       this.$refs.fileagent.reset();
       this.form.resetFields();
     },
     onClose() {
       this.reset();
       this.$emit("close");
     },
+     uploadAgent_1(fileId, fileUrl) {
+      this.mdlBSpecial.fileId = fileId;
+      this.mdlBSpecial.fileUrl = fileUrl;
+    },
+    removeAgent_1() {
+      this.mdlBSpecial.fileId = "";
+      this.mdlBSpecial.fileUrl = "";
+    },
     setFormValues({ ...mdlBSpecial }) {
-      let fields = ["qlName", "fileId", "fileUrl"];
-      let fieldDates = [];
+      let fields = ["qlName", "qlDate", "qlCode", "fileId", "fileUrl"];
+      let fieldDates = ["qlDate"];
       Object.keys(mdlBSpecial).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key);
@@ -110,7 +122,13 @@ export default {
           }
         }
       });
+       this.mdlBSpecial.fileId = mdlBSpecial.fileId;
+      this.mdlBSpecial.fileUrl = mdlBSpecial.fileUrl;
       this.mdlBSpecial.id = mdlBSpecial.id;
+      let that=this
+      setTimeout(()=>{
+        that.$refs.fileagent.setForm(mdlBSpecial.fileId);
+      },100)
     },
     handleSubmit() {
       this.form.validateFields((err, values) => {

@@ -182,6 +182,7 @@ export default {
           },
           width: 150,
         },
+        
         {
           title: "变更日期",
           dataIndex: "bgDate",

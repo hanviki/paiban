@@ -367,6 +367,9 @@
                     sortField = sortedInfo.field
                     sortOrder = sortedInfo.order
                 }
+                if (this.paginationInfo) {
+                    this.paginationInfo.current = this.pagination.defaultCurrent
+                }
                 this.fetch({
                     sortField: sortField,
                     sortOrder: sortOrder,

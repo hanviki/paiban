@@ -77,6 +77,12 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="出生年月")
     private String birthday;
 
+    @ExcelField(value ="电话号码")
+    private String tel;
+
+    @ExcelField(value ="邮箱")
+    private String email;
+
     /**
      * 附件ID
      */

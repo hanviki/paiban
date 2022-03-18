@@ -145,7 +145,7 @@ export default {
       return [
          {
           title: "科室名称",
-          dataIndex: "deptName",
+          dataIndex: "deptNew",
           width: 150,
         },
           {
@@ -163,30 +163,55 @@ export default {
           dataIndex: "birthday",
           width: 100,
         },
-           {
-          title: "身份证",
-          dataIndex: "idCard",
-          width: 150,
+          
+         {
+          title: "医师资格证书编号",
+          dataIndex: "yishiZgzsbianhao",
+          width: 100,
         },
-        
+         {
+          title: "医师执业证书编号",
+          dataIndex: "yishiZiyebianhao",
+          width: 100,
+        },
         {
           title: "职称",
           dataIndex: "zhicheng",
           width: 100,
         },
-        {
-          title: "操作",
-          dataIndex: "operation",
-          scopedSlots: { customRender: "operation" },
-          fixed: "right",
+         {
+          title: "教学职称",
+          dataIndex: "zyjsgw",
           width: 100,
         },
+        {
+          title: "临床职称",
+          dataIndex: "zyjsgwLc",
+          width: 100,
+        },
+         {
+          title: "内聘临床专业技术职务",
+          dataIndex: "zyjsNp",
+          width: 100,
+        },
+         {
+          title: "内聘教学专业技术职务",
+          dataIndex: "zyjsNpjx",
+          width: 100,
+        },
+        // {
+        //   title: "操作",
+        //   dataIndex: "operation",
+        //   scopedSlots: { customRender: "operation" },
+        //   fixed: "right",
+        //   width: 100,
+        // },
       ];
     },
   },
   mounted() {
     this.fetchDept();
-    this.fetch();
+    this.search();
   },
   methods: {
     onSelectChange(selectedRowKeys) {
@@ -213,13 +238,15 @@ export default {
       }
     },
     fetchDept() {
-      this.$get("dept/list", { parentId: "0" }).then((res) => {
+      this.$get("sdlBUser/deptNew", {  }).then((res) => {
         this.deptData = [];
-        this.deptData.push({
+         this.deptData.push({
           deptId: "-1",
           deptName: "全部",
         });
-        this.deptData.push(...res.data);
+       if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
       });
     },
     filterOption(input, option) {
@@ -313,6 +340,9 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
+      if (this.paginationInfo) {
+        this.paginationInfo.current = this.pagination.defaultCurrent
+      }
       let queryParams ={...this.queryParams};
       if(queryParams.deptId=='-1'){
         delete queryParams.deptId
@@ -342,6 +372,7 @@ export default {
     handleTableChange(pagination, filters, sorter) {
       this.sortedInfo = sorter;
       this.paginationInfo = pagination;
+      
       this.fetch({
         sortField: sorter.field,
         sortOrder: sorter.order,
@@ -361,7 +392,10 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlBUser/ywc", {
+       if(params.deptId=='-1'){
+        delete params.deptId
+      }
+      this.$get("sdlBUser/hz", {
         ...params,
       }).then((r) => {
         let data = r.data;

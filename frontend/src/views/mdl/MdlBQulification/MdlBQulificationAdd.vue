@@ -10,7 +10,7 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      
+    
          <a-form-item v-bind="formItemLayout" label="证件名称">
             <a-select style="width: 100%"  v-decorator="['qlName',{ rules: [{ required: true, message: '证件名称不能为空' }] },]">
               <a-select-option value="医疗机构执业许可"> 医疗机构执业许可 </a-select-option>
@@ -19,7 +19,7 @@
                 <a-select-option value="放射诊疗许可"> 放射诊疗许可 </a-select-option>
             </a-select>
           </a-form-item>
-    
+      
       <a-form-item v-bind="formItemLayout" label="发证日期">
         <a-date-picker
           v-decorator="[
@@ -45,7 +45,7 @@
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="附件">
+     <a-form-item v-bind="formItemLayout" label="附件">
         
         <upload-single-file
          ref="fileagent"
@@ -82,7 +82,7 @@ export default {
       default: false,
     },
   },
-  components: {UploadSingleFile},
+   components: {UploadSingleFile},
   data() {
     return {
       loading: false,
@@ -95,14 +95,14 @@ export default {
     reset() {
       this.loading = false;
       this.mdlBQulification = {};
-      this.$refs.fileagent.reset();
+       this.$refs.fileagent.reset();
       this.form.resetFields();
     },
     onClose() {
       this.reset();
       this.$emit("close");
     },
-    uploadAgent (fileId,fileUrl) {
+     uploadAgent (fileId,fileUrl) {
       this.mdlBQulification.fileId = fileId
       this.mdlBQulification.fileUrl = fileUrl
     },
@@ -133,6 +133,7 @@ export default {
         "fzDate",
         "bgDate",
         "bgItem",
+        "qlCode",
       ]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {

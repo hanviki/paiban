@@ -1,248 +1,251 @@
 <template>
-  <a-card title="行业类资质：临床医师获取的本专业培训等资质">
-    <div>
-      <a-button @click="handleAdd" type="primary" :loading="loading"
-        >添加行</a-button
-      >
-      <a-button @click="handleDelete" type="primary" :loading="loading"
-        >删除行</a-button
-      >
+  <a-card :bordered="false" class="card-area">
+    <div :class="advanced ? 'search' : null">
+      <a-form layout="horizontal">
+        <a-row>
+          <div :class="advanced ? null : 'fold'">
+            <a-col :md="8" :sm="24">
+             <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
+                <a-input v-model="queryParams.userAccount" />
+              </a-form-item>
+            </a-col>
+          </div>
+          <span style="float: right; margin-top: 3px">
+            <a-button type="primary" @click="search">查询</a-button>
+            <a-button style="margin-left: 8px" @click="reset">重置</a-button>
+            <a @click="toggleAdvanced" style="margin-left: 8px">
+              {{ advanced ? "收起" : "展开" }}
+              <a-icon :type="advanced ? 'up' : 'down'" />
+            </a>
+          </span>
+        </a-row>
+      </a-form>
     </div>
-    <a-table
-      :columns="columns"
-      :data-source="dataSource"
-      :rowKey="(record) => record.id"
-      :rowSelection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange,
-      }"
-      bordered
-    >
-      <template slot="qlName" slot-scope="text, record">
-        <div v-if="record.state == 3 || record.state == 1">
-          {{ text }}
-        </div>
-        <div v-else>
-          <a-input
-            @blur="(e) => inputChange(e.target.value, record, 'qlName')"
-            :value="record.qlName"
-          >
-          </a-input>
-        </div>
-      </template>
-     
-     
-      <template slot="fileId" slot-scope="text, record">
-        <div v-if="record.state == 3 || record.state == 1">
-          <a
-            :href="handleUrl(record.fileUrl)"
-            v-if="text != null && text != ''"
-            target="_blank"
-            >查看</a
-          >
-        </div>
-        <div v-else>
-          <a-button type="dashed" block @click="OpenFile(record)">
-            {{
-              record.fileId != null && record.fileId != "" ? "已上传" : "上传"
-            }}
+    <div>
+      <div class="operator">
+        <a-button
+         
+          type="primary"
+          ghost
+          @click="add"
+          >新增</a-button
+        >
+        <a-button
+         
+          @click="batchDelete"
+          >删除</a-button
+        >
+        <a-dropdown v-hasPermission="['mdlBProfession:export']">
+          <a-menu slot="overlay">
+            <a-menu-item key="export-data" @click="exportExcel"
+              >导出Excel</a-menu-item
+            >
+          </a-menu>
+          <a-button>
+            更多操作
+            <a-icon type="down" />
           </a-button>
-        </div>
-      </template>
-      <template slot="isUse" slot-scope="text, record">
-        <a-checkbox
-          @change="(e) => onIsUseChange(e, record, 'isUse')"
-          :checked="text"
-        ></a-checkbox>
-      </template>
-    </a-table>
-    <div>
-      <a-button @click="handleSave" type="primary" :loading="loading"
-        >保存草稿</a-button
+        </a-dropdown>
+        <import-excel
+          v-hasPermission="['mdlBProfession:import']"
+          templateUrl="mdlBProfession/downTemplate"
+          @succ="handleRefesh"
+          url="mdlBProfession/import"
+        >
+        </import-excel>
+      </div>
+      <!-- 表格区域 -->
+      <a-table
+        ref="TableInfo"
+        :columns="columns"
+        :rowKey="(record) => record.id"
+        :dataSource="dataSource"
+        :pagination="pagination"
+        :loading="loading"
+        :rowSelection="{
+          selectedRowKeys: selectedRowKeys,
+          onChange: onSelectChange,
+        }"
+        @change="handleTableChange"
+        :bordered="bordered"
+        :scroll="{ x: 900 }"
       >
-      <a-button @click="handleSubmit" type="primary" :loading="loading"
-        >提交</a-button
-      >
+        <template slot="remark" slot-scope="text, record">
+          <a-popover placement="topLeft">
+            <template slot="content">
+              <div style="max-width: 200px">{{ text }}</div>
+            </template>
+            <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
+          </a-popover>
+        </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-icon
+            
+            type="setting"
+            theme="twoTone"
+            twoToneColor="#4a9ff5"
+            @click="edit(record)"
+            title="修改"
+          ></a-icon>
+         
+        </template>
+      </a-table>
     </div>
-    <tableUpload-file
-      ref="upFile"
-      :fileId="editRecord.fileId"
-      :fileVisiable="fileVisiable"
-      @setFileId="setFileId"
+    <!-- 新增字典 -->
+    <mdlBProfession-add
+      @close="handleAddClose"
+      @success="handleAddSuccess"
+      :addVisiable="addVisiable"
     >
-    </tableUpload-file>
+    </mdlBProfession-add>
+    <!-- 修改字典 -->
+    <mdlBProfession-edit
+      ref="mdlBProfessionEdit"
+      @close="handleEditClose"
+      @success="handleEditSuccess"
+      :editVisiable="editVisiable"
+    >
+    </mdlBProfession-edit>
   </a-card>
 </template>
 
 <script>
+import MdlBProfessionAdd from "./MdlBProfessionAdd";
+import MdlBProfessionEdit from "./MdlBProfessionEdit";
+import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
-import TableUploadFile from "../../common/TableUploadFile";
+
+const formItemLayout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 15, offset: 1 },
+};
 export default {
+  name: "MdlBProfession",
+  components: { MdlBProfessionAdd, MdlBProfessionEdit, ImportExcel },
   data() {
     return {
-      dateFormat: "YYYY-MM-DD",
+      advanced: false,
       dataSource: [],
       selectedRowKeys: [],
-      loading: false,
-      CustomVisiable: false,
-      idNums: 10000,
-      fileVisiable: false,
-      editRecord: {
-        fileId: "",
+      sortedInfo: null,
+      paginationInfo: null,
+      formItemLayout,
+      pagination: {
+        pageSizeOptions: ["10", "20", "30", "40", "100"],
+        defaultCurrent: 1,
+        defaultPageSize: 10,
+        showQuickJumper: true,
+        showSizeChanger: true,
+        showTotal: (total, range) =>
+          `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
+      queryParams: {},
+      addVisiable: false,
+      editVisiable: false,
+      loading: false,
+      bordered: true,
     };
   },
-  components: { TableUploadFile },
+  computed: {
+    columns() {
+      let { sortedInfo } = this;
+      sortedInfo = sortedInfo || {};
+      return [
+         {
+          title: "发薪号",
+          dataIndex: "userAccount",
+          width: 100,
+        },
+        {
+          title: "姓名",
+          dataIndex: "userAccountName",
+          width: 100,
+        },
+        {
+          title: "行业资质名称",
+          dataIndex: "qlName",
+          width: 100,
+        },
+        {
+          title: "获得时间",
+          dataIndex: "qlDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+        {
+          title: "证书编号",
+          dataIndex: "qlCode",
+          width: 100,
+        },
+        {
+          title: "附件",
+          dataIndex: "fileId",
+          customRender: (text, row, index) => {
+            if (text != null && text != "") {
+              return (
+                <a href={this.$baseUrl + row.fileUrl} target="_blank">
+                  查看
+                </a>
+              );
+            }
+            return "";
+          },
+          width: 100,
+        },
+        {
+          title: "操作",
+          dataIndex: "operation",
+          scopedSlots: { customRender: "operation" },
+          fixed: "right",
+          width: 100,
+        },
+      ];
+    },
+  },
   mounted() {
     this.fetch();
   },
   methods: {
     moment,
-    handleUrl(url) {
-      return this.$baseUrl + url;
+    handleRefesh() {
+      this.search();
     },
-    showFile(record) {
-      window.location.href = record.fileUrl;
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys;
     },
-    OpenFile(record) {
-      this.editRecord = record;
-      this.fileVisiable = true;
-      if (record.fileId != undefined && record.fileId != "") {
-        this.$refs.upFile.fetch(record.fileId);
+    toggleAdvanced() {
+      this.advanced = !this.advanced;
+      if (!this.advanced) {
+        this.queryParams.comments = "";
       }
     },
-    setFileId(fileId, fileUrl) {
-      this.fileVisiable = false;
-      console.log(fileUrl);
-      /**
-                 const dataSource = [...this.dataSource]
-                 console.log(this.editRecord.id)
-                 let record=dataSource.filter(p=>p.id===this.editRecord.id)
-                 console.log(record)*/
-      this.editRecord["fileId"] = fileId;
-      this.editRecord["fileUrl"] = fileUrl;
-      //this.dataSource =[...dataSource]
+    handleAddSuccess() {
+      this.addVisiable = false;
+      this.$message.success("新增成功");
+      this.search();
     },
-    onSelectChange(selectedRowKeys, selectedRows) {
-      // console.log(selectedRows)
-      if (selectedRows.length > 0) {
-        if (selectedRows[0].state != 3 && selectedRows[0].state != 1) {
-          this.selectedRowKeys = selectedRowKeys;
-        }
-      } else {
-        this.selectedRowKeys = selectedRowKeys;
-      }
+    handleAddClose() {
+      this.addVisiable = false;
     },
-    handleChange(date, dateStr, record, filedName) {
-      const value = dateStr;
-      record[filedName] = value;
+    add() {
+      this.addVisiable = true;
     },
-    inputChange(value, record, filedName) {
-      console.info(value);
-      record[filedName] = value;
+    handleEditSuccess() {
+      this.editVisiable = false;
+      this.$message.success("修改成功");
+      this.search();
     },
-    handleSelectChange(value, option, record, filedName) {
-      console.info(value);
-      record[filedName] = value;
+    handleEditClose() {
+      this.editVisiable = false;
     },
-    onIsUseChange(e, record, filedName) {
-      record[filedName] = e.target.checked;
+    edit(record) {
+      this.$refs.mdlBProfessionEdit.setFormValues(record);
+      this.editVisiable = true;
     },
-    handleAdd() {
-      for (let i = 0; i < 4; i++) {
-        this.dataSource.push({
-            state: 0,
-          qlName: "",
-          fileId: "",
-          fileUrl: ""
-        });
-      }
-    },
-    handleSave() {
-      const dataSourceAll = [...this.dataSource];
-      const dataSource = dataSourceAll.filter(
-        (p) => p.state == 0 || p.state == 2
-      );
-      let dataAdd = [];
-      dataSource.forEach((element) => {
-        if (
-          element.qlName != "" ||
-          element.fileId != "" ||
-          element.fileUrl != ""
-        ) {
-          dataAdd.push(element);
-        }
-      });
-      if (dataAdd.length === 0) {
-        this.$message.warning("请填写数据！！！");
-      } else {
-        let jsonStr = JSON.stringify(dataAdd);
-        this.loading = true;
-        this.$post("mdlBSpecial/addNew", {
-          jsonStr: jsonStr,
-          state: 0,
-        })
-          .then(() => {
-            // this.reset()
-            this.$message.success("保存成功");
-            this.fetch();
-            this.loading = false;
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      }
-    },
-    handleSubmit() {
-      let that = this;
-      this.$confirm({
-        title: "确定提交全部记录?",
-        content: "当您点击确定按钮后，信息将不能修改",
-        centered: true,
-        onOk() {
-          const dataSourceAll = [...that.dataSource];
-          const dataSource = dataSourceAll.filter(
-            (p) => p.state == 0 || p.state == 2
-          );
-        
-          let dataAdd = [];
-          dataSource.forEach((element) => {
-            if (
-              element.qlName != "" ||
-              element.fileId != "" ||
-              element.fileUrl != ""
-            ) {
-              dataAdd.push(element);
-            }
-          });
-          if (dataAdd.length === 0) {
-            that.$message.warning("请填写数据！！！");
-          } else {
-            let jsonStr = JSON.stringify(dataAdd);
-            that.loading = true;
-            that
-              .$post("mdlBSpecial/addNew", {
-                jsonStr: jsonStr,
-                state: 1,
-              })
-              .then(() => {
-                //this.reset()
-                that.$message.success("提交成功");
-                that.fetch();
-                that.CustomVisiable = false; //提交之后 不能再修改
-                that.loading = false;
-              })
-              .catch(() => {
-                that.loading = false;
-              });
-          }
-        },
-        onCancel() {
-          that.selectedRowKeys = [];
-        },
-      });
-    },
-    handleDelete() {
+    batchDelete() {
       if (!this.selectedRowKeys.length) {
         this.$message.warning("请选择需要删除的记录");
         return;
@@ -253,78 +256,97 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let dcaBPatentIds = that.selectedRowKeys.join(",");
-          const dataSource = [...that.dataSource];
-          let new_dataSource = dataSource.filter(
-            (p) => that.selectedRowKeys.indexOf(p.id) < 0
-          );
-          that.dataSource = new_dataSource;
-          that.$message.success("删除成功");
-          that.selectedRowKeys = [];
+          let mdlBProfessionIds = that.selectedRowKeys.join(",");
+          that.$delete("mdlBProfession/" + mdlBProfessionIds).then(() => {
+            that.$message.success("删除成功");
+            that.selectedRowKeys = [];
+            that.search();
+          });
         },
         onCancel() {
           that.selectedRowKeys = [];
         },
       });
     },
-   
-    fetch() {
-      this.$get("mdlBSpecial/custom", {}).then((r) => {
-        let data = r.data;
-        this.dataSource = data.rows;
-
-        for (let i = 0; i < 4; i++) {
-          this.dataSource.push({
-            state: 0,
-            qlName: "",
-            fileId: "",
-            fileUrl: "",
-          });
-        }
+    exportExcel() {
+      let { sortedInfo } = this;
+      let sortField, sortOrder;
+      // 获取当前列的排序和列的过滤规则
+      if (sortedInfo) {
+        sortField = sortedInfo.field;
+        sortOrder = sortedInfo.order;
+      }
+      this.$export("mdlBProfession/excel", {
+        sortField: sortField,
+        sortOrder: sortOrder,
+        ...this.queryParams,
       });
     },
-  },
-  computed: {
-    columns() {
-      return [
-        {
-          title: "行业资质名称",
-          dataIndex: "qlName",
-          width: 300,
-          scopedSlots: { customRender: "qlName" },
-        },
-        {
-          title: "状态",
-          dataIndex: "state",
-          width: 100,
-          customRender: (text, row, index) => {
-            switch (text) {
-              case 0:
-                return <a-tag color="purple">未提交</a-tag>;
-              case 1:
-                return <a-tag color="green">已提交</a-tag>;
-              case 2:
-                return <a-tag color="red">审核未通过</a-tag>;
-              case 3:
-                return <a-tag color="#f50">已审核</a-tag>;
-              default:
-                return text;
-            }
-          },
-        },
-        //  {
-        //   title: "审核意见",
-        //   dataIndex: "auditSuggestion",
-        //   width: 200,
-        // },
-        {
-          title: "附件",
-          dataIndex: "fileId",
-          scopedSlots: { customRender: "fileId" },
-          width: 200,
-        },
-        
-      ];
+    search() {
+      let { sortedInfo } = this;
+      let sortField, sortOrder;
+      // 获取当前列的排序和列的过滤规则
+      if (sortedInfo) {
+        sortField = sortedInfo.field;
+        sortOrder = sortedInfo.order;
+      }
+      if (this.paginationInfo) {
+        this.paginationInfo.current = this.pagination.defaultCurrent;
+      }
+      this.fetch({
+        sortField: sortField,
+        sortOrder: sortOrder,
+        ...this.queryParams,
+      });
+    },
+    reset() {
+      // 取消选中
+      this.selectedRowKeys = [];
+      // 重置分页
+      this.$refs.TableInfo.pagination.current = this.pagination.defaultCurrent;
+      if (this.paginationInfo) {
+        this.paginationInfo.current = this.pagination.defaultCurrent;
+        this.paginationInfo.pageSize = this.pagination.defaultPageSize;
+      }
+      // 重置列排序规则
+      this.sortedInfo = null;
+      this.paginationInfo = null;
+      // 重置查询参数
+      this.queryParams = {};
+      this.fetch();
+    },
+    handleTableChange(pagination, filters, sorter) {
+      this.sortedInfo = sorter;
+      this.paginationInfo = pagination;
+      this.fetch({
+        sortField: sorter.field,
+        sortOrder: sorter.order,
+        ...this.queryParams,
+      });
+    },
+    fetch(params = {}) {
+      this.loading = true;
+      if (this.paginationInfo) {
+        // 如果分页信息不为空，则设置表格当前第几页，每页条数，并设置查询分页参数
+        this.$refs.TableInfo.pagination.current = this.paginationInfo.current;
+        this.$refs.TableInfo.pagination.pageSize = this.paginationInfo.pageSize;
+        params.pageSize = this.paginationInfo.pageSize;
+        params.pageNum = this.paginationInfo.current;
+      } else {
+        // 如果分页信息为空，则设置为默认值
+        params.pageSize = this.pagination.defaultPageSize;
+        params.pageNum = this.pagination.defaultCurrent;
+      }
+      this.$get("mdlBProfession", {
+        ...params,
+      }).then((r) => {
+        let data = r.data;
+        const pagination = { ...this.pagination };
+        pagination.total = data.total;
+        this.loading = false;
+        this.dataSource = data.rows;
+        this.pagination = pagination;
+      });
     },
   },
 };

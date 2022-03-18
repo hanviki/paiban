@@ -56,6 +56,12 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="发薪号")
     private String userAccount;
 
+    @ExcelField(value ="职称")
+    private String zhicheng;
+
+    @ExcelField(value ="部门")
+    private String deptNew;
+
     /**
      * 培训日期
      */
@@ -64,6 +70,15 @@ private static final long serialVersionUID=1L;
     private Date trainDate;
     private transient String trainDateFrom;
     private transient String trainDateTo;
+
+    /**
+     * 授权日期
+     */
+
+    @ExcelField(value ="授权日期", writeConverter = DateConverter.class,readConverter = DateReadConverter.class)
+    private Date powerDate;
+    private transient String powerDateFrom;
+    private transient String tpowerDateTo;
 
     /**
      * 考核分数
@@ -179,7 +194,10 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="修改人")
     private Long modifyUserId;
 
+    private transient  String deptName;
+    private  transient  String yishiZgzsbianhao;
 
+    private  transient  String yishiZiyebianhao;
 
     public static final String ID ="id" ;
 

@@ -27,6 +27,7 @@
             </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
+            <a-button  @click="exportExcel">导出</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
             <a @click="toggleAdvanced" style="margin-left: 8px">
@@ -37,19 +38,7 @@
         </a-row>
       </a-form>
     </div>
-    <div>
-      <div class="operator">
-        <a-button
-         
-          type="primary"
-          ghost
-          @click="add"
-          >新增{{ type }}</a-button
-        >
-        <a-button  @click="batchDelete"
-          >删除</a-button
-        >
-      </div>
+    
       <!-- 表格区域 -->
       <a-table
         ref="TableInfo"
@@ -74,42 +63,15 @@
             <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
           </a-popover>
         </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-icon
-           
-            type="setting"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="edit(record)"
-            title="修改"
-          ></a-icon>
-         
-        </template>
+       
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <mdlBChufang-add
-      :type="type"
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </mdlBChufang-add>
-    <!-- 修改字典 -->
-    <mdlBChufang-edit
-      :type="type"
-      ref="mdlBChufangEdit"
-      @close="handleEditClose"
-      @success="handleEditSuccess"
-      :editVisiable="editVisiable"
-    >
-    </mdlBChufang-edit>
+    
   </a-card>
 </template>
 
 <script>
-import MdlBChufangAdd from "./MdlBChufangAdd";
-import MdlBChufangEdit from "./MdlBChufangEdit";
 import moment from "moment";
 
 const formItemLayout = {
@@ -118,7 +80,7 @@ const formItemLayout = {
 };
 export default {
   name: "MdlBChufang",
-  components: { MdlBChufangAdd, MdlBChufangEdit },
+  components: {  },
   data() {
     return {
       advanced: false,
@@ -153,7 +115,7 @@ export default {
     columns() {
       let { sortedInfo, type } = this;
       sortedInfo = sortedInfo || {};
-      if (type === "考试管理") {
+    
         return [
           {
             title: "发薪号",
@@ -161,23 +123,23 @@ export default {
             width: 100,
           },
           {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-           {
             title: "姓名",
             dataIndex: "userAccountName",
             width: 100,
           },
             {
             title: "科室",
-            dataIndex: "deptNew",
+            dataIndex: "deptName",
             width: 100,
           },
            {
-            title: "职称",
-            dataIndex: "zhicheng",
+            title: "医师资格证书",
+            dataIndex: "yishiZgzsbianhao",
+            width: 100,
+          },
+            {
+            title: "医师执业证书",
+            dataIndex: "yishiZgzsbianhao",
             width: 100,
           },
           {
@@ -198,198 +160,15 @@ export default {
             title: "考核结果",
             dataIndex: "exiamResult",
             width: 100,
-          },
-          
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
+          }
+         
         ];
-      } else if (type === "麻精药物处方权") {
-        return [
-          {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
-          },
-          {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-  {
-            title: "科室",
-            dataIndex: "deptNew",
-            width: 100,
-          },
-           {
-            title: "职称",
-            dataIndex: "zhicheng",
-            width: 100,
-          },
-          {
-            title: "是否处方",
-            dataIndex: "isChufang",
-            width: 100,
-          },
-           {
-            title: "授权日期",
-            dataIndex: "powerDate",
-            customRender: (text, row, index) => {
-              if (text == null) return "";
-              return moment(text).format("YYYY-MM-DD");
-            },
-            width: 100,
-          },
-          {
-            title: "考试日期",
-            dataIndex: "trainDate",
-            customRender: (text, row, index) => {
-              if (text == null) return "";
-              return moment(text).format("YYYY-MM-DD");
-            },
-            width: 100,
-          },
-          {
-            title: "考核分数",
-            dataIndex: "exiamScore",
-            width: 100,
-          },
-          {
-            title: "考核结果",
-            dataIndex: "exiamResult",
-            width: 100,
-          },
-{
-            title: "授权文件名称",
-            dataIndex: "archiveName",
-            width: 100,
-          },
-          {
-            title: "授权文件编码",
-            dataIndex: "archiveCode",
-            width: 100,
-          },
-          {
-            title: "附件ID",
-            dataIndex: "fileId",
-            width: 100,
-            customRender: (text, row, index) => {
-              if (text != null && text != "") {
-                return (
-                  <a href={this.handleUrl(row.fileUrl)} target="_blank">
-                    查看
-                  </a>
-                );
-              }
-              return "";
-            },
-          },
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      } else {
-        return [
-          {
-            title: "发薪号",
-            dataIndex: "userAccount",
-            width: 100,
-          },
-          {
-            title: "姓名",
-            dataIndex: "userAccountName",
-            width: 100,
-          },
-  {
-            title: "科室",
-            dataIndex: "deptNew",
-            width: 100,
-          },
-           {
-            title: "职称",
-            dataIndex: "zhicheng",
-            width: 100,
-          },
-          {
-            title: "级别",
-            dataIndex: "level",
-            width: 100,
-          },
-           {
-            title: "授权日期",
-            dataIndex: "powerDate",
-            customRender: (text, row, index) => {
-              if (text == null) return "";
-              return moment(text).format("YYYY-MM-DD");
-            },
-            width: 100,
-          },
-          {
-            title: "考试日期",
-            dataIndex: "trainDate",
-            customRender: (text, row, index) => {
-              if (text == null) return "";
-              return moment(text).format("YYYY-MM-DD");
-            },
-            width: 100,
-          },
-          {
-            title: "考核分数",
-            dataIndex: "exiamScore",
-            width: 100,
-          },
-          {
-            title: "考核结果",
-            dataIndex: "exiamResult",
-            width: 100,
-          },
-          {
-            title: "授权文件名称",
-            dataIndex: "archiveName",
-            width: 100,
-          },
-          {
-            title: "授权文件编码",
-            dataIndex: "archiveCode",
-            width: 100,
-          },
-
-          {
-            title: "附件ID",
-            dataIndex: "fileId",
-            width: 100,
-            customRender: (text, row, index) => {
-              if (text != null && text != "") {
-                return (
-                  <a href={this.handleUrl(row.fileUrl)} target="_blank">
-                    查看
-                  </a>
-                );
-              }
-              return "";
-            },
-          },
-          {
-            title: "操作",
-            dataIndex: "operation",
-            scopedSlots: { customRender: "operation" },
-            fixed: "right",
-            width: 100,
-          },
-        ];
-      }
-    },
+  
+  
+    }
   },
   mounted() {
-    this.search();
+    this.fetch();
     this.fetchDept();
   },
   methods: {
@@ -455,14 +234,25 @@ export default {
         },
       });
     },
-    filterOption(input, option) {
+    exportExcel () {
+     
+      let json = this.columns
+     // json.splice(this.columns.length - 1, 1) //移出第一个
+      let dataJson = JSON.stringify(json)
+
+      this.$export('mdlBChufang/excelChuFang', {
+        dataJson: dataJson,
+        id: this.id
+      })
+     },
+      filterOption(input, option) {
       return (
         option.componentOptions.children[0].text
           .toLowerCase()
           .indexOf(input.toLowerCase()) >= 0
       );
     },
-    fetchDept() {
+     fetchDept() {
       this.$get("sdlBUser/deptNew", {  }).then((res) => {
         this.deptData = [];
          this.deptData.push({
@@ -472,20 +262,6 @@ export default {
          if(res.data[0]!=null){
          this.deptData.push(...res.data);
         }
-      });
-    },
-    exportExcel() {
-      let { sortedInfo } = this;
-      let sortField, sortOrder;
-      // 获取当前列的排序和列的过滤规则
-      if (sortedInfo) {
-        sortField = sortedInfo.field;
-        sortOrder = sortedInfo.order;
-      }
-      this.$export("mdlBChufang/excel", {
-        sortField: sortField,
-        sortOrder: sortOrder,
-        ...this.queryParams,
       });
     },
     search() {
@@ -540,11 +316,10 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      if(params.deptNew=="-1"){
+       if(params.deptNew=="-1"){
         delete params.deptNew
       }
-      this.$get("mdlBChufang", {
-        type: this.type,
+      this.$get("mdlBChufang/chufang", {
         ...params,
       }).then((r) => {
         let data = r.data;

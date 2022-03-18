@@ -11,4 +11,10 @@ public class SdlBUserSearch {
     private String birthday;
 
     private String id;
+
+    private String deptNew;
+
+    private String tel;
+
+    private String zhicheng;
 }

@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
  * </p>
  *
  * @author viki
- * @since 2022-01-20
+ * @since 2022-03-16
  */
 public interface IMdlBProfessionService extends IService<MdlBProfession> {
 

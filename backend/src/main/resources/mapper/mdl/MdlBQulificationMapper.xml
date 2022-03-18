@@ -9,6 +9,7 @@
                     <result column="fz_date" property="fzDate"/>
                     <result column="bg_date" property="bgDate"/>
                     <result column="bg_item" property="bgItem"/>
+                    <result column="ql_code" property="qlCode"/>
                     <result column="file_id" property="fileId"/>
                     <result column="file_url" property="fileUrl"/>
                     <result column="state" property="state"/>
@@ -21,7 +22,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, ql_name, fz_date, bg_date, bg_item, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, ql_name, fz_date, bg_date, bg_item, ql_code, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBQulification" parameterType="cc.mrbird.febs.mdl.entity.MdlBQulification">
         update mdl_b_qulification
@@ -30,6 +31,7 @@
 <if test="fzDate != null">fz_date=#{fzDate},</if>
 <if test="bgDate != null">bg_date=#{bgDate},</if>
 <if test="bgItem != null">bg_item=#{bgItem},</if>
+<if test="qlCode != null">ql_code=#{qlCode},</if>
 <if test="fileId != null">file_id=#{fileId},</if>
 <if test="fileUrl != null">file_url=#{fileUrl},</if>
 <if test="state != null">state=#{state},</if>
@@ -59,6 +61,7 @@
             AND  mdl_b_qulification.bg_date <![CDATA[ <= ]]>  #{mdlBQulification.bgDateTo}
         </if>
             <if test="mdlBQulification.bgItem != null and mdlBQulification.bgItem != ''"> and  mdl_b_qulification.bg_item like concat('%', #{ mdlBQulification.bgItem} ,'%')</if>
+            <if test="mdlBQulification.qlCode != null and mdlBQulification.qlCode != ''"> and  mdl_b_qulification.ql_code like concat('%', #{ mdlBQulification.qlCode} ,'%')</if>
             <if test="mdlBQulification.fileId != null and mdlBQulification.fileId != ''"> and  mdl_b_qulification.file_id like concat('%', #{ mdlBQulification.fileId} ,'%')</if>
             <if test="mdlBQulification.fileUrl != null and mdlBQulification.fileUrl != ''"> and  mdl_b_qulification.file_url like concat('%', #{ mdlBQulification.fileUrl} ,'%')</if>
         <if test="mdlBQulification.state != null"> and  mdl_b_qulification.state =#{ mdlBQulification.state} </if>

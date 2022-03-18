@@ -546,15 +546,15 @@ private static final long serialVersionUID=1L;
      * 担(兼)任党政职务
      */
         
-        @ExcelField(value ="担(兼)任党政职务")
-    private String djrdzzw;
+        @ExcelField(value ="新科室")
+    private String deptNew;
 
     /**
      * 是否通过初级考核
      */
         
         @ExcelField(value ="是否通过初级考核")
-    private Boolean isChujikh;
+    private String docType;
 
     /**
      * 通过初级考核时间

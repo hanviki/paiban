@@ -73,8 +73,8 @@
                     <result column="auditSuggestion" property="auditSuggestion"/>
                     <result column="file_id_lc" property="fileIdLc"/>
                     <result column="file_url_lc" property="fileUrlLc"/>
-                    <result column="djrdzzw" property="djrdzzw"/>
-                    <result column="is_chujikh" property="isChujikh"/>
+                    <result column="dept_new" property="deptNew"/>
+                    <result column="doc_type" property="docType"/>
                     <result column="chujikh_date" property="chujikhDate"/>
                     <result column="is_zhongjikh" property="isZhongjikh"/>
                     <result column="zhongjikh_date" property="zhongjikhDate"/>
@@ -89,7 +89,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, user_account_name, user_account, bq_name, user_type, user_type_name, dept_id, telephone, dept_name, position_name, np_position_name, rylx, yggh, gh_hk, sex_name, qualify_no, birthday, school_date, zyjsgw, bianhao_jx, zyjsgw_lc, xcszyjzc, appointed_date, appointed_date_lc, zizu, yuangongzu, xrgwjb, xrgwjbprsj, zhicheng, zyjs_np, zyjs_date_np, zyjs_npjx, zyjs_date_npjx, edu, edu_school, guoji, minzu, jiguan, political_status, bianhao_lc, xingzhengjiebie, id_card, work_date, yishi_lb, yishi_jb, yishi_zhiyefanwei, yishi_zgzsbianhao, yishi_ziyebianhao, renshizifw, renshizfenlei, is_authority, file_id, IsUse, file_url, patent_good, patent_ranknum, state, IS_DELETEMARK, CREATE_TIME, display_index, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, auditMan, auditManName, auditDate, auditSuggestion, file_id_lc, file_url_lc, djrdzzw, is_chujikh, chujikh_date, is_zhongjikh, zhongjikh_date, staff_date, picture_id, picture_url, gqpxqk, gfhyspxqk, zjspnlceqk, dca_year
+        id, user_account_name, user_account, bq_name, user_type, user_type_name, dept_id, telephone, dept_name, position_name, np_position_name, rylx, yggh, gh_hk, sex_name, qualify_no, birthday, school_date, zyjsgw, bianhao_jx, zyjsgw_lc, xcszyjzc, appointed_date, appointed_date_lc, zizu, yuangongzu, xrgwjb, xrgwjbprsj, zhicheng, zyjs_np, zyjs_date_np, zyjs_npjx, zyjs_date_npjx, edu, edu_school, guoji, minzu, jiguan, political_status, bianhao_lc, xingzhengjiebie, id_card, work_date, yishi_lb, yishi_jb, yishi_zhiyefanwei, yishi_zgzsbianhao, yishi_ziyebianhao, renshizifw, renshizfenlei, is_authority, file_id, IsUse, file_url, patent_good, patent_ranknum, state, IS_DELETEMARK, CREATE_TIME, display_index, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, auditMan, auditManName, auditDate, auditSuggestion, file_id_lc, file_url_lc, dept_new, doc_type, chujikh_date, is_zhongjikh, zhongjikh_date, staff_date, picture_id, picture_url, gqpxqk, gfhyspxqk, zjspnlceqk, dca_year
     </sql>
     <update id="updateSdlBUser" parameterType="cc.mrbird.febs.sdl.entity.SdlBUser">
         update sdl_b_user
@@ -162,8 +162,8 @@
 <if test="auditSuggestion != null">auditSuggestion=#{auditSuggestion},</if>
 <if test="fileIdLc != null">file_id_lc=#{fileIdLc},</if>
 <if test="fileUrlLc != null">file_url_lc=#{fileUrlLc},</if>
-<if test="djrdzzw != null">djrdzzw=#{djrdzzw},</if>
-<if test="isChujikh != null">is_chujikh=#{isChujikh},</if>
+<if test="deptNew != null">dept_new=#{deptNew},</if>
+<if test="docType != null">doc_type=#{docType},</if>
 <if test="chujikhDate != null">chujikh_date=#{chujikhDate},</if>
 <if test="isZhongjikh != null">is_zhongjikh=#{isZhongjikh},</if>
 <if test="zhongjikhDate != null">zhongjikh_date=#{zhongjikhDate},</if>
@@ -262,7 +262,7 @@
             <if test="sdlBUser.auditSuggestion != null and sdlBUser.auditSuggestion != ''"> and  sdl_b_user.auditSuggestion like concat('%', #{ sdlBUser.auditSuggestion} ,'%')</if>
             <if test="sdlBUser.fileIdLc != null and sdlBUser.fileIdLc != ''"> and  sdl_b_user.file_id_lc like concat('%', #{ sdlBUser.fileIdLc} ,'%')</if>
             <if test="sdlBUser.fileUrlLc != null and sdlBUser.fileUrlLc != ''"> and  sdl_b_user.file_url_lc like concat('%', #{ sdlBUser.fileUrlLc} ,'%')</if>
-            <if test="sdlBUser.djrdzzw != null and sdlBUser.djrdzzw != ''"> and  sdl_b_user.djrdzzw like concat('%', #{ sdlBUser.djrdzzw} ,'%')</if>
+            <if test="sdlBUser.deptNew != null and sdlBUser.deptNew != ''"> and  sdl_b_user.dept_new like concat('%', #{ sdlBUser.deptNew} ,'%')</if>
             <if test="sdlBUser.chujikhDate != null and sdlBUser.chujikhDate != ''"> and  sdl_b_user.chujikh_date like concat('%', #{ sdlBUser.chujikhDate} ,'%')</if>
             <if test="sdlBUser.zhongjikhDate != null and sdlBUser.zhongjikhDate != ''"> and  sdl_b_user.zhongjikh_date like concat('%', #{ sdlBUser.zhongjikhDate} ,'%')</if>
             <if test="sdlBUser.staffDate != null and sdlBUser.staffDate != ''"> and  sdl_b_user.staff_date like concat('%', #{ sdlBUser.staffDate} ,'%')</if>
@@ -282,5 +282,8 @@
         </foreach>
         and state!=0
 
+    </select>
+    <select id="getDeptNew" resultType="cc.mrbird.febs.sdl.entity.CustomDept">
+        SELECT DISTINCT dept_new AS dept_name,dept_new As dept_id from sdl_b_user where length(dept_new)>0
     </select>
 </mapper>

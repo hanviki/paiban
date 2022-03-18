@@ -4,7 +4,7 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
+            <a-col :md="5" :sm="24">
                  <a-form-item v-bind="formItemLayout" label="科室">
                 <a-select v-model="queryParams.deptId"
                   option-filter-prop="children"
@@ -19,7 +19,31 @@
                   </a-select-option>
                 </a-select>
               </a-form-item>
+              
             </a-col>
+            <a-col :md="5" :sm="24">
+             <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
+                <a-input v-model="queryParams.userAccount" />
+              </a-form-item>
+            </a-col>
+             <a-col :md="7" :sm="24">
+              <a-form-item label="变更日期" v-bind="formItemLayout2">
+                 <a-date-picker style="width:45%"
+          @change="handleStartDateChange"
+        />-<a-date-picker style="width:45%"
+          @change="handleEndDateChange"
+        />
+              </a-form-item>
+              </a-col>
+               <a-col :md="7" :sm="24">
+              <a-form-item label="任职时间" v-bind="formItemLayout2">
+                  <a-date-picker
+          @change="handleRzChange" style="width:45%"
+        />-<a-date-picker style="width:45%"
+          @change="handleRzEndChange"
+        />
+              </a-form-item>
+               </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -123,9 +147,13 @@ import MdlBManagerAdd from "./MdlBManagerAdd";
 import MdlBManagerEdit from "./MdlBManagerEdit";
 import moment from "moment";
 
+const formItemLayout2 = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 18 },
+};
 const formItemLayout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 15, offset: 1 },
+  wrapperCol: { span: 16 },
 };
 export default {
   name: "MdlBManager",
@@ -138,6 +166,7 @@ export default {
       sortedInfo: null,
       paginationInfo: null,
       formItemLayout,
+      formItemLayout2,
       pagination: {
         pageSizeOptions: ["10", "20", "30", "40", "100"],
         defaultCurrent: 1,
@@ -167,7 +196,7 @@ export default {
       return [
         {
           title: "科室名称",
-          dataIndex: "deptName",
+          dataIndex: "deptId",
           width: 100,
         },
         {
@@ -188,6 +217,16 @@ export default {
         {
           title: "出生年月",
           dataIndex: "birthday",
+          width: 100,
+        },
+        {
+          title: "手机号",
+          dataIndex: "tel",
+          width: 100,
+        },
+        {
+          title: "电子邮箱",
+          dataIndex: "email",
           width: 100,
         },
          {
@@ -230,13 +269,15 @@ export default {
       this.search();
     },
     fetchDept() {
-      this.$get("dept/list", { parentId: "0" }).then((res) => {
+      this.$get("sdlBUser/deptNew", {  }).then((res) => {
         this.deptData = [];
          this.deptData.push({
           deptId: "-1",
           deptName: "全部",
         });
-        this.deptData.push(...res.data);
+       if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
       });
     },
     filterOption(input, option) {
@@ -248,6 +289,38 @@ export default {
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
+    },
+    handleStartDateChange(value) {
+      if(value==null){
+         delete this.queryParams.modifyTimeFrom
+      }
+      else{
+        this.queryParams.modifyTimeFrom = moment(value).format("YYYY-MM-DD");
+      }
+    },
+    handleEndDateChange(value) {
+      if(value==null){
+         delete this.queryParams.modifyTimeTo
+      }
+      else{
+      this.queryParams.modifyTimeTo = moment(value).format("YYYY-MM-DD");
+      }
+    },
+    handleRzChange(value){
+      if(value==null){
+        delete this.queryParams.startDateFrom
+      }
+      else{
+        this.queryParams.startDateFrom = moment(value).format("YYYY-MM-DD");
+      }
+    },
+      handleRzEndChange(value){
+      if(value==null){
+        delete this.queryParams.startDateTo
+      }
+      else{
+        this.queryParams.startDateTo = moment(value).format("YYYY-MM-DD");
+      }
     },
     toggleAdvanced() {
       this.advanced = !this.advanced;
@@ -370,6 +443,9 @@ export default {
         // 如果分页信息为空，则设置为默认值
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
+      }
+       if(params.deptId=="-1"){
+        delete params.deptId
       }
       this.$get("mdlBManager", {
         type: this.type,

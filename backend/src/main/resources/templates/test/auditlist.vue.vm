@@ -286,6 +286,7 @@
                     sortField = sortedInfo.field
                     sortOrder = sortedInfo.order
                 }
+
                 this.fetch({
                     sortField: "userAccount",
                     sortOrder: "descend",

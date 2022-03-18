@@ -19,23 +19,30 @@
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="附件ID">
-        <a-input
-          placeholder="请输入附件ID"
+      <a-form-item v-bind="formItemLayout" label="获得时间">
+        <a-date-picker
           v-decorator="[
-            'fileId',
-            { rules: [{ required: true, message: '附件ID不能为空' }] },
+            'qlDate',
+            { rules: [{ required: true, message: '获得时间不能为空' }] },
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="附件地址">
+      <a-form-item v-bind="formItemLayout" label="证书编号">
         <a-input
-          placeholder="请输入附件地址"
+          placeholder="请输入证书编号"
           v-decorator="[
-            'fileUrl',
-            { rules: [{ required: true, message: '附件地址不能为空' }] },
+            'qlCode',
+            { rules: [{ required: true, message: '证书编号不能为空' }] },
           ]"
         />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="附件">
+        <upload-single-file
+            ref="fileagent"
+            @uploadRemove="removeAgent_1"
+            @uploadSuc="uploadAgent_1"
+          >
+          </upload-single-file>
       </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
@@ -58,13 +65,15 @@ const formItemLayout = {
   labelCol: { span: 3 },
   wrapperCol: { span: 18 },
 };
+import UploadSingleFile from "../../common/uploadSingleFile"
 export default {
-  name: "MdlBSpecialAdd",
+  name: "mdlBSpecialAdd",
   props: {
     addVisiable: {
       default: false,
     },
   },
+  components: { UploadSingleFile },
   data() {
     return {
       loading: false,
@@ -77,11 +86,20 @@ export default {
     reset() {
       this.loading = false;
       this.mdlBSpecial = {};
+       this.$refs.fileagent.reset();
       this.form.resetFields();
     },
     onClose() {
       this.reset();
       this.$emit("close");
+    },
+    uploadAgent_1(fileId, fileUrl) {
+      this.mdlBSpecial.fileId = fileId;
+      this.mdlBSpecial.fileUrl = fileUrl;
+    },
+    removeAgent_1() {
+      this.mdlBSpecial.fileId = "";
+      this.mdlBSpecial.fileUrl = "";
     },
     handleSubmit() {
       this.form.validateFields((err, values) => {
@@ -101,7 +119,11 @@ export default {
       });
     },
     setFields() {
-      let values = this.form.getFieldsValue(["qlName", "fileId", "fileUrl"]);
+      let values = this.form.getFieldsValue([
+        "qlName",
+        "qlDate",
+        "qlCode"
+      ]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {
           this.mdlBSpecial[_key] = values[_key];

@@ -10,26 +10,7 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
       <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="科室">
-        <a-select
-          v-decorator="[
-            'deptId',
-            { rules: [{ required: true, message: '科室不能为空' }] },
-          ]"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          show-search
-          @change="deptChange"
-        >
-          <a-select-option
-            v-for="d in deptData"
-            :key="d.deptName"
-            :value="`${d.deptId}`"
-          >
-            {{ d.deptName }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
+     
       <a-form-item v-bind="formItemLayout" label="人员">
         <a-select
           v-decorator="[
@@ -50,6 +31,15 @@
           </a-select-option>
         </a-select>
       </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="科室">
+        <a-input
+          placeholder="请输入科室"
+          disabled
+          v-decorator="[
+            'deptId',
+          ]"
+        />
+      </a-form-item>
         <a-form-item v-bind="formItemLayout" label="姓名">
        <a-input
           disabled
@@ -64,6 +54,24 @@
           disabled
           v-decorator="[
             'birthday',
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="手机号">
+        <a-input
+          placeholder="请输入手机号"
+        
+          v-decorator="[
+            'tel',
+          ]"
+        />
+      </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="电子邮箱">
+        <a-input
+          placeholder="请输入电子邮箱"
+        
+          v-decorator="[
+            'email',
           ]"
         />
       </a-form-item>
@@ -127,11 +135,11 @@ export default {
     };
   },
   watch: {
-    editVisiable() {
-      if (this.editVisiable) {
-        this.fetchDept();
-      }
-    },
+    // editVisiable() {
+    //   if (this.editVisiable) {
+    //     this.fetchDept();
+    //   }
+    // },
   },
   methods: {
     reset() {
@@ -154,9 +162,11 @@ export default {
       });
     },
     fetchDept() {
-      this.$get("dept/list", { parentId: "0" }).then((res) => {
+      this.$get("sdlBUser/deptNew", { }).then((res) => {
         this.deptData = [];
-        this.deptData.push(...res.data);
+       if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
       });
     },
     filterOption(input, option) {
@@ -174,6 +184,10 @@ export default {
       
       this.form.getFieldDecorator('birthday');
       this.form.setFieldsValue({birthday: option.key.birthday});
+       this.form.getFieldDecorator('tel');
+      this.form.setFieldsValue({tel: option.key.tel});
+        this.form.getFieldDecorator('deptId');
+      this.form.setFieldsValue({deptId: option.key.deptNew});
        this.form.getFieldDecorator('userAccountName');
         this.form.setFieldsValue({userAccountName: option.key.userAccountName});
     },
@@ -182,7 +196,7 @@ export default {
       this.mdlBManager["deptName"] = option.key;
     },
     setFormValues({ ...mdlBManager }) {
-      let fields = ["deptId", "userAccountName","userAccount", "birthday","startDate","endDate"];
+      let fields = ["deptId", "userAccountName","userAccount", "birthday","startDate","endDate","tel","email"];
       let fieldDates = ["startDate","endDate"];
       Object.keys(mdlBManager).forEach((key) => {
         if (fields.indexOf(key) !== -1) {

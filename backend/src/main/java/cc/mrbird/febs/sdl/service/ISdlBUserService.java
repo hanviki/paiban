@@ -1,6 +1,7 @@
 package cc.mrbird.febs.sdl.service;
 
 import cc.mrbird.febs.rfc.CustomUser;
+import cc.mrbird.febs.sdl.entity.CustomDept;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ISdlBUserService extends IService<SdlBUser> {
 
         IPage<SdlBUser> findSdlBUsersYwc(QueryRequest request, SdlBUser sdlBUser);
 
+        IPage<SdlBUser> findSdlBUsersYwc2(QueryRequest request, SdlBUser sdlBUser);
+
         IPage<SdlBUser> findSdlBUsersHz(QueryRequest request, SdlBUser sdlBUser);
 
         IPage<SdlBUser> findSdlBUserList(QueryRequest request, SdlBUser sdlBUser);
@@ -37,5 +40,7 @@ public interface ISdlBUserService extends IService<SdlBUser> {
         List<CustomUser> getUserAccounts();
 
         List<SdlBUser> findSdlBUsers_search( SdlBUser sdlBUser);
+
+        List<CustomDept> getDeptNew();
 
         }

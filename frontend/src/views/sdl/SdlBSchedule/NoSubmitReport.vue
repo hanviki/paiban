@@ -152,10 +152,20 @@ export default {
       this.selectedRowKeys = selectedRowKeys;
     },
     handleStartDateChange(value) {
-      this.queryParams.startDate2 = moment(value).format("YYYY-MM-DD");
+      if(value==null){
+        delete this.queryParams.startDate2
+      }
+      else{
+        this.queryParams.startDate2 = moment(value).format("YYYY-MM-DD");
+      }
     },
     handleEndDateChange(value) {
-      this.queryParams.endDate2 = moment(value).format("YYYY-MM-DD");
+      if(value==null){
+        delete this.queryParams.endDate2
+      }
+      else{
+        this.queryParams.endDate2 = moment(value).format("YYYY-MM-DD");
+      }
     },
 
     exportExcel(flag) {

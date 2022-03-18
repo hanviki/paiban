@@ -19,8 +19,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.beust.jcommander.internal.Lists;
 import com.wuwenze.poi.ExcelKit;
@@ -45,7 +43,7 @@ import java.util.Map;
 /**
  *
  * @author viki
- * @since 2022-01-20
+ * @since 2022-03-16
  */
 @Slf4j
 @Validated
@@ -78,48 +76,10 @@ public IMdlBProfessionService iMdlBProfessionService;
  * @return
  */
 @GetMapping
-
 public Map<String, Object> List(QueryRequest request, MdlBProfession mdlBProfession){
         return getDataTable(this.iMdlBProfessionService.findMdlBProfessions(request, mdlBProfession));
         }
-    @GetMapping("custom")
-    public Map<String, Object> ListCustom(QueryRequest request, MdlBProfession mdlBSpecial){
-        User currentUser= FebsUtil.getCurrentUser();
-        mdlBSpecial.setUserAccount(currentUser.getUsername());
-        mdlBSpecial.setIsDeletemark(1);
-        request.setPageSize(100);
-        return getDataTable(this.iMdlBProfessionService.findMdlBProfessions(request, mdlBSpecial));
-    }
-    @Log("新增/按钮")
-    @PostMapping("addNew")
-    public void addDcaBAcademicCustom(@Valid String jsonStr,int state)throws FebsException{
-        try{
-            User currentUser=FebsUtil.getCurrentUser();
-            List<MdlBProfession> list= JSON.parseObject(jsonStr,new TypeReference<List<MdlBProfession>>(){
-            });
-            for(MdlBProfession mdlBSpecial:list
-            ){
-                if(mdlBSpecial.getId()==null) {
-                    mdlBSpecial.setCreateUserId(currentUser.getUserId());
-                    mdlBSpecial.setUserAccount(currentUser.getUsername());
-                    mdlBSpecial.setUserAccountName(currentUser.getRealname());
-                    mdlBSpecial.setState(state);
-                    this.iMdlBProfessionService.createMdlBProfession(mdlBSpecial);
-                }
-                else{
-                    mdlBSpecial.setModifyUserId(currentUser.getUserId());
-                    mdlBSpecial.setUserAccount(currentUser.getUsername());
-                    mdlBSpecial.setUserAccountName(currentUser.getRealname());
-                    mdlBSpecial.setState(state);
-                    this.iMdlBProfessionService.updateMdlBProfession(mdlBSpecial);
-                }
-            }
-        }catch(Exception e){
-            message="新增/按钮失败";
-            log.error(message,e);
-            throw new FebsException(message);
-        }
-    }
+
 /**
  * 添加
  * @param  mdlBProfession
@@ -127,11 +87,12 @@ public Map<String, Object> List(QueryRequest request, MdlBProfession mdlBProfess
  */
 @Log("新增/按钮")
 @PostMapping
-
 public void addMdlBProfession(@Valid MdlBProfession mdlBProfession)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
         mdlBProfession.setCreateUserId(currentUser.getUserId());
+        mdlBProfession.setUserAccount(currentUser.getUsername());
+        mdlBProfession.setUserAccountName(currentUser.getRealname());
         this.iMdlBProfessionService.createMdlBProfession(mdlBProfession);
         }catch(Exception e){
         message="新增/按钮失败" ;
@@ -147,11 +108,12 @@ public void addMdlBProfession(@Valid MdlBProfession mdlBProfession)throws FebsEx
  */
 @Log("修改")
 @PutMapping
-
 public void updateMdlBProfession(@Valid MdlBProfession mdlBProfession)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
       mdlBProfession.setModifyUserId(currentUser.getUserId());
+            mdlBProfession.setUserAccount(currentUser.getUsername());
+            mdlBProfession.setUserAccountName(currentUser.getRealname());
         this.iMdlBProfessionService.updateMdlBProfession(mdlBProfession);
         }catch(Exception e){
         message="修改失败" ;
@@ -163,7 +125,6 @@ public void updateMdlBProfession(@Valid MdlBProfession mdlBProfession)throws Feb
 
 @Log("删除")
 @DeleteMapping("/{ids}")
-
 public void deleteMdlBProfessions(@NotBlank(message = "{required}") @PathVariable String ids)throws FebsException{
         try{
         String[]arr_ids=ids.split(StringPool.COMMA);

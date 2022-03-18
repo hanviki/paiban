@@ -7,6 +7,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.utils.ExportExcelUtils;
+import cc.mrbird.febs.sdl.entity.CustomDept;
 import cc.mrbird.febs.sdl.entity.CustomUser;
 import cc.mrbird.febs.sdl.entity.SdlBUserSearch;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
@@ -77,6 +78,9 @@ public Map<String, Object> List(QueryRequest request, SdlBUser sdlBUser){
             n.setId(p.getId());
             n.setBirthday(p.getBirthday());
             n.setUserAccount(p.getUserAccount());
+            n.setDeptNew(p.getDeptNew());
+            n.setZhicheng(p.getZhicheng());
+            n.setTel(p.getTelephone());
             n.setUserAccountName(p.getUserAccountName());
             return  n;
         }).collect(Collectors.toList());
@@ -85,6 +89,17 @@ public Map<String, Object> List(QueryRequest request, SdlBUser sdlBUser){
     @GetMapping("ywc")
     public Map<String, Object> List2(QueryRequest request, SdlBUser sdlBUser){
         return getDataTable(this.iSdlBUserService.findSdlBUsersYwc(request, sdlBUser));
+    }
+
+    /**
+     * 医师执业资质 取数逻辑
+     * @param request
+     * @param sdlBUser
+     * @return
+     */
+    @GetMapping("ywc2")
+    public Map<String, Object> List12(QueryRequest request, SdlBUser sdlBUser){
+        return getDataTable(this.iSdlBUserService.findSdlBUsersYwc2(request, sdlBUser));
     }
     @GetMapping("hz")
     public Map<String, Object> List3(QueryRequest request, SdlBUser sdlBUser){
@@ -184,6 +199,27 @@ public void deleteSdlBUsers(@NotBlank(message = "{required}") @PathVariable Stri
         }
     }
 
+    @PostMapping("excelYszy")
+    public void excelYszy(QueryRequest request, SdlBUser sdlBUser,String dataJson,HttpServletResponse response)throws FebsException{
+        try{
+            request.setPageNum(1);
+            request.setPageSize(20000);
+
+            sdlBUser.setIsDeletemark(1);
+            request.setSortField("user_account");
+            request.setSortOrder("ascend");
+            List<SdlBUser> sdlBUserList=  this.iSdlBUserService.findSdlBUsersYwc2(request, sdlBUser).getRecords();
+
+
+            //ExcelKit.$Export(DcaBAuditdynamic.class,response).downXlsx(dcaBAuditdynamics,false);
+            ExportExcelUtils.exportCustomExcel_han(response, sdlBUserList,dataJson,"");
+        }catch(Exception e){
+            message="导出Excel失败";
+            log.error(message,e);
+            throw new FebsException(message);
+        }
+    }
+
     @PostMapping("excelYwc")
     public void exportYwc(QueryRequest request, SdlBUser sdlBUser,String dataJson,HttpServletResponse response)throws FebsException{
         try{
@@ -210,4 +246,8 @@ public SdlBUser detail(@NotBlank(message = "{required}") @PathVariable String id
     SdlBUser sdlBUser=this.iSdlBUserService.getById(id);
         return sdlBUser;
         }
+    @GetMapping("deptNew")
+    public List<CustomDept> getAllDept(){
+       return  this.iSdlBUserService.getDeptNew();
+    }
         }

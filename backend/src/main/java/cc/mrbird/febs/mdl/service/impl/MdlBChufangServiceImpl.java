@@ -54,6 +54,9 @@ public IPage<MdlBChufang> findMdlBChufangs(QueryRequest request, MdlBChufang mdl
                                 if (StringUtils.isNotBlank(mdlBChufang.getType())) {
                                 queryWrapper.eq(MdlBChufang::getType, mdlBChufang.getType());
                                 }
+                if (StringUtils.isNotBlank(mdlBChufang.getDeptNew())) {
+                        queryWrapper.eq(MdlBChufang::getDeptNew, mdlBChufang.getDeptNew());
+                }
 
         Page<MdlBChufang> page=new Page<>();
         SortUtil.handlePageSort(request,page,false);//true 是属性  false是数据库字段可两个

@@ -112,7 +112,7 @@ public class SdlBScheduleDController extends BaseController {
         queryWrapper.ge(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getStartDate());
         queryWrapper.le(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getEndDate());
         List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
-        zizhiList.forEach(p -> {
+        zizhiList.stream().parallel().forEach(p -> {
                     List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
                             t -> t.getBqId().equals(p.getBqId()) && t.getZizhiId().equals(p.getZizhiId())
                             &&  t.getBaseId().equals(sdlBScheduleD.getBaseId())
@@ -133,7 +133,7 @@ public class SdlBScheduleDController extends BaseController {
         queryWrapper.ge(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getStartDate());
         queryWrapper.le(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getEndDate());
         List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
-        zizhiList.forEach(p -> {
+        zizhiList.stream().parallel().forEach(p -> {
                     List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
                             t -> t.getBqId().equals(p.getBqId()) && t.getZizhiId().equals(p.getZizhiId())
                                     &&  t.getBaseId().equals(sdlBScheduleD.getBaseId())
@@ -164,7 +164,7 @@ public class SdlBScheduleDController extends BaseController {
         queryWrapper.ge(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getStartDate());
         queryWrapper.le(SdlBScheduleD::getScheduleDate,sdlBScheduleD.getEndDate());
         List<SdlBScheduleD> sdlBScheduleDList = this.iSdlBScheduleDService.list(queryWrapper);
-        zizhiList.forEach(p -> {
+        zizhiList.stream().parallel().forEach(p -> {
                     List<SdlBScheduleD> subList = sdlBScheduleDList.stream().filter(
                             t -> t.getBqId().equals(p.getBqId()) && t.getZizhiId().equals(p.getZizhiId())
                                     &&  t.getBaseId().equals(sdlBScheduleD.getBaseId())
@@ -424,6 +424,7 @@ public class SdlBScheduleDController extends BaseController {
 
                         }
                         nDetail.setMonth(cn.hutool.core.date.DateUtil.format(sdlBScheduleDetail.getScheduleDate(),"yyyy-MM"));
+                         nDetail.setSch(cn.hutool.core.date.DateUtil.format(sdlBScheduleDetail.getScheduleDate(),"yyyy-MM-dd"));
                         nDetail.setAccountId(accounts);
                         List<SdlBUser> users1=users.stream().filter(p -> accounts.equals(p.getUserAccount())).collect(Collectors.toList());
                         if(users1==null ||users1.size()==0){

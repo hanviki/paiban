@@ -8,7 +8,10 @@
                     <result column="type" property="type"/>
                     <result column="user_account_name" property="userAccountName"/>
                     <result column="user_account" property="userAccount"/>
+            <result column="dept_new" property="deptNew"/>
+            <result column="zhicheng" property="zhicheng"/>
                     <result column="train_date" property="trainDate"/>
+            <result column="power_date" property="powerDate"/>
                     <result column="exiam_score" property="exiamScore"/>
                     <result column="exiam_result" property="exiamResult"/>
                     <result column="archive_id" property="archiveId"/>
@@ -28,7 +31,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, type, user_account_name, user_account, train_date, exiam_score, exiam_result, archive_id, archive_name, archive_code, file_id, file_url, is_chufang, level, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, type, user_account_name, user_account, dept_new , zhicheng,train_date, power_date,exiam_score, exiam_result, archive_id, archive_name, archive_code, file_id, file_url, is_chufang, level, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBChufang" parameterType="cc.mrbird.febs.mdl.entity.MdlBChufang">
         update mdl_b_chufang
@@ -36,7 +39,10 @@
 <if test="type != null">type=#{type},</if>
 <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
 <if test="userAccount != null">user_account=#{userAccount},</if>
+            <if test="deptNew != null">dept_new=#{deptNew},</if>
+            <if test="zhicheng != null">zhicheng=#{zhicheng},</if>
 <if test="trainDate != null">train_date=#{trainDate},</if>
+            <if test="powerDate != null">power_date=#{powerDate},</if>
 <if test="exiamScore != null">exiam_score=#{exiamScore},</if>
 <if test="exiamResult != null">exiam_result=#{exiamResult},</if>
 <if test="archiveId != null">archive_id=#{archiveId},</if>
@@ -57,13 +63,18 @@
 
     </update>
     <select id="findMdlBChufang" resultType="cc.mrbird.febs.mdl.entity.MdlBChufang" parameterType="cc.mrbird.febs.mdl.entity.MdlBChufang">
-        select  *  from mdl_b_chufang
-        where  1=1
+        select  mdl_b_chufang.*,sdl_b_user.dept_name,sdl_b_user.yishi_ziyebianhao,sdl_b_user.yishi_zgzsbianhao from mdl_b_chufang
+        inner join sdl_b_user on mdl_b_chufang.user_account=sdl_b_user.user_account
+        where  1=1 and mdl_b_chufang.type='考试管理' and mdl_b_chufang.exiam_result='通过' and
+        LENGTH(sdl_b_user.yishi_zgzsbianhao)>0 and LENGTH(sdl_b_user.yishi_ziyebianhao)>0 and sdl_b_user.rylx='职工'
             <if test="mdlBChufang.type != null and mdlBChufang.type != ''"> and  mdl_b_chufang.type like concat('%', #{ mdlBChufang.type} ,'%')</if>
             <if test="mdlBChufang.userAccountName != null and mdlBChufang.userAccountName != ''"> and  mdl_b_chufang.user_account_name like concat('%', #{ mdlBChufang.userAccountName} ,'%')</if>
             <if test="mdlBChufang.userAccount != null and mdlBChufang.userAccount != ''"> and  mdl_b_chufang.user_account like concat('%', #{ mdlBChufang.userAccount} ,'%')</if>
         <if test="mdlBChufang.trainDateFrom!= null">
             AND mdl_b_chufang.train_date <![CDATA[ >= ]]>  #{mdlBChufang.trainDateFrom}
+        </if>
+        <if test="mdlBChufang.deptNew!= null">
+            AND mdl_b_chufang.dept_new =  #{mdlBChufang.deptNew}
         </if>
         <if test="mdlBChufang.trainDateTo!= null">
             AND  mdl_b_chufang.train_date <![CDATA[ <= ]]>  #{mdlBChufang.trainDateTo}

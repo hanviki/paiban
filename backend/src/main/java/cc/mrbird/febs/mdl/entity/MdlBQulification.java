@@ -21,7 +21,7 @@ import cc.mrbird.febs.common.converter.*;
  * </p>
  *
  * @author viki
- * @since 2022-01-12
+ * @since 2022-03-16
  */
 
 @Excel("mdl_b_qulification")
@@ -66,6 +66,13 @@ private static final long serialVersionUID=1L;
         
         @ExcelField(value ="变更事项")
     private String bgItem;
+
+    /**
+     * 证件编号
+     */
+        
+        @ExcelField(value ="证件编号")
+    private String qlCode;
 
     /**
      * 附件ID
@@ -143,6 +150,8 @@ private static final long serialVersionUID=1L;
     public static final String BG_DATE ="bg_date" ;
 
     public static final String BG_ITEM ="bg_item" ;
+
+    public static final String QL_CODE ="ql_code" ;
 
     public static final String FILE_ID ="file_id" ;
 

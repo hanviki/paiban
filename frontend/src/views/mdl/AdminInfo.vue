@@ -11,7 +11,18 @@
             <a-space>
               <a-card
               class="cu"
-                @click="openQulifaction(7, '基本处方权')"
+                @click="openQulifaction(7, '考试管理')"
+                style="width: 200px"
+                :bordered="false"
+              >
+                <a-icon type="home" style="font-size: 60px" :bordered="false" />
+                <div style="font-size: 20px;  margin-top: 10px">
+                  考试管理
+                </div>
+              </a-card>
+              <a-card
+              class="cu"
+                @click="openQulifaction(12, '基本处方权')"
                 style="width: 200px"
                 :bordered="false"
               >
@@ -89,7 +100,7 @@
               </a-card>
               <a-card
               class="cu"
-                @click="openQulifaction(21, '多单科会诊')"
+                @click="openQulifaction(21, '多学科会诊')"
                 style="width: 200px"
                 :bordered="false"
               >
@@ -97,7 +108,7 @@
                 <div
                   style="font-size: 20px;  margin-top: 10px"
                 >
-                  多单科会诊
+                  多学科会诊
                 </div>
               </a-card>
             </a-space>
@@ -179,15 +190,17 @@
       <mdl-b-profession v-show="subShow == 5"> </mdl-b-profession>
       <schedule-info v-show="subShow == 1"> </schedule-info>
       <mdl-b-archive-list v-show="subShow == 6"> </mdl-b-archive-list>
-      <mdl-b-chufang v-show="subShow == 7" type="基本处方权"> </mdl-b-chufang>
+      <mdl-b-chufang v-show="subShow == 7" type="考试管理"> </mdl-b-chufang>
       <mdl-b-chufang v-show="subShow == 8" type="麻精药物处方权">
       </mdl-b-chufang>
       <mdl-b-chufang v-show="subShow == 9" type="抗菌药物分级管理">
       </mdl-b-chufang>
       <mdl-b-chufang v-show="subShow == 10" type="抗肿瘤药物分级管理">
       </mdl-b-chufang>
+       <chu-fang-report v-show="subShow == 12" type="基本处方权">
+      </chu-fang-report>
       <hui-zhen v-show="subShow == 20" type="单科会诊"> </hui-zhen>
-      <hui-zhen v-show="subShow == 21" type="多单科会诊"> </hui-zhen>
+      <hui-zhen v-show="subShow == 21" type="多学科会诊"> </hui-zhen>
     </div>
   </a-card>
 </template>
@@ -198,6 +211,7 @@ import ScheduleInfo from "./MdlBManager/ScheduleInfo.vue";
 import MdlBArchiveList from "./MdlBArchive/MdlBArchiveList.vue";
 import MdlBChufang from "./MdlBChufang/MdlBChufang.vue";
 import HuiZhen from "./MdlBManager/HuiZhen.vue";
+import ChuFangReport from './MdlBChufang/ChuFangReport.vue';
 
 export default {
   name: "BaseInfo",
@@ -215,6 +229,8 @@ export default {
     MdlBArchiveList,
     MdlBChufang,
     HuiZhen,
+    ChuFangReport,
+    ChuFangReport
   },
   methods: {
     openQulifaction(index, title) {

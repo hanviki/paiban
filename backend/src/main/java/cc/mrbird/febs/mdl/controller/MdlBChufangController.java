@@ -7,6 +7,7 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.utils.ExportExcelUtils;
 import cc.mrbird.febs.mdl.service.IMdlBChufangService;
 import cc.mrbird.febs.mdl.entity.MdlBChufang;
 
@@ -18,6 +19,7 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.beust.jcommander.internal.Lists;
 import com.wuwenze.poi.ExcelKit;
@@ -78,6 +80,10 @@ public IMdlBChufangService iMdlBChufangService;
 public Map<String, Object> List(QueryRequest request, MdlBChufang mdlBChufang){
         return getDataTable(this.iMdlBChufangService.findMdlBChufangs(request, mdlBChufang));
         }
+    @GetMapping("chufang")
+    public Map<String, Object> List2(QueryRequest request, MdlBChufang mdlBChufang){
+        return getDataTable(this.iMdlBChufangService.findMdlBChufangList(request, mdlBChufang));
+    }
 
 /**
  * 添加
@@ -90,11 +96,26 @@ public void addMdlBChufang(@Valid MdlBChufang mdlBChufang)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
         mdlBChufang.setCreateUserId(currentUser.getUserId());
+
+        if(!mdlBChufang.getType().equals("考试管理")) {
+            LambdaQueryWrapper<MdlBChufang> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(MdlBChufang::getUserAccount, mdlBChufang.getUserAccount());
+            queryWrapper.eq(MdlBChufang::getExiamResult, "通过");
+            queryWrapper.eq(MdlBChufang::getType, "考试管理");
+            List<MdlBChufang> mdlBChufangList = this.iMdlBChufangService.list(queryWrapper);
+            if (mdlBChufangList.size() <= 0) {
+                throw new FebsException("考试结果尚未通过，请添加考试管理结果");
+            } else {
+                mdlBChufang.setExiamResult(mdlBChufangList.get(0).getExiamResult());
+                mdlBChufang.setExiamScore(mdlBChufangList.get(0).getExiamScore());
+                mdlBChufang.setTrainDate(mdlBChufangList.get(0).getTrainDate());
+            }
+        }
         this.iMdlBChufangService.createMdlBChufang(mdlBChufang);
         }catch(Exception e){
-        message="新增/按钮失败" ;
+      //  message="新增/按钮失败" ;
         log.error(message,e);
-        throw new FebsException(message);
+        throw new FebsException(e.getMessage());
         }
         }
 
@@ -131,18 +152,34 @@ public void deleteMdlBChufangs(@NotBlank(message = "{required}") @PathVariable S
         }
         }
 @PostMapping("excel")
-@RequiresPermissions("mdlBChufang:export")
-public void export(QueryRequest request, MdlBChufang mdlBChufang, HttpServletResponse response) throws FebsException {
+    @RequiresPermissions("mdlBChufang:export")
+    public void export(QueryRequest request, MdlBChufang mdlBChufang, HttpServletResponse response) throws FebsException {
         try {
-        List<MdlBChufang> mdlBChufangs = this.iMdlBChufangService.findMdlBChufangs(request, mdlBChufang).getRecords();
-        ExcelKit.$Export(MdlBChufang.class, response).downXlsx(mdlBChufangs, false);
+            List<MdlBChufang> mdlBChufangs = this.iMdlBChufangService.findMdlBChufangs(request, mdlBChufang).getRecords();
+            ExcelKit.$Export(MdlBChufang.class, response).downXlsx(mdlBChufangs, false);
         } catch (Exception e) {
-        message = "导出Excel失败";
-        log.error(message, e);
-        throw new FebsException(message);
+            message = "导出Excel失败";
+            log.error(message, e);
+            throw new FebsException(message);
         }
+    }
+    @PostMapping("excelChuFang")
+    public void export33(QueryRequest request, MdlBChufang mdlBChufang,String dataJson, HttpServletResponse response) throws FebsException {
+        try {
+            request.setPageNum(1);
+            request.setPageSize(20000);
+            request.setSortField("user_account");
+            request.setSortOrder("ascend");
+            List<MdlBChufang> mdlBChufangs = this.iMdlBChufangService.findMdlBChufangList(request, mdlBChufang).getRecords();
+            ExportExcelUtils.exportCustomExcel_han(response, mdlBChufangs,dataJson,"");
+        } catch (Exception e) {
+            message = "导出Excel失败";
+            log.error(message, e);
+            throw new FebsException(message);
         }
-@RequestMapping(value = "downTemplate", method = RequestMethod.POST)
+    }
+
+    @RequestMapping(value = "downTemplate", method = RequestMethod.POST)
 @RequiresPermissions("mdlBChufang:import")
 public void downTemplate(HttpServletResponse response) {
         List<MdlBChufang> publishList = new ArrayList<>();

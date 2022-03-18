@@ -165,7 +165,7 @@ export default {
       return [
          {
           title: "科室名称",
-          dataIndex: "deptName",
+          dataIndex: "deptNew",
           width: 100,
           fixed: "left",
         },
@@ -464,13 +464,16 @@ export default {
       }
     },
     fetchDept() {
-      this.$get("dept/list", { parentId: "0" }).then((res) => {
+      this.$get("sdlBUser/deptNew", { }).then((res) => {
         this.deptData = [];
         this.deptData.push({
           deptId: "-1",
           deptName: "全部",
         });
-        this.deptData.push(...res.data);
+        console.info(res)
+        if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
       });
     },
     filterOption(input, option) {
@@ -549,7 +552,7 @@ export default {
         delete queryParams.deptId
       }
 
-      this.$export("sdlBUser/excelYwc", {
+      this.$export("sdlBUser/excelYszy", {
         sortField: sortField,
         sortOrder: sortOrder,
         dataJson,
@@ -612,7 +615,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("sdlBUser/ywc", {
+      this.$get("sdlBUser/ywc2", {
         ...params,
       }).then((r) => {
         let data = r.data;

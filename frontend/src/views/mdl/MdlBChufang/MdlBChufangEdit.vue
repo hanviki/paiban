@@ -33,12 +33,12 @@
       <a-form-item v-bind="formItemLayout" label="姓名">
         <a-input disabled v-decorator="['userAccountName']" />
       </a-form-item>
-      <template v-if="handleType('基本处方权')">
-        <a-form-item v-bind="formItemLayout" label="培训日期">
+      <template v-if="handleType('考试管理')">
+        <a-form-item v-bind="formItemLayout" label="考试日期">
           <a-date-picker
             v-decorator="[
               'trainDate',
-              { rules: [{ required: true, message: '培训日期不能为空' }] },
+              { rules: [{ required: true, message: '考试日期不能为空' }] },
             ]"
           />
         </a-form-item>
@@ -60,6 +60,20 @@
             ]"
           />
         </a-form-item>
+        
+      </template>
+      <template v-else-if="handleType('麻精药物处方权')">
+        <a-form-item v-bind="formItemLayout" label="是否处方">
+          <a-select
+            v-decorator="[
+              'isChufang',
+              { rules: [{ required: true, message: '是否处方不能为空' }] },
+            ]"
+          >
+            <a-select-option value="是"> 是 </a-select-option>
+            <a-select-option value="否"> 否 </a-select-option>
+          </a-select>
+        </a-form-item>
         <a-form-item v-bind="formItemLayout" label="授权文件">
           <a-select
             v-decorator="[
@@ -76,18 +90,13 @@
             </a-select-option>
           </a-select>
         </a-form-item>
-      </template>
-      <template v-else-if="handleType('麻精药物处方权')">
-        <a-form-item v-bind="formItemLayout" label="是否处方">
-          <a-select
+         <a-form-item v-bind="formItemLayout" label="授权日期">
+          <a-date-picker
             v-decorator="[
-              'isChufang',
-              { rules: [{ required: true, message: '是否处方不能为空' }] },
+              'powerDate',
+              { rules: [{ required: true, message: '授权日期不能为空' }] },
             ]"
-          >
-            <a-select-option value="是"> 是 </a-select-option>
-            <a-select-option value="否"> 否 </a-select-option>
-          </a-select>
+          />
         </a-form-item>
       </template>
       <template v-else>
@@ -102,6 +111,31 @@
             <a-select-option value="非限制级"> 非限制级 </a-select-option>
             <a-select-option value="特殊使用"> 特殊使用 </a-select-option>
           </a-select>
+        </a-form-item>
+         <a-form-item v-bind="formItemLayout" label="授权文件">
+          <a-select
+            v-decorator="[
+              'archiveId',
+              { rules: [{ required: true, message: '授权文件不能为空' }] },
+            ]"
+            option-filter-prop="children"
+            :filter-option="filterOption"
+            show-search
+            @change="fileChange"
+          >
+            <a-select-option v-for="d in fileData" :key="d" :value="`${d.id}`">
+              {{ d.fileName + " " + d.fileCode }}
+            </a-select-option>
+          </a-select>
+          
+        </a-form-item>
+         <a-form-item v-bind="formItemLayout" label="授权日期">
+          <a-date-picker
+            v-decorator="[
+              'powerDate',
+              { rules: [{ required: true, message: '授权日期不能为空' }] },
+            ]"
+          />
         </a-form-item>
       </template>
     </a-form>
@@ -152,7 +186,7 @@ export default {
   watch: {
     editVisiable() {
       if (this.editVisiable) {
-        this.fetchFile();
+        this.fetchFile(this.type);
       }
     },
   },
@@ -171,11 +205,20 @@ export default {
      handleType(type) {
       return this.type == type;
     },
-    fetchFile() {
-      this.$get("mdlBArchive/list", { parentId: "0" }).then((res) => {
+   fetchFile(type) {
+      this.$get("mdlBArchive/list", { fileType: this.getFileType(type) }).then((res) => {
         this.fileData = [];
         this.fileData.push(...res.data);
       });
+    },
+    getFileType(type){
+        if(type=="麻精药物处方权"){
+           return "麻精药物"
+        }
+        if(type=="抗菌药物分级管理"){
+           return "抗菌药物"
+        }
+        return ""
     },
     fileChange(value, option) {
       this.mdlBChufang["archiveName"] = option.key.fileName;
@@ -196,19 +239,23 @@ export default {
 
       this.form.getFieldDecorator("userAccountName");
       this.form.setFieldsValue({ userAccountName: option.key.userAccountName });
+
+      this.mdlBChufang["deptNew"] = option.key.deptNew;
+      this.mdlBChufang["zhicheng"] = option.key.zhicheng;
     },
     setFormValues({ ...mdlBChufang }) {
       let fields = [
         "userAccount",
         "userAccountName",
         "trainDate",
+        "powerDate",
         "exiamScore",
         "exiamResult",
         "archiveId",
         "isChufang",
         "level",
       ];
-      let fieldDates = ["trainDate"];
+      let fieldDates = ["trainDate","powerDate"];
       Object.keys(mdlBChufang).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key);
@@ -242,6 +289,8 @@ export default {
       this.mdlBChufang["archiveCode"] = mdlBChufang["archiveCode"];
       this.mdlBChufang["fileId"] = mdlBChufang["fileId"];
       this.mdlBChufang["fileUrl"] = mdlBChufang["fileUrl"];
+        this.mdlBChufang["deptNew"] = mdlBChufang["deptNew"];
+      this.mdlBChufang["zhicheng"] = mdlBChufang["zhicheng"];
       this.mdlBChufang.id = mdlBChufang.id;
     },
     handleSubmit() {
@@ -254,6 +303,8 @@ export default {
           mdlBChufang["archiveCode"] = this.mdlBChufang["archiveCode"];
           mdlBChufang["fileId"] = this.mdlBChufang["fileId"];
           mdlBChufang["fileUrl"] = this.mdlBChufang["fileUrl"];
+          mdlBChufang["deptNew"] = this.mdlBChufang["deptNew"];
+      mdlBChufang["zhicheng"] = this.mdlBChufang["zhicheng"];
           this.$put("mdlBChufang", {
             ...mdlBChufang,
           })

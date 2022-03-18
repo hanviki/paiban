@@ -8,6 +8,7 @@
                     <result column="file_name" property="fileName"/>
                     <result column="file_code" property="fileCode"/>
                     <result column="file_date" property="fileDate"/>
+            <result column="file_type" property="fileType"/>
                     <result column="note" property="note"/>
                     <result column="file_id" property="fileId"/>
                     <result column="file_url" property="fileUrl"/>
@@ -21,7 +22,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, file_name, file_code, file_date, note, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, file_name, file_code, file_date, file_type, note, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBArchive" parameterType="cc.mrbird.febs.mdl.entity.MdlBArchive">
         update mdl_b_archive
@@ -29,6 +30,7 @@
 <if test="fileName != null">file_name=#{fileName},</if>
 <if test="fileCode != null">file_code=#{fileCode},</if>
 <if test="fileDate != null">file_date=#{fileDate},</if>
+            <if test="fileType != null">file_type=#{fileType},</if>
 <if test="note != null">note=#{note},</if>
 <if test="fileId != null">file_id=#{fileId},</if>
 <if test="fileUrl != null">file_url=#{fileUrl},</if>

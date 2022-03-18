@@ -104,10 +104,20 @@ export default {
   },
   methods: {
     handleStartDateChange(value) {
-      this.queryParams.scheduleDateFrom = moment(value).format("YYYY-MM-DD");
+      if(value==null){
+        delete this.queryParams.scheduleDateFrom
+      }
+      else{
+        this.queryParams.scheduleDateFrom = moment(value).format("YYYY-MM-DD");
+      }
     },
     handleEndDateChange(value) {
-      this.queryParams.scheduleDateTo = moment(value).format("YYYY-MM-DD");
+      if(value==null){
+        delete this.queryParams.scheduleDateTo
+      }
+      else{
+        this.queryParams.scheduleDateTo = moment(value).format("YYYY-MM-DD");
+      }
     },
 
     exportExcel(flag) {

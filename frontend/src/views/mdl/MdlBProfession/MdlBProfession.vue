@@ -4,8 +4,8 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-               <a-col :md="8" :sm="24">
-              <a-form-item label="人事编号/姓名" v-bind="formItemLayout">
+            <a-col :md="8" :sm="24">
+             <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
@@ -22,38 +22,7 @@
       </a-form>
     </div>
     <div>
-      <div class="operator">
-        <a-button
-          v-hasPermission="['mdlBProfession:add']"
-          type="primary"
-          ghost
-          @click="add"
-          >新增</a-button
-        >
-        <a-button
-          v-hasPermission="['mdlBProfession:delete']"
-          @click="batchDelete"
-          >删除</a-button
-        >
-        <a-dropdown v-hasPermission="['mdlBProfession:export']">
-          <a-menu slot="overlay">
-            <a-menu-item key="export-data" @click="exportExcel"
-              >导出Excel</a-menu-item
-            >
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
-        <import-excel
-          v-hasPermission="['mdlBProfession:import']"
-          templateUrl="mdlBProfession/downTemplate"
-          @succ="handleRefesh"
-          url="mdlBProfession/import"
-        >
-        </import-excel>
-      </div>
+     
       <!-- 表格区域 -->
       <a-table
         ref="TableInfo"
@@ -78,30 +47,7 @@
             <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
           </a-popover>
         </template>
-         <template
-                slot="userAccount"
-                slot-scope="text, record"
-              >
-                <a
-                  href="#"
-                  @click="showUserInfo(text)"
-                >{{text}}</a>
-              </template>
-        <template slot="operation" slot-scope="text, record">
-          <a-icon
-            v-hasPermission="['mdlBProfession:update']"
-            type="setting"
-            theme="twoTone"
-            twoToneColor="#4a9ff5"
-            @click="edit(record)"
-            title="修改"
-          ></a-icon>
-          <a-badge
-            v-hasNoPermission="['mdlBProfession:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge>
-        </template>
+       
       </a-table>
     </div>
     <!-- 新增字典 -->
@@ -119,12 +65,6 @@
       :editVisiable="editVisiable"
     >
     </mdlBProfession-edit>
-        <audit-userInfo
-      ref="userinfo"
-      @close="onCloseUserInfo"
-      :visibleUserInfo="visibleUserInfo"
-      :userAccount="userAccount"
-    ></audit-userInfo>
   </a-card>
 </template>
 
@@ -133,8 +73,6 @@ import MdlBProfessionAdd from "./MdlBProfessionAdd";
 import MdlBProfessionEdit from "./MdlBProfessionEdit";
 import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
-import AuditUserInfo from '../../common/AuditUserInfo'
-
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -142,7 +80,7 @@ const formItemLayout = {
 };
 export default {
   name: "MdlBProfession",
-  components: { MdlBProfessionAdd, MdlBProfessionEdit, ImportExcel, AuditUserInfo },
+  components: { MdlBProfessionAdd, MdlBProfessionEdit, ImportExcel },
   data() {
     return {
       advanced: false,
@@ -165,8 +103,6 @@ export default {
       editVisiable: false,
       loading: false,
       bordered: true,
-       visibleUserInfo: false,
-      userAccount: '',
     };
   },
   computed: {
@@ -174,20 +110,33 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
-          {
+         {
+          title: "发薪号",
+          dataIndex: "userAccount",
+          width: 100,
+        },
+        {
           title: "姓名",
           dataIndex: "userAccountName",
           width: 100,
         },
-           {
-          title: "发薪号",
-          dataIndex: "userAccount",
-          width: 120,
-          scopedSlots: { customRender: 'userAccount' }
-        },
         {
           title: "行业资质名称",
           dataIndex: "qlName",
+          width: 100,
+        },
+        {
+          title: "获得时间",
+          dataIndex: "qlDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+        {
+          title: "证书编号",
+          dataIndex: "qlCode",
           width: 100,
         },
         {
@@ -205,13 +154,7 @@ export default {
           },
           width: 100,
         },
-        // {
-        //   title: "操作",
-        //   dataIndex: "operation",
-        //   scopedSlots: { customRender: "operation" },
-        //   fixed: "right",
-        //   width: 100,
-        // },
+       
       ];
     },
   },
@@ -222,16 +165,6 @@ export default {
     moment,
     handleRefesh() {
       this.search();
-    },
-     showUserInfo (text) {
-      //debugger
-      this.visibleUserInfo = true
-      this.userAccount = text
-    },
-
-
-    onCloseUserInfo () {
-      this.visibleUserInfo = false
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
@@ -309,6 +242,9 @@ export default {
       if (sortedInfo) {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
+      }
+      if (this.paginationInfo) {
+        this.paginationInfo.current = this.pagination.defaultCurrent;
       }
       this.fetch({
         sortField: sortField,

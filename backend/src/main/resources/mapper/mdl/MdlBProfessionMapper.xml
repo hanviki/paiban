@@ -6,6 +6,8 @@
         <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBProfession">
                     <id column="id" property="id"/>
                     <result column="ql_name" property="qlName"/>
+                    <result column="ql_date" property="qlDate"/>
+                    <result column="ql_code" property="qlCode"/>
                     <result column="user_account" property="userAccount"/>
                     <result column="user_account_name" property="userAccountName"/>
                     <result column="file_id" property="fileId"/>
@@ -20,12 +22,14 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, ql_name, user_account, user_account_name, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, ql_name, ql_date, ql_code, user_account, user_account_name, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBProfession" parameterType="cc.mrbird.febs.mdl.entity.MdlBProfession">
         update mdl_b_profession
         <trim prefix="set" suffixOverrides=",">
 <if test="qlName != null">ql_name=#{qlName},</if>
+<if test="qlDate != null">ql_date=#{qlDate},</if>
+<if test="qlCode != null">ql_code=#{qlCode},</if>
 <if test="userAccount != null">user_account=#{userAccount},</if>
 <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
 <if test="fileId != null">file_id=#{fileId},</if>
@@ -44,6 +48,13 @@
         select  *  from mdl_b_profession
         where  1=1
             <if test="mdlBProfession.qlName != null and mdlBProfession.qlName != ''"> and  mdl_b_profession.ql_name like concat('%', #{ mdlBProfession.qlName} ,'%')</if>
+        <if test="mdlBProfession.qlDateFrom!= null">
+            AND mdl_b_profession.ql_date <![CDATA[ >= ]]>  #{mdlBProfession.qlDateFrom}
+        </if>
+        <if test="mdlBProfession.qlDateTo!= null">
+            AND  mdl_b_profession.ql_date <![CDATA[ <= ]]>  #{mdlBProfession.qlDateTo}
+        </if>
+            <if test="mdlBProfession.qlCode != null and mdlBProfession.qlCode != ''"> and  mdl_b_profession.ql_code like concat('%', #{ mdlBProfession.qlCode} ,'%')</if>
             <if test="mdlBProfession.userAccount != null and mdlBProfession.userAccount != ''"> and  mdl_b_profession.user_account like concat('%', #{ mdlBProfession.userAccount} ,'%')</if>
             <if test="mdlBProfession.userAccountName != null and mdlBProfession.userAccountName != ''"> and  mdl_b_profession.user_account_name like concat('%', #{ mdlBProfession.userAccountName} ,'%')</if>
             <if test="mdlBProfession.fileId != null and mdlBProfession.fileId != ''"> and  mdl_b_profession.file_id like concat('%', #{ mdlBProfession.fileId} ,'%')</if>

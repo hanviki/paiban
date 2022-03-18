@@ -50,12 +50,29 @@ public IPage<MdlBManager> findMdlBManagers(QueryRequest request, MdlBManager mdl
         if(StringUtils.isNotBlank(mdlBManager.getType())){
                 queryWrapper.eq(MdlBManager::getType,mdlBManager.getType());
         }
+                if(StringUtils.isNotBlank(mdlBManager.getModifyTimeFrom())){
+                        queryWrapper.ge(MdlBManager::getModifyTime,mdlBManager.getModifyTimeFrom());
+                }
+                if(StringUtils.isNotBlank(mdlBManager.getModifyTimeTo())){
+                        queryWrapper.le(MdlBManager::getModifyTime,mdlBManager.getModifyTimeTo());
+                }
+                if(StringUtils.isNotBlank(mdlBManager.getStartDateFrom())){
+                    if(StringUtils.isNotBlank(mdlBManager.getStartDateTo())){
+                        queryWrapper.le(MdlBManager::getStartDate,mdlBManager.getStartDateTo());
+                        queryWrapper.and(p->p.ge(MdlBManager::getEndDate,mdlBManager.getStartDateFrom()).or().isNull(MdlBManager::getEndDate));
+                    }
+                    else{
+                        queryWrapper.le(MdlBManager::getStartDate,"9999-01-01");
+                        queryWrapper.and(p->p.ge(MdlBManager::getEndDate,mdlBManager.getStartDateFrom()).or().isNull(MdlBManager::getEndDate));
+                    }
+                }
+
         if (mdlBManager.getState()!=null) {
         queryWrapper.eq(MdlBManager::getState, mdlBManager.getState());
         }
 
                                 if (StringUtils.isNotBlank(mdlBManager.getDeptId())) {
-                                queryWrapper.like(MdlBManager::getDeptId, mdlBManager.getDeptId());
+                                queryWrapper.eq(MdlBManager::getDeptId, mdlBManager.getDeptId());
                                 }
 
         Page<MdlBManager> page=new Page<>();
