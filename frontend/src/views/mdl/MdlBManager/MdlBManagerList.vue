@@ -5,7 +5,7 @@
         <a-row>
           <div :class="advanced ? null : 'fold'">
             <a-col :md="5" :sm="24">
-                 <a-form-item v-bind="formItemLayout" label="科室">
+              <a-form-item v-bind="formItemLayout" label="科室">
                 <a-select v-model="queryParams.deptId"
                   option-filter-prop="children"
          :filter-option="filterOption"

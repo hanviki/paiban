@@ -205,6 +205,13 @@ export default {
      handleType(type) {
       return this.type == type;
     },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
+    },
    fetchFile(type) {
       this.$get("mdlBArchive/list", { fileType: this.getFileType(type) }).then((res) => {
         this.fileData = [];

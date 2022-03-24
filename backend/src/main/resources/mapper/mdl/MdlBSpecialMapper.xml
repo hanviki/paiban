@@ -52,6 +52,9 @@
         <if test="mdlBSpecial.qlDateFrom!= null">
             AND mdl_b_special.ql_date <![CDATA[ >= ]]>  #{mdlBSpecial.qlDateFrom}
         </if>
+        <if test="mdlBSpecial.deptNew!= null">
+            AND sdl_b_user.dept_new =  #{mdlBSpecial.deptNew}
+        </if>
         <if test="mdlBSpecial.qlDateTo!= null">
             AND  mdl_b_special.ql_date <![CDATA[ <= ]]>  #{mdlBSpecial.qlDateTo}
         </if>

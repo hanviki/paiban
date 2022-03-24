@@ -9,7 +9,7 @@ import store from '../store'
 import db from 'utils/localstorage'
 moment.locale('zh-cn')
 
- let request_url= 'http://192.168.64.115:1099/';
+let request_url= 'http://192.168.64.115:1099/';
 //let request_url= 'http://whuhmedical.qm.whuh.com:1099/';
 //let request_url= 'http://localhost:1099/';
 // 统一配置

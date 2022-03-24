@@ -139,7 +139,7 @@ export default {
           },
             {
             title: "医师执业证书",
-            dataIndex: "yishiZgzsbianhao",
+            dataIndex: "yishiZhiyefanwei",
             width: 100,
           },
           {

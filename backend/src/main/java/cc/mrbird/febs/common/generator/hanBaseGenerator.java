@@ -65,7 +65,7 @@ public class hanBaseGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         //strategy.setTablePrefix(new String[] { "tlog_", "tsys_" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"mdl_b_profession","mdl_b_special"}); // 需要生成的表
+        strategy.setInclude(new String[]{"mdl_b_mdt_file"}); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -105,8 +105,8 @@ public class hanBaseGenerator {
         List<String> eliminateFiledsList = new ArrayList<>();
         eliminateFiledsList.add("COMMENTS");
         eliminateFiledsList.add("id");
-        eliminateFiledsList.add("user_account");
-        eliminateFiledsList.add("user_account_name");
+        //eliminateFiledsList.add("user_account");
+        //eliminateFiledsList.add("user_account_name");
         eliminateFiledsList.add("user_no");
         eliminateFiledsList.add("name");
         eliminateFiledsList.add("user_name");
@@ -129,10 +129,10 @@ public class hanBaseGenerator {
 
         //在生成页面时候  查询字段设置
         List<String> searchFiledsList = new ArrayList<>();
-        searchFiledsList.add("file_name");
-        searchFiledsList.add("file_code");
-        searchFiledsList.add("dept_id");
-        searchFiledsList.add("type");
+        searchFiledsList.add("user_account_leader");
+        searchFiledsList.add("user_account_assist");
+        searchFiledsList.add("team_name");
+        searchFiledsList.add("dept_head");
 //        searchFiledsList.add("user_account_name");
 //        searchFiledsList.add("user_account");
 //        searchFiledsList.add("user_account_name");
@@ -222,9 +222,9 @@ return projectPath + "/src/main/java/cc/mrbird/febs/" + moduleName + "/dao/" + t
         // 放置自己项目的 src/main/resources/templates 目录下, 默认名称一下可以不配置，也可以自定义模板名称
         TemplateConfig tc = new TemplateConfig();
         ///templates/templatesMybatis/controller.java.vm
-        tc.setController("//templates/templatesMybatis/controller.java.vm");//templates/templatesMybatis/controller.java.vm
-        tc.setService("//templates/templatesMybatis/service.java.vm");//templates/templatesMybatis/service.java.vm
-        tc.setServiceImpl("//templates/templatesMybatis/serviceImpl.java.vm");//templates/templatesMybatis/serviceImpl.java.vm
+        tc.setController("templates/templatesMybatis/controller.java.vm");//templates/templatesMybatis/controller.java.vm
+        tc.setService("templates/templatesMybatis/service.java.vm");//templates/templatesMybatis/service.java.vm
+        tc.setServiceImpl("templates/templatesMybatis/serviceImpl.java.vm");//templates/templatesMybatis/serviceImpl.java.vm
         tc.setEntity("templates/templatesMybatis/entity.java.vm");///templates/templatesMybatis/entity.java.vm
         // tc.setMapper("/templates/templatesMybatis/mapper.java.vm");
         //  tc.setXml("/templates/templatesMybatis/mapper.xml.vm");

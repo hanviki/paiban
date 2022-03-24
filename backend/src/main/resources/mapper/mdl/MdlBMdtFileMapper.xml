@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBMdtFileMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBMdtFile">
+                    <id column="id" property="id"/>
+                    <result column="base_id" property="baseId"/>
+                    <result column="name" property="name"/>
+                    <result column="year" property="year"/>
+                    <result column="note" property="note"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="zc_file_id" property="zcFileId"/>
+                    <result column="zc_file_url" property="zcFileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, base_id, name, year, note, file_id, file_url, zc_file_id, zc_file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBMdtFile" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdtFile">
+        update mdl_b_mdt_file
+        <trim prefix="set" suffixOverrides=",">
+<if test="baseId != null">base_id=#{baseId},</if>
+<if test="name != null">name=#{name},</if>
+<if test="year != null">year=#{year},</if>
+<if test="note != null">note=#{note},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="zcFileId != null">zc_file_id=#{zcFileId},</if>
+<if test="zcFileUrl != null">zc_file_url=#{zcFileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBMdtFile" resultType="cc.mrbird.febs.mdl.entity.MdlBMdtFile" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdtFile">
+        select  *  from mdl_b_mdt_file
+        where  1=1
+            <if test="mdlBMdtFile.id != null and mdlBMdtFile.id != ''"> and  mdl_b_mdt_file.id =#{ mdlBMdtFile.id} </if>
+            <if test="mdlBMdtFile.name != null and mdlBMdtFile.name != ''"> and  mdl_b_mdt_file.name like concat('%', #{ mdlBMdtFile.name} ,'%')</if>
+            <if test="mdlBMdtFile.year != null and mdlBMdtFile.year != ''"> and  mdl_b_mdt_file.year like concat('%', #{ mdlBMdtFile.year} ,'%')</if>
+            <if test="mdlBMdtFile.note != null and mdlBMdtFile.note != ''"> and  mdl_b_mdt_file.note like concat('%', #{ mdlBMdtFile.note} ,'%')</if>
+            <if test="mdlBMdtFile.fileId != null and mdlBMdtFile.fileId != ''"> and  mdl_b_mdt_file.file_id like concat('%', #{ mdlBMdtFile.fileId} ,'%')</if>
+            <if test="mdlBMdtFile.fileUrl != null and mdlBMdtFile.fileUrl != ''"> and  mdl_b_mdt_file.file_url like concat('%', #{ mdlBMdtFile.fileUrl} ,'%')</if>
+            <if test="mdlBMdtFile.zcFileId != null and mdlBMdtFile.zcFileId != ''"> and  mdl_b_mdt_file.zc_file_id like concat('%', #{ mdlBMdtFile.zcFileId} ,'%')</if>
+            <if test="mdlBMdtFile.zcFileUrl != null and mdlBMdtFile.zcFileUrl != ''"> and  mdl_b_mdt_file.zc_file_url like concat('%', #{ mdlBMdtFile.zcFileUrl} ,'%')</if>
+        <if test="mdlBMdtFile.state != null"> and  mdl_b_mdt_file.state =#{ mdlBMdtFile.state} </if>
+        <if test="mdlBMdtFile.isDeletemark != null"> and  mdl_b_mdt_file.IS_DELETEMARK =#{ mdlBMdtFile.isDeletemark} </if>
+        <if test="mdlBMdtFile.createTimeFrom!= null">
+            AND mdl_b_mdt_file.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBMdtFile.createTimeFrom}
+        </if>
+        <if test="mdlBMdtFile.createTimeTo!= null">
+            AND  mdl_b_mdt_file.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBMdtFile.createTimeTo}
+        </if>
+        <if test="mdlBMdtFile.modifyTimeFrom!= null">
+            AND mdl_b_mdt_file.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBMdtFile.modifyTimeFrom}
+        </if>
+        <if test="mdlBMdtFile.modifyTimeTo!= null">
+            AND  mdl_b_mdt_file.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBMdtFile.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

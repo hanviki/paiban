@@ -74,6 +74,7 @@ export default {
       this.$get('comFile/' + fileId).then((r) => {
         let data = r.data
         this.fileUrl =this.$baseUrl+ data.url
+        data.url =this.$baseUrl+ data.url
         this.fileList.push(data)
       })
     },
@@ -88,6 +89,7 @@ export default {
         let comfile = r.data.data
         this.fileId = comfile.uid
         this.fileUrl =this.$baseUrl+ comfile.url
+        comfile.url= this.fileUrl
         this.fileList=[]
         this.fileList.push(comfile)
         //this.fileList = []

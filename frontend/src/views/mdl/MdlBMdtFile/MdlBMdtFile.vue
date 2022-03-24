@@ -1,61 +1,17 @@
 <template>
   <a-card :bordered="false" class="card-area">
-    <div :class="advanced ? 'search' : null">
-      <a-form layout="horizontal">
-        <a-row>
-          <div :class="advanced ? null : 'fold'">
-               <a-col :md="8" :sm="24">
-             <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccount" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-            <a-form-item v-bind="formItemLayout" label="科室">
-                <a-select v-model="queryParams.deptNew"
-                  option-filter-prop="children"
-         :filter-option="filterOption"
-         show-search>
-                  <a-select-option
-                    v-for="d in deptData"
-                    :key="d.deptId"
-                    :value="`${d.deptId}`"
-                  >
-                    {{ d.deptName }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-             </a-col>
-          </div>
-          <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="search">查询</a-button>
-            <a-button style="margin-left: 8px" @click="reset">重置</a-button>
-            <a @click="toggleAdvanced" style="margin-left: 8px">
-              {{ advanced ? "收起" : "展开" }}
-              <a-icon :type="advanced ? 'up' : 'down'" />
-            </a>
-          </span>
-        </a-row>
-      </a-form>
-    </div>
     <div>
-        <a-dropdown v-hasPermission="['mdlBSpecial:export']">
-          <a-menu slot="overlay">
-            <a-menu-item key="export-data" @click="exportExcel"
-              >导出Excel</a-menu-item
-            >
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
-        <import-excel
-          v-hasPermission="['mdlBSpecial:import']"
-          templateUrl="mdlBSpecial/downTemplate"
-          @succ="handleRefesh"
-          url="mdlBSpecial/import"
+      <div class="operator">
+        <a-button
+          type="primary"
+          ghost
+          @click="add"
+          >新增</a-button
         >
-        </import-excel>
+        <a-button @click="batchDelete"
+          >删除</a-button
+        >
+      
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -89,32 +45,31 @@
             @click="edit(record)"
             title="修改"
           ></a-icon>
-         
         </template>
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <mdlBSpecial-add
+    <mdlBMdtFile-add
       @close="handleAddClose"
       @success="handleAddSuccess"
       :addVisiable="addVisiable"
+      :baseId="baseId"
     >
-    </mdlBSpecial-add>
+    </mdlBMdtFile-add>
     <!-- 修改字典 -->
-    <mdlBSpecial-edit
-      ref="mdlBSpecialEdit"
+    <mdlBMdtFile-edit
+      ref="mdlBMdtFileEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </mdlBSpecial-edit>
+    </mdlBMdtFile-edit>
   </a-card>
 </template>
 
 <script>
-import MdlBSpecialAdd from "./MdlBSpecialAdd";
-import MdlBSpecialEdit from "./MdlBSpecialEdit";
-import ImportExcel from "../../common/ImportExcel";
+import MdlBMdtFileAdd from "./MdlBMdtFileAdd";
+import MdlBMdtFileEdit from "./MdlBMdtFileEdit";
 import moment from "moment";
 
 const formItemLayout = {
@@ -122,8 +77,8 @@ const formItemLayout = {
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "MdlBSpecial",
-  components: { MdlBSpecialAdd, MdlBSpecialEdit, ImportExcel },
+  name: "MdlBMdtFile",
+  components: { MdlBMdtFileAdd, MdlBMdtFileEdit },
   data() {
     return {
       advanced: false,
@@ -145,51 +100,31 @@ export default {
       addVisiable: false,
       editVisiable: false,
       loading: false,
-      bordered: true,
-      deptData: []
+      bordered: true
     };
+  },
+  props: {
+     baseId: {
+        default: ''
+     }
   },
   computed: {
     columns() {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
-         {
-          title: "科室",
-          dataIndex: "deptNew",
-          width: 100,
-        },
-          {
-          title: "发薪号",
-          dataIndex: "userAccount",
+        {
+          title: "年度",
+          dataIndex: "year",
           width: 100,
         },
         {
-          title: "姓名",
-          dataIndex: "userAccountName",
+          title: "备注",
+          dataIndex: "note",
           width: 100,
         },
         {
-          title: "专业资质名称",
-          dataIndex: "qlName",
-          width: 100,
-        },
-        {
-          title: "获得时间",
-          dataIndex: "qlDate",
-          customRender: (text, row, index) => {
-            if (text == null) return "";
-            return moment(text).format("YYYY-MM-DD");
-          },
-          width: 100,
-        },
-        {
-          title: "证书编号",
-          dataIndex: "qlCode",
-          width: 100,
-        },
-        {
-          title: "附件",
+          title: "工作总结",
           dataIndex: "fileId",
           customRender: (text, row, index) => {
             if (text != null && text != "") {
@@ -203,37 +138,38 @@ export default {
           },
           width: 100,
         },
-      
+        {
+          title: "工作量统计",
+          dataIndex: "zcFileId",
+          customRender: (text, row, index) => {
+            if (text != null && text != "") {
+              return (
+                <a href={this.$baseUrl + row.zcFileUrl} target="_blank">
+                  查看
+                </a>
+              );
+            }
+            return "";
+          },
+          width: 100,
+        },
+        {
+          title: "操作",
+          dataIndex: "operation",
+          scopedSlots: { customRender: "operation" },
+          fixed: "right",
+          width: 100,
+        },
       ];
     },
   },
   mounted() {
-    this.fetchDept();
     this.fetch();
   },
   methods: {
     moment,
     handleRefesh() {
       this.search();
-    },
-     fetchDept() {
-      this.$get("sdlBUser/deptNew", {  }).then((res) => {
-        this.deptData = [];
-         this.deptData.push({
-          deptId: "-1",
-          deptName: "全部",
-        });
-       if(res.data[0]!=null){
-         this.deptData.push(...res.data);
-        }
-      });
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
@@ -264,7 +200,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      this.$refs.mdlBSpecialEdit.setFormValues(record);
+      this.$refs.mdlBMdtFileEdit.setFormValues(record);
       this.editVisiable = true;
     },
     batchDelete() {
@@ -278,8 +214,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let mdlBSpecialIds = that.selectedRowKeys.join(",");
-          that.$delete("mdlBSpecial/" + mdlBSpecialIds).then(() => {
+          let mdlBMdtFileIds = that.selectedRowKeys.join(",");
+          that.$delete("mdlBMdtFile/" + mdlBMdtFileIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -298,7 +234,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("mdlBSpecial/excel", {
+      this.$export("mdlBMdtFile/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -359,11 +295,9 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-       if(params.deptNew=="-1"){
-        delete params.deptNew
-      }
-      this.$get("mdlBSpecial/all", {
+      this.$get("mdlBMdtFile", {
         ...params,
+        baseId: this.baseId
       }).then((r) => {
         let data = r.data;
         const pagination = { ...this.pagination };

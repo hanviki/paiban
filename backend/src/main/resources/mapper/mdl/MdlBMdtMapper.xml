@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBMdtMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBMdt">
+                    <id column="id" property="id"/>
+                    <result column="team_name" property="teamName"/>
+                    <result column="dept_head" property="deptHead"/>
+                    <result column="user_account_name_leader" property="userAccountNameLeader"/>
+                    <result column="user_account_leader" property="userAccountLeader"/>
+                    <result column="user_account_name_assist" property="userAccountNameAssist"/>
+                    <result column="user_account_name_leader2" property="userAccountNameLeader2"/>
+                    <result column="user_account_leader2" property="userAccountLeader2"/>
+                    <result column="user_account_name_assist2" property="userAccountNameAssist2"/>
+                    <result column="user_account_assist2" property="userAccountAssist2"/>
+                    <result column="user_account_assist" property="userAccountAssist"/>
+                    <result column="state" property="state"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
+                    <result column="note" property="note"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, team_name, dept_head, user_account_name_leader, user_account_leader, user_account_name_assist, user_account_name_leader2, user_account_leader2, user_account_name_assist2, user_account_assist2, user_account_assist, state, start_date, end_date, note, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBMdt" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdt">
+        update mdl_b_mdt
+        <trim prefix="set" suffixOverrides=",">
+<if test="teamName != null">team_name=#{teamName},</if>
+<if test="deptHead != null">dept_head=#{deptHead},</if>
+<if test="userAccountNameLeader != null">user_account_name_leader=#{userAccountNameLeader},</if>
+<if test="userAccountLeader != null">user_account_leader=#{userAccountLeader},</if>
+<if test="userAccountNameAssist != null">user_account_name_assist=#{userAccountNameAssist},</if>
+<if test="userAccountNameLeader2 != null">user_account_name_leader2=#{userAccountNameLeader2},</if>
+<if test="userAccountLeader2 != null">user_account_leader2=#{userAccountLeader2},</if>
+<if test="userAccountNameAssist2 != null">user_account_name_assist2=#{userAccountNameAssist2},</if>
+<if test="userAccountAssist2 != null">user_account_assist2=#{userAccountAssist2},</if>
+<if test="userAccountAssist != null">user_account_assist=#{userAccountAssist},</if>
+<if test="state != null">state=#{state},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
+<if test="note != null">note=#{note},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBMdt" resultType="cc.mrbird.febs.mdl.entity.MdlBMdt" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdt">
+        select  *  from mdl_b_mdt
+        where  1=1
+            <if test="mdlBMdt.teamName != null and mdlBMdt.teamName != ''"> and  mdl_b_mdt.team_name like concat('%', #{ mdlBMdt.teamName} ,'%')</if>
+            <if test="mdlBMdt.deptHead != null and mdlBMdt.deptHead != ''"> and  mdl_b_mdt.dept_head like concat('%', #{ mdlBMdt.deptHead} ,'%')</if>
+            <if test="mdlBMdt.userAccountNameLeader != null and mdlBMdt.userAccountNameLeader != ''"> and  mdl_b_mdt.user_account_name_leader like concat('%', #{ mdlBMdt.userAccountNameLeader} ,'%')</if>
+            <if test="mdlBMdt.userAccountLeader != null and mdlBMdt.userAccountLeader != ''"> and  mdl_b_mdt.user_account_leader like concat('%', #{ mdlBMdt.userAccountLeader} ,'%')</if>
+            <if test="mdlBMdt.userAccountNameAssist != null and mdlBMdt.userAccountNameAssist != ''"> and  mdl_b_mdt.user_account_name_assist like concat('%', #{ mdlBMdt.userAccountNameAssist} ,'%')</if>
+            <if test="mdlBMdt.userAccountNameLeader2 != null and mdlBMdt.userAccountNameLeader2 != ''"> and  mdl_b_mdt.user_account_name_leader2 like concat('%', #{ mdlBMdt.userAccountNameLeader2} ,'%')</if>
+            <if test="mdlBMdt.userAccountLeader2 != null and mdlBMdt.userAccountLeader2 != ''"> and  mdl_b_mdt.user_account_leader2 like concat('%', #{ mdlBMdt.userAccountLeader2} ,'%')</if>
+            <if test="mdlBMdt.userAccountNameAssist2 != null and mdlBMdt.userAccountNameAssist2 != ''"> and  mdl_b_mdt.user_account_name_assist2 like concat('%', #{ mdlBMdt.userAccountNameAssist2} ,'%')</if>
+            <if test="mdlBMdt.userAccountAssist2 != null and mdlBMdt.userAccountAssist2 != ''"> and  mdl_b_mdt.user_account_assist2 like concat('%', #{ mdlBMdt.userAccountAssist2} ,'%')</if>
+            <if test="mdlBMdt.userAccountAssist != null and mdlBMdt.userAccountAssist != ''"> and  mdl_b_mdt.user_account_assist like concat('%', #{ mdlBMdt.userAccountAssist} ,'%')</if>
+        <if test="mdlBMdt.state != null"> and  mdl_b_mdt.state =#{ mdlBMdt.state} </if>
+        <if test="mdlBMdt.startDateFrom!= null">
+            AND mdl_b_mdt.start_date <![CDATA[ >= ]]>  #{mdlBMdt.startDateFrom}
+        </if>
+        <if test="mdlBMdt.startDateTo!= null">
+            AND  mdl_b_mdt.start_date <![CDATA[ <= ]]>  #{mdlBMdt.startDateTo}
+        </if>
+        <if test="mdlBMdt.endDateFrom!= null">
+            AND mdl_b_mdt.end_date <![CDATA[ >= ]]>  #{mdlBMdt.endDateFrom}
+        </if>
+        <if test="mdlBMdt.endDateTo!= null">
+            AND  mdl_b_mdt.end_date <![CDATA[ <= ]]>  #{mdlBMdt.endDateTo}
+        </if>
+            <if test="mdlBMdt.note != null and mdlBMdt.note != ''"> and  mdl_b_mdt.note like concat('%', #{ mdlBMdt.note} ,'%')</if>
+        <if test="mdlBMdt.isDeletemark != null"> and  mdl_b_mdt.IS_DELETEMARK =#{ mdlBMdt.isDeletemark} </if>
+        <if test="mdlBMdt.createTimeFrom!= null">
+            AND mdl_b_mdt.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBMdt.createTimeFrom}
+        </if>
+        <if test="mdlBMdt.createTimeTo!= null">
+            AND  mdl_b_mdt.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBMdt.createTimeTo}
+        </if>
+        <if test="mdlBMdt.modifyTimeFrom!= null">
+            AND mdl_b_mdt.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBMdt.modifyTimeFrom}
+        </if>
+        <if test="mdlBMdt.modifyTimeTo!= null">
+            AND  mdl_b_mdt.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBMdt.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

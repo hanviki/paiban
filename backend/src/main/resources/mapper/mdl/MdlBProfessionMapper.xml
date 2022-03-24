@@ -52,6 +52,9 @@
         <if test="mdlBProfession.qlDateFrom!= null">
             AND mdl_b_profession.ql_date <![CDATA[ >= ]]>  #{mdlBProfession.qlDateFrom}
         </if>
+        <if test="mdlBProfession.deptNew!= null">
+            AND sdl_b_user.dept_new =  #{mdlBProfession.deptNew}
+        </if>
         <if test="mdlBProfession.qlDateTo!= null">
             AND  mdl_b_profession.ql_date <![CDATA[ <= ]]>  #{mdlBProfession.qlDateTo}
         </if>

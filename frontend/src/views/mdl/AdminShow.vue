@@ -131,6 +131,7 @@
       </chu-fang-report>
       <hui-zhen v-show="subShow == 20" type="单科会诊"> </hui-zhen>
       <hui-zhen v-show="subShow == 21" type="多学科会诊"> </hui-zhen>
+      <mdl-b-mdt v-show="subShow == 3" type="MDT团队管理"></mdl-b-mdt>
     </div>
   </a-card>
 </template>
@@ -142,6 +143,7 @@ import MdlBArchiveList from "./MdlBArchive/MdlBArchiveList.vue";
 import MdlBChufang from "./MdlBChufang/MdlBChufang.vue";
 import HuiZhen from "./MdlBManager/HuiZhen.vue";
 import ChuFangReport from "./MdlBChufang/ChuFangReport.vue";
+import MdlBMdt from './MdlBMdt/MdlBMdt.vue';
 
 export default {
   name: "BaseInfo",
@@ -160,6 +162,7 @@ export default {
     MdlBChufang,
     HuiZhen,
     ChuFangReport,
+    MdlBMdt,
     ChuFangReport,
   },
   methods: {

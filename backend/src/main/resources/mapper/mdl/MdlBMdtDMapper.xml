@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBMdtDMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBMdtD">
+                    <id column="id" property="id"/>
+                    <result column="base_id" property="baseId"/>
+                    <result column="type" property="type"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="dept_new" property="deptNew"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, base_id, type, user_account_name, user_account, dept_new, zhicheng, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBMdtD" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdtD">
+        update mdl_b_mdt_d
+        <trim prefix="set" suffixOverrides=",">
+<if test="baseId != null">base_id=#{baseId},</if>
+<if test="type != null">type=#{type},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="deptNew != null">dept_new=#{deptNew},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBMdtD" resultType="cc.mrbird.febs.mdl.entity.MdlBMdtD" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdtD">
+        select  *  from mdl_b_mdt_d
+        where  1=1
+            <if test="mdlBMdtD.userAccountName != null and mdlBMdtD.userAccountName != ''"> and  mdl_b_mdt_d.user_account_name like concat('%', #{ mdlBMdtD.userAccountName} ,'%')</if>
+            <if test="mdlBMdtD.userAccount != null and mdlBMdtD.userAccount != ''"> and  mdl_b_mdt_d.user_account like concat('%', #{ mdlBMdtD.userAccount} ,'%')</if>
+            <if test="mdlBMdtD.deptNew != null and mdlBMdtD.deptNew != ''"> and  mdl_b_mdt_d.dept_new like concat('%', #{ mdlBMdtD.deptNew} ,'%')</if>
+            <if test="mdlBMdtD.zhicheng != null and mdlBMdtD.zhicheng != ''"> and  mdl_b_mdt_d.zhicheng like concat('%', #{ mdlBMdtD.zhicheng} ,'%')</if>
+        <if test="mdlBMdtD.state != null"> and  mdl_b_mdt_d.state =#{ mdlBMdtD.state} </if>
+        <if test="mdlBMdtD.isDeletemark != null"> and  mdl_b_mdt_d.IS_DELETEMARK =#{ mdlBMdtD.isDeletemark} </if>
+        <if test="mdlBMdtD.createTimeFrom!= null">
+            AND mdl_b_mdt_d.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBMdtD.createTimeFrom}
+        </if>
+        <if test="mdlBMdtD.createTimeTo!= null">
+            AND  mdl_b_mdt_d.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBMdtD.createTimeTo}
+        </if>
+        <if test="mdlBMdtD.modifyTimeFrom!= null">
+            AND mdl_b_mdt_d.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBMdtD.modifyTimeFrom}
+        </if>
+        <if test="mdlBMdtD.modifyTimeTo!= null">
+            AND  mdl_b_mdt_d.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBMdtD.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

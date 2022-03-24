@@ -106,11 +106,14 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
 
             }
             if (sdlBUser.getState() != null) {
-                queryWrapper.eq(SdlBUser::getState, sdlBUser.getState());
+
+            }
+            else{
+                queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
             }
            // queryWrapper.eq(SdlBUser::getRylx,"职工");
             queryWrapper.apply("sdl_b_user.yuangongzu!='规培' and sdl_b_user.yuangongzu!='博士后' and (sdl_b_user.renshizifw ='医师' or  (sdl_b_user.renshizifw='技术' and sdl_b_user.renshizfenlei='卫生'))");
-            queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
+
             IPage<SdlBUser> page = new Page<>();
             page.setPages(1L);
             page.setSize(20);

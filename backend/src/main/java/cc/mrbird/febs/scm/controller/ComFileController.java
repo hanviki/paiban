@@ -71,7 +71,7 @@ public class ComFileController extends BaseController{
         outComFile.setName(comFile.getClientName());
         outComFile.setStatus("done");
 
-        String fileUrl = febsProperties.getBaseUrl() + "/uploadFile/"  + comFile.getServerName();
+        String fileUrl =  "/uploadFile/"  + comFile.getServerName();
         outComFile.setUrl(fileUrl);
         outComFile.setThumbUrl(fileUrl);
         outComFile.setSerName(comFile.getServerName());

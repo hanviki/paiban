@@ -9,6 +9,22 @@
                 <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
+             <a-col :md="8" :sm="24">
+            <a-form-item v-bind="formItemLayout" label="科室">
+                <a-select v-model="queryParams.deptNew"
+                  option-filter-prop="children"
+         :filter-option="filterOption"
+         show-search>
+                  <a-select-option
+                    v-for="d in deptData"
+                    :key="d.deptId"
+                    :value="`${d.deptId}`"
+                  >
+                    {{ d.deptName }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+             </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -103,6 +119,7 @@ export default {
       editVisiable: false,
       loading: false,
       bordered: true,
+      deptData: []
     };
   },
   computed: {
@@ -164,12 +181,25 @@ export default {
     },
   },
   mounted() {
+    this.fetchDept();
     this.fetch();
   },
   methods: {
     moment,
     handleRefesh() {
       this.search();
+    },
+    fetchDept() {
+      this.$get("sdlBUser/deptNew", {  }).then((res) => {
+        this.deptData = [];
+         this.deptData.push({
+          deptId: "-1",
+          deptName: "全部",
+        });
+       if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
+      });
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
@@ -225,6 +255,13 @@ export default {
           that.selectedRowKeys = [];
         },
       });
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     },
     exportExcel() {
       let { sortedInfo } = this;
@@ -294,6 +331,9 @@ export default {
         // 如果分页信息为空，则设置为默认值
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
+      }
+       if(params.deptNew=="-1"){
+        delete params.deptNew
       }
       this.$get("mdlBProfession/all", {
         ...params,

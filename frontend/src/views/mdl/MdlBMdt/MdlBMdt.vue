@@ -4,27 +4,28 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-               <a-col :md="8" :sm="24">
-             <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccount" />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="团队名称" v-bind="formItemLayout">
+                <a-input v-model="queryParams.teamName" />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-            <a-form-item v-bind="formItemLayout" label="科室">
-                <a-select v-model="queryParams.deptNew"
-                  option-filter-prop="children"
-         :filter-option="filterOption"
-         show-search>
-                  <a-select-option
-                    v-for="d in deptData"
-                    :key="d.deptId"
-                    :value="`${d.deptId}`"
-                  >
-                    {{ d.deptName }}
-                  </a-select-option>
-                </a-select>
+              <a-form-item label="牵头科室" v-bind="formItemLayout">
+                <a-input v-model="queryParams.deptHead" />
               </a-form-item>
-             </a-col>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="团队负责人发薪号" v-bind="formItemLayout">
+                <a-input v-model="queryParams.userAccountLeader" />
+              </a-form-item>
+            </a-col>
+            <template v-if="advanced">
+              <a-col :md="8" :sm="24">
+                <a-form-item label="团队秘书发薪号" v-bind="formItemLayout">
+                  <a-input v-model="queryParams.userAccountAssist" />
+                </a-form-item>
+              </a-col>
+            </template>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -38,7 +39,18 @@
       </a-form>
     </div>
     <div>
-        <a-dropdown v-hasPermission="['mdlBSpecial:export']">
+      <div class="operator">
+        <a-button
+         
+          type="primary"
+          ghost
+          @click="add"
+          >新增</a-button
+        >
+        <a-button  @click="batchDelete"
+          >删除</a-button
+        >
+        <a-dropdown v-hasPermission="['mdlBMdt:export']">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exportExcel"
               >导出Excel</a-menu-item
@@ -50,10 +62,10 @@
           </a-button>
         </a-dropdown>
         <import-excel
-          v-hasPermission="['mdlBSpecial:import']"
-          templateUrl="mdlBSpecial/downTemplate"
+          v-hasPermission="['mdlBMdt:import']"
+          templateUrl="mdlBMdt/downTemplate"
           @succ="handleRefesh"
-          url="mdlBSpecial/import"
+          url="mdlBMdt/import"
         >
         </import-excel>
       </div>
@@ -65,6 +77,7 @@
         :dataSource="dataSource"
         :pagination="pagination"
         :loading="loading"
+        :expandedRowKeys="expandedRowKeys"
         :rowSelection="{
           selectedRowKeys: selectedRowKeys,
           onChange: onSelectChange,
@@ -72,7 +85,19 @@
         @change="handleTableChange"
         :bordered="bordered"
         :scroll="{ x: 900 }"
+         @expand="expandSubGrid"
       >
+       <a-table
+          ref="subTable"
+          slot="expandedRowRender"
+          slot-scope="record"
+          :columns="innerColumns"
+          :dataSource="record.innerData"
+          :pagination="false"
+          :rowKey="record2 => record2.id"
+          :scroll="{y: 200}"
+        >
+        </a-table> 
         <template slot="remark" slot-scope="text, record">
           <a-popover placement="topLeft">
             <template slot="content">
@@ -83,6 +108,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
+           
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
@@ -94,26 +120,26 @@
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <mdlBSpecial-add
+    <mdlBMdt-add
       @close="handleAddClose"
       @success="handleAddSuccess"
       :addVisiable="addVisiable"
     >
-    </mdlBSpecial-add>
+    </mdlBMdt-add>
     <!-- 修改字典 -->
-    <mdlBSpecial-edit
-      ref="mdlBSpecialEdit"
+    <mdlBMdt-edit
+      ref="mdlBMdtEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </mdlBSpecial-edit>
+    </mdlBMdt-edit>
   </a-card>
 </template>
 
 <script>
-import MdlBSpecialAdd from "./MdlBSpecialAdd";
-import MdlBSpecialEdit from "./MdlBSpecialEdit";
+import MdlBMdtAdd from "./MdlBMdtAdd";
+import MdlBMdtEdit from "./MdlBMdtEdit";
 import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
 
@@ -122,13 +148,14 @@ const formItemLayout = {
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "MdlBSpecial",
-  components: { MdlBSpecialAdd, MdlBSpecialEdit, ImportExcel },
+  name: "MdlBMdt",
+  components: { MdlBMdtAdd, MdlBMdtEdit, ImportExcel },
   data() {
     return {
       advanced: false,
       dataSource: [],
       selectedRowKeys: [],
+      expandedRowKeys: [],
       sortedInfo: null,
       paginationInfo: null,
       formItemLayout,
@@ -146,7 +173,6 @@ export default {
       editVisiable: false,
       loading: false,
       bordered: true,
-      deptData: []
     };
   },
   computed: {
@@ -154,86 +180,125 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
+        {
+          title: "团队名称",
+          dataIndex: "teamName",
+          width: 100,
+        },
+        {
+          title: "牵头科室",
+          dataIndex: "deptHead",
+          width: 100,
+        },
+        {
+          title: "团队负责人",
+          dataIndex: "userAccountNameLeader",
+          width: 100,
+        },
+        {
+          title: "团队负责人发薪号",
+          dataIndex: "userAccountLeader",
+          width: 100,
+        },
+        {
+          title: "团队秘书",
+          dataIndex: "userAccountNameAssist",
+          width: 100,
+        },
+        {
+          title: "团队秘书发薪号",
+          dataIndex: "userAccountAssist",
+          width: 100,
+        },
+        {
+          title: "团队负责人2",
+          dataIndex: "userAccountNameLeader2",
+          width: 100,
+        },
+        {
+          title: "团队负责人2发薪号",
+          dataIndex: "userAccountLeader2",
+          width: 100,
+        },
+        {
+          title: "团队秘书2",
+          dataIndex: "userAccountNameAssist2",
+          width: 100,
+        },
+        {
+          title: "团队秘书发薪号2",
+          dataIndex: "userAccountAssist2",
+          width: 100,
+        },
+         {
+          title: "有效日期",
+          children: [
+            {
+              title: "开始时间",
+              dataIndex: "startDate",
+              width: 100,
+               customRender: (text, row, index) => {
+            if(text == null) return ''
+            return moment(text).format('YYYY-MM-DD')
+          },
+            },
+            {
+              title: "结束时间",
+              dataIndex: "endDate",
+              width: 100,
+               customRender: (text, row, index) => {
+            if(text == null) return ''
+            return moment(text).format('YYYY-MM-DD')
+          },
+            },
+          ],
+        },
+        {
+          title: "操作",
+          dataIndex: "operation",
+          scopedSlots: { customRender: "operation" },
+          width: 100,
+        },
+      ];
+    },
+     innerColumns() {
+      return  [
+         {
+          title: "类型",
+          dataIndex: "type",
+          width: 150,
+          customRender: (value, row, index)=>{
+            if(value){
+              return <a-tag color="orange">其他成员</a-tag>;
+            }
+           return <a-tag color="green">核心成员</a-tag>;;
+          }
+        },
+         {
+          title: "姓名",
+          dataIndex: "userAccountName",
+          width: 150,
+        },
+         {
+          title: "发薪号",
+          dataIndex: "userAccount",
+          width: 100,
+        },
          {
           title: "科室",
           dataIndex: "deptNew",
           width: 100,
         },
-          {
-          title: "发薪号",
-          dataIndex: "userAccount",
-          width: 100,
-        },
-        {
-          title: "姓名",
-          dataIndex: "userAccountName",
-          width: 100,
-        },
-        {
-          title: "专业资质名称",
-          dataIndex: "qlName",
-          width: 100,
-        },
-        {
-          title: "获得时间",
-          dataIndex: "qlDate",
-          customRender: (text, row, index) => {
-            if (text == null) return "";
-            return moment(text).format("YYYY-MM-DD");
-          },
-          width: 100,
-        },
-        {
-          title: "证书编号",
-          dataIndex: "qlCode",
-          width: 100,
-        },
-        {
-          title: "附件",
-          dataIndex: "fileId",
-          customRender: (text, row, index) => {
-            if (text != null && text != "") {
-              return (
-                <a href={this.$baseUrl + row.fileUrl} target="_blank">
-                  查看
-                </a>
-              );
-            }
-            return "";
-          },
-          width: 100,
-        },
-      
       ];
     },
   },
   mounted() {
-    this.fetchDept();
     this.fetch();
   },
   methods: {
     moment,
     handleRefesh() {
       this.search();
-    },
-     fetchDept() {
-      this.$get("sdlBUser/deptNew", {  }).then((res) => {
-        this.deptData = [];
-         this.deptData.push({
-          deptId: "-1",
-          deptName: "全部",
-        });
-       if(res.data[0]!=null){
-         this.deptData.push(...res.data);
-        }
-      });
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
@@ -264,7 +329,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      this.$refs.mdlBSpecialEdit.setFormValues(record);
+      this.$refs.mdlBMdtEdit.setFormValues(record);
       this.editVisiable = true;
     },
     batchDelete() {
@@ -278,8 +343,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let mdlBSpecialIds = that.selectedRowKeys.join(",");
-          that.$delete("mdlBSpecial/" + mdlBSpecialIds).then(() => {
+          let mdlBMdtIds = that.selectedRowKeys.join(",");
+          that.$delete("mdlBMdt/" + mdlBMdtIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -298,11 +363,35 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("mdlBSpecial/excel", {
+      this.$export("mdlBMdt/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
       });
+    },
+    expandSubGrid (expanded, record) {//获取供应计划的数量
+      if (expanded) {
+        this.expandedRowKeys.push(record.id)
+        this.handleSubData(record) //获取子表数据
+      } else {
+        let expandedRowKeys = this.expandedRowKeys.filter(RowKey => RowKey !== record.id)
+        this.expandedRowKeys = expandedRowKeys
+      }
+    },
+    handleSubData (record) {
+      this.loading = true
+      let queryParams = {  };
+      queryParams.baseId = record.id
+      this.$get('mdlBMdtD', {
+        ...queryParams,
+        sortField: 'type',
+        sortOrder: 'ascend',
+        pageSize: 100000
+      }).then((r) => {
+        let data = r.data
+        this.loading = false
+        record.innerData = data.rows
+      })
     },
     search() {
       let { sortedInfo } = this;
@@ -359,10 +448,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-       if(params.deptNew=="-1"){
-        delete params.deptNew
-      }
-      this.$get("mdlBSpecial/all", {
+      this.$get("mdlBMdt", {
         ...params,
       }).then((r) => {
         let data = r.data;
