@@ -7,7 +7,9 @@ import cc.mrbird.febs.rfc.CustomUser;
 import cc.mrbird.febs.rfc.RfcNoc;
 import cc.mrbird.febs.sdl.entity.SdlBPersoninfo;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
+import cc.mrbird.febs.sdl.entity.SdlBUserMg;
 import cc.mrbird.febs.sdl.service.ISdlBPersoninfoService;
+import cc.mrbird.febs.sdl.service.ISdlBUserMgService;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
 import cc.mrbird.febs.sdl.service.impl.SdlBUserServiceImpl;
 import cn.hutool.core.date.DateUtil;
@@ -29,6 +31,9 @@ public class MsgValidTask {
     private ISdlBUserService iSdlBUserService;
 
     @Autowired
+    private ISdlBUserMgService iSdlBUserMgService;
+
+    @Autowired
     private ISdlBPersoninfoService iSdlBPersoninfoService;
 
     public void user() {
@@ -44,6 +49,26 @@ public class MsgValidTask {
                 iSdlBUserService.updateSdlBUser(user);
             } else {
                 iSdlBUserService.createSdlBUser(user);
+            }
+        }
+    }
+
+    /**
+     * 全部人员信息同步  护士、医生
+     */
+    public void user2() {
+        RfcNoc rfcNoc = new RfcNoc();
+        List<SdlBUserMg> sdlBUserList = rfcNoc.GetUserList2();
+        List<CustomUser> sdlUserIds = iSdlBUserMgService.getUserAccounts();
+
+        for (SdlBUserMg user : sdlBUserList
+        ) {
+            List<CustomUser> users= sdlUserIds.stream().filter(p->p.getUserAccount().equals(user.getUserAccount())).collect(Collectors.toList());
+            if (users.size()>0) {
+                user.setId(users.get(0).getId());
+                iSdlBUserMgService.updateSdlBUserMg(user);
+            } else {
+                iSdlBUserMgService.createSdlBUserMg(user);
             }
         }
     }

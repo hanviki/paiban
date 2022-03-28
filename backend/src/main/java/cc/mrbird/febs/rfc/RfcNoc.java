@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.properties.FebsProperties;
 import cc.mrbird.febs.common.properties.JcoProperties;
 
 import cc.mrbird.febs.sdl.entity.SdlBUser;
+import cc.mrbird.febs.sdl.entity.SdlBUserMg;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import com.sap.conn.jco.*;
@@ -134,6 +135,117 @@ public class RfcNoc {
                 rfcReturn.setRow(i);
 
                 SdlBUser user = new SdlBUser();
+
+
+                user.setRylx((rfcReturn.getString("ZRYLXMS")).replace("0000-00-00",""));
+                user.setUserAccount((rfcReturn.getString("PERNR")).replace("0000-00-00",""));
+                user.setUserAccountName((rfcReturn.getString("NACHN")).replace("0000-00-00",""));
+                user.setYggh((rfcReturn.getString("YGGH")).replace("0000-00-00",""));
+                user.setGhHk((rfcReturn.getString("HKRSBH")).replace("0000-00-00",""));
+                user.setSexName((rfcReturn.getString("GESCTXT")).replace("0000-00-00",""));
+                user.setBirthday((rfcReturn.getString("GBDAT")).replace("0000-00-00",""));
+                user.setYuangongzu((rfcReturn.getString("PTEXT")).replace("0000-00-00",""));
+                user.setZizu((rfcReturn.getString("PERSK_TXT")).replace("0000-00-00",""));
+                user.setRenshizifw((rfcReturn.getString("BTEXT")).replace("0000-00-00",""));
+                user.setRenshizfenlei((rfcReturn.getString("ZHRBTTXT")).replace("0000-00-00",""));
+                user.setIdCard((rfcReturn.getString("ICNUM")).replace("0000-00-00",""));
+                user.setXingzhengjiebie((rfcReturn.getString("zhrzwtxtxt".toUpperCase())).replace("0000-00-00",""));
+                user.setZhicheng((rfcReturn.getString("ZHRZCJBTXT")).replace("0000-00-00",""));
+                user.setXrgwjb((rfcReturn.getString("TRFGR")).replace("0000-00-00",""));
+                user.setXrgwjbprsj((rfcReturn.getString("zhrzykssj".toUpperCase())).replace("0000-00-00",""));
+                user.setZyjsgwLc((rfcReturn.getString("ZHR_ZYZWTXT")).replace("0000-00-00",""));
+                user.setAppointedDateLc((rfcReturn.getString("zhrzcsj".toUpperCase())).replace("0000-00-00",""));
+                user.setBianhaoLc((rfcReturn.getString("zhrcyzkzh".toUpperCase())).replace("0000-00-00",""));
+                user.setZyjsgw((rfcReturn.getString("ZHR_ZYZWTXT2")).replace("0000-00-00",""));
+                user.setAppointedDate((rfcReturn.getString("zhrzcsj2".toUpperCase())).replace("0000-00-00",""));
+                user.setBianhaoJx((rfcReturn.getString("zhrcyzkzh2".toUpperCase())).replace("0000-00-00",""));
+                user.setZyjsNp((rfcReturn.getString("ZHR_ZYZWTXT3")).replace("0000-00-00",""));
+                user.setZyjsDateNp((rfcReturn.getString("ZHRZCSJ3")).replace("0000-00-00",""));
+                user.setZyjsNpjx((rfcReturn.getString("zhr_zyzwtxt4".toUpperCase())).replace("0000-00-00",""));
+                user.setZyjsDateNpjx((rfcReturn.getString("ZHRZCSJ4")).replace("0000-00-00",""));
+                user.setEdu((rfcReturn.getString("trfst".toUpperCase())).replace("0000-00-00",""));
+                user.setEduSchool((rfcReturn.getString("INSTI2")).replace("0000-00-00",""));
+                user.setTelephone((rfcReturn.getString("BGSTEL")).replace("0000-00-00",""));
+                user.setGuoji((rfcReturn.getString("NATTX")).replace("0000-00-00",""));
+                user.setJiguan((rfcReturn.getString("ZHRJG")).replace("0000-00-00",""));
+                user.setMinzu((rfcReturn.getString("LTEXT")).replace("0000-00-00",""));
+                user.setPoliticalStatus((rfcReturn.getString("PTEXT1")).replace("0000-00-00",""));
+                user.setSchoolDate((rfcReturn.getString("DAT02")).replace("0000-00-00",""));
+                user.setWorkDate((rfcReturn.getString("DAT01")).replace("0000-00-00",""));
+                user.setYishiLb((rfcReturn.getString("ZHRYSLB")).replace("0000-00-00",""));
+                user.setYishiJb((rfcReturn.getString("ZHRYSJB")).replace("0000-00-00",""));
+                user.setYishiZhiyefanwei((rfcReturn.getString("ZHRZYFW")).replace("0000-00-00",""));
+                user.setYishiZgzsbianhao((rfcReturn.getString("ZHRZGZS")).replace("0000-00-00",""));
+                user.setYishiZiyebianhao((rfcReturn.getString("ZHRZYZS")).replace("0000-00-00",""));
+                user.setPatentGood((rfcReturn.getString("KHXL")).replace("0000-00-00",""));
+                user.setDocType((rfcReturn.getString("DOC_TYPE")).replace("0000-00-00",""));
+                user.setDeptNew((rfcReturn.getString("DEPT_NEW")).replace("0000-00-00",""));
+                user.setState(Convert.toInt(rfcReturn.getString("STAT2")));
+                if(rfcReturn.getString("STAT2").equals("0")){
+                    user.setDeptId("");
+                    user.setDeptName("");
+                    user.setBqName("");
+                }
+
+
+
+                list.add(user);
+            }
+
+            log.info("获取用户数据结束");
+        } catch (Exception ex) {
+
+            log.error(ex.getMessage());
+        } finally {
+            destination = null;
+        }
+
+        return list;
+    }
+
+
+    /**
+     * 从sap获取用户，并更新用户的数据
+     * @return
+     */
+    public List<SdlBUserMg> GetUserList2() {
+        String fuName = "ZHR00_FM_YSDAXX2";
+        String nowDate= DateUtil.format((new Date()),"yyyy-MM-dd");
+        log.info("获取用户 begin:"+ nowDate);
+        List<SdlBUserMg> list = new ArrayList<>();
+        JCoDestination destination;
+        try {
+
+            destination = RfcNoc.GetDestination();
+            if (destination == null) {
+                log.error("配置信息出错");
+                return null;
+            }
+
+            // JCoRepository rfcrep = destination.getRepository();
+            JCoFunction myfun = null;
+            myfun = destination.getRepository().getFunction(fuName);
+
+            //  myfun.SetValue("IS_SELCOND", "0");//SAP里面的传入参数
+            if (myfun == null)
+                log.info(fuName + " is null");
+
+            myfun.getImportParameterList().setValue("DATUM", nowDate);
+
+            //提前实例化一个空的表结构出来
+            myfun.execute(destination);//执行
+            log.info(fuName + "myfun.Invoke succeed");
+            JCoTable rfcReturn = myfun.getTableParameterList().getTable("T_YSXX"); //此处返回类型为Structure 如果是Single类型 则直接调用myfun.GetString("RETURN");
+            if (rfcReturn == null) {
+                log.info("rfcReturn is null");
+            }
+            // log.info(String.format("rfcReturn.Count is %s", rfcReturn.getNumRows()));
+
+
+            for (int i = 0; i < rfcReturn.getNumRows(); i++) {
+                rfcReturn.setRow(i);
+
+                SdlBUserMg user = new SdlBUserMg();
 
 
                 user.setRylx((rfcReturn.getString("ZRYLXMS")).replace("0000-00-00",""));

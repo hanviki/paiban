@@ -35,7 +35,7 @@ export default {
       this.fetchUser(value);
     },
     fetchUser(userAccount) {
-      this.$get("sdlBUser/search", {
+      this.$get("sdlBUserMg/search", {
         userAccount,
         state: 0
       }).then((r) => {

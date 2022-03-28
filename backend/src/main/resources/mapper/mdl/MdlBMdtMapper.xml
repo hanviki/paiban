@@ -7,11 +7,20 @@
                     <id column="id" property="id"/>
                     <result column="team_name" property="teamName"/>
                     <result column="dept_head" property="deptHead"/>
+                    <result column="is_menzhen" property="isMenzhen"/>
                     <result column="user_account_name_leader" property="userAccountNameLeader"/>
                     <result column="user_account_leader" property="userAccountLeader"/>
+                    <result column="tel_leader" property="telLeader"/>
+                    <result column="email_leader" property="emailLeader"/>
                     <result column="user_account_name_assist" property="userAccountNameAssist"/>
                     <result column="user_account_name_leader2" property="userAccountNameLeader2"/>
                     <result column="user_account_leader2" property="userAccountLeader2"/>
+                    <result column="tel_leader2" property="telLeader2"/>
+                    <result column="email_leader2" property="emailLeader2"/>
+                    <result column="tel_assist" property="telAssist"/>
+                    <result column="email_assist" property="emailAssist"/>
+                    <result column="tel_assist2" property="telAssist2"/>
+                    <result column="email_assist2" property="emailAssist2"/>
                     <result column="user_account_name_assist2" property="userAccountNameAssist2"/>
                     <result column="user_account_assist2" property="userAccountAssist2"/>
                     <result column="user_account_assist" property="userAccountAssist"/>
@@ -28,18 +37,27 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, team_name, dept_head, user_account_name_leader, user_account_leader, user_account_name_assist, user_account_name_leader2, user_account_leader2, user_account_name_assist2, user_account_assist2, user_account_assist, state, start_date, end_date, note, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, team_name, dept_head, is_menzhen, user_account_name_leader, user_account_leader, tel_leader, email_leader, user_account_name_assist, user_account_name_leader2, user_account_leader2, tel_leader2, email_leader2, tel_assist, email_assist, tel_assist2, email_assist2, user_account_name_assist2, user_account_assist2, user_account_assist, state, start_date, end_date, note, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBMdt" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdt">
         update mdl_b_mdt
         <trim prefix="set" suffixOverrides=",">
 <if test="teamName != null">team_name=#{teamName},</if>
 <if test="deptHead != null">dept_head=#{deptHead},</if>
+<if test="isMenzhen != null">is_menzhen=#{isMenzhen},</if>
 <if test="userAccountNameLeader != null">user_account_name_leader=#{userAccountNameLeader},</if>
 <if test="userAccountLeader != null">user_account_leader=#{userAccountLeader},</if>
+<if test="telLeader != null">tel_leader=#{telLeader},</if>
+<if test="emailLeader != null">email_leader=#{emailLeader},</if>
 <if test="userAccountNameAssist != null">user_account_name_assist=#{userAccountNameAssist},</if>
 <if test="userAccountNameLeader2 != null">user_account_name_leader2=#{userAccountNameLeader2},</if>
 <if test="userAccountLeader2 != null">user_account_leader2=#{userAccountLeader2},</if>
+<if test="telLeader2 != null">tel_leader2=#{telLeader2},</if>
+<if test="emailLeader2 != null">email_leader2=#{emailLeader2},</if>
+<if test="telAssist != null">tel_assist=#{telAssist},</if>
+<if test="emailAssist != null">email_assist=#{emailAssist},</if>
+<if test="telAssist2 != null">tel_assist2=#{telAssist2},</if>
+<if test="emailAssist2 != null">email_assist2=#{emailAssist2},</if>
 <if test="userAccountNameAssist2 != null">user_account_name_assist2=#{userAccountNameAssist2},</if>
 <if test="userAccountAssist2 != null">user_account_assist2=#{userAccountAssist2},</if>
 <if test="userAccountAssist != null">user_account_assist=#{userAccountAssist},</if>
@@ -61,11 +79,20 @@
         where  1=1
             <if test="mdlBMdt.teamName != null and mdlBMdt.teamName != ''"> and  mdl_b_mdt.team_name like concat('%', #{ mdlBMdt.teamName} ,'%')</if>
             <if test="mdlBMdt.deptHead != null and mdlBMdt.deptHead != ''"> and  mdl_b_mdt.dept_head like concat('%', #{ mdlBMdt.deptHead} ,'%')</if>
+            <if test="mdlBMdt.isMenzhen != null and mdlBMdt.isMenzhen != ''"> and  mdl_b_mdt.is_menzhen like concat('%', #{ mdlBMdt.isMenzhen} ,'%')</if>
             <if test="mdlBMdt.userAccountNameLeader != null and mdlBMdt.userAccountNameLeader != ''"> and  mdl_b_mdt.user_account_name_leader like concat('%', #{ mdlBMdt.userAccountNameLeader} ,'%')</if>
             <if test="mdlBMdt.userAccountLeader != null and mdlBMdt.userAccountLeader != ''"> and  mdl_b_mdt.user_account_leader like concat('%', #{ mdlBMdt.userAccountLeader} ,'%')</if>
+            <if test="mdlBMdt.telLeader != null and mdlBMdt.telLeader != ''"> and  mdl_b_mdt.tel_leader like concat('%', #{ mdlBMdt.telLeader} ,'%')</if>
+            <if test="mdlBMdt.emailLeader != null and mdlBMdt.emailLeader != ''"> and  mdl_b_mdt.email_leader like concat('%', #{ mdlBMdt.emailLeader} ,'%')</if>
             <if test="mdlBMdt.userAccountNameAssist != null and mdlBMdt.userAccountNameAssist != ''"> and  mdl_b_mdt.user_account_name_assist like concat('%', #{ mdlBMdt.userAccountNameAssist} ,'%')</if>
             <if test="mdlBMdt.userAccountNameLeader2 != null and mdlBMdt.userAccountNameLeader2 != ''"> and  mdl_b_mdt.user_account_name_leader2 like concat('%', #{ mdlBMdt.userAccountNameLeader2} ,'%')</if>
             <if test="mdlBMdt.userAccountLeader2 != null and mdlBMdt.userAccountLeader2 != ''"> and  mdl_b_mdt.user_account_leader2 like concat('%', #{ mdlBMdt.userAccountLeader2} ,'%')</if>
+            <if test="mdlBMdt.telLeader2 != null and mdlBMdt.telLeader2 != ''"> and  mdl_b_mdt.tel_leader2 like concat('%', #{ mdlBMdt.telLeader2} ,'%')</if>
+            <if test="mdlBMdt.emailLeader2 != null and mdlBMdt.emailLeader2 != ''"> and  mdl_b_mdt.email_leader2 like concat('%', #{ mdlBMdt.emailLeader2} ,'%')</if>
+            <if test="mdlBMdt.telAssist != null and mdlBMdt.telAssist != ''"> and  mdl_b_mdt.tel_assist like concat('%', #{ mdlBMdt.telAssist} ,'%')</if>
+            <if test="mdlBMdt.emailAssist != null and mdlBMdt.emailAssist != ''"> and  mdl_b_mdt.email_assist like concat('%', #{ mdlBMdt.emailAssist} ,'%')</if>
+            <if test="mdlBMdt.telAssist2 != null and mdlBMdt.telAssist2 != ''"> and  mdl_b_mdt.tel_assist2 like concat('%', #{ mdlBMdt.telAssist2} ,'%')</if>
+            <if test="mdlBMdt.emailAssist2 != null and mdlBMdt.emailAssist2 != ''"> and  mdl_b_mdt.email_assist2 like concat('%', #{ mdlBMdt.emailAssist2} ,'%')</if>
             <if test="mdlBMdt.userAccountNameAssist2 != null and mdlBMdt.userAccountNameAssist2 != ''"> and  mdl_b_mdt.user_account_name_assist2 like concat('%', #{ mdlBMdt.userAccountNameAssist2} ,'%')</if>
             <if test="mdlBMdt.userAccountAssist2 != null and mdlBMdt.userAccountAssist2 != ''"> and  mdl_b_mdt.user_account_assist2 like concat('%', #{ mdlBMdt.userAccountAssist2} ,'%')</if>
             <if test="mdlBMdt.userAccountAssist != null and mdlBMdt.userAccountAssist != ''"> and  mdl_b_mdt.user_account_assist like concat('%', #{ mdlBMdt.userAccountAssist} ,'%')</if>

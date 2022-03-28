@@ -21,7 +21,7 @@ import cc.mrbird.febs.common.converter.*;
  * </p>
  *
  * @author viki
- * @since 2022-03-23
+ * @since 2022-03-28
  */
 
 @Excel("mdl_b_mdt")
@@ -50,6 +50,13 @@ private static final long serialVersionUID=1L;
     private String deptHead;
 
     /**
+     * 是否开通MDT门诊
+     */
+        
+        @ExcelField(value ="是否开通MDT门诊")
+    private String isMenzhen;
+
+    /**
      * 团队负责人
      */
         
@@ -62,6 +69,20 @@ private static final long serialVersionUID=1L;
         
         @ExcelField(value ="团队负责人发薪号")
     private String userAccountLeader;
+
+    /**
+     * 团队负责人联系电话
+     */
+        
+        @ExcelField(value ="团队负责人联系电话")
+    private String telLeader;
+
+    /**
+     * 团队负责人邮箱
+     */
+        
+        @ExcelField(value ="团队负责人邮箱")
+    private String emailLeader;
 
     /**
      * 团队秘书
@@ -83,6 +104,48 @@ private static final long serialVersionUID=1L;
         
         @ExcelField(value ="团队负责人发薪号2")
     private String userAccountLeader2;
+
+    /**
+     * 团队负责人2联系电话
+     */
+        
+        @ExcelField(value ="团队负责人2联系电话")
+    private String telLeader2;
+
+    /**
+     * 团队负责人2邮箱
+     */
+        
+        @ExcelField(value ="团队负责人2邮箱")
+    private String emailLeader2;
+
+    /**
+     * 团队秘书邮箱
+     */
+        
+        @ExcelField(value ="团队秘书邮箱")
+    private String telAssist;
+
+    /**
+     * 团队秘书邮箱
+     */
+        
+        @ExcelField(value ="团队秘书邮箱")
+    private String emailAssist;
+
+    /**
+     * 团队秘书2邮箱
+     */
+        
+        @ExcelField(value ="团队秘书2邮箱")
+    private String telAssist2;
+
+    /**
+     * 团队秘书2邮箱
+     */
+        
+        @ExcelField(value ="团队秘书2邮箱")
+    private String emailAssist2;
 
     /**
      * 团队秘书2
@@ -189,15 +252,33 @@ private static final long serialVersionUID=1L;
 
     public static final String DEPT_HEAD ="dept_head" ;
 
+    public static final String IS_MENZHEN ="is_menzhen" ;
+
     public static final String USER_ACCOUNT_NAME_LEADER ="user_account_name_leader" ;
 
     public static final String USER_ACCOUNT_LEADER ="user_account_leader" ;
+
+    public static final String TEL_LEADER ="tel_leader" ;
+
+    public static final String EMAIL_LEADER ="email_leader" ;
 
     public static final String USER_ACCOUNT_NAME_ASSIST ="user_account_name_assist" ;
 
     public static final String USER_ACCOUNT_NAME_LEADER2 ="user_account_name_leader2" ;
 
     public static final String USER_ACCOUNT_LEADER2 ="user_account_leader2" ;
+
+    public static final String TEL_LEADER2 ="tel_leader2" ;
+
+    public static final String EMAIL_LEADER2 ="email_leader2" ;
+
+    public static final String TEL_ASSIST ="tel_assist" ;
+
+    public static final String EMAIL_ASSIST ="email_assist" ;
+
+    public static final String TEL_ASSIST2 ="tel_assist2" ;
+
+    public static final String EMAIL_ASSIST2 ="email_assist2" ;
 
     public static final String USER_ACCOUNT_NAME_ASSIST2 ="user_account_name_assist2" ;
 

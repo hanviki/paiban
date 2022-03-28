@@ -40,16 +40,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button
-         
-          type="primary"
-          ghost
-          @click="add"
-          >新增</a-button
-        >
-        <a-button  @click="batchDelete"
-          >删除</a-button
-        >
+        <a-button type="primary" ghost @click="add">新增</a-button>
+        <a-button @click="batchDelete">删除</a-button>
         <a-dropdown v-hasPermission="['mdlBMdt:export']">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exportExcel"
@@ -84,20 +76,20 @@
         }"
         @change="handleTableChange"
         :bordered="bordered"
-        :scroll="{ x: 900 }"
-         @expand="expandSubGrid"
+        :scroll="{ x: 3000 }"
+        @expand="expandSubGrid"
       >
-       <a-table
+        <a-table
           ref="subTable"
           slot="expandedRowRender"
           slot-scope="record"
           :columns="innerColumns"
           :dataSource="record.innerData"
           :pagination="false"
-          :rowKey="record2 => record2.id"
-          :scroll="{y: 200}"
+          :rowKey="(record2) => record2.id"
+          :scroll="{x:800, y: 200 }"
         >
-        </a-table> 
+        </a-table>
         <template slot="remark" slot-scope="text, record">
           <a-popover placement="topLeft">
             <template slot="content">
@@ -108,14 +100,12 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-           
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-         
         </template>
       </a-table>
     </div>
@@ -183,75 +173,158 @@ export default {
         {
           title: "团队名称",
           dataIndex: "teamName",
-          width: 100,
+          width: 200,
         },
         {
           title: "牵头科室",
           dataIndex: "deptHead",
-          width: 100,
+          width: 200,
+        },
+        {
+          title: "是否开通MDT门诊",
+          dataIndex: "isMenzhen",
+          width: 80,
         },
         {
           title: "团队负责人",
-          dataIndex: "userAccountNameLeader",
-          width: 100,
-        },
-        {
-          title: "团队负责人发薪号",
-          dataIndex: "userAccountLeader",
-          width: 100,
-        },
-        {
-          title: "团队秘书",
-          dataIndex: "userAccountNameAssist",
-          width: 100,
-        },
-        {
-          title: "团队秘书发薪号",
-          dataIndex: "userAccountAssist",
-          width: 100,
+          customHeaderCell: function () {
+            return { style: { backgroundColor: "#7FFFD4" } };
+          },
+          children: [
+            {
+              title: "姓名",
+              dataIndex: "userAccountNameLeader",
+              width: 100,
+            },
+            {
+              title: "发薪号",
+              dataIndex: "userAccountLeader",
+              width: 80,
+            },
+            {
+              title: "电话",
+              dataIndex: "telLeader",
+              width: 120,
+            },
+            {
+              title: "邮箱",
+              dataIndex: "emailLeader",
+              width: 150,
+            },
+          ],
         },
         {
           title: "团队负责人2",
-          dataIndex: "userAccountNameLeader2",
-          width: 100,
+          customHeaderCell: function () {
+            return { style: { backgroundColor: "LightSkyBlue" } };
+          },
+          children: [
+            {
+              title: "姓名",
+              dataIndex: "userAccountNameLeader2",
+              width: 100,
+            },
+            {
+              title: "发薪号",
+              dataIndex: "userAccountLeader2",
+              width: 80,
+            },
+            {
+              title: "电话",
+              dataIndex: "telLeader2",
+              width: 120,
+            },
+            {
+              title: "邮箱",
+              dataIndex: "emailLeader2",
+              width: 150,
+            },
+          ],
         },
         {
-          title: "团队负责人2发薪号",
-          dataIndex: "userAccountLeader2",
-          width: 100,
+          title: "团队秘书",
+          customHeaderCell: function () {
+            return { style: { backgroundColor: "LightCyan" } };
+          },
+          children: [
+            {
+              title: "姓名",
+              dataIndex: "userAccountNameAssist",
+              width: 100,
+            },
+            {
+              title: "发薪号",
+              dataIndex: "userAccountAssist",
+              width: 80,
+            },
+            {
+              title: "电话",
+              dataIndex: "telAssist",
+              width: 120,
+            },
+            {
+              title: "邮箱",
+              dataIndex: "emailAssist",
+              width: 150,
+            },
+          ],
         },
+
         {
           title: "团队秘书2",
-          dataIndex: "userAccountNameAssist2",
-          width: 100,
+          customHeaderCell: function () {
+            return { style: { backgroundColor: "#AFEEEE" } };
+          },
+          children: [
+            {
+              title: "姓名",
+              dataIndex: "userAccountNameAssist2",
+              width: 100,
+            },
+            {
+              title: "发薪号",
+              dataIndex: "userAccountAssist2",
+              width: 80,
+            },
+            {
+              title: "电话",
+              dataIndex: "telAssist2",
+              width: 120,
+            },
+            {
+              title: "邮箱",
+              dataIndex: "emailAssist2",
+              width: 150,
+            },
+          ],
         },
+
         {
-          title: "团队秘书发薪号2",
-          dataIndex: "userAccountAssist2",
-          width: 100,
-        },
-         {
           title: "有效日期",
           children: [
             {
               title: "开始时间",
               dataIndex: "startDate",
               width: 100,
-               customRender: (text, row, index) => {
-            if(text == null) return ''
-            return moment(text).format('YYYY-MM-DD')
-          },
+              customRender: (text, row, index) => {
+                if (text == null) return "";
+                return moment(text).format("YYYY-MM-DD");
+              },
             },
             {
               title: "结束时间",
               dataIndex: "endDate",
               width: 100,
-               customRender: (text, row, index) => {
-            if(text == null) return ''
-            return moment(text).format('YYYY-MM-DD')
-          },
+              customRender: (text, row, index) => {
+                if (text == null) return "";
+                return moment(text).format("YYYY-MM-DD");
+              },
             },
           ],
+        },
+         {
+          title: "备注",
+          dataIndex: "note",
         },
         {
           title: "操作",
@@ -261,33 +334,37 @@ export default {
         },
       ];
     },
-     innerColumns() {
-      return  [
-         {
+    innerColumns() {
+      return [
+        {
           title: "类型",
           dataIndex: "type",
           width: 150,
-          customRender: (value, row, index)=>{
-            if(value){
+          customRender: (value, row, index) => {
+            if (value) {
               return <a-tag color="orange">其他成员</a-tag>;
             }
-           return <a-tag color="green">核心成员</a-tag>;;
-          }
+            return <a-tag color="green">核心成员</a-tag>;
+          },
         },
-         {
+        {
           title: "姓名",
           dataIndex: "userAccountName",
           width: 150,
         },
-         {
+        {
           title: "发薪号",
           dataIndex: "userAccount",
           width: 100,
         },
-         {
+        {
           title: "科室",
           dataIndex: "deptNew",
           width: 100,
+        },
+        {
+          title: " ",
+          dataIndex: "deptNew222",
         },
       ];
     },
@@ -369,29 +446,32 @@ export default {
         ...this.queryParams,
       });
     },
-    expandSubGrid (expanded, record) {//获取供应计划的数量
+    expandSubGrid(expanded, record) {
+      //获取供应计划的数量
       if (expanded) {
-        this.expandedRowKeys.push(record.id)
-        this.handleSubData(record) //获取子表数据
+        this.expandedRowKeys.push(record.id);
+        this.handleSubData(record); //获取子表数据
       } else {
-        let expandedRowKeys = this.expandedRowKeys.filter(RowKey => RowKey !== record.id)
-        this.expandedRowKeys = expandedRowKeys
+        let expandedRowKeys = this.expandedRowKeys.filter(
+          (RowKey) => RowKey !== record.id
+        );
+        this.expandedRowKeys = expandedRowKeys;
       }
     },
-    handleSubData (record) {
-      this.loading = true
-      let queryParams = {  };
-      queryParams.baseId = record.id
-      this.$get('mdlBMdtD', {
+    handleSubData(record) {
+      this.loading = true;
+      let queryParams = {};
+      queryParams.baseId = record.id;
+      this.$get("mdlBMdtD", {
         ...queryParams,
-        sortField: 'type',
-        sortOrder: 'ascend',
-        pageSize: 100000
+        sortField: "type",
+        sortOrder: "ascend",
+        pageSize: 100000,
       }).then((r) => {
-        let data = r.data
-        this.loading = false
-        record.innerData = data.rows
-      })
+        let data = r.data;
+        this.loading = false;
+        record.innerData = data.rows;
+      });
     },
     search() {
       let { sortedInfo } = this;
