@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlDBadscoreMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlDBadscore">
+                    <id column="id" property="id"/>
+                    <result column=" code" property=" code"/>
+                    <result column="name" property="name"/>
+                    <result column="score" property="score"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+                    <result column="display_index" property="displayIndex"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id,  code, name, score, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, display_index
+    </sql>
+    <update id="updateMdlDBadscore" parameterType="cc.mrbird.febs.mdl.entity.MdlDBadscore">
+        update mdl_d_badscore
+        <trim prefix="set" suffixOverrides=",">
+<if test=" code != null"> code=#{ code},</if>
+<if test="name != null">name=#{name},</if>
+<if test="score != null">score=#{score},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+<if test="displayIndex != null">display_index=#{displayIndex},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlDBadscore" resultType="cc.mrbird.febs.mdl.entity.MdlDBadscore" parameterType="cc.mrbird.febs.mdl.entity.MdlDBadscore">
+        select  *  from mdl_d_badscore
+        where  1=1
+            <if test="mdlDBadscore. code != null and mdlDBadscore. code != ''"> and  mdl_d_badscore. code like concat('%', #{ mdlDBadscore. code} ,'%')</if>
+            <if test="mdlDBadscore.name != null and mdlDBadscore.name != ''"> and  mdl_d_badscore.name like concat('%', #{ mdlDBadscore.name} ,'%')</if>
+        <if test="mdlDBadscore.score != null"> and  mdl_d_badscore.score =#{ mdlDBadscore.score} </if>
+        <if test="mdlDBadscore.state != null"> and  mdl_d_badscore.state =#{ mdlDBadscore.state} </if>
+        <if test="mdlDBadscore.isDeletemark != null"> and  mdl_d_badscore.IS_DELETEMARK =#{ mdlDBadscore.isDeletemark} </if>
+        <if test="mdlDBadscore.createTimeFrom!= null">
+            AND mdl_d_badscore.CREATE_TIME <![CDATA[ >= ]]>  #{mdlDBadscore.createTimeFrom}
+        </if>
+        <if test="mdlDBadscore.createTimeTo!= null">
+            AND  mdl_d_badscore.CREATE_TIME <![CDATA[ <= ]]>  #{mdlDBadscore.createTimeTo}
+        </if>
+        <if test="mdlDBadscore.modifyTimeFrom!= null">
+            AND mdl_d_badscore.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlDBadscore.modifyTimeFrom}
+        </if>
+        <if test="mdlDBadscore.modifyTimeTo!= null">
+            AND  mdl_d_badscore.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlDBadscore.modifyTimeTo}
+        </if>
+        <if test="mdlDBadscore.displayIndex != null"> and  mdl_d_badscore.display_index =#{ mdlDBadscore.displayIndex} </if>
+</select>
+
+</mapper>

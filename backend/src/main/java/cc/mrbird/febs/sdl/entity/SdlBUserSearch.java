@@ -17,4 +17,8 @@ public class SdlBUserSearch {
     private String tel;
 
     private String zhicheng;
+
+    private String rylx;
+
+    private String yggh;
 }

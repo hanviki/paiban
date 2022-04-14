@@ -88,6 +88,7 @@ export default {
       this.$upload('comFile/upload', formData).then((r) => {
         let comfile = r.data.data
         this.fileId = comfile.uid
+        var fileServer = comfile.url
         this.fileUrl =this.$baseUrl+ comfile.url
         comfile.url= this.fileUrl
         this.fileList=[]
@@ -96,7 +97,7 @@ export default {
         this.isShow = 0
         this.uploading = false
         this.$message.success('上传成功.')
-        this.$emit("uploadSuc",this.fileId,comfile.url)
+        this.$emit("uploadSuc",this.fileId,fileServer)
       }).catch(() => {
         this.fileList= []
         this.fileId = ''

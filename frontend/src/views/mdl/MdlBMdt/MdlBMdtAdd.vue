@@ -146,7 +146,7 @@
           />
         </a-form-item>
       </a-col>
-      <a-col :sm="12">
+      <!-- <a-col :sm="12">
         <a-form-item v-bind="formItemLayout" label="团队秘书2">
           <select-user-remote
             ref="user22"
@@ -175,7 +175,7 @@
             ]"
           />
         </a-form-item>
-      </a-col>
+      </a-col> -->
       <a-col :sm="12">
         <a-form-item v-bind="formItemLayout" label="开始时间">
           <a-date-picker
@@ -262,7 +262,7 @@ export default {
       this.$refs.user1.reset();
       this.$refs.user2.reset();
       this.$refs.user12.reset();
-      this.$refs.user22.reset();
+    //  this.$refs.user22.reset();
       this.$refs.userHX.reset();
       this.$refs.userQT.reset();
       this.form.resetFields();
@@ -346,10 +346,10 @@ export default {
         "emailLeader2",
         "telAssist",
         "emailAssist",
-        "telAssist2",
-        "emailAssist2",
+       // "telAssist2",
+      //  "emailAssist2",
         "userAccountLeader2",
-        "userAccountAssist2",
+       // "userAccountAssist2",
         "startDate",
         "endDate",
         "note"

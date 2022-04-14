@@ -164,6 +164,8 @@ export default {
         if (!err) {
           let mdlBArchive = this.form.getFieldsValue();
           mdlBArchive.id = this.mdlBArchive.id;
+          mdlBArchive.fileId = this.mdlBArchive.fileId;
+          mdlBArchive.fileUrl = this.mdlBArchive.fileUrl;
           this.$put("mdlBArchive", {
             ...mdlBArchive,
           })

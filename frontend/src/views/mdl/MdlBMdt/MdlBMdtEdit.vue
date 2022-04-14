@@ -174,7 +174,7 @@
           />
         </a-form-item>
       </a-col>
-        <a-col :sm="12">
+        <!-- <a-col :sm="12">
        <a-form-item v-bind="formItemLayout" label="团队秘书2">
         <select-user-remote  ref="user22"  v-decorator="[
             'userAccountAssist2',
@@ -213,7 +213,7 @@
             ]"
           />
         </a-form-item>
-      </a-col>
+      </a-col> -->
         <a-col :sm="12">
       <a-form-item v-bind="formItemLayout" label="开始时间">
         <a-date-picker 
@@ -308,7 +308,7 @@ export default {
       this.$refs.user1.reset();
       this.$refs.user2.reset();
       this.$refs.user12.reset();
-      this.$refs.user22.reset();
+     // this.$refs.user22.reset();
        this.$refs.userHX.reset();
       this.$refs.userQT.reset();
       this.form.resetFields();
@@ -358,20 +358,20 @@ export default {
         "isMenzhen",
         "userAccountNameLeader",
         "userAccountLeader",
-        "telAssist2",
+      //  "telAssist2",
         "telAssist",
         "telLeader",
         "telLeader2",
           "emailLeader",
         "emailAssist",
          "emailLeader2",
-        "emailAssist2",
+       // "emailAssist2",
         "userAccountNameAssist",
         "userAccountAssist",
         "userAccountNameLeader2",
         "userAccountLeader2",
-        "userAccountNameAssist2",
-        "userAccountAssist2",
+      //  "userAccountNameAssist2",
+      //  "userAccountAssist2",
          "startDate", "endDate","note"
      
       ];
@@ -399,7 +399,7 @@ export default {
          that.$refs.user1.setFiledValue(mdlBMdt.userAccountLeader)
          that.$refs.user2.setFiledValue(mdlBMdt.userAccountAssist)
          that.$refs.user12.setFiledValue(mdlBMdt.userAccountLeader2)
-         that.$refs.user22.setFiledValue(mdlBMdt.userAccountAssist2)
+      //   that.$refs.user22.setFiledValue(mdlBMdt.userAccountAssist2)
          that.$refs.userHX.fetch()
          that.$refs.userQT.fetch()
          that.$refs.file.fetch()

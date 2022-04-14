@@ -4,28 +4,34 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="团队名称" v-bind="formItemLayout">
-                <a-input v-model="queryParams.teamName" />
+            <a-col :md="6" :sm="24">
+              <a-form-item label="人员类型" v-bind="formItemLayout">
+                <a-input v-model="queryParams.type" />
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="牵头科室" v-bind="formItemLayout">
-                <a-input v-model="queryParams.deptHead" />
+            <a-col :md="6" :sm="24">
+              <a-form-item label="发薪号" v-bind="formItemLayout">
+                <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="团队负责人发薪号" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccountLeader" />
+            <a-col :md="12" :sm="24">
+              <a-form-item v-bind="formItemLayout" label="记分指标">
+                <a-select
+                  v-model="queryParams.code"
+                  option-filter-prop="children"
+                  :filter-option="filterOption"
+                  show-search
+                >
+                  <a-select-option
+                    v-for="d in indData"
+                    :key="d"
+                    :value="`${d.code}`"
+                  >
+                    {{ d.code + " " + d.name + " " + d.score }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="团队秘书发薪号" v-bind="formItemLayout">
-                  <a-input v-model="queryParams.userAccountAssist" />
-                </a-form-item>
-              </a-col>
-            </template>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -40,9 +46,19 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
-        <a-dropdown v-hasPermission="['mdlBMdt:export']">
+        <a-button
+          v-hasPermission="['mdlBBadrecord:add']"
+          type="primary"
+          ghost
+          @click="add"
+          >新增</a-button
+        >
+        <a-button
+          v-hasPermission="['mdlBBadrecord:delete']"
+          @click="batchDelete"
+          >删除</a-button
+        >
+        <a-dropdown v-hasPermission="['mdlBBadrecord:export']">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exportExcel"
               >导出Excel</a-menu-item
@@ -54,10 +70,10 @@
           </a-button>
         </a-dropdown>
         <import-excel
-          v-hasPermission="['mdlBMdt:import']"
-          templateUrl="mdlBMdt/downTemplate"
+          v-hasPermission="['mdlBBadrecord:import']"
+          templateUrl="mdlBBadrecord/downTemplate"
           @succ="handleRefesh"
-          url="mdlBMdt/import"
+          url="mdlBBadrecord/import"
         >
         </import-excel>
       </div>
@@ -69,27 +85,14 @@
         :dataSource="dataSource"
         :pagination="pagination"
         :loading="loading"
-        :expandedRowKeys="expandedRowKeys"
         :rowSelection="{
           selectedRowKeys: selectedRowKeys,
           onChange: onSelectChange,
         }"
         @change="handleTableChange"
         :bordered="bordered"
-        :scroll="{ x: 2500 }"
-        @expand="expandSubGrid"
+        :scroll="{ x: 900 }"
       >
-        <a-table
-          ref="subTable"
-          slot="expandedRowRender"
-          slot-scope="record"
-          :columns="innerColumns"
-          :dataSource="record.innerData"
-          :pagination="false"
-          :rowKey="(record2) => record2.id"
-          :scroll="{x:800, y: 200 }"
-        >
-        </a-table>
         <template slot="remark" slot-scope="text, record">
           <a-popover placement="topLeft">
             <template slot="content">
@@ -100,36 +103,42 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
+            v-hasPermission="['mdlBBadrecord:update']"
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
+          <a-badge
+            v-hasNoPermission="['mdlBBadrecord:update']"
+            status="warning"
+            text="无权限"
+          ></a-badge>
         </template>
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <mdlBMdt-add
+    <mdlBBadrecord-add
       @close="handleAddClose"
       @success="handleAddSuccess"
       :addVisiable="addVisiable"
     >
-    </mdlBMdt-add>
+    </mdlBBadrecord-add>
     <!-- 修改字典 -->
-    <mdlBMdt-edit
-      ref="mdlBMdtEdit"
+    <mdlBBadrecord-edit
+      ref="mdlBBadrecordEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </mdlBMdt-edit>
+    </mdlBBadrecord-edit>
   </a-card>
 </template>
 
 <script>
-import MdlBMdtAdd from "./MdlBMdtAdd";
-import MdlBMdtEdit from "./MdlBMdtEdit";
+import MdlBBadrecordAdd from "./MdlBBadrecordAdd";
+import MdlBBadrecordEdit from "./MdlBBadrecordEdit";
 import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
 
@@ -138,14 +147,13 @@ const formItemLayout = {
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "MdlBMdt",
-  components: { MdlBMdtAdd, MdlBMdtEdit, ImportExcel },
+  name: "MdlBBadrecord",
+  components: { MdlBBadrecordAdd, MdlBBadrecordEdit, ImportExcel },
   data() {
     return {
       advanced: false,
       dataSource: [],
       selectedRowKeys: [],
-      expandedRowKeys: [],
       sortedInfo: null,
       paginationInfo: null,
       formItemLayout,
@@ -163,6 +171,7 @@ export default {
       editVisiable: false,
       loading: false,
       bordered: true,
+      indData: [],
     };
   },
   computed: {
@@ -171,209 +180,107 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "团队名称",
-          dataIndex: "teamName",
-          width: 200,
-        },
-        {
-          title: "牵头科室",
-          dataIndex: "deptHead",
-          width: 200,
-        },
-        {
-          title: "是否开通MDT门诊",
-          dataIndex: "isMenzhen",
-          width: 80,
-        },
-        {
-          title: "团队负责人",
-          customHeaderCell: function () {
-            return { style: { backgroundColor: "#7FFFD4" } };
-          },
-          children: [
-            {
-              title: "姓名",
-              dataIndex: "userAccountNameLeader",
-              width: 100,
-            },
-            {
-              title: "发薪号",
-              dataIndex: "userAccountLeader",
-              width: 80,
-            },
-            {
-              title: "电话",
-              dataIndex: "telLeader",
-              width: 120,
-            },
-            {
-              title: "邮箱",
-              dataIndex: "emailLeader",
-              width: 150,
-            },
-          ],
-        },
-        {
-          title: "团队负责人2",
-          customHeaderCell: function () {
-            return { style: { backgroundColor: "LightSkyBlue" } };
-          },
-          children: [
-            {
-              title: "姓名",
-              dataIndex: "userAccountNameLeader2",
-              width: 100,
-            },
-            {
-              title: "发薪号",
-              dataIndex: "userAccountLeader2",
-              width: 80,
-            },
-            {
-              title: "电话",
-              dataIndex: "telLeader2",
-              width: 120,
-            },
-            {
-              title: "邮箱",
-              dataIndex: "emailLeader2",
-              width: 150,
-            },
-          ],
-        },
-        {
-          title: "团队秘书",
-          customHeaderCell: function () {
-            return { style: { backgroundColor: "LightCyan" } };
-          },
-          children: [
-            {
-              title: "姓名",
-              dataIndex: "userAccountNameAssist",
-              width: 100,
-            },
-            {
-              title: "发薪号",
-              dataIndex: "userAccountAssist",
-              width: 80,
-            },
-            {
-              title: "电话",
-              dataIndex: "telAssist",
-              width: 120,
-            },
-            {
-              title: "邮箱",
-              dataIndex: "emailAssist",
-              width: 150,
-            },
-          ],
-        },
-
-        // {
-        //   title: "团队秘书2",
-        //   customHeaderCell: function () {
-        //     return { style: { backgroundColor: "#AFEEEE" } };
-        //   },
-        //   children: [
-        //     {
-        //       title: "姓名",
-        //       dataIndex: "userAccountNameAssist2",
-        //       width: 100,
-        //     },
-        //     {
-        //       title: "发薪号",
-        //       dataIndex: "userAccountAssist2",
-        //       width: 80,
-        //     },
-        //     {
-        //       title: "电话",
-        //       dataIndex: "telAssist2",
-        //       width: 120,
-        //     },
-        //     {
-        //       title: "邮箱",
-        //       dataIndex: "emailAssist2",
-        //       width: 150,
-        //     },
-        //   ],
-        // },
-
-        {
-          title: "有效日期",
-          children: [
-            {
-              title: "开始时间",
-              dataIndex: "startDate",
-              width: 100,
-              customRender: (text, row, index) => {
-                if (text == null) return "";
-                return moment(text).format("YYYY-MM-DD");
-              },
-            },
-            {
-              title: "结束时间",
-              dataIndex: "endDate",
-              width: 100,
-              customRender: (text, row, index) => {
-                if (text == null) return "";
-                return moment(text).format("YYYY-MM-DD");
-              },
-            },
-          ],
-        },
-         {
-          title: "备注",
-          dataIndex: "note",
-        },
-        {
-          title: "操作",
-          dataIndex: "operation",
-          scopedSlots: { customRender: "operation" },
-          width: 100,
-        },
-      ];
-    },
-    innerColumns() {
-      return [
-        {
-          title: "类型",
-          dataIndex: "type",
-          width: 150,
-          customRender: (value, row, index) => {
-            if (value) {
-              return <a-tag color="orange">其他成员</a-tag>;
-            }
-            return <a-tag color="green">核心成员</a-tag>;
-          },
-        },
-        {
-          title: "姓名",
-          dataIndex: "userAccountName",
-          width: 150,
-        },
-        {
           title: "发薪号",
           dataIndex: "userAccount",
           width: 100,
         },
         {
-          title: "科室",
-          dataIndex: "deptNew",
+          title: "姓名",
+          dataIndex: "userAccountName",
           width: 100,
         },
         {
-          title: " ",
-          dataIndex: "deptNew222",
+          title: "人员类型",
+          dataIndex: "type",
+          width: 80,
+        },
+        {
+          title: "工号",
+          dataIndex: "yggh",
+          width: 80,
+        },
+        {
+          title: "记分部门",
+          dataIndex: "deptName",
+          width: 100,
+        },
+        {
+          title: "序号",
+          dataIndex: "code",
+          width: 80,
+        },
+        {
+          title: "记分指标",
+          dataIndex: "indict",
+          width: 200,
+        },
+        {
+          title: "具体事由",
+          dataIndex: "note",
+          width: 200,
+        },
+        {
+          title: "记分额度",
+          dataIndex: "score",
+          width: 80,
+        },
+        {
+          title: "记录时间",
+          dataIndex: "startDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+        {
+          title: "附件",
+          dataIndex: "fileId",
+          customRender: (text, row, index) => {
+            if (text != null && text != "") {
+              return (
+                <a href={this.$baseUrl + row.fileUrl} target="_blank">
+                  查看
+                </a>
+              );
+            }
+            return "";
+          },
+          width: 80,
+        },
+        {
+          title: "操作",
+          dataIndex: "operation",
+          scopedSlots: { customRender: "operation" },
+          fixed: "right",
+          width: 100,
         },
       ];
     },
   },
   mounted() {
     this.fetch();
+    this.fetchIndict();
   },
+
   methods: {
     moment,
+    fetchIndict() {
+      this.$get("mdlDBadscore", {
+        pageNum: 1,
+        pageSize: 1000,
+      }).then((r) => {
+        console.log(r);
+        this.indData = r.data.rows;
+      });
+    },
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
+    },
     handleRefesh() {
       this.search();
     },
@@ -406,7 +313,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      this.$refs.mdlBMdtEdit.setFormValues(record);
+      this.$refs.mdlBBadrecordEdit.setFormValues(record);
       this.editVisiable = true;
     },
     batchDelete() {
@@ -420,8 +327,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let mdlBMdtIds = that.selectedRowKeys.join(",");
-          that.$delete("mdlBMdt/" + mdlBMdtIds).then(() => {
+          let mdlBBadrecordIds = that.selectedRowKeys.join(",");
+          that.$delete("mdlBBadrecord/" + mdlBBadrecordIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -440,37 +347,10 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("mdlBMdt/excel", {
+      this.$export("mdlBBadrecord/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
-      });
-    },
-    expandSubGrid(expanded, record) {
-      //获取供应计划的数量
-      if (expanded) {
-        this.expandedRowKeys.push(record.id);
-        this.handleSubData(record); //获取子表数据
-      } else {
-        let expandedRowKeys = this.expandedRowKeys.filter(
-          (RowKey) => RowKey !== record.id
-        );
-        this.expandedRowKeys = expandedRowKeys;
-      }
-    },
-    handleSubData(record) {
-      this.loading = true;
-      let queryParams = {};
-      queryParams.baseId = record.id;
-      this.$get("mdlBMdtD", {
-        ...queryParams,
-        sortField: "type",
-        sortOrder: "ascend",
-        pageSize: 100000,
-      }).then((r) => {
-        let data = r.data;
-        this.loading = false;
-        record.innerData = data.rows;
       });
     },
     search() {
@@ -528,7 +408,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("mdlBMdt", {
+      this.$get("mdlBBadrecord", {
         ...params,
       }).then((r) => {
         let data = r.data;
