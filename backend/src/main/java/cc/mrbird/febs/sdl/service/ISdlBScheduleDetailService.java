@@ -30,6 +30,7 @@ public interface ISdlBScheduleDetailService extends IService<SdlBScheduleDetail>
         void deleteSdlBScheduleDetails(String[]Ids);
 
         List<CustomData> findSdlBScheduleReport(SdlBScheduleDetail sdlBScheduleDetail);
+        List<CustomData> findSdlBScheduleReport2(SdlBScheduleDetail sdlBScheduleDetail);
 
         List<CustomData>  findYeBanReport(SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findYeBanSubReport(SdlBScheduleDetail sdlBScheduleDetail);

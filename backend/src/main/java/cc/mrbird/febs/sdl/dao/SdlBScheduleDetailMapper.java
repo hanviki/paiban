@@ -22,6 +22,7 @@ public interface SdlBScheduleDetailMapper extends BaseMapper<SdlBScheduleDetail>
         IPage<SdlBScheduleDetail> findSdlBScheduleDetail(Page page, @Param("sdlBScheduleDetail") SdlBScheduleDetail sdlBScheduleDetail);
 
         List<CustomData>  findSdlBScheduleReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
+        List<CustomData>  findSdlBScheduleReport2( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findYeBanReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findYeBanSubReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findMenZhenReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);

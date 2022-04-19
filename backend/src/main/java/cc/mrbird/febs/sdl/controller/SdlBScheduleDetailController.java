@@ -171,6 +171,25 @@ public class SdlBScheduleDetailController extends BaseController {
         });
         return  data;
     }
+    @GetMapping("dept2")
+    public List<CustomData> deptStatistic45(SdlBScheduleDetail sdlBScheduleDetail) {
+        return getStatictid45(sdlBScheduleDetail);
+    }
+
+    private List<CustomData> getStatictid45(SdlBScheduleDetail sdlBScheduleDetail){
+        List<CustomData> data = new ArrayList<>();
+        List<CustomData> customDataList = this.iSdlBScheduleDetailService.findSdlBScheduleReport2(sdlBScheduleDetail);
+        Map<String, Double> mp = customDataList.stream().collect(
+                Collectors.groupingBy(p->p.getDeptId()+"_"+p.getDeptName(), Collectors.summingDouble(p -> (p.getCishu() > 1 ? 1d : p.getCishu()))));
+        mp.entrySet().forEach(entry -> {
+            CustomData nc = new CustomData();
+            nc.setDeptId(entry.getKey().substring(0,entry.getKey().indexOf("_")));
+            nc.setDeptName(entry.getKey().substring(entry.getKey().indexOf("_")+1));
+            nc.setCishu(entry.getValue());
+            data.add(nc);
+        });
+        return  data;
+    }
     /**
      * 节假日考勤统计 子表
      * @param sdlBScheduleDetail
@@ -204,6 +223,33 @@ public class SdlBScheduleDetailController extends BaseController {
         return data;
     }
 
+    @GetMapping("deptSub2")
+    public List<CustomData> deptStatisticSub45(SdlBScheduleDetail sdlBScheduleDetail) {
+        List<CustomData> data = new ArrayList<>();
+        List<CustomData> customDataList = this.iSdlBScheduleDetailService.findSdlBScheduleReport2(sdlBScheduleDetail);
+
+        if(customDataList.size()>0) {
+            //final String dept_name = customDataList.get(0).getDeptName();
+
+            Map<String, Double> mp = customDataList.stream().collect(
+                    Collectors.groupingBy(p -> p.getDeptName()+"_"+p.getDeptId()+"_"+p.getAccountId() + "_" + p.getAccountName(), Collectors.summingDouble(p -> (p.getCishu() > 1 ? 1d : p.getCishu()))));
+            //for(String key in mp.entrySet())
+            for (Map.Entry<String,Double> entry:mp.entrySet())
+            {
+                CustomData nc = new CustomData();
+                String[] arr=entry.getKey().split("_");
+                nc.setAccountId(arr[2]);
+                nc.setAccountName(arr[3]);
+                nc.setCishu(entry.getValue());
+                nc.setDeptId(arr[1]);
+                nc.setDeptName(arr[0]);
+                data.add(nc);
+            };
+            //
+        }
+        data= data.stream().sorted(Comparator.comparing(CustomData::getDeptName)).collect(Collectors.toList());
+        return data;
+    }
     /**
      * 全院夜班统计
      * @param sdlBScheduleDetail
@@ -280,6 +326,9 @@ public class SdlBScheduleDetailController extends BaseController {
             if(flag==0){
                 customDataList= getStatictid(sdlBScheduleDetail);
             }
+            if(flag==4){
+                customDataList= getStatictid45(sdlBScheduleDetail);
+            }
             if(flag==1){
                 customDataList= this.iSdlBScheduleDetailService.findYeBanReport(sdlBScheduleDetail);
             }
@@ -300,6 +349,9 @@ public class SdlBScheduleDetailController extends BaseController {
             List<CustomData> customDataList =new ArrayList<>();
             if(flag==0){
                 customDataList= deptStatisticSub(sdlBScheduleDetail);
+            }
+            if(flag==0){
+                customDataList= deptStatisticSub45(sdlBScheduleDetail);
             }
             if(flag==1){
                 customDataList= this.iSdlBScheduleDetailService.findYeBanSubReport(sdlBScheduleDetail);

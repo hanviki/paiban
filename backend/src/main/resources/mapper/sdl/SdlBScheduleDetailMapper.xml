@@ -117,6 +117,43 @@
         <if test="sdlBScheduleDetail.createUserId != null"> and  sdl_b_schedule_detail.CREATE_USER_ID =#{ sdlBScheduleDetail.createUserId} </if>
         <if test="sdlBScheduleDetail.modifyUserId != null"> and  sdl_b_schedule_detail.MODIFY_USER_ID =#{ sdlBScheduleDetail.modifyUserId} </if>
 </select>
+    <select id="findSdlBScheduleReport2" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+
+        SELECT
+        A.dept_id,
+        A.dept_name,
+        A.schedule_date,
+        A.account_id,
+        A.account_name,
+        SUM( B.cishu ) cishu
+        FROM
+        sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
+        INNER JOIN sdl_b_user C ON A.account_id = C.user_account
+        inner join sdl_b_schedule D on A.base_id =D.id
+        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='规培'  AND A.zizhi_id in (1,2,6,7)
+        <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
+            and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+        <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
+            and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
+        </if>
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND A.schedule_date <![CDATA[ >= ]]>  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateTo!= null">
+            AND  A.schedule_date <![CDATA[ <= ]]>  #{sdlBScheduleDetail.scheduleDateTo}
+        </if>
+        GROUP BY
+        A.dept_id,
+        A.dept_name,
+        A.schedule_date,
+        A.account_id,
+        A.account_name
+    </select>
+
     <select id="findSdlBScheduleReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
 
         SELECT

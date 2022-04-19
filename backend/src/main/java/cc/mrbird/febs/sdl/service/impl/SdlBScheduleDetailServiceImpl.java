@@ -103,6 +103,13 @@ public class SdlBScheduleDetailServiceImpl extends ServiceImpl<SdlBScheduleDetai
         return this.baseMapper.findSdlBScheduleReport(sdlBScheduleDetail);
     }
 
+
+    @Override
+    @Transactional
+    public List<CustomData> findSdlBScheduleReport2(SdlBScheduleDetail sdlBScheduleDetail) {
+        return this.baseMapper.findSdlBScheduleReport2(sdlBScheduleDetail);
+    }
+
     @Override
     @Transactional
     public List<SdlBScheduleDetail> findSdlBScheduleReportAccount(SdlBScheduleDetail sdlBScheduleDetail) {
