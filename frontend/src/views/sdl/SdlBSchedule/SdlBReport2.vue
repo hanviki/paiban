@@ -279,7 +279,7 @@ export default {
         sortOrder = sortedInfo.order;
       }
         let queryParams = { ...this.queryParams };
-        queryParams.flag= 0;
+        queryParams.flag= 4;
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
         this.$message.warning("节假日必选");
       }
@@ -303,7 +303,7 @@ export default {
         sortOrder = sortedInfo.order;
       }
         let queryParams = { ...this.queryParams };
-        queryParams.flag= 0;
+        queryParams.flag= 4;
       if(queryParams.scheduleDateFrom==undefined||queryParams.scheduleDateFrom==""){
         this.$message.warning("节假日必选");
       }
@@ -365,7 +365,7 @@ export default {
        this.viewInfoVisalboe= true;
        this.infoParams = { ...this.queryParams };
        this.infoParams.accountId= record.accountId;
-       this.infoParams.flag= 0;
+       this.infoParams.flag= 4;
        this.infoParams.deptId = record.deptId
     },
     fetchDept() {

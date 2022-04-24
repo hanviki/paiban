@@ -21,4 +21,14 @@ public class SdlBUserSearch {
     private String rylx;
 
     private String yggh;
+
+    private String zhichenglc;
+
+    private String edu;
+
+    private String sexname;
+
+    private String age;
+
+    private String renshizifw;
 }

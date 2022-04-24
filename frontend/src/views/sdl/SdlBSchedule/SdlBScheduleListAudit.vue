@@ -231,6 +231,8 @@ export default {
                 return <a-tag color="#f50">已审核</a-tag>;
               case 9:
                 return <a-tag color="orange">已完成</a-tag>;
+              case 10:
+                return <a-tag color="blue">已完成未审核</a-tag>;
               default:
                 return text;
             }
@@ -546,8 +548,8 @@ export default {
       this.sortedInfo = sorter;
       this.paginationInfo = pagination;
       this.fetch({
-        sortField: sorter.field,
-        sortOrder: sorter.order,
+        //sortField: sorter.field,
+        //sortOrder: sorter.order,
         ...this.queryParams,
       });
     },

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBCheckMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBCheck">
+        <id column="id" property="id"/>
+        <result column="dept_new" property="deptNew"/>
+        <result column="project_name" property="projectName"/>
+        <result column="project_type" property="projectType"/>
+        <result column="project_level" property="projectLevel"/>
+        <result column="project_lb" property="projectLb"/>
+        <result column="isxzyljs" property="isxzyljs"/>
+        <result column="applydat" property="applydat"/>
+        <result column="user_account_name" property="userAccountName"/>
+        <result column="user_account" property="userAccount"/>
+        <result column="yggh" property="yggh"/>
+        <result column="sex_name" property="sexName"/>
+        <result column="birthday" property="birthday"/>
+        <result column="userdept" property="userdept"/>
+        <result column="edu" property="edu"/>
+        <result column="zhicheng" property="zhicheng"/>
+        <result column="zhichenglc" property="zhichenglc"/>
+        <result column="zhiwu" property="zhiwu"/>
+        <result column="zhuany" property="zhuany"/>
+        <result column="zhuanc" property="zhuanc"/>
+        <result column="telephone" property="telephone"/>
+        <result column="lev" property="lev"/>
+        <result column="typ" property="typ"/>
+        <result column="projectcontent" property="projectcontent"/>
+        <result column="lincaqfx" property="lincaqfx"/>
+        <result column="lincjssb" property="lincjssb"/>
+        <result column="syz" property="syz"/>
+        <result column="jjz" property="jjz"/>
+        <result column="czgz" property="czgz"/>
+        <result column="srtdat" property="srtdat"/>
+        <result column="enddat" property="enddat"/>
+        <result column="ycdat" property="ycdat"/>
+        <result column="shstate" property="shstate"/>
+        <result column="xmjdstate" property="xmjdstate"/>
+        <result column="COMMENTS" property="comments"/>
+        <result column="STATE" property="state"/>
+        <result column="IS_DELETEMARK" property="isDeletemark"/>
+        <result column="MODIFY_TIME" property="modifyTime"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="CREATE_USER_ID" property="createUserId"/>
+        <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        <result column="projectmdyycx" property="projectmdyycx"/>
+        <result column="gnwyjyygk" property="gnwyjyygk"/>
+        <result column="kxxfxssjh" property="kxxfxssjh"/>
+        <result column="projectlcwtxyfx" property="projectlcwtxyfx"/>
+        <result column="ryjjpxgwzzqk" property="ryjjpxgwzzqk"/>
+        <result column="blhgbfzffcs" property="blhgbfzffcs"/>
+        <result column="zkcs" property="zkcs"/>
+        <result column="sfwyzlkmfw" property="sfwyzlkmfw"/>
+        <result column="flownum" property="flownum"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dept_new, project_name, project_level, project_type, project_lb, isxzyljs, applydat, user_account_name, user_account, yggh, sex_name, userdept, birthday, edu, zhicheng, zhichenglc, zhiwu, zhuany, zhuanc, telephone, lev, typ, projectcontent, lincaqfx, lincjssb, syz, jjz, czgz, srtdat, enddat, ycdat, shstate, xmjdstate, COMMENTS, STATE, IS_DELETEMARK, MODIFY_TIME, CREATE_TIME, CREATE_USER_ID, MODIFY_USER_ID, projectmdyycx, gnwyjyygk, kxxfxssjh, projectlcwtxyfx, ryjjpxgwzzqk, blhgbfzffcs, zkcs, sfwyzlkmfw, flownum
+    </sql>
+    <update id="updateXxbBCheck" parameterType="cc.mrbird.febs.xxb.entity.XxbBCheck">
+        update xxb_b_check
+        <trim prefix="set" suffixOverrides=",">
+            <if test="deptNew != null">dept_new=#{deptNew},</if>
+            <if test="projectName != null">project_name=#{projectName},</if>
+            <if test="projectType != null">project_type=#{projectType},</if>
+            <if test="projectLevel != null">project_level=#{projectLevel},</if>
+            <if test="projectLb != null">project_lb=#{projectLb},</if>
+            <if test="isxzyljs != null">isxzyljs=#{isxzyljs},</if>
+            <if test="applydat != null">applydat=#{applydat},</if>
+            <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+            <if test="userAccount != null">user_account=#{userAccount},</if>
+            <if test="yggh != null">yggh=#{yggh},</if>
+            <if test="sexName != null">sex_name=#{sexName},</if>
+            <if test="birthday != null">birthday=#{birthday},</if>
+            <if test="edu != null">edu=#{edu},</if>
+            <if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+            <if test="zhiwu != null">zhiwu=#{zhiwu},</if>
+            <if test="zhuany != null">zhuany=#{zhuany},</if>
+            <if test="zhuanc != null">zhuanc=#{zhuanc},</if>
+            <if test="telephone != null">telephone=#{telephone},</if>
+            <if test="lev != null">lev=#{lev},</if>
+            <if test="typ != null">typ=#{typ},</if>
+            <if test="projectcontent != null">projectcontent=#{projectcontent},</if>
+            <if test="lincaqfx != null">lincaqfx=#{lincaqfx},</if>
+            <if test="lincjssb != null">lincjssb=#{lincjssb},</if>
+            <if test="syz != null">syz=#{syz},</if>
+            <if test="jjz != null">jjz=#{jjz},</if>
+            <if test="czgz != null">czgz=#{czgz},</if>
+            <if test="srtdat != null">srtdat=#{srtdat},</if>
+            <if test="enddat != null">enddat=#{enddat},</if>
+            <if test="ycdat != null">ycdat=#{ycdat},</if>
+            <if test="shstate != null">shstate=#{shstate},</if>
+            <if test="xmjdstate != null">xmjdstate=#{xmjdstate},</if>
+            <if test="comments != null">COMMENTS=#{comments},</if>
+            <if test="state != null">STATE=#{state},</if>
+            <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+            <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+            <if test="createTime != null">CREATE_TIME=#{createTime},</if>
+            <if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+            <if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+            <if test="userdept != null">userdept=#{userdept},</if>
+            <if test="projectmdyycx != null">projectmdyycx=#{projectmdyycx},</if>
+            <if test="gnwyjyygk != null">gnwyjyygk=#{gnwyjyygk},</if>
+            <if test="kxxfxssjh != null">kxxfxssjh=#{kxxfxssjh},</if>
+            <if test="projectlcwtxyfx != null">projectlcwtxyfx=#{projectlcwtxyfx},</if>
+            <if test="ryjjpxgwzzqk != null">ryjjpxgwzzqk=#{ryjjpxgwzzqk},</if>
+            <if test="blhgbfzffcs != null">blhgbfzffcs=#{blhgbfzffcs},</if>
+            <if test="zkcs != null">zkcs=#{zkcs},</if>
+            <if test="sfwyzlkmfw != null">sfwyzlkmfw=#{sfwyzlkmfw},</if>
+            <if test="flownum != null">flownum=#{flownum},</if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <!--  projectmdyycx, gnwyjyygk, kxxfxssjh, projectlcwtxyfx, ryjjpxgwzzqk, blhgbfzffcs, zkcs, sfwyzlkmfw  -->
+    <select id="findXxbBCheck" resultType="cc.mrbird.febs.xxb.entity.XxbBCheck"
+            parameterType="cc.mrbird.febs.xxb.entity.XxbBCheck">
+        select * from xxb_b_check
+        where 1=1
+        <if test="xxbBCheck.id != null and xxbBCheck.id != ''">and xxb_b_check.id =#{ xxbBCheck.id}</if>
+        <if test="xxbBCheck.deptNew != null and xxbBCheck.deptNew != ''">and xxb_b_check.dept_new like concat('%',
+            #{ xxbBCheck.deptNew} ,'%')
+        </if>
+        <if test="xxbBCheck.projectName != null and xxbBCheck.projectName != ''">and xxb_b_check.project_name like
+            concat('%', #{ xxbBCheck.projectName} ,'%')
+        </if>
+        <if test="xxbBCheck.projectLevel != null">and xxb_b_check.project_level = #{ xxbBCheck.projectLevel}
+        </if>
+        <if test="xxbBCheck.projectType != null">and xxb_b_check.project_type = #{ xxbBCheck.projectType}
+        </if>
+        <if test="xxbBCheck.projectLb != null">and xxb_b_check.project_lb = #{ xxbBCheck.projectLb}
+        </if>
+        <if test="xxbBCheck.applydatFrom!= null">
+            AND xxb_b_check.applydat <![CDATA[ >= ]]>  #{xxbBCheck.applydatFrom}
+        </if>
+        <if test="xxbBCheck.applydatTo!= null">
+            AND xxb_b_check.applydat <![CDATA[ <= ]]>  #{xxbBCheck.applydatTo}
+        </if>
+        <if test="xxbBCheck.userAccountName != null and xxbBCheck.userAccountName != ''">and
+            xxb_b_check.user_account_name like concat('%', #{ xxbBCheck.userAccountName} ,'%')
+        </if>
+        <if test="xxbBCheck.userAccount != null and xxbBCheck.userAccount != ''">and xxb_b_check.user_account like
+            concat('%', #{ xxbBCheck.userAccount} ,'%')
+        </if>
+        <if test="xxbBCheck.yggh != null and xxbBCheck.yggh != ''">and xxb_b_check.yggh like concat('%',
+            #{ xxbBCheck.yggh} ,'%')
+        </if>
+        <if test="xxbBCheck.sexName != null and xxbBCheck.sexName != ''">and xxb_b_check.sex_name like concat('%',
+            #{ xxbBCheck.sexName} ,'%')
+        </if>
+        <if test="xxbBCheck.edu != null and xxbBCheck.edu != ''">and xxb_b_check.edu like concat('%', #{ xxbBCheck.edu}
+            ,'%')
+        </if>
+        <if test="xxbBCheck.zhicheng != null and xxbBCheck.zhicheng != ''">and xxb_b_check.zhicheng like concat('%',
+            #{ xxbBCheck.zhicheng} ,'%')
+        </if>
+        <if test="xxbBCheck.zhiwu != null and xxbBCheck.zhiwu != ''">and xxb_b_check.zhiwu like concat('%',
+            #{ xxbBCheck.zhiwu} ,'%')
+        </if>
+        <if test="xxbBCheck.zhuany != null and xxbBCheck.zhuany != ''">and xxb_b_check.zhuany like concat('%',
+            #{ xxbBCheck.zhuany} ,'%')
+        </if>
+        <if test="xxbBCheck.zhuanc != null and xxbBCheck.zhuanc != ''">and xxb_b_check.zhuanc like concat('%',
+            #{ xxbBCheck.zhuanc} ,'%')
+        </if>
+        <if test="xxbBCheck.telephone != null and xxbBCheck.telephone != ''">and xxb_b_check.telephone like concat('%',
+            #{ xxbBCheck.telephone} ,'%')
+        </if>
+        <if test="xxbBCheck.projectcontent != null and xxbBCheck.projectcontent != ''">and xxb_b_check.projectcontent
+            like
+            concat('%', #{ xxbBCheck.projectcontent} ,'%')
+        </if>
+        <if test="xxbBCheck.lincaqfx != null and xxbBCheck.lincaqfx != ''">and xxb_b_check.lincaqfx like concat('%',
+            #{ xxbBCheck.lincaqfx} ,'%')
+        </if>
+        <if test="xxbBCheck.lincjssb != null and xxbBCheck.lincjssb != ''">and xxb_b_check.lincjssb like concat('%',
+            #{ xxbBCheck.lincjssb} ,'%')
+        </if>
+        <if test="xxbBCheck.syz != null and xxbBCheck.syz != ''">and xxb_b_check.syz like concat('%', #{ xxbBCheck.syz}
+            ,'%')
+        </if>
+        <if test="xxbBCheck.jjz != null and xxbBCheck.jjz != ''">and xxb_b_check.jjz like concat('%', #{ xxbBCheck.jjz}
+            ,'%')
+        </if>
+        <if test="xxbBCheck.czgz != null and xxbBCheck.czgz != ''">and xxb_b_check.czgz like concat('%',
+            #{ xxbBCheck.czgz} ,'%')
+        </if>
+        <if test="xxbBCheck.srtdatFrom!= null">
+            AND xxb_b_check.srtdat <![CDATA[ >= ]]>  #{xxbBCheck.srtdatFrom}
+        </if>
+        <if test="xxbBCheck.srtdatTo!= null">
+            AND xxb_b_check.srtdat <![CDATA[ <= ]]>  #{xxbBCheck.srtdatTo}
+        </if>
+        <if test="xxbBCheck.enddatFrom!= null">
+            AND xxb_b_check.enddat <![CDATA[ >= ]]>  #{xxbBCheck.enddatFrom}
+        </if>
+        <if test="xxbBCheck.enddatTo!= null">
+            AND xxb_b_check.enddat <![CDATA[ <= ]]>  #{xxbBCheck.enddatTo}
+        </if>
+        <if test="xxbBCheck.ycdatFrom!= null">
+            AND xxb_b_check.ycdat <![CDATA[ >= ]]>  #{xxbBCheck.ycdatFrom}
+        </if>
+        <if test="xxbBCheck.ycdatTo!= null">
+            AND xxb_b_check.ycdat <![CDATA[ <= ]]>  #{xxbBCheck.ycdatTo}
+        </if>
+        <if test="xxbBCheck.comments != null and xxbBCheck.comments != ''">and xxb_b_check.COMMENTS like concat('%',
+            #{ xxbBCheck.comments} ,'%')
+        </if>
+        <if test="xxbBCheck.isDeletemark != null">and xxb_b_check.IS_DELETEMARK =#{ xxbBCheck.isDeletemark}</if>
+        <if test="xxbBCheck.modifyTimeFrom!= null">
+            AND xxb_b_check.MODIFY_TIME <![CDATA[ >= ]]>  #{xxbBCheck.modifyTimeFrom}
+        </if>
+        <if test="xxbBCheck.modifyTimeTo!= null">
+            AND xxb_b_check.MODIFY_TIME <![CDATA[ <= ]]>  #{xxbBCheck.modifyTimeTo}
+        </if>
+        <if test="xxbBCheck.createTimeFrom!= null">
+            AND xxb_b_check.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBCheck.createTimeFrom}
+        </if>
+        <if test="xxbBCheck.createTimeTo!= null">
+            AND xxb_b_check.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBCheck.createTimeTo}
+        </if>
+    </select>
+
+</mapper>

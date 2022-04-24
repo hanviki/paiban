@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBDeptflowMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBDeptflow">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="flow_account_name" property="flowAccountName"/>
+        <result column="flow_account" property="flowAccount"/>
+        <result column="flow_yggh" property="flowYggh"/>
+        <result column="flowdept" property="flowdept"/>
+        <result column="flowcontent" property="flowcontent"/>
+        <result column="backflowcontent" property="backflowcontent"/>
+        <result column="flownum" property="flownum"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="STATE" property="state"/>
+        <result column="flowDate" property="flowDate"/>
+        <result column="projdeptid" property="projdeptid"/>
+        <result column="IS_DELETEMARK" property="isDeletemark"/>
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, pid, flow_account_name, flow_account, flow_yggh, flowdept, flowcontent, backflowcontent, flownum, CREATE_TIME, STATE, flowDate, projdeptid, IS_DELETEMARK
+    </sql>
+    <update id="updateXxbBDeptflow" parameterType="cc.mrbird.febs.xxb.entity.XxbBDeptflow">
+        update xxb_b_deptflow
+        <trim prefix="set" suffixOverrides=",">
+            <if test="pid != null">pid=#{pid},</if>
+            <if test="flowAccountName != null">flow_account_name=#{flowAccountName},</if>
+            <if test="flowAccount != null">flow_account=#{flowAccount},</if>
+            <if test="flowYggh != null">flow_yggh=#{flowYggh},</if>
+            <if test="flowdept != null">flowdept=#{flowdept},</if>
+            <if test="flowcontent != null">flowcontent=#{flowcontent},</if>
+            <if test="backflowcontent != null">backflowcontent=#{backflowcontent},</if>
+            <if test="flownum != null">flownum=#{flownum},</if>
+            <if test="createTime != null">CREATE_TIME=#{createTime},</if>
+            <if test="state != null">STATE=#{state},</if>
+            <if test="flowDate != null">flowDate=#{flowDate},</if>
+            <if test="projdeptid != null">projdeptid=#{projdeptid},</if>
+            <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+        </trim>
+        where id=#{id}
+
+    </update>
+    <select id="findXxbBDeptflow" resultType="cc.mrbird.febs.xxb.entity.XxbBDeptflow"
+            parameterType="cc.mrbird.febs.xxb.entity.XxbBDeptflow">
+        select * from xxb_b_deptflow
+        where 1=1
+        <if test="xxbBDeptflow.id != null and xxbBDeptflow.id != ''">and xxb_b_deptflow.id =#{ xxbBDeptflow.id}</if>
+        <if test="xxbBDeptflow.pid != null and xxbBDeptflow.pid != ''">and xxb_b_deptflow.pid like concat('%',
+            #{ xxbBDeptflow.pid} ,'%')
+        </if>
+        <if test="xxbBDeptflow.flowAccountName != null and xxbBDeptflow.flowAccountName != ''">and
+            xxb_b_deptflow.flow_account_name like concat('%', #{ xxbBDeptflow.flowAccountName} ,'%')
+        </if>
+        <if test="xxbBDeptflow.flowAccount != null and xxbBDeptflow.flowAccount != ''">and xxb_b_deptflow.flow_account
+            like concat('%', #{ xxbBDeptflow.flowAccount} ,'%')
+        </if>
+        <if test="xxbBDeptflow.flowYggh != null and xxbBDeptflow.flowYggh != ''">and xxb_b_deptflow.flow_yggh like
+            concat('%', #{ xxbBDeptflow.flowYggh} ,'%')
+        </if>
+        <if test="xxbBDeptflow.flowdept != null and xxbBDeptflow.flowdept != ''">and xxb_b_deptflow.flowdept like
+            concat('%', #{ xxbBDeptflow.flowdept} ,'%')
+        </if>
+        <if test="xxbBDeptflow.flowcontent != null and xxbBDeptflow.flowcontent != ''">and xxb_b_deptflow.flowcontent
+            like concat('%', #{ xxbBDeptflow.flowcontent} ,'%')
+        </if>
+        <if test="xxbBDeptflow.flownum != null">and xxb_b_deptflow.flownum =#{ xxbBDeptflow.flownum}</if>
+        <if test="xxbBDeptflow.createTimeFrom!= null">
+            AND xxb_b_deptflow.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBDeptflow.createTimeFrom}
+        </if>
+        <if test="xxbBDeptflow.createTimeTo!= null">
+            AND xxb_b_deptflow.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBDeptflow.createTimeTo}
+        </if>
+        <if test="xxbBDeptflow.state != null">and xxb_b_deptflow.STATE =#{ xxbBDeptflow.state}</if>
+        <if test="xxbBDeptflow.flowDateFrom!= null">
+            AND xxb_b_deptflow.flowDate <![CDATA[ >= ]]>  #{xxbBDeptflow.flowDateFrom}
+        </if>
+        <if test="xxbBDeptflow.flowDateTo!= null">
+            AND xxb_b_deptflow.flowDate <![CDATA[ <= ]]>  #{xxbBDeptflow.flowDateTo}
+        </if>
+    </select>
+
+</mapper>

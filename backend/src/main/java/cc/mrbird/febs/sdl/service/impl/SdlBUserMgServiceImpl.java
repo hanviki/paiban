@@ -72,7 +72,19 @@ public class SdlBUserMgServiceImpl extends ServiceImpl<SdlBUserMgMapper, SdlBUse
         }
     }
 
+    @Override
+    public SdlBUserMg findObjByAccount(String account) {
+        try {
+            LambdaQueryWrapper<SdlBUserMg> wrapper = new LambdaQueryWrapper();
+            wrapper.eq(SdlBUserMg::getUserAccount,account);
+            List<SdlBUserMg> list = this.baseMapper.selectList(wrapper);
+            return  list.size() == 0 ? null : list.get(0);
 
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
+        }
+    }
     @Override
     public List<cc.mrbird.febs.sdl.entity.CustomUser> findSdlBUserMgs(SdlBUserMg sdlBUser) {
         try {

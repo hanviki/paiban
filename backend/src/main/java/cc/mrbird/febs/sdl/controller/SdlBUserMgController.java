@@ -6,6 +6,7 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.utils.DateUtil;
 import cc.mrbird.febs.common.utils.ExportExcelUtils;
 import cc.mrbird.febs.sdl.entity.CustomDept;
 import cc.mrbird.febs.sdl.entity.CustomUser;
@@ -17,6 +18,7 @@ import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
@@ -82,10 +84,46 @@ public class SdlBUserMgController extends BaseController{
             n.setZhicheng(p.getZhicheng());
             n.setTel(p.getTelephone());
             n.setUserAccountName(p.getUserAccountName());
+            n.setEdu(p.getEdu());
+            n.setZhichenglc(p.getZyjsgwLc());
+            n.setSexname(p.getSexName());
+            n.setYggh(p.getYggh());
+            n.setAge(DateUtil.getAge(p.getBirthday()));
+            n.setRenshizifw(p.getRenshizifw());
             return  n;
         }).collect(Collectors.toList());
         return  list;
     }
+    @GetMapping("getAccountInfo")
+    public SdlBUserSearch getAccountInfo1(){
+        User currentUser= FebsUtil.getCurrentUser();
+        SdlBUserMg p = this.iSdlBUserMgService.findObjByAccount(currentUser.getUsername());
+
+        if(p != null) {
+            SdlBUserSearch n = new SdlBUserSearch();
+            n.setId(p.getId());
+            n.setBirthday(p.getBirthday());
+            n.setUserAccount(p.getUserAccount());
+            n.setYggh(p.getYggh());
+            n.setDeptNew(p.getDeptNew());
+            n.setEdu(p.getEdu());
+            // 职称getZhicheng
+            n.setZhicheng(p.getZhicheng());
+            // 临床职称getZyjsgwLc
+            n.setZhichenglc(p.getZyjsgwLc());
+            n.setTel(p.getTelephone());
+            n.setSexname(p.getSexName());
+            n.setAge(DateUtil.getAge(p.getBirthday()));
+            n.setUserAccountName(p.getUserAccountName());
+            n.setRenshizifw(p.getRenshizifw());
+            return n;
+        } else {
+            return null;
+        }
+    }
+
+
+
     @GetMapping("ywc")
     public Map<String, Object> List2(QueryRequest request, SdlBUserMg sdlBUser){
         return getDataTable(this.iSdlBUserMgService.findSdlBUserMgsYwc(request, sdlBUser));

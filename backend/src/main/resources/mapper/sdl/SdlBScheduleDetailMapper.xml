@@ -217,17 +217,45 @@
         ORDER BY A.schedule_date asc
     </select>
 
-
-    <select id="findYeBanReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        drop table if EXISTS tb;
-        CREATE TEMPORARY TABLE tb AS
+    <!--个人记录-->
+    <select id="findSdlBScheduleReportAccount2" resultType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
         SELECT
+        A.*
+        FROM
+        sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
+        INNER JOIN sdl_b_user C ON A.account_id = C.user_account
+        inner join sdl_b_schedule D on A.base_id =D.id
+        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='规培'  AND A.zizhi_id in (1,2,6,7)
+        <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
+            and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
+        <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
+            and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
+        </if>
+        <if test="sdlBScheduleDetail.deptId != null and sdlBScheduleDetail.deptId != ''">
+            and  A.dept_id = #{ sdlBScheduleDetail.deptId}
+        </if>
+
+        <if test="sdlBScheduleDetail.scheduleDateFrom!= null">
+            AND A.schedule_date <![CDATA[ >= ]]>  #{sdlBScheduleDetail.scheduleDateFrom}
+        </if>
+        <if test="sdlBScheduleDetail.scheduleDateTo!= null">
+            AND  A.schedule_date <![CDATA[ <= ]]>  #{sdlBScheduleDetail.scheduleDateTo}
+        </if>
+        ORDER BY A.schedule_date asc
+    </select>
+
+    <select id="findAllBaseId" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail" resultType="String">
+         SELECT
         DISTINCT id
         FROM
         sdl_b_schedule
         WHERE
         ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
         AND state = 3 ;
+    </select>
+
+    <select id="findYeBanReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
+
         SELECT
         G.DEPT_ID,
         G.DEPT_NAME,
@@ -241,7 +269,7 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
-        inner join tb on A.base_id =tb.id
+       -- inner join tb on A.base_id =tb.id
        --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id --  INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
@@ -262,7 +290,10 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-
+        and A.base_id in
+        <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
 
 
         GROUP BY
@@ -279,15 +310,6 @@
     </select>
 
     <select id="findYeBanSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        drop table if EXISTS tb;
-        CREATE TEMPORARY TABLE tb AS
-        SELECT
-        DISTINCT id
-        FROM
-        sdl_b_schedule
-        WHERE
-        ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
-        AND state = 3 ;
         SELECT
         G.dept_name,
         G.dept_id,
@@ -309,7 +331,7 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
-        inner join tb on A.base_id =tb.id
+        -- inner join tb on A.base_id =tb.id
        --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID -- INNER JOIN sdl_d_banci C ON A.banci_id = C.id
@@ -331,7 +353,10 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-
+        and A.base_id in
+        <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
 
 
         GROUP BY
@@ -385,15 +410,6 @@
     </select>
 
     <select id="findMenZhenReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        drop table if EXISTS tb2;
-        CREATE TEMPORARY TABLE tb2 AS
-        SELECT
-        DISTINCT id
-        FROM
-        sdl_b_schedule
-        WHERE
-        ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
-        AND state = 3 ;
 
         SELECT
         G.DEPT_ID,
@@ -416,7 +432,7 @@
         A.banci_id
         FROM
         sdl_b_schedule_detail A
-        inner join tb2 on A.base_id =tb2.id
+       -- inner join tb2 on A.base_id =tb2.id
        --  INNER JOIN sdl_b_schedule S ON A.base_id = S.id -- INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
         WHERE
@@ -435,7 +451,10 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-
+        and A.base_id in
+        <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
 
 
         GROUP BY
@@ -454,15 +473,7 @@
     </select>
 
     <select id="findMenZhenSubReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
-        drop table if EXISTS tb2;
-        CREATE TEMPORARY TABLE tb2 AS
-        SELECT
-        DISTINCT id
-        FROM
-        sdl_b_schedule
-        WHERE
-        ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
-        AND state = 3 ;
+
 
         SELECT
         G.dept_name,
@@ -493,7 +504,7 @@
         A.zhicheng
         FROM
         sdl_b_schedule_detail A
-        inner join tb2 on A.base_id =tb2.id
+       --  inner join tb2 on A.base_id =tb2.id
         -- INNER JOIN sdl_b_schedule S ON A.base_id = S.id
         INNER JOIN sdl_b_user B ON A.account_id = B.user_account
         INNER JOIN t_dept D ON A.dept_id = D.DEPT_ID
@@ -513,7 +524,10 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-
+        and A.base_id in
+        <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
 
 
         GROUP BY

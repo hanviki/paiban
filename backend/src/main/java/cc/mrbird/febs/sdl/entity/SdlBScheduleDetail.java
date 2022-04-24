@@ -9,6 +9,8 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import java.util.Date;
+import java.util.List;
+
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import cc.mrbird.febs.common.converter.*;
@@ -230,6 +232,8 @@ private static final long serialVersionUID=1L;
     private Long modifyUserId;
 
     private transient  int areaIndex;
+
+    private transient List<String> baseList;
 
 
 

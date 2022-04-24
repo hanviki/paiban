@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBDeptleaderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBDeptleader">
+        <id column="id" property="id"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="user_account_name" property="userAccountName"/>
+        <result column="user_account" property="userAccount"/>
+        <result column="user_yggh" property="userYggh"/>
+        <result column="state" property="state"/>
+        <result column="IS_DELETEMARK" property="isDeletemark"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="MODIFY_TIME" property="modifyTime"/>
+        <result column="CREATE_USER_ID" property="createUserId"/>
+        <result column="MODIFY_USER_ID" property="modifyUserId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dept_name, user_account_name, user_account, user_yggh, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateXxbBDeptleader" parameterType="cc.mrbird.febs.xxb.entity.XxbBDeptleader">
+        update xxb_b_deptleader
+        <trim prefix="set" suffixOverrides=",">
+            <if test="deptName != null">dept_name=#{deptName},</if>
+            <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+            <if test="userAccount != null">user_account=#{userAccount},</if>
+            <if test="userYggh != null">user_yggh=#{userYggh},</if>
+            <if test="state != null">state=#{state},</if>
+            <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+            <if test="createTime != null">CREATE_TIME=#{createTime},</if>
+            <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+            <if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+            <if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+        where id=#{id}
+
+    </update>
+    <select id="findXxbBDeptleader" resultType="cc.mrbird.febs.xxb.entity.XxbBDeptleader"
+            parameterType="cc.mrbird.febs.xxb.entity.XxbBDeptleader">
+        select * from xxb_b_deptleader
+        where 1=1
+        <if test="xxbBDeptleader.deptName != null and xxbBDeptleader.deptName != ''">and xxb_b_deptleader.dept_name like
+            concat('%', #{ xxbBDeptleader.deptName} ,'%')
+        </if>
+        <if test="xxbBDeptleader.userAccountName != null and xxbBDeptleader.userAccountName != ''">and
+            xxb_b_deptleader.user_account_name like concat('%', #{ xxbBDeptleader.userAccountName} ,'%')
+        </if>
+        <if test="xxbBDeptleader.userAccount != null and xxbBDeptleader.userAccount != ''">and
+            xxb_b_deptleader.user_account like concat('%', #{ xxbBDeptleader.userAccount} ,'%')
+        </if>
+        <if test="xxbBDeptleader.state != null">and xxb_b_deptleader.state =#{ xxbBDeptleader.state}</if>
+        <if test="xxbBDeptleader.isDeletemark != null">and xxb_b_deptleader.IS_DELETEMARK
+            =#{ xxbBDeptleader.isDeletemark}
+        </if>
+        <if test="xxbBDeptleader.createTimeFrom!= null">
+            AND xxb_b_deptleader.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBDeptleader.createTimeFrom}
+        </if>
+        <if test="xxbBDeptleader.createTimeTo!= null">
+            AND xxb_b_deptleader.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBDeptleader.createTimeTo}
+        </if>
+        <if test="xxbBDeptleader.modifyTimeFrom!= null">
+            AND xxb_b_deptleader.MODIFY_TIME <![CDATA[ >= ]]>  #{xxbBDeptleader.modifyTimeFrom}
+        </if>
+        <if test="xxbBDeptleader.modifyTimeTo!= null">
+            AND xxb_b_deptleader.MODIFY_TIME <![CDATA[ <= ]]>  #{xxbBDeptleader.modifyTimeTo}
+        </if>
+    </select>
+
+</mapper>

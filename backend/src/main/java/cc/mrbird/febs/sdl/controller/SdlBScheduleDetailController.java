@@ -309,6 +309,9 @@ public class SdlBScheduleDetailController extends BaseController {
         if(flag==0) {
             customDataList = this.iSdlBScheduleDetailService.findSdlBScheduleReportAccount(sdlBScheduleDetail);
         }
+        if(flag==4) {
+            customDataList = this.iSdlBScheduleDetailService.findSdlBScheduleReportAccount2(sdlBScheduleDetail);
+        }
         if(flag==1) {
             customDataList = this.iSdlBScheduleDetailService.findYeBanSubReportAccount(sdlBScheduleDetail);
         }
@@ -350,7 +353,7 @@ public class SdlBScheduleDetailController extends BaseController {
             if(flag==0){
                 customDataList= deptStatisticSub(sdlBScheduleDetail);
             }
-            if(flag==0){
+            if(flag==4){
                 customDataList= deptStatisticSub45(sdlBScheduleDetail);
             }
             if(flag==1){

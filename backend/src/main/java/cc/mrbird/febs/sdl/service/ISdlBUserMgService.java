@@ -28,6 +28,8 @@ public interface ISdlBUserMgService extends IService<SdlBUserMg> {
 
         IPage<SdlBUserMg> findSdlBUserMgsHz(QueryRequest request, SdlBUserMg sdlBUser);
 
+        SdlBUserMg findObjByAccount(String account);
+
         IPage<SdlBUserMg> findSdlBUserMgList(QueryRequest request, SdlBUserMg sdlBUser);
 
         void createSdlBUserMg(SdlBUserMg sdlBUser);

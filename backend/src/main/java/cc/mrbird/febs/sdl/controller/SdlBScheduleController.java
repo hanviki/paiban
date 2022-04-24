@@ -91,6 +91,26 @@ public class SdlBScheduleController extends BaseController {
         }
         return pageInfo;
     }
+    private IPage<SdlBSchedule>  handleControlTime2(IPage<SdlBSchedule> pageInfo){
+        List<SdlBSchedule> sdlBScheduleList= pageInfo.getRecords();
+        LambdaQueryWrapper<SdlBControl> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(SdlBControl::getState,2);
+        List<SdlBControl> controlList =iSdlBControlService.list(queryWrapper);
+        for (SdlBSchedule sdl:sdlBScheduleList
+        ) {
+            long c= controlList.stream().filter(p->(p.getYear()+p.getMonth())
+                    .equals(DateUtil.format(sdl.getStartDate(),"yyyyMM"))).count();
+            if(c>0){
+                if(sdl.getState().equals(3)) {
+                    sdl.setState(9);//代表不能处理
+                }
+                else{
+                    sdl.setState(10);//代表不能处理
+                }
+            }
+        }
+        return pageInfo;
+    }
 
     @GetMapping("audit")
     @RequiresPermissions("sdlBSchedule:view")
@@ -119,6 +139,8 @@ public class SdlBScheduleController extends BaseController {
     @GetMapping("auditList")
     @RequiresPermissions("sdlBSchedule:view")
     public Map<String, Object> List_audit2(QueryRequest request, SdlBSchedule sdlBSchedule) {
+        request.setSortField("CREATE_TIME");
+        request.setSortOrder("descend");
         User currentUser = FebsUtil.getCurrentUser();
         if(currentUser.getUsername().toUpperCase().equals("MZBGS")){
             sdlBSchedule.setDeptId("13000102");//门诊办公室 默认处理 急诊内科 2021.12.28
@@ -138,7 +160,7 @@ public class SdlBScheduleController extends BaseController {
         else{
             sdlBSchedule.setDeptName("13000102,30000001,13001103,13001106,13001114,30000002,30000004,30000006,30000007,13001111"); //
         }
-        return getDataTable(handleControlTime(this.iSdlBScheduleService.findSdlBScheduleList2(request, sdlBSchedule)));
+        return getDataTable(handleControlTime2(this.iSdlBScheduleService.findSdlBScheduleList2(request, sdlBSchedule)));
     }
 
 

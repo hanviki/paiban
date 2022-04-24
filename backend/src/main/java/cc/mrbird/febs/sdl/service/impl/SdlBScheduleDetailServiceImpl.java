@@ -115,16 +115,26 @@ public class SdlBScheduleDetailServiceImpl extends ServiceImpl<SdlBScheduleDetai
     public List<SdlBScheduleDetail> findSdlBScheduleReportAccount(SdlBScheduleDetail sdlBScheduleDetail) {
         return this.baseMapper.findSdlBScheduleReportAccount(sdlBScheduleDetail);
     }
+    @Override
+    @Transactional
+    public List<SdlBScheduleDetail> findSdlBScheduleReportAccount2(SdlBScheduleDetail sdlBScheduleDetail) {
+        return this.baseMapper.findSdlBScheduleReportAccount2(sdlBScheduleDetail);
+    }
+
 
     @Override
     @Transactional
     public List<CustomData> findYeBanReport(SdlBScheduleDetail sdlBScheduleDetail) {
+        List<String> idList= this.baseMapper.findAllBaseId(sdlBScheduleDetail);
+        sdlBScheduleDetail.setBaseList(idList);
         return this.baseMapper.findYeBanReport(sdlBScheduleDetail);
     }
 
     @Override
     @Transactional
     public List<CustomData> findYeBanSubReport(SdlBScheduleDetail sdlBScheduleDetail) {
+        List<String> idList= this.baseMapper.findAllBaseId(sdlBScheduleDetail);
+        sdlBScheduleDetail.setBaseList(idList);
         return this.baseMapper.findYeBanSubReport(sdlBScheduleDetail);
     }
     @Override
@@ -136,12 +146,16 @@ public class SdlBScheduleDetailServiceImpl extends ServiceImpl<SdlBScheduleDetai
     @Override
     @Transactional
     public List<CustomData> findMenZhenReport(SdlBScheduleDetail sdlBScheduleDetail) {
+        List<String> idList= this.baseMapper.findAllBaseId(sdlBScheduleDetail);
+        sdlBScheduleDetail.setBaseList(idList);
         return this.baseMapper.findMenZhenReport(sdlBScheduleDetail);
     }
 
     @Override
     @Transactional
     public List<CustomData> findMenZhenSubReport(SdlBScheduleDetail sdlBScheduleDetail) {
+        List<String> idList= this.baseMapper.findAllBaseId(sdlBScheduleDetail);
+        sdlBScheduleDetail.setBaseList(idList);
         return this.baseMapper.findMenZhenSubReport(sdlBScheduleDetail);
     }
     @Override

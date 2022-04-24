@@ -8,17 +8,21 @@ import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.properties.FebsProperties;
 import cc.mrbird.febs.common.utils.FtpUtil;
+import cc.mrbird.febs.scm.entity.InUploadFile;
 import cc.mrbird.febs.scm.entity.OutComFile;
 import cc.mrbird.febs.scm.service.IComFileService;
 import cc.mrbird.febs.scm.entity.ComFile;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.wuwenze.poi.ExcelKit;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *
@@ -239,5 +240,122 @@ public class ComFileController extends BaseController{
         } catch (IOException e) {
             System.out.println("文件读取错误。"+e.getMessage());
         }
+    }
+
+    @PostMapping("fileList")
+    public FebsResponse findImgListComFiles(InUploadFile inUploadFile) {
+        List<OutComFile> outList = new ArrayList<>();
+        try {
+            LambdaQueryWrapper<ComFile> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(ComFile::getRefTabId,inUploadFile.getId());
+            if (StringUtils.isNotBlank(inUploadFile.getRefTab())) {
+                wrapper.eq(ComFile::getRefTabTable, inUploadFile.getRefTab());
+            }
+            wrapper.eq(ComFile::getIsDeletemark,1);
+            List<ComFile> list = this.iComFileService.list(wrapper);
+            if (list.size() > 0) {
+                for (ComFile item : list) {
+                    String fileUrl = "uploadFile/" + item.getServerName();
+                    OutComFile outComFile = new OutComFile();
+                    outComFile.setUid(item.getId());
+                    outComFile.setName(item.getClientName());
+                    outComFile.setStatus("done");
+                    outComFile.setUrl(fileUrl);
+                    outComFile.setSerName(item.getServerName());
+                    outComFile.setThumbUrl(fileUrl);
+                    outList.add(outComFile);
+                }
+            }
+        } catch (Exception e) {
+            log.error(message, e);
+        }
+        return new FebsResponse().data(outList);
+    }
+    @PostMapping("uploadFile")
+    public FebsResponse UploadFile(@RequestParam("file") MultipartFile file, InUploadFile inUploadFile) throws FebsException {
+        if (file.isEmpty()) {
+            throw new FebsException("空文件");
+        }
+        ModelMap map = new ModelMap();
+        Date thisDate = new Date();
+        String strId = inUploadFile.getId();
+        String fileName2 = file.getOriginalFilename();  // 文件名
+        String suffixName = fileName2.substring(fileName2.lastIndexOf("."));  // 后缀名
+        suffixName = suffixName.toLowerCase();
+
+        if (suffixName.equals(inUploadFile.getSuffix())) {
+            String filePath = febsProperties.getUploadPath(); // 上传后的路径
+            String fileName = UUID.randomUUID().toString() + suffixName;
+            File dest = new File(filePath + "/" + fileName);
+            String Id = UUID.randomUUID().toString();
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            try {
+                file.transferTo(dest);
+                ComFile cf = new ComFile();
+                cf.setId(Id);
+                cf.setCreateTime(thisDate);
+                cf.setClientName(fileName2);//客户端的名称
+                cf.setServerName(fileName);
+                cf.setRefTabId(strId);
+                cf.setRefTabTable(inUploadFile.getRefTab());
+                iComFileService.createComFile(cf);
+
+            } catch (IOException e) {
+                throw new FebsException(e.getMessage());
+            }
+            String fileUrl = "/uploadFile/" + fileName;
+
+            map.put("success", 1);
+            map.put("uid", Id);
+            map.put("name", fileName2);
+            map.put("status", "done");
+            map.put("url", fileUrl);
+            map.put("thumbUrl", fileUrl);
+            map.put("serName", fileName);
+        } else {
+            map.put("success", 0);
+            map.put("message", "上传文件的格式不正确，应上传PDF格式.");
+        }
+        return new FebsResponse().put("data", map);
+    }
+    @Log("删除")
+    @PostMapping("deleteFile")
+    public FebsResponse deleteFile(InUploadFile inUploadFile) {
+        ModelMap map = new ModelMap();
+        int success = 0;
+        try {
+            String strId = inUploadFile.getId();
+            ComFile comFile = this.iComFileService.getById(strId);
+            if (comFile != null) {
+                String[] ids = {inUploadFile.getId()};
+                this.iComFileService.deleteComFiles(ids);
+//                success = 1;
+//                String filePath = febsProperties.getUploadPath(); // 上传后的路径
+//                String fileUrl = filePath + "/" + comFile.getServerName();
+//                delete(fileUrl);
+            }
+        } catch (Exception e) {
+            message = "删除失败.";
+            log.error(message, e);
+        }
+        map.put("message", message);
+        map.put("success", success);
+        return new FebsResponse().data(map);
+    }
+    public boolean delete(String sPath) {
+        boolean flag = false;
+        File file = new File(sPath);
+        // 路径为文件且不为空则进行删除
+        if (file.exists()) {
+            if (file.isFile()) {
+                file.delete();
+                flag = true;
+            }
+        } else {
+            flag = true;
+        }
+        return flag;
     }
 }

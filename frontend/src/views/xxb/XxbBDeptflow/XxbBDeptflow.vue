@@ -1,0 +1,326 @@
+<template>
+    <a-card :bordered="false" class="card-area">
+        <div :class="advanced ? 'search' : null">
+            <a-form layout="horizontal">
+                <a-row>
+                    <div :class="advanced ? null: 'fold'">
+                    </div>
+                    <span style="float: right; margin-top: 3px;">
+          <a-button type="primary" @click="search">查询</a-button>
+          <a-button style="margin-left: 8px" @click="reset">重置</a-button>
+          <a @click="toggleAdvanced" style="margin-left: 8px">
+            {{advanced ? '收起' : '展开'}}
+            <a-icon :type="advanced ? 'up' : 'down'"/>
+          </a>
+        </span>
+                </a-row>
+            </a-form>
+        </div>
+        <div>
+            <div class="operator">
+                <a-button v-hasPermission="['xxbBDeptflow:add']" type="primary" ghost @click="add">新增</a-button>
+                <a-button v-hasPermission="['xxbBDeptflow:delete']" @click="batchDelete">删除</a-button>
+                <a-dropdown v-hasPermission="['xxbBDeptflow:export']">
+                    <a-menu slot="overlay">
+                        <a-menu-item key="export-data" @click="exportExcel">导出Excel</a-menu-item>
+                    </a-menu>
+                    <a-button>
+                        更多操作
+                        <a-icon type="down"/>
+                    </a-button>
+                </a-dropdown>
+                    <import-excel
+                            v-hasPermission="['xxbBDeptflow:import']"
+                            templateUrl="xxbBDeptflow/downTemplate"
+                            @succ="handleRefesh"
+                            url="xxbBDeptflow/import">
+                    </import-excel>
+            </div>
+            <!-- 表格区域 -->
+            <a-table ref="TableInfo"
+                     :columns="columns"
+                     :rowKey="record => record. id                      "
+                     :dataSource="dataSource"
+                     :pagination="pagination"
+                     :loading="loading"
+                     :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+                     @change="handleTableChange"
+                     :bordered="bordered"
+                     :scroll="{ x: 900 }">
+                <template slot="remark" slot-scope="text, record">
+                    <a-popover placement="topLeft">
+                        <template slot="content">
+                            <div style="max-width: 200px">{{text}}</div>
+                        </template>
+                        <p style="width: 200px;margin-bottom: 0">{{text}}</p>
+                    </a-popover>
+                </template>
+                <template slot="operation" slot-scope="text, record">
+                    <a-icon v-hasPermission="['xxbBDeptflow:update']" type="setting" theme="twoTone"
+                            twoToneColor="#4a9ff5" @click="edit(record)" title="修改"></a-icon>
+                    <a-badge v-hasNoPermission="['xxbBDeptflow:update']" status="warning" text="无权限"></a-badge>
+                </template>
+            </a-table>
+        </div>
+        <!-- 新增字典 -->
+        <xxbBDeptflow-add
+        @close="handleAddClose"
+        @success="handleAddSuccess"
+        :addVisiable="addVisiable">
+    </xxbBDeptflow-add>
+    <!-- 修改字典 -->
+    <xxbBDeptflow-edit
+    ref="xxbBDeptflowEdit"
+    @close="handleEditClose"
+    @success="handleEditSuccess"
+    :editVisiable="editVisiable">
+</xxbBDeptflow-edit>
+</a-card>
+</template>
+
+<script>
+    import XxbBDeptflowAdd from './XxbBDeptflowAdd'
+    import XxbBDeptflowEdit from './XxbBDeptflowEdit'
+    import ImportExcel from '../../common/ImportExcel'
+    import moment from 'moment'
+
+    const formItemLayout = {
+        labelCol: {span: 8},
+        wrapperCol: {span: 15, offset: 1}
+    }
+    export default {
+        name: 'XxbBDeptflow',
+        components: {XxbBDeptflowAdd, XxbBDeptflowEdit, ImportExcel },
+        data() {
+            return {
+                advanced: false,
+                dataSource: [],
+                selectedRowKeys: [],
+                sortedInfo: null,
+                paginationInfo: null,
+                formItemLayout,
+                pagination: {
+                    pageSizeOptions: ['10', '20', '30', '40', '100'],
+                    defaultCurrent: 1,
+                    defaultPageSize: 10,
+                    showQuickJumper: true,
+                    showSizeChanger: true,
+                    showTotal: (total, range) => `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`
+               },
+                queryParams:{
+                },
+            addVisiable: false,
+            editVisiable: false,
+            loading: false,
+            bordered: true
+        }
+        },
+        computed: {
+            columns() {
+                let {sortedInfo} = this
+                sortedInfo = sortedInfo || {}
+                return [                        {
+                                title: 'checkId',
+                            dataIndex: 'pid',
+                            width: 100
+                        },
+                        {
+                                title: '姓名',
+                            dataIndex: 'flowAccountName',
+                            width: 100
+                        },
+                        {
+                                title: '人事编号',
+                            dataIndex: 'flowAccount',
+                            width: 100
+                        },
+                        {
+                                title: '员工工号',
+                            dataIndex: 'flowYggh',
+                            width: 100
+                        },
+                        {
+                                title: '用户科室',
+                            dataIndex: 'flowdept',
+                            width: 100
+                        },
+                        {
+                                title: '流程内容',
+                            dataIndex: 'flowcontent',
+                            width: 100
+                        },
+                        {
+                                title: '流程数',
+                            dataIndex: 'flownum',
+                            width: 100
+                        },
+                        {
+                                title: '审核时间',
+                            dataIndex: 'flowDate',
+                                customRender: (text, row, index) => {
+                                if(text==null) return ''
+                                return moment(text).format('YYYY-MM-DD')
+                            },
+                            width: 100
+                        },
+                    {
+                        title: '操作',
+                        dataIndex: 'operation',
+                        scopedSlots: {customRender: 'operation'},
+                        fixed: 'right',
+                        width: 100
+                    }]
+            }
+        },
+        mounted() {
+            this.fetch()
+        },
+        methods: {
+            moment,
+            handleRefesh(){
+                this.search()
+            },
+            onSelectChange(selectedRowKeys) {
+                this.selectedRowKeys = selectedRowKeys
+            },
+            toggleAdvanced() {
+                this.advanced = !this.advanced
+                if (!this.advanced) {
+                    this.queryParams.comments = ''
+                }
+            },
+            handleAddSuccess() {
+                this.addVisiable = false
+                this.$message.success('新增成功')
+                this.search()
+            },
+            handleAddClose() {
+                this.addVisiable = false
+            },
+            add() {
+                this.addVisiable = true
+            },
+            handleEditSuccess() {
+                this.editVisiable = false
+                this.$message.success('修改成功')
+                this.search()
+            },
+            handleEditClose() {
+                this.editVisiable = false
+            },
+            edit(record) {
+                this.$refs.xxbBDeptflowEdit.setFormValues(record)
+                this.editVisiable = true
+            },
+            batchDelete() {
+                if (!this.selectedRowKeys.length) {
+                    this.$message.warning('请选择需要删除的记录')
+                            return
+                }
+                let that = this
+                this.$confirm({
+                    title: '确定删除所选中的记录?',
+                    content: '当您点击确定按钮后，这些记录将会被彻底删除',
+                    centered: true,
+                    onOk() {
+                        let xxbBDeptflowIds = that.selectedRowKeys.join(',')
+                        that.$delete('xxbBDeptflow/' + xxbBDeptflowIds).then(() => {
+                            that.$message.success('删除成功')
+                                    that.selectedRowKeys = []
+                            that.search()
+                        }
+                    )
+                    },
+                    onCancel() {
+                        that.selectedRowKeys = []
+                    }
+                })
+            },
+            exportExcel() {
+                let {sortedInfo} = this
+                let sortField, sortOrder
+                // 获取当前列的排序和列的过滤规则
+                if (sortedInfo) {
+                    sortField = sortedInfo.field
+                    sortOrder = sortedInfo.order
+                }
+                this.$export('xxbBDeptflow/excel', {
+                    sortField: sortField,
+                    sortOrder: sortOrder,
+                    ...this.queryParams
+                })
+            },
+            search() {
+                let {sortedInfo} = this
+                let sortField, sortOrder
+                // 获取当前列的排序和列的过滤规则
+                if (sortedInfo) {
+                    sortField = sortedInfo.field
+                    sortOrder = sortedInfo.order
+                }
+                if (this.paginationInfo) {
+                    this.paginationInfo.current = this.pagination.defaultCurrent
+                }
+                this.fetch({
+                    sortField: sortField,
+                    sortOrder: sortOrder,
+                    ...this.queryParams
+                })
+            },
+            reset() {
+                // 取消选中
+                this.selectedRowKeys = []
+                // 重置分页
+                this.$refs.TableInfo.pagination.current = this.pagination.defaultCurrent
+                if (this.paginationInfo) {
+                    this.paginationInfo.current = this.pagination.defaultCurrent
+                    this.paginationInfo.pageSize = this.pagination.defaultPageSize
+                }
+                // 重置列排序规则
+                this.sortedInfo = null
+                this.paginationInfo = null
+                // 重置查询参数
+                this.queryParams = {}
+                this.fetch()
+            },
+            handleTableChange(pagination, filters, sorter) {
+                this.sortedInfo = sorter
+                this.paginationInfo = pagination
+                this.fetch({
+                    sortField: sorter.field,
+                    sortOrder: sorter.order,
+                    ...this.queryParams
+                })
+            },
+            fetch(params = {}) {
+                this.loading = true
+                if (this.paginationInfo) {
+                    // 如果分页信息不为空，则设置表格当前第几页，每页条数，并设置查询分页参数
+                    this.$refs.TableInfo.pagination.current = this.paginationInfo.current
+                    this.$refs.TableInfo.pagination.pageSize = this.paginationInfo.pageSize
+                    params.pageSize = this.paginationInfo.pageSize
+                    params.pageNum = this.paginationInfo.current
+                } else {
+                    // 如果分页信息为空，则设置为默认值
+                    params.pageSize = this.pagination.defaultPageSize
+                    params.pageNum = this.pagination.defaultCurrent
+                }
+                this.$get('xxbBDeptflow', {
+                    ...params
+                }).then((r) => {
+                    let data = r.data
+                    const pagination = {...this.pagination}
+                    pagination.total = data.total
+                    this.loading = false
+                    this.dataSource = data.rows
+                    this.pagination = pagination
+                }
+            )
+            }
+        }
+    }
+</script>
+
+<style lang="less" scoped>
+    @import "../../../../static/less/Common";
+</style>

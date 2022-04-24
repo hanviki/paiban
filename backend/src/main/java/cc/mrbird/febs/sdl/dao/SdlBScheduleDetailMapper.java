@@ -23,11 +23,13 @@ public interface SdlBScheduleDetailMapper extends BaseMapper<SdlBScheduleDetail>
 
         List<CustomData>  findSdlBScheduleReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findSdlBScheduleReport2( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
+        List<String> findAllBaseId(@Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findYeBanReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findYeBanSubReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findMenZhenReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<CustomData>  findMenZhenSubReport( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
 
+        List<SdlBScheduleDetail>  findSdlBScheduleReportAccount2( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<SdlBScheduleDetail>  findSdlBScheduleReportAccount( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<SdlBScheduleDetail>  findYeBanSubReportAccount( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<SdlBScheduleDetail>  findMenZhenSubReportAccount( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);

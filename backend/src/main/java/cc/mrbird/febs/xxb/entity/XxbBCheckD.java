@@ -1,0 +1,206 @@
+package cc.mrbird.febs.xxb.entity;
+
+import java.time.LocalDate;
+import java.io.Serializable;
+
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.util.Date;
+
+import com.wuwenze.poi.annotation.Excel;
+import com.wuwenze.poi.annotation.ExcelField;
+import cc.mrbird.febs.common.converter.*;
+
+/**
+ * <p>
+ *
+ * </p>
+ *
+ * @author viki
+ * @since 2022-03-29
+ */
+
+@Excel("xxb_b_check_d")
+@Data
+@Accessors(chain = true)
+public class XxbBCheckD implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * checkDId
+     */
+
+    @ExcelField(value = "checkDId")
+    private String id;
+
+    /**
+     * checkId
+     */
+
+    @ExcelField(value = "checkId")
+    private String pid;
+
+    /**
+     * 姓名
+     */
+
+    @ExcelField(value = "姓名")
+    private String userAccountName;
+
+    /**
+     * 人事编号
+     */
+
+    @ExcelField(value = "人事编号")
+    private String userAccount;
+
+    /**
+     * 员工工号
+     */
+
+    @ExcelField(value = "员工工号")
+    private String yggh;
+
+    /**
+     * 性别
+     */
+
+    @ExcelField(value = "性别")
+    private String sexName;
+
+    /**
+     * 出生年月
+     */
+
+    @ExcelField(value = "出生年月")
+    private String birthday;
+
+    /**
+     * 年龄
+     */
+
+    @ExcelField(value = "年龄")
+    private String age;
+
+    /**
+     * 用户科室
+     */
+
+    @ExcelField(value = "用户科室")
+    private String userdept;
+
+    /**
+     * 学历、学位
+     */
+
+    @ExcelField(value = "学历、学位")
+    private String edu;
+
+    /**
+     * 职称
+     */
+
+    @ExcelField(value = "职称")
+    private String zhicheng;
+
+    /**
+     * 临床职称
+     */
+
+    @ExcelField(value = "临床职称")
+    private String zhichenglc;
+
+    /**
+     * 职务
+     */
+
+    @ExcelField(value = "职务")
+    private String zhiwu;
+
+
+    /**
+     * 手机号码
+     */
+
+    @ExcelField(value = "手机号码")
+    private String telephone;
+
+    /**
+     * 专业
+     */
+
+    @ExcelField(value = "专业")
+    private String zhuany;
+
+    /**
+     * 专长
+     */
+
+    @ExcelField(value = "专长")
+    private String zhuanc;
+
+    /**
+     * 人事子范围
+     */
+
+    @ExcelField(value = "人事子范围")
+    private String renshizifw;
+
+    /**
+     * 创建时间
+     */
+    @TableField("CREATE_TIME")
+
+    @ExcelField(value = "创建时间", writeConverter = DateConverter.class, readConverter = DateReadConverter.class)
+    private Date createTime;
+
+    /**
+     * 是否删除
+     */
+    @TableField("IS_DELETEMARK")
+
+    @ExcelField(value = "是否删除")
+    private Integer isDeletemark;
+
+    public static final String ID = "id";
+
+    public static final String PID = "pid";
+
+    public static final String USER_ACCOUNT_NAME = "user_account_name";
+
+    public static final String USER_ACCOUNT = "user_account";
+
+    public static final String YGGH = "yggh";
+
+    public static final String SEX_NAME = "sex_name";
+
+    public static final String BIRTHDAY = "birthday";
+
+    public static final String AGE = "age";
+
+    public static final String USERDEPT = "userdept";
+
+    public static final String EDU = "edu";
+
+    public static final String ZHICHENG = "zhicheng";
+
+    public static final String ZHICHENGLC = "zhichenglc";
+
+    public static final String ZHIWU = "zhiwu";
+
+    public static final String TELEPHONE = "telephone";
+
+    public static final String CREATE_TIME = "CREATE_TIME";
+
+    public static final String ZHUANY = "zhuany";
+
+    public static final String ZHUANC = "zhuanc";
+
+    public static final String RENSHIZIFW = "renshizifw";
+
+    public static final String IS_DELETEMARK = "IS_DELETEMARK";
+}

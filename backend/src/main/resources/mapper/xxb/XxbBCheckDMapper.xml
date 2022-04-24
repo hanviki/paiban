@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBCheckDMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBCheckD">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="user_account_name" property="userAccountName"/>
+        <result column="user_account" property="userAccount"/>
+        <result column="yggh" property="yggh"/>
+        <result column="sex_name" property="sexName"/>
+        <result column="userdept" property="userdept"/>
+        <result column="birthday" property="birthday"/>
+        <result column="age" property="age"/>
+        <result column="edu" property="edu"/>
+        <result column="zhicheng" property="zhicheng"/>
+        <result column="zhichenglc" property="zhichenglc"/>
+        <result column="zhiwu" property="zhiwu"/>
+        <result column="zhuany" property="zhuany"/>
+        <result column="zhuanc" property="zhuanc"/>
+        <result column="telephone" property="telephone"/>
+        <result column="renshizifw" property="renshizifw"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="IS_DELETEMARK" property="isDeletemark"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, pid, user_account_name, user_account, yggh, sex_name, userdept, birthday, age, edu, zhicheng, zhichenglc, zhiwu, telephone, zhuany, zhuanc, renshizifw, CREATE_TIME, IS_DELETEMARK
+    </sql>
+    <update id="updateXxbBCheckD" parameterType="cc.mrbird.febs.xxb.entity.XxbBCheckD">
+        update xxb_b_check_d
+        <trim prefix="set" suffixOverrides=",">
+            <if test="pid != null">pid=#{pid},</if>
+            <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+            <if test="userAccount != null">user_account=#{userAccount},</if>
+            <if test="yggh != null">yggh=#{yggh},</if>
+            <if test="sexName != null">sex_name=#{sexName},</if>
+            <if test="birthday != null">birthday=#{birthday},</if>
+            <if test="age != null">age=#{age},</if>
+            <if test="edu != null">edu=#{edu},</if>
+            <if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+            <if test="zhichenglc != null">zhichenglc=#{zhichenglc},</if>
+            <if test="zhiwu != null">zhiwu=#{zhiwu},</if>
+            <if test="telephone != null">telephone=#{telephone},</if>
+            <if test="userdept != null">userdept=#{userdept},</if>
+            <if test="zhuany != null">zhuany=#{zhuany},</if>
+            <if test="zhuanc != null">zhuanc=#{zhuanc},</if>
+            <if test="renshizifw != null">renshizifw=#{renshizifw},</if>
+            <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+        </trim>
+        where id=#{id}
+
+    </update>
+    <select id="findXxbBCheckD" resultType="cc.mrbird.febs.xxb.entity.XxbBCheckD"
+            parameterType="cc.mrbird.febs.xxb.entity.XxbBCheckD">
+        select * from xxb_b_check_d
+        where 1=1
+        <if test="xxbBCheckD.id != null and xxbBCheckD.id != ''">and xxb_b_check_d.id =#{ xxbBCheckD.id}</if>
+        <if test="xxbBCheckD.pid != null and xxbBCheckD.pid != ''">and xxb_b_check_d.pid like concat('%',
+            #{ xxbBCheckD.pid} ,'%')
+        </if>
+        <if test="xxbBCheckD.userAccountName != null and xxbBCheckD.userAccountName != ''">and
+            xxb_b_check_d.user_account_name like concat('%', #{ xxbBCheckD.userAccountName} ,'%')
+        </if>
+        <if test="xxbBCheckD.userAccount != null and xxbBCheckD.userAccount != ''">and xxb_b_check_d.user_account like
+            concat('%', #{ xxbBCheckD.userAccount} ,'%')
+        </if>
+        <if test="xxbBCheckD.yggh != null and xxbBCheckD.yggh != ''">and xxb_b_check_d.yggh like concat('%',
+            #{ xxbBCheckD.yggh} ,'%')
+        </if>
+        <if test="xxbBCheckD.sexName != null and xxbBCheckD.sexName != ''">and xxb_b_check_d.sex_name like concat('%',
+            #{ xxbBCheckD.sexName} ,'%')
+        </if>
+        <if test="xxbBCheckD.edu != null and xxbBCheckD.edu != ''">and xxb_b_check_d.edu like concat('%',
+            #{ xxbBCheckD.edu} ,'%')
+        </if>
+        <if test="xxbBCheckD.zhicw != null and xxbBCheckD.zhicw != ''">and xxb_b_check_d.zhicw like concat('%',
+            #{ xxbBCheckD.zhicw} ,'%')
+        </if>
+    </select>
+
+</mapper>

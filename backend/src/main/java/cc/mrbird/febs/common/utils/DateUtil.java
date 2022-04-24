@@ -1,5 +1,8 @@
 package cc.mrbird.febs.common.utils;
 
+import cn.hutool.core.date.DateUnit;
+import com.ruiyun.jvppeteer.util.StringUtil;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,5 +97,19 @@ public class DateUtil {
         }
 
         return days;
+    }
+    public static String getAge(String date){
+        Long day = 0l;
+        if(StringUtil.isNotBlank(date)) {
+            Date date1 = cn.hutool.core.date.DateUtil.parseDate(date);
+            day = cn.hutool.core.date.DateUtil.between(date1, new Date(), DateUnit.DAY);
+        }
+        if(day > 0) {
+            int age= day.intValue() / 365;
+            return String.valueOf(age);
+        } else if(day < 365){
+            return "1";
+        }
+        return "";
     }
 }

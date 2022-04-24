@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBProjdeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBProjdept">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="dept_account_name" property="deptAccountName"/>
+        <result column="dept_account" property="deptAccount"/>
+        <result column="dept_yggh" property="deptYggh"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="gxd" property="gxd"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="STATE" property="state"/>
+        <result column="IS_DELETEMARK" property="isDeletemark"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, pid, dept_account_name, dept_account, dept_yggh, dept_name, gxd, CREATE_TIME, STATE, IS_DELETEMARK
+    </sql>
+    <update id="updateXxbBProjdept" parameterType="cc.mrbird.febs.xxb.entity.XxbBProjdept">
+        update xxb_b_projdept
+        <trim prefix="set" suffixOverrides=",">
+            <if test="pid != null">pid=#{pid},</if>
+            <if test="deptAccountName != null">dept_account_name=#{deptAccountName},</if>
+            <if test="deptAccount != null">dept_account=#{deptAccount},</if>
+            <if test="deptYggh != null">dept_yggh=#{deptYggh},</if>
+            <if test="deptName != null">dept_name=#{deptName},</if>
+            <if test="gxd != null">gxd=#{gxd},</if>
+            <if test="createTime != null">CREATE_TIME=#{createTime},</if>
+            <if test="state != null">STATE=#{state},</if>
+            <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+        </trim>
+        where id=#{id}
+
+    </update>
+    <select id="findXxbBProjdept" resultType="cc.mrbird.febs.xxb.entity.XxbBProjdept"
+            parameterType="cc.mrbird.febs.xxb.entity.XxbBProjdept">
+        select * from xxb_b_projdept
+        where 1=1
+        <if test="xxbBProjdept.id != null and xxbBProjdept.id != ''">and xxb_b_projdept.id =#{ xxbBProjdept.id}</if>
+        <if test="xxbBProjdept.pid != null and xxbBProjdept.pid != ''">and xxb_b_projdept.pid like concat('%',
+            #{ xxbBProjdept.pid} ,'%')
+        </if>
+        <if test="xxbBProjdept.deptAccountName != null and xxbBProjdept.deptAccountName != ''">and
+            xxb_b_projdept.dept_account_name like concat('%', #{ xxbBProjdept.deptAccountName} ,'%')
+        </if>
+        <if test="xxbBProjdept.deptAccount != null and xxbBProjdept.deptAccount != ''">and xxb_b_projdept.dept_account
+            like concat('%', #{ xxbBProjdept.deptAccount} ,'%')
+        </if>
+        <if test="xxbBProjdept.deptYggh != null and xxbBProjdept.deptYggh != ''">and xxb_b_projdept.dept_yggh like
+            concat('%', #{ xxbBProjdept.deptYggh} ,'%')
+        </if>
+        <if test="xxbBProjdept.deptName != null and xxbBProjdept.deptName != ''">and xxb_b_projdept.dept_name like
+            concat('%', #{ xxbBProjdept.deptName} ,'%')
+        </if>
+        <if test="xxbBProjdept.createTimeFrom!= null">
+            AND xxb_b_projdept.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBProjdept.createTimeFrom}
+        </if>
+        <if test="xxbBProjdept.createTimeTo!= null">
+            AND xxb_b_projdept.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBProjdept.createTimeTo}
+        </if>
+        <if test="xxbBProjdept.state != null">and xxb_b_projdept.STATE =#{ xxbBProjdept.state}</if>
+    </select>
+
+</mapper>
