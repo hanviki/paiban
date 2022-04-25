@@ -403,15 +403,15 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                 // entity 查询 当前状态 创建时
                 if ((entity == null || (entity != null && entity.getState() == 0)) && deptFlowList.size() == 0) {
                     int flowNum = 1;
-                    this.insertDeptFLow(insertDeptFLowList, deptLeaderList, check.getDeptNew(), null, check.getId(), null, flowNum, thisDate);
+                    this.insertDeptFLow(insertDeptFLowList, deptLeaderList, check.getDeptNew(),0, null, check.getId(), null, flowNum, thisDate);
                     flowNum = 2;
                     if (check.getProjectType() == 2) {
                         for (XxbBProjdept item : insertProjDeptData) {
-                            this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(), null, check.getId(), item.getId(), flowNum, thisDate);
+                            this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(),0, null, check.getId(), item.getId(), flowNum, thisDate);
                         }
 
                         for (XxbBProjdept item : updateProjDeptData) {
-                            this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(), null, check.getId(), item.getId(), flowNum, thisDate);
+                            this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(),0, null, check.getId(), item.getId(), flowNum, thisDate);
                         }
                         flowNum = 3;
                     }
@@ -420,6 +420,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                     deptflow3.setPid(check.getId());
                     deptflow3.setFlownum(flowNum);
                     deptflow3.setState(0);
+                    deptflow3.setResultstate(0);
                     deptflow3.setFlowAccount("ywcgl");
                     deptflow3.setFlowYggh("ywcgl");
                     deptflow3.setFlowAccountName("医务办公室");
@@ -430,36 +431,50 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
 
                 }
                 // entity 查询 当前状态 退回时
-                if (entity != null && entity.getState() == 3 && check.getProjectType() == 2 && deptFlowList.size() > 0) {
+                if (entity != null && entity.getState() == 3 && deptFlowList.size() > 0) {
                     List<XxbBDeptflow> deptFlowQuery = new ArrayList<>();
                     String backFlowContent = null;
+                    int resultState = 0;
                     int flowNum = 1;
-                    deptFlowQuery = deptFlowList.stream().filter(s -> s.getProjdeptid() == null && s.getFlowdept().equals(check.getDeptNew())).collect(Collectors.toList());
+                    deptFlowQuery = deptFlowList.stream().filter(s -> s.getFlownum() == 1 && s.getFlowdept().equals(check.getDeptNew())).collect(Collectors.toList());
                     backFlowContent = deptFlowQuery.size() == 0 ? null : deptFlowQuery.get(0).getFlowcontent();
-                    this.insertDeptFLow(insertDeptFLowList, deptLeaderList, check.getDeptNew(), backFlowContent, check.getId(), null, flowNum, thisDate);
+                    resultState = deptFlowQuery.size() == 0 ? 0 : deptFlowQuery.get(0).getResultstate();
+                    this.insertDeptFLow(insertDeptFLowList, deptLeaderList, check.getDeptNew(),resultState, backFlowContent, check.getId(), null, flowNum, thisDate);
 
-                    flowNum = 2;
-                    for (XxbBProjdept item : insertProjDeptData) {
-                        deptFlowQuery = deptFlowList.stream().filter(s -> s.getProjdeptid() != null && s.getFlowdept().equals(item.getDeptName())).collect(Collectors.toList());
-                        backFlowContent = deptFlowQuery.size() == 0 ? null : deptFlowQuery.get(0).getFlowcontent();
-                        this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(), backFlowContent, check.getId(), item.getId(), flowNum, thisDate);
-                    }
+                    if(check.getProjectType() == 2) {
+                        flowNum += 1;
+                        for (XxbBProjdept item : insertProjDeptData) {
+                            deptFlowQuery = deptFlowList.stream().filter(s -> s.getFlownum() == 2 && s.getFlowdept().equals(item.getDeptName())).collect(Collectors.toList());
+                            backFlowContent = deptFlowQuery.size() == 0 ? null : deptFlowQuery.get(0).getFlowcontent();
+                            resultState = deptFlowQuery.size() == 0 ? 0 : deptFlowQuery.get(0).getResultstate();
+                            this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(), resultState, backFlowContent, check.getId(), item.getId(), flowNum, thisDate);
+                        }
 
-                    for (XxbBProjdept item : updateProjDeptData) {
-                        deptFlowQuery = deptFlowList.stream().filter(s -> s.getProjdeptid() != null && s.getFlowdept().equals(item.getDeptName())).collect(Collectors.toList());
-                        backFlowContent = deptFlowQuery.size() == 0 ? null : deptFlowQuery.get(0).getFlowcontent();
-                        this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(), backFlowContent, check.getId(), item.getId(), flowNum, thisDate);
+                        for (XxbBProjdept item : updateProjDeptData) {
+                            deptFlowQuery = deptFlowList.stream().filter(s -> s.getFlownum() == 2 && s.getFlowdept().equals(item.getDeptName())).collect(Collectors.toList());
+                            backFlowContent = deptFlowQuery.size() == 0 ? null : deptFlowQuery.get(0).getFlowcontent();
+                            resultState = deptFlowQuery.size() == 0 ? 0 : deptFlowQuery.get(0).getResultstate();
+                            this.insertDeptFLow(insertDeptFLowList, deptLeaderList, item.getDeptName(), resultState, backFlowContent, check.getId(), item.getId(), flowNum, thisDate);
+                        }
                     }
-                    flowNum = 3;
+                    flowNum += 1;
+                    if(check.getProjectType() == 2) {
+                        deptFlowQuery = deptFlowList.stream().filter(s -> s.getFlownum() == 3 && s.getFlowdept().equals("医务办公室")).collect(Collectors.toList());
+                    } else {
+                        deptFlowQuery = deptFlowList.stream().filter(s -> s.getFlownum() == 2 && s.getFlowdept().equals("医务办公室")).collect(Collectors.toList());
+                    }
+                    backFlowContent = deptFlowQuery.size() == 0 ? null : deptFlowQuery.get(0).getFlowcontent();
                     XxbBDeptflow deptflow3 = new XxbBDeptflow();
                     deptflow3.setId(UUID.randomUUID().toString());
                     deptflow3.setPid(check.getId());
                     deptflow3.setFlownum(flowNum);
                     deptflow3.setState(0);
+                    deptflow3.setResultstate(0);
                     deptflow3.setFlowAccount("ywcgl");
                     deptflow3.setFlowYggh("ywcgl");
                     deptflow3.setFlowAccountName("医务办公室");
                     deptflow3.setFlowdept("医务办公室");
+                    deptflow3.setBackflowcontent(backFlowContent);
                     deptflow3.setCreateTime(thisDate);
                     deptflow3.setIsDeletemark(1);
                     insertDeptFLowList.add(deptflow3);
@@ -470,7 +485,8 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                 }
             }
         }
-        if (check.getProjectType() == 2 && entity != null && entity.getState() == 3 && delType2DeptFlowIdList.size() > 0) {
+
+        if (entity != null && entity.getState() == 3 && delType2DeptFlowIdList.size() > 0) {
             String[] delDeptFlow = delType2DeptFlowIdList.toArray(new String[delType2DeptFlowIdList.size()]);
             iXxbBDeptflowService.deleteXxbBDeptflows(delDeptFlow);
         }
@@ -497,20 +513,22 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
         return check.getId();
     }
 
-    private void insertDeptFLow(List<XxbBDeptflow> insertDeptFlow, List<XxbBDeptleader> deptLeaderList, String deptName, String backFlowContent, String baseId, String projDeptId, int flowNum, Date thisDate) {
+    private void insertDeptFLow(List<XxbBDeptflow> insertDeptFlow, List<XxbBDeptleader> deptLeaderList, String deptName,int resiltState, String backFlowContent, String baseId, String projDeptId, int flowNum, Date thisDate) {
         List<XxbBDeptleader> query = new ArrayList<>();
         query = deptLeaderList.stream().filter(s -> s.getDeptName().equals(deptName)).collect(Collectors.toList());
         if (query.size() > 0) {
             XxbBDeptflow item = new XxbBDeptflow();
             item.setId(UUID.randomUUID().toString());
             item.setFlownum(flowNum);
+            item.setResultstate(0);
             item.setState(0);
             item.setPid(baseId);
             item.setFlowAccount(query.get(0).getUserAccount());
             item.setFlowAccountName(query.get(0).getUserAccountName());
             item.setFlowYggh(query.get(0).getUserYggh());
             item.setFlowdept(query.get(0).getDeptName());
-            item.setBackflowcontent(backFlowContent);
+            item.setFlowcontent(resiltState == 1 ? backFlowContent :null);
+            item.setBackflowcontent(resiltState == 2 ? backFlowContent :null);
             item.setProjdeptid(projDeptId);
             item.setIsDeletemark(1);
             item.setCreateTime(thisDate);
@@ -605,7 +623,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
     }
 
     @Override
-    public List<XxbBDeptflow> getDeptFlowList(String baseId, User user) {
+    public List<XxbBDeptflow> getDeptFlowList(String baseId, User user,int state) {
         XxbBCheck obj = this.getById(baseId);
         if (obj != null && obj.getState() > 0) {
             int flowNum = obj.getFlownum();
@@ -616,7 +634,8 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
             List<XxbBDeptflow> list = this.iXxbBDeptflowService.list(wrapper);
 
             XxbBDeptflow newFlow = null;
-            if (obj.getState() == 1) {
+            // state 0 只查询 1做业务
+            if (state == 1 && obj.getState() == 1) {
                 if (list.size() > 0) {
                     List<XxbBDeptflow> query = new ArrayList<>();
                     query = list.stream().filter(s -> s.getFlownum() == flowNum).collect(Collectors.toList());
@@ -659,6 +678,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                             newFlow.setPid(baseId);
                             newFlow.setFlownum(flowNum);
                             newFlow.setState(0);
+                            newFlow.setResultstate(0);
                             newFlow.setFlowAccount("ywcgl");
                             newFlow.setFlowYggh("ywcgl");
                             newFlow.setFlowAccountName("医务办公室");
@@ -675,7 +695,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                 list.add(newFlow);
             }
 
-            if (obj.getState() == 1 && list.size() > 0) {
+            if (state == 1 && obj.getState() == 1 && list.size() > 0) {
                 if (flowNum == 1) {
                     list = list.stream().filter(s -> s.getFlownum() == 1 && s.getFlowAccount().equals(user.getUsername())).sorted(Comparator.comparing(XxbBDeptflow::getFlownum)).collect(Collectors.toList());
                 }
@@ -688,7 +708,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                     list = list.stream().sorted(Comparator.comparing(XxbBDeptflow::getFlownum).thenComparing(XxbBDeptflow::getFlowDate)).collect(Collectors.toList());
                 }
             } else {
-                list = list.stream().sorted(Comparator.comparing(XxbBDeptflow::getFlownum).thenComparing(XxbBDeptflow::getFlowDate)).collect(Collectors.toList());
+                list = list.stream().filter(s->s.getState()==1).sorted(Comparator.comparing(XxbBDeptflow::getFlownum).thenComparing(XxbBDeptflow::getFlowDate)).collect(Collectors.toList());
             }
             return list;
         }
@@ -704,7 +724,10 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
             deptflow.setCreateTime(thisDate);
         }
         XxbBCheck obj = this.getById(deptflow.getPid());
+        // state = 1 指的是同意审核
         if (deptflow.getState() == 1) {
+            deptflow.setBackflowcontent("");
+            deptflow.setResultstate(1);
             deptflow.setFlowDate(thisDate);
             if (obj.getProjectType() != 2) {
                 XxbBCheck update = new XxbBCheck();
@@ -765,9 +788,11 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
             }
         }
 
-        // state = 2指的是传进来的参数，不是真是状态
+        // state = 2 指的是传进来的参数，不是真是状态，驳回操作
         if (deptflow.getState() == 2) {
-            deptflow.setState(0);
+            deptflow.setResultstate(2);
+            deptflow.setState(1);
+            deptflow.setFlowDate(thisDate);
             XxbBCheck update = new XxbBCheck();
             update.setId(obj.getId());
             update.setFlownum(0);
@@ -782,12 +807,12 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                 pdup.setState(0);
                 iXxbBProjdeptService.update(pdup, pdWrapper);
             }
-            LambdaQueryWrapper<XxbBDeptflow> dfWrapper = new LambdaQueryWrapper<>();
-            dfWrapper.eq(XxbBDeptflow::getPid, obj.getId());
-            dfWrapper.eq(XxbBDeptflow::getIsDeletemark, 1);
-            XxbBDeptflow dfup = new XxbBDeptflow();
-            dfup.setState(0);
-            iXxbBDeptflowService.update(dfup, dfWrapper);
+//            LambdaQueryWrapper<XxbBDeptflow> dfWrapper = new LambdaQueryWrapper<>();
+//            dfWrapper.eq(XxbBDeptflow::getPid, obj.getId());
+//            dfWrapper.eq(XxbBDeptflow::getIsDeletemark, 1);
+//            XxbBDeptflow dfup = new XxbBDeptflow();
+//            dfup.setState(0);
+//            iXxbBDeptflowService.update(dfup, dfWrapper);
         }
         this.iXxbBDeptflowService.saveOrUpdate(deptflow);
     }
@@ -799,6 +824,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
             XxbBDeptflow item = new XxbBDeptflow();
             item.setFlownum(flowNum);
             item.setState(0);
+            item.setResultstate(0);
             item.setPid(baseId);
             item.setFlowAccount(list.get(0).getUserAccount());
             item.setFlowAccountName(list.get(0).getUserAccountName());
@@ -814,6 +840,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
         XxbBDeptflow item = new XxbBDeptflow();
         item.setFlownum(flowNum);
         item.setState(0);
+        item.setResultstate(0);
         item.setPid(baseId);
         item.setFlowAccount(deptleader.getUserAccount());
         item.setFlowAccountName(deptleader.getUserAccountName());

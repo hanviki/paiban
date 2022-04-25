@@ -15,6 +15,7 @@
         <result column="flownum" property="flownum"/>
         <result column="CREATE_TIME" property="createTime"/>
         <result column="STATE" property="state"/>
+        <result column="resultstate" property="resultstate"/>
         <result column="flowDate" property="flowDate"/>
         <result column="projdeptid" property="projdeptid"/>
         <result column="IS_DELETEMARK" property="isDeletemark"/>
@@ -23,7 +24,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, pid, flow_account_name, flow_account, flow_yggh, flowdept, flowcontent, backflowcontent, flownum, CREATE_TIME, STATE, flowDate, projdeptid, IS_DELETEMARK
+        id, pid, flow_account_name, flow_account, flow_yggh, flowdept, flowcontent, backflowcontent, flownum, CREATE_TIME, STATE, resultstate, flowDate, projdeptid, IS_DELETEMARK
     </sql>
     <update id="updateXxbBDeptflow" parameterType="cc.mrbird.febs.xxb.entity.XxbBDeptflow">
         update xxb_b_deptflow
@@ -38,6 +39,7 @@
             <if test="flownum != null">flownum=#{flownum},</if>
             <if test="createTime != null">CREATE_TIME=#{createTime},</if>
             <if test="state != null">STATE=#{state},</if>
+            <if test="resultstate != null">resultstate=#{resultstate},</if>
             <if test="flowDate != null">flowDate=#{flowDate},</if>
             <if test="projdeptid != null">projdeptid=#{projdeptid},</if>
             <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>

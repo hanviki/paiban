@@ -34,7 +34,7 @@ public interface IXxbBCheckService extends IService<XxbBCheck> {
 
         List<XxbBCheckD> getCheckDataList(String baseId);
 
-        List<XxbBDeptflow> getDeptFlowList(String baseId,User user);
+        List<XxbBDeptflow> getDeptFlowList(String baseId,User user,int state);
 
         void updateDeptflow(XxbBDeptflow deptflow);
 

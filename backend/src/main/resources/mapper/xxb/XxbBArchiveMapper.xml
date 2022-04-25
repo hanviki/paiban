@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBArchiveMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBArchive">
+                    <id column="id" property="id"/>
+                    <result column="file_name" property="fileName"/>
+                    <result column="file_code" property="fileCode"/>
+                    <result column="file_date" property="fileDate"/>
+                    <result column="file_type" property="fileType"/>
+                    <result column="note" property="note"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, file_name, file_code, file_date, file_type, note, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateXxbBArchive" parameterType="cc.mrbird.febs.xxb.entity.XxbBArchive">
+        update xxb_b_archive
+        <trim prefix="set" suffixOverrides=",">
+<if test="fileName != null">file_name=#{fileName},</if>
+<if test="fileCode != null">file_code=#{fileCode},</if>
+<if test="fileDate != null">file_date=#{fileDate},</if>
+<if test="fileType != null">file_type=#{fileType},</if>
+<if test="note != null">note=#{note},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findXxbBArchive" resultType="cc.mrbird.febs.xxb.entity.XxbBArchive" parameterType="cc.mrbird.febs.xxb.entity.XxbBArchive">
+        select  *  from xxb_b_archive
+        where  1=1
+            <if test="xxbBArchive.fileName != null and xxbBArchive.fileName != ''"> and  xxb_b_archive.file_name like concat('%', #{ xxbBArchive.fileName} ,'%')</if>
+            <if test="xxbBArchive.fileCode != null and xxbBArchive.fileCode != ''"> and  xxb_b_archive.file_code like concat('%', #{ xxbBArchive.fileCode} ,'%')</if>
+        <if test="xxbBArchive.fileDateFrom!= null">
+            AND xxb_b_archive.file_date <![CDATA[ >= ]]>  #{xxbBArchive.fileDateFrom}
+        </if>
+        <if test="xxbBArchive.fileDateTo!= null">
+            AND  xxb_b_archive.file_date <![CDATA[ <= ]]>  #{xxbBArchive.fileDateTo}
+        </if>
+            <if test="xxbBArchive.fileType != null and xxbBArchive.fileType != ''"> and  xxb_b_archive.file_type like concat('%', #{ xxbBArchive.fileType} ,'%')</if>
+            <if test="xxbBArchive.note != null and xxbBArchive.note != ''"> and  xxb_b_archive.note like concat('%', #{ xxbBArchive.note} ,'%')</if>
+            <if test="xxbBArchive.fileId != null and xxbBArchive.fileId != ''"> and  xxb_b_archive.file_id like concat('%', #{ xxbBArchive.fileId} ,'%')</if>
+            <if test="xxbBArchive.fileUrl != null and xxbBArchive.fileUrl != ''"> and  xxb_b_archive.file_url like concat('%', #{ xxbBArchive.fileUrl} ,'%')</if>
+        <if test="xxbBArchive.state != null"> and  xxb_b_archive.state =#{ xxbBArchive.state} </if>
+        <if test="xxbBArchive.isDeletemark != null"> and  xxb_b_archive.IS_DELETEMARK =#{ xxbBArchive.isDeletemark} </if>
+        <if test="xxbBArchive.createTimeFrom!= null">
+            AND xxb_b_archive.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBArchive.createTimeFrom}
+        </if>
+        <if test="xxbBArchive.createTimeTo!= null">
+            AND  xxb_b_archive.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBArchive.createTimeTo}
+        </if>
+        <if test="xxbBArchive.modifyTimeFrom!= null">
+            AND xxb_b_archive.MODIFY_TIME <![CDATA[ >= ]]>  #{xxbBArchive.modifyTimeFrom}
+        </if>
+        <if test="xxbBArchive.modifyTimeTo!= null">
+            AND  xxb_b_archive.MODIFY_TIME <![CDATA[ <= ]]>  #{xxbBArchive.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

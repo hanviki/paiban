@@ -110,6 +110,14 @@ private static final long serialVersionUID=1L;
     private Integer state;
 
     /**
+     * 结果状态
+     */
+    @TableField("resultstate")
+
+    @ExcelField(value ="结果状态")
+    private Integer resultstate;
+
+    /**
      * 审核时间
      */
     @TableField("flowDate")
@@ -157,6 +165,8 @@ private static final long serialVersionUID=1L;
     public static final String CREATE_TIME ="CREATE_TIME" ;
 
     public static final String STATE ="STATE" ;
+
+    public static final String RESULTSTATE ="resultstate" ;
 
     public static final String FLOWDATE ="flowDate" ;
 

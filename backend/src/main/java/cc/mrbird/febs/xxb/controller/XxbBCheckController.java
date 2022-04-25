@@ -143,13 +143,13 @@ public class XxbBCheckController extends BaseController {
 
     @GetMapping("findDeptFlow")
     @RequiresPermissions("xxbBCheck:view")
-    public FebsResponse findDeptFlow(String baseId) {
+    public FebsResponse findDeptFlow(String baseId,int state) {
         ModelMap map = new ModelMap();
         int success = 0;
         List<XxbBDeptflow> xxbBCheckDataList = new ArrayList<>();
         try {
             User currentUser = FebsUtil.getCurrentUser();
-            xxbBCheckDataList = this.iXxbBCheckService.getDeptFlowList(baseId,currentUser);
+            xxbBCheckDataList = this.iXxbBCheckService.getDeptFlowList(baseId,currentUser,state);
             success = 1;
         } catch (Exception e) {
             message = "查询失败.";
