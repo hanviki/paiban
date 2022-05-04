@@ -24,6 +24,14 @@ public interface IXxbBCheckService extends IService<XxbBCheck> {
 
         IPage<XxbBCheck> findXxbBflow(QueryRequest request, XxbBCheck xxbBCheck,User user);
 
+        IPage<XxbBCheck> zqList(QueryRequest request, XxbBCheck xxbBCheck);
+
+        IPage<XxbBCheck> zqListAudit(QueryRequest request, XxbBCheck xxbBCheck);
+
+        IPage<XxbBCheck> mqList(QueryRequest request, XxbBCheck xxbBCheck);
+
+        IPage<XxbBCheck> mqListAudit(QueryRequest request, XxbBCheck xxbBCheck);
+
         void createXxbBCheck(XxbBCheck xxbBCheck);
 
         void updateXxbBCheck(XxbBCheck xxbBCheck);

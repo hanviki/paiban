@@ -1160,4 +1160,69 @@ public class ExportExcelUtils {
 //        //此处记得关闭输出Servlet流
 //        IoUtil.close(out);
 //    }
+
+    public static void exportRows(HttpServletResponse response,List<Map<String,Object>> rows,String sheelName,String tempUrl,int startRowCount) throws NoSuchFieldException, IllegalAccessException, IOException{
+        // 通过工具类创建writer
+        InputStream inputStream = new FileInputStream(tempUrl);
+        ExcelReader reader = ExcelUtil.getReader(inputStream,0);
+
+
+        ExcelWriter writer = reader.getWriter();
+
+        // 合并单元格后的标题行，使用默认标题样式
+//                writer.merge(rows.size() - 1, "一班成绩单");
+
+        for (int i = 0; i < startRowCount; i++) {
+            writer.passCurrentRow();
+        }
+        int rowCount = 0;
+      //  int sheetColumnCount = exportList.size();
+        // 一次性写出内容，使用默认样式，强制输出标题
+
+            rowCount = rows.size();
+            writer.write(rows, false);
+
+        //设置所有列为自动宽度，不考虑合并单元格
+        //  writer.autoSizeColumnAll();
+
+        //标题Row高度
+        // writer.setRowHeight(0, 25);
+
+        //内容Row高度
+
+
+        StyleSet style = writer.getStyleSet();
+        /**
+         CellStyle cellStyle = style.getHeadCellStyle();
+         Font f1 = writer.createFont();
+         f1.setBold(true);
+         f1.setFontName("宋体");
+         short fontHeight = 280;
+         f1.setFontHeight(fontHeight);
+         cellStyle.setFont(f1);*/
+
+        CellStyle cellStyle2 = style.getCellStyle();
+        cellStyle2.setWrapText(true);
+        // cellStyle.setWrapText(true);
+
+        /**
+         List<org.apache.poi.ss.usermodel.Sheet> sheetList = writer.getSheets();
+         for (org.apache.poi.ss.usermodel.Sheet sheet : sheetList) {
+         for (int i = 0; i <= sheetColumnCount; i++) {
+         sheet.autoSizeColumn(i);
+         }
+         }*/
+        //response为HttpServletResponse对象
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        //response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        //test.xls是弹出下载对话框的文件名，不能为中文，中文请自行编码
+        response.setHeader("Content-Disposition", "attachment;filename=test.xls");
+        ServletOutputStream out = response.getOutputStream();
+
+        writer.flush(out, true);
+        // 关闭writer，释放内存
+        writer.close();
+        //此处记得关闭输出Servlet流
+        IoUtil.close(out);
+    }
 }

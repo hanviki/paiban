@@ -95,6 +95,16 @@
             @click="edit(record)"
             title="修改"
           ></a-icon>
+          <a-divider
+            v-show="record.state> 0? true : false" type="vertical" />
+          <a-icon
+            v-show="record.state> 0? true : false"
+            type="message"
+            theme="twoTone"
+            twoToneColor="#4a9ff5"
+            @click="flowLook(record)"
+            title="流程"
+          ></a-icon>
           <!-- <a-badge
             v-hasNoPermission="['xxbBCheck:update']"
             status="warning"
@@ -132,6 +142,12 @@
       :editVisiable="editVisiable"
     >
     </xxbBLcone-edit>
+    <a-modal :maskClosable="false" :footer="null" v-model="lookFlowVisiable" width="85%" title="浏览流程" @ok="handleLookFlowOk">
+      <xxbBDeptFlow-look
+        ref="xxbBDeptFlowLook"
+      >
+      </xxbBDeptFlow-look>
+    </a-modal>
   </a-card>
 </template>
 
@@ -139,6 +155,7 @@
 // import XxbBLconeAdd from "./XxbBLconeAdd";
 import XxbBShow from "../XxbBShow";
 import XxbBLconeEdit from "./XxbBLconeEdit";
+import XxbBDeptFlowLook from "../XxbBDeptFlowLook";
 // import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
 
@@ -148,7 +165,7 @@ const formItemLayout = {
 };
 export default {
   name: "XxbBLcone",
-  components: { XxbBLconeEdit, XxbBShow },
+  components: { XxbBLconeEdit, XxbBShow, XxbBDeptFlowLook },
   data() {
     return {
       advanced: false,
@@ -171,6 +188,7 @@ export default {
       addVisiable: false,
       editVisiable: false,
       lookVisiable: false,
+      lookFlowVisiable: false,
       loading: false,
       bordered: true,
     };
@@ -353,6 +371,15 @@ export default {
   },
   methods: {
     moment,
+    handleLookFlowOk () {
+      this.lookFlowVisiable = false
+    },
+    flowLook(record) {
+      this.lookFlowVisiable = true;
+      setTimeout(() => {
+        this.$refs.xxbBDeptFlowLook.setFieldValues(record.id, 1, record.state,0);
+      }, 100);
+    },
     closeLook() {
       this.lookVisiable = false
     },

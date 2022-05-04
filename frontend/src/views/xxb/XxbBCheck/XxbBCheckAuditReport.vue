@@ -4,12 +4,91 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'"></div>
-          <a-col :md="10" :sm="24">
-            <a-form-item label="申请日期" v-bind="formItemLayout">
-              <a-date-picker @change="onSqStartChange" style="width:115px" />- 
-              <a-date-picker @change="onSqEndChange" style="width:115px"/>
+          <a-col :md="4" :sm="24">
+            <a-form-item label="项目名称" v-bind="formItemLayout">
+              <a-input v-model="queryParams.projectName" />
             </a-form-item>
           </a-col>
+           <a-col :md="4" :sm="24">
+            <a-form-item label="项目类型" v-bind="formItemLayout">
+              <a-select v-model="queryParams.projectType">
+                  <a-select-option :value="-1">全部</a-select-option>
+                 <a-select-option :value="0">检验检查类</a-select-option>
+                 <a-select-option :value="1">临床类-单科申报</a-select-option>
+                 <a-select-option :value="2">临床类-多科联合申报</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+           <a-col :md="4" :sm="24">
+            <a-form-item label="审核状态" v-bind="formItemLayout">
+              <a-select v-model="queryParams.state">
+                  <a-select-option :value="-1">全部</a-select-option>
+                 <a-select-option :value="0">未提交</a-select-option>
+                 <a-select-option :value="1">已提交</a-select-option>
+                 <a-select-option :value="2">已审核</a-select-option>
+                 <a-select-option :value="3">审核未通过</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :md="4" :sm="24">
+            <a-form-item label="上会状态" v-bind="formItemLayout">
+              <a-select v-model="queryParams.shstate">
+                  <a-select-option :value="-1">全部</a-select-option>
+                 <a-select-option :value="1">上会通过</a-select-option>
+                 <a-select-option :value="2">上会未通过</a-select-option>
+                 <a-select-option :value="3">未上会</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+           <a-col :md="4" :sm="24">
+            <a-form-item label="项目进度状态" v-bind="formItemLayout">
+              <a-select v-model="queryParams.xmjdstate">
+                  <a-select-option :value="-1">全部</a-select-option>
+                 <a-select-option :value="1">已开始</a-select-option>
+                 <a-select-option :value="2">中期总结已提交</a-select-option>
+                 <a-select-option :value="3">中期总结已驳回重填</a-select-option>
+                 <a-select-option :value="4">继续开展</a-select-option>
+                 <a-select-option :value="5">中止开展</a-select-option>
+                 <a-select-option :value="6">项目延期 </a-select-option>
+                 <a-select-option :value="7">总结反馈已提交</a-select-option>
+                 <a-select-option :value="8">总结反馈已驳回重填</a-select-option>
+                 <a-select-option :value="9">转化为常规技术</a-select-option>
+                 <a-select-option :value="10">终止开展</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+           <template v-if="advanced">
+          <a-col :md="8" :sm="24">
+            <a-form-item label="申请日期" v-bind="formItemLayout">
+              <a-date-picker @change="onSqStartChange" style="width:45%" />- 
+              <a-date-picker @change="onSqEndChange" style="width:45%"/>
+            </a-form-item>
+          </a-col>
+           <a-col :md="8" :sm="24">
+            <a-form-item label="开始日期" v-bind="formItemLayout">
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'srtdatFrom')" style="width:45%" />- 
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'srtdatTo')" style="width:45%"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="结束日期" v-bind="formItemLayout">
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'enddatFrom')" style="width:45%" />- 
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'enddatTo')" style="width:45%"/>
+            </a-form-item>
+          </a-col>
+           <a-col :md="8" :sm="24">
+            <a-form-item label="中期反馈日期" v-bind="formItemLayout">
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'zqDateFrom')" style="width:45%" />- 
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'zqDateTo')" style="width:45%"/>
+            </a-form-item>
+          </a-col>
+           <a-col :md="8" :sm="24">
+            <a-form-item label="总结反馈日期" v-bind="formItemLayout">
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'mqDateFrom')" style="width:45%" />- 
+              <a-date-picker @change="(a,b)=>onDateChange(a,b,'mqDateTo')" style="width:45%"/>
+            </a-form-item>
+          </a-col>
+           </template>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
@@ -23,27 +102,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button
-          v-hasPermission="['xxbBCheck:add']"
-          type="primary"
-          ghost
-          @click="add"
-          >新增</a-button
-        >
-        <a-button v-hasPermission="['xxbBCheck:delete']" @click="batchDelete"
-          >删除</a-button
-        >
-        <a-dropdown v-hasPermission="['xxbBCheck:export']">
-          <a-menu slot="overlay">
-            <a-menu-item key="export-data" @click="exportExcel"
-              >导出Excel</a-menu-item
-            >
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
+          <a-button  type="primary" ghost @click="exportExcel">导出</a-button>
+        
         <!-- <import-excel
           v-hasPermission="['xxbBCheck:import']"
           templateUrl="xxbBCheck/downTemplate"
@@ -76,29 +136,15 @@
             <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
           </a-popover>
         </template>
-        <template slot="operation" slot-scope="text, record">
+     <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['xxbBCheck:view']"
             type="eye"
             theme="twoTone"
             twoToneColor="#42b983"
             @click="view(record)"
             title="查看"></a-icon>
-          <a-divider v-hasPermission="['xxbBCheck:update']" 
-            v-show="record.state==0 || record.state == 3? true : false" type="vertical" />
+             <a-divider type="vertical" />
           <a-icon
-            v-hasPermission="['xxbBCheck:update']"
-            type="setting"
-            theme="twoTone"
-            v-show="record.state==0 || record.state == 3? true : false"
-            twoToneColor="#4a9ff5"
-            @click="edit(record)"
-            title="修改"
-          ></a-icon>
-          <a-divider
-            v-show="record.state> 0? true : false" type="vertical" />
-          <a-icon
-            v-show="record.state> 0? true : false"
             type="message"
             theme="twoTone"
             twoToneColor="#4a9ff5"
@@ -111,11 +157,34 @@
             @click="download(record)"
             title="下载pdf"
            ></a-icon>
-          <!-- <a-badge
-            v-hasNoPermission="['xxbBCheck:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge> -->
+          <a-divider type="vertical" />
+          <a-icon
+            type="cloud"
+            theme="twoTone"
+            twoToneColor="#42b983"
+            @click="viewZq(record)"
+            title="中期报告"></a-icon>
+            <a-divider type="vertical" />
+             <a-icon
+            type="file"
+            theme="twoTone"
+            twoToneColor="#42b983"
+            @click="viewMq(record)"
+            title="末期报告"></a-icon>
+            <a-divider type="vertical" />
+            <a-icon 
+           
+            type="down"
+            @click="download_zq(record)"
+            title="下载中期报告文档"
+           ></a-icon>
+           <a-divider type="vertical" />
+            <a-icon 
+           
+            type="export"
+            @click="download_mq(record)"
+            title="下载总结报告文档"
+           ></a-icon>
         </template>
       </a-table>
     </div>
@@ -132,22 +201,29 @@
       >
       </xxbB-show>
     </a-modal>
-    <!-- 新增字典 -->
-    <!-- <xxbBCheck-add
-      ref="xxbBCheckAdd"
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </xxbBCheck-add> -->
-    <!-- 修改字典 -->
-    <xxbBCheck-edit
-      ref="xxbBCheckEdit"
+  <xxbB-flow
+      ref="xxbBFlow"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </xxbBCheck-edit>
+    </xxbB-flow>
+    <xxb-b-zq-view
+     ref="zqView"
+      :baseId="editId"
+      @close="handleZqEditClose"
+      :editVisiable="editZqVisiable"
+    >
+
+    </xxb-b-zq-view>
+    <xxb-b-mq-view
+       ref="mqView"
+      :baseId="editId"
+      @close="handleMqEditClose"
+      :editVisiable="editMqVisiable"
+    >
+    </xxb-b-mq-view>
+    
     <a-modal :maskClosable="false" :footer="null" v-model="lookFlowVisiable" width="85%" title="浏览流程" @ok="handleLookFlowOk">
       <xxbBDeptFlow-look
         ref="xxbBDeptFlowLook"
@@ -160,10 +236,13 @@
 <script>
 // import XxbBCheckAdd from "./XxbBCheckAdd";
 import XxbBShow from "../XxbBShow";
-import XxbBCheckEdit from "./XxbBCheckEdit";
+
 import XxbBDeptFlowLook from "../XxbBDeptFlowLook";
 // import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
+import XxbBFlow from '../XxbBFlow.vue';
+import XxbBMqView from '../XxbBMq/XxbBMqView.vue'
+import XxbBZqView from '../XxbBZq/XxbBZqView.vue'
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -171,7 +250,7 @@ const formItemLayout = {
 };
 export default {
   name: "XxbBCheck",
-  components: { XxbBCheckEdit, XxbBShow, XxbBDeptFlowLook },
+  components: { XxbBShow, XxbBDeptFlowLook,XxbBFlow,XxbBMqView, XxbBZqView},
   data() {
     return {
       advanced: false,
@@ -189,7 +268,7 @@ export default {
         showTotal: (total, range) =>
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
-      projectType: "检验检查类",
+      projectType: "",
       queryParams: {},
       addVisiable: false,
       editVisiable: false,
@@ -197,6 +276,10 @@ export default {
       lookFlowVisiable: false,
       loading: false,
       bordered: true,
+      editId: '',
+      editMqVisiable: false,
+      editZqVisiable: false,
+
     };
   },
   computed: {
@@ -204,6 +287,24 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
+           {
+          title: "项目类型",
+          dataIndex: "projectType",
+          customRender: (text, row, index) => {
+            switch (text) {
+              case 0:
+                return '检验检查类'
+              case 1:
+                return '临床类-单科申报'
+              case 2:
+                return '临床类-多科联合申报'
+              default:
+                return text
+            }
+          },
+          fixed: "left",
+          width: 100,
+        },
         {
           title: "申请科室",
           dataIndex: "deptNew",
@@ -258,6 +359,56 @@ export default {
             return moment(text).format("YYYY-MM-DD");
           },
           width: 100,
+        },
+         {
+          title: "开始日期",
+          dataIndex: "srtdat",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+        {
+          title: "结束日期",
+          dataIndex: "enddat",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+         {
+          title: "中期反馈日期",
+          dataIndex: "zqDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+         {
+          title: "总结反馈日期",
+          dataIndex: "mqDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+        {
+          title: "项目延期日期",
+          dataIndex: "yanzhanDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+         {
+          title: "参与专科",
+          dataIndex: "comments",
+          width: 220,
         },
         {
           title: "项目负责人",
@@ -336,21 +487,52 @@ export default {
               case 0:
                 return ''
               case 1:
-                return '通过'
+                return <a-tag color="green">通过</a-tag>;
               case 2:
-                return '不通过'
+                return <a-tag color="red">未通过</a-tag>;
               default:
                 return text
             }
           },
           width: 80,
         },
+         {
+          title: "项目进度状态",
+          dataIndex: "xmjdstate",
+          customRender: (text, row, index) => {
+            switch (text) {
+              case 1:
+                return "已开始";
+              case 2:
+                return "中期总结已提交";
+              case 3:
+                return "中期总结已驳回重填";
+              case 4:
+                return "继续开展";
+              case 5:
+                return "中止开展";
+              case 6:
+                return "项目延期";
+              case 7:
+                return '总结反馈已提交';
+              case 8:
+                return '总结反馈已驳回重填';
+              case 9:
+                return '转化为常规技术';
+              case 10:
+                return '终止开展';
+              default:
+                return '';
+            }
+          },
+          width: 100,
+        },
         {
           title: "操作",
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" },
           fixed: "right",
-          width: 120,
+          width: 200,
         },
       ];
     },
@@ -376,10 +558,28 @@ export default {
       this.lookVisiable = false
     },
     onSqStartChange (date, dateString) {
-      this.queryParams.applydatFrom = dateString;
+        if(date==null){
+            delete this.queryParams.applydatFrom
+        }
+        else{
+          this.queryParams.applydatFrom = dateString;
+        }
     },
     onSqEndChange (date, dateString) {
-      this.queryParams.applydatTo = dateString;
+        if(date==null){
+            delete this.queryParams.applydatTo
+        }
+        else{
+            this.queryParams.applydatTo = dateString;
+        }
+    },
+    onDateChange(date,dateString,filedName){
+         if(date==null){
+            delete this.queryParams[filedName]
+        }
+        else{
+            this.queryParams[filedName] = dateString;
+        }
     },
     handleRefesh() {
       this.search();
@@ -409,6 +609,18 @@ export default {
       }, `${new Date().getTime()}_` + record.deptNew + '-' + 
         record.projectName + '-' + record.userAccountName + '.pdf')
     },
+    download_zq (record) {
+      this.$download('xxbBZq/doc', {
+        baseId: record.id
+      }, `${new Date().getTime()}_` + 
+        record.projectName + '_中期反馈表.docx')
+    },
+    download_mq (record) {
+      this.$download('xxbBMq/doc', {
+        baseId: record.id
+      }, `${new Date().getTime()}_` + 
+        record.projectName + '_总结反馈表.docx')
+    },
     add() {
       // this.addVisiable = true;
       // this.$refs.xxbBCheckAdd.setFormValues();
@@ -422,6 +634,12 @@ export default {
       this.editVisiable = true;
       this.$refs.xxbBCheckEdit.setFormValues(null,'新增',this.projectType);
     },
+   handleZqEditClose() {
+      this.editZqVisiable = false;
+    },
+    handleMqEditClose() {
+      this.editMqVisiable = false;
+    },
     handleEditSuccess() {
       this.editVisiable = false;
       this.$message.success("提交成功");
@@ -430,12 +648,27 @@ export default {
     handleEditClose() {
       this.editVisiable = false;
     },
+    handleType(type){
+      if(type==0) return '检验检查类'
+      if(type==1) return '临床类-单科申报'
+      if(type==2) return '临床类-多科联合申报'
+    },
     view(record) {
-      this.$refs.xxbBCheckEdit.setFormValues(record,'查看',this.projectType);
+      this.$refs.xxbBFlow.setFormValues(record,'查看',this.handleType(record.projectType));
       this.editVisiable = true;
     },
+    viewZq(record) {
+      this.editId= record.id;
+      this.$refs.zqView.setProject(record);
+      this.editZqVisiable = true;
+    },
+     viewMq(record) {
+       this.editId= record.id;
+      this.$refs.mqView.setProject(record);
+      this.editMqVisiable = true;
+    },
     edit(record) {
-      this.$refs.xxbBCheckEdit.setFormValues(record,'修改',this.projectType);
+      this.$refs.xxbBFlow.setFormValues(record,'查看',this.handleType(record.projectType));
       this.editVisiable = true;
     },
     batchDelete() {
@@ -462,17 +695,26 @@ export default {
       });
     },
     exportExcel() {
-      let { sortedInfo } = this;
-      let sortField, sortOrder;
-      // 获取当前列的排序和列的过滤规则
-      if (sortedInfo) {
-        sortField = sortedInfo.field;
-        sortOrder = sortedInfo.order;
+      
+      let params =  {...this.queryParams}
+       params.sortField = 'create_Time'
+      params.sortOrder = 'descend'
+
+      if(params.projectType=='-1'){
+          delete params.projectType
       }
+       if(params.state=='-1'){
+          delete params.state
+      }
+       if(params.shstate=='-1'){
+          delete params.shstate
+      }
+       if(params.xmjdstate=='-1'){
+          delete params.xmjdstate
+      }
+      params.yggh= this.$store.state.account.user.username; //获取当前审核人
       this.$export("xxbBCheck/excel", {
-        sortField: sortField,
-        sortOrder: sortOrder,
-        ...this.queryParams,
+        ...params,
       });
     },
     search() {
@@ -532,8 +774,21 @@ export default {
       }
       params.sortField = 'create_Time'
       params.sortOrder = 'descend'
-      params.projectType = 0
-      this.$get("xxbBCheck", {
+
+      if(params.projectType=='-1'){
+          delete params.projectType
+      }
+       if(params.state=='-1'){
+          delete params.state
+      }
+       if(params.shstate=='-1'){
+          delete params.shstate
+      }
+       if(params.xmjdstate=='-1'){
+          delete params.xmjdstate
+      }
+      params.yggh= this.$store.state.account.user.username; //获取当前审核人
+      this.$get("xxbBCheck/report", {
         ...params,
       }).then((r) => {
         let data = r.data;

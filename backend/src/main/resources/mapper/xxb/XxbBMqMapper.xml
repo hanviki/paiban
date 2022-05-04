@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBMqMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBMq">
+                    <id column="id" property="id"/>
+                    <result column="base_id" property="baseId"/>
+                    <result column="kzls" property="kzls"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="zysyz" property="zysyz"/>
+                    <result column="is_ygzwsyz" property="isYgzwsyz"/>
+                    <result column="zyjjz" property="zyjjz"/>
+                    <result column="is_ygzwjjz" property="isYgzwjjz"/>
+                    <result column="zy" property="zy"/>
+                    <result column="hz" property="hz"/>
+                    <result column="zy_percent" property="zyPercent"/>
+                    <result column="economic" property="economic"/>
+                    <result column="is_badresult" property="isBadresult"/>
+                    <result column="bad" property="bad"/>
+                    <result column="badresult" property="badresult"/>
+                    <result column="cs" property="cs"/>
+                    <result column="state" property="state"/>
+                    <result column="audit_state" property="auditState"/>
+                    <result column="audit_suggestion" property="auditSuggestion"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, base_id, kzls, file_id, file_url, zysyz, is_ygzwsyz, zyjjz, is_ygzwjjz, zy, hz, zy_percent, economic, is_badresult, bad, badresult, cs, state, audit_state, audit_suggestion, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateXxbBMq" parameterType="cc.mrbird.febs.xxb.entity.XxbBMq">
+        update xxb_b_mq
+        <trim prefix="set" suffixOverrides=",">
+<if test="baseId != null">base_id=#{baseId},</if>
+<if test="kzls != null">kzls=#{kzls},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="zysyz != null">zysyz=#{zysyz},</if>
+<if test="isYgzwsyz != null">is_ygzwsyz=#{isYgzwsyz},</if>
+<if test="zyjjz != null">zyjjz=#{zyjjz},</if>
+<if test="isYgzwjjz != null">is_ygzwjjz=#{isYgzwjjz},</if>
+<if test="zy != null">zy=#{zy},</if>
+<if test="hz != null">hz=#{hz},</if>
+<if test="zyPercent != null">zy_percent=#{zyPercent},</if>
+<if test="economic != null">economic=#{economic},</if>
+<if test="isBadresult != null">is_badresult=#{isBadresult},</if>
+<if test="bad != null">bad=#{bad},</if>
+<if test="badresult != null">badresult=#{badresult},</if>
+<if test="cs != null">cs=#{cs},</if>
+<if test="state != null">state=#{state},</if>
+<if test="auditState != null">audit_state=#{auditState},</if>
+<if test="auditSuggestion != null">audit_suggestion=#{auditSuggestion},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findXxbBMq" resultType="cc.mrbird.febs.xxb.entity.XxbBMq" parameterType="cc.mrbird.febs.xxb.entity.XxbBMq">
+        select  *  from xxb_b_mq
+        where  1=1
+            <if test="xxbBMq.id != null and xxbBMq.id != ''"> and  xxb_b_mq.id =#{ xxbBMq.id} </if>
+            <if test="xxbBMq.baseId != null and xxbBMq.baseId != ''"> and  xxb_b_mq.base_id like concat('%', #{ xxbBMq.baseId} ,'%')</if>
+        <if test="xxbBMq.kzls != null"> and  xxb_b_mq.kzls =#{ xxbBMq.kzls} </if>
+            <if test="xxbBMq.fileId != null and xxbBMq.fileId != ''"> and  xxb_b_mq.file_id like concat('%', #{ xxbBMq.fileId} ,'%')</if>
+            <if test="xxbBMq.fileUrl != null and xxbBMq.fileUrl != ''"> and  xxb_b_mq.file_url like concat('%', #{ xxbBMq.fileUrl} ,'%')</if>
+            <if test="xxbBMq.zysyz != null and xxbBMq.zysyz != ''"> and  xxb_b_mq.zysyz like concat('%', #{ xxbBMq.zysyz} ,'%')</if>
+            <if test="xxbBMq.isYgzwsyz != null and xxbBMq.isYgzwsyz != ''"> and  xxb_b_mq.is_ygzwsyz like concat('%', #{ xxbBMq.isYgzwsyz} ,'%')</if>
+            <if test="xxbBMq.zyjjz != null and xxbBMq.zyjjz != ''"> and  xxb_b_mq.zyjjz like concat('%', #{ xxbBMq.zyjjz} ,'%')</if>
+            <if test="xxbBMq.isYgzwjjz != null and xxbBMq.isYgzwjjz != ''"> and  xxb_b_mq.is_ygzwjjz like concat('%', #{ xxbBMq.isYgzwjjz} ,'%')</if>
+        <if test="xxbBMq.zy != null"> and  xxb_b_mq.zy =#{ xxbBMq.zy} </if>
+        <if test="xxbBMq.hz != null"> and  xxb_b_mq.hz =#{ xxbBMq.hz} </if>
+            <if test="xxbBMq.zyPercent != null and xxbBMq.zyPercent != ''"> and  xxb_b_mq.zy_percent like concat('%', #{ xxbBMq.zyPercent} ,'%')</if>
+            <if test="xxbBMq.economic != null and xxbBMq.economic != ''"> and  xxb_b_mq.economic like concat('%', #{ xxbBMq.economic} ,'%')</if>
+            <if test="xxbBMq.isBadresult != null and xxbBMq.isBadresult != ''"> and  xxb_b_mq.is_badresult like concat('%', #{ xxbBMq.isBadresult} ,'%')</if>
+        <if test="xxbBMq.bad != null"> and  xxb_b_mq.bad =#{ xxbBMq.bad} </if>
+            <if test="xxbBMq.badresult != null and xxbBMq.badresult != ''"> and  xxb_b_mq.badresult like concat('%', #{ xxbBMq.badresult} ,'%')</if>
+            <if test="xxbBMq.cs != null and xxbBMq.cs != ''"> and  xxb_b_mq.cs like concat('%', #{ xxbBMq.cs} ,'%')</if>
+        <if test="xxbBMq.state != null"> and  xxb_b_mq.state =#{ xxbBMq.state} </if>
+        <if test="xxbBMq.auditState != null"> and  xxb_b_mq.audit_state =#{ xxbBMq.auditState} </if>
+            <if test="xxbBMq.auditSuggestion != null and xxbBMq.auditSuggestion != ''"> and  xxb_b_mq.audit_suggestion like concat('%', #{ xxbBMq.auditSuggestion} ,'%')</if>
+        <if test="xxbBMq.isDeletemark != null"> and  xxb_b_mq.IS_DELETEMARK =#{ xxbBMq.isDeletemark} </if>
+        <if test="xxbBMq.createTimeFrom!= null">
+            AND xxb_b_mq.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBMq.createTimeFrom}
+        </if>
+        <if test="xxbBMq.createTimeTo!= null">
+            AND  xxb_b_mq.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBMq.createTimeTo}
+        </if>
+        <if test="xxbBMq.modifyTimeFrom!= null">
+            AND xxb_b_mq.MODIFY_TIME <![CDATA[ >= ]]>  #{xxbBMq.modifyTimeFrom}
+        </if>
+        <if test="xxbBMq.modifyTimeTo!= null">
+            AND  xxb_b_mq.MODIFY_TIME <![CDATA[ <= ]]>  #{xxbBMq.modifyTimeTo}
+        </if>
+        <if test="xxbBMq.createUserId != null"> and  xxb_b_mq.CREATE_USER_ID =#{ xxbBMq.createUserId} </if>
+        <if test="xxbBMq.modifyUserId != null"> and  xxb_b_mq.MODIFY_USER_ID =#{ xxbBMq.modifyUserId} </if>
+</select>
+
+</mapper>

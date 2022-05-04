@@ -56,6 +56,87 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
     @Autowired
     ISdlBUserMgService iSdlBUserMgService;
 
+    public IPage<XxbBCheck> mqList(QueryRequest request, XxbBCheck xxbBCheck) {
+        try {
+            LambdaQueryWrapper<XxbBCheck> queryWrapper = new LambdaQueryWrapper<>();
+
+           queryWrapper.eq(XxbBCheck::getIsDeletemark,1);
+           queryWrapper.eq(XxbBCheck::getShstate,1);
+           queryWrapper.and(wrap->wrap.eq(XxbBCheck::getXmjdstate,4).or().eq(XxbBCheck::getXmjdstate,6).or().eq(XxbBCheck::getXmjdstate,8));
+           queryWrapper.le(XxbBCheck::getMqDate,new Date());
+           queryWrapper.eq(XxbBCheck::getCreateUserId,xxbBCheck.getCreateUserId());
+
+            Page<XxbBCheck> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            this.page(page, queryWrapper);
+            this.getData(page.getRecords());
+            return page;
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
+        }
+    }
+    public IPage<XxbBCheck> mqListAudit(QueryRequest request, XxbBCheck xxbBCheck) {
+        try {
+            LambdaQueryWrapper<XxbBCheck> queryWrapper = new LambdaQueryWrapper<>();
+
+            queryWrapper.eq(XxbBCheck::getIsDeletemark,1);
+            queryWrapper.eq(XxbBCheck::getShstate,1);
+            queryWrapper.and(wrap->wrap.eq(XxbBCheck::getXmjdstate,7));
+            //queryWrapper.le(XxbBCheck::getSrtdat,new Date());
+
+
+            Page<XxbBCheck> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            this.page(page, queryWrapper);
+            this.getData(page.getRecords());
+            return page;
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
+        }
+    }
+    public IPage<XxbBCheck> zqList(QueryRequest request, XxbBCheck xxbBCheck) {
+        try {
+            LambdaQueryWrapper<XxbBCheck> queryWrapper = new LambdaQueryWrapper<>();
+
+            queryWrapper.eq(XxbBCheck::getIsDeletemark,1);
+            queryWrapper.eq(XxbBCheck::getShstate,1);
+            queryWrapper.and(wrap->wrap.eq(XxbBCheck::getXmjdstate,1).or().eq(XxbBCheck::getXmjdstate,3));
+            queryWrapper.le(XxbBCheck::getZqDate,new Date());
+            queryWrapper.eq(XxbBCheck::getCreateUserId,xxbBCheck.getCreateUserId());
+
+            Page<XxbBCheck> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            this.page(page, queryWrapper);
+            this.getData(page.getRecords());
+            return page;
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
+        }
+    }
+    public IPage<XxbBCheck> zqListAudit(QueryRequest request, XxbBCheck xxbBCheck) {
+        try {
+            LambdaQueryWrapper<XxbBCheck> queryWrapper = new LambdaQueryWrapper<>();
+
+            queryWrapper.eq(XxbBCheck::getIsDeletemark,1);
+            queryWrapper.eq(XxbBCheck::getShstate,1);
+            queryWrapper.and(wrap->wrap.eq(XxbBCheck::getXmjdstate,2));
+            //queryWrapper.le(XxbBCheck::getSrtdat,new Date());
+            // queryWrapper.eq(XxbBCheck::getCreateUserId,xxbBCheck.getCreateUserId());
+
+            Page<XxbBCheck> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            this.page(page, queryWrapper);
+            this.getData(page.getRecords());
+            return page;
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
+        }
+    }
+
     @Override
     public IPage<XxbBCheck> findXxbBChecks(QueryRequest request, XxbBCheck xxbBCheck, User user) {
         try {
@@ -186,7 +267,14 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
             } else {
                 sql += " and 1=2";
             }
-
+            if(xxbBCheck.getShstate()!=null){
+                if(xxbBCheck.getShstate().equals(3)){
+                   queryWrapper.and(wrap->wrap.isNull(XxbBCheck::getShstate).or().eq(XxbBCheck::getShstate,0));
+                }
+                else {
+                    queryWrapper.eq(XxbBCheck::getShstate, xxbBCheck.getShstate());
+                }
+            }
             queryWrapper.apply(sql);
 
             Page<XxbBCheck> page = new Page<>();
@@ -239,7 +327,10 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
         try {
             Page<XxbBCheck> page = new Page<>();
             SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
-            return this.baseMapper.findXxbBCheck(page, xxbBCheck);
+            //return this.baseMapper.findXxbBCheck(page, xxbBCheck);
+            this.baseMapper.findXxbBCheck(page, xxbBCheck);
+            this.getData(page.getRecords());
+            return page;
         } catch (Exception e) {
             log.error("获取失败", e);
             return null;
@@ -708,7 +799,7 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
                     list = list.stream().sorted(Comparator.comparing(XxbBDeptflow::getFlownum).thenComparing(XxbBDeptflow::getFlowDate)).collect(Collectors.toList());
                 }
             } else {
-                list = list.stream().filter(s->s.getState()==1).sorted(Comparator.comparing(XxbBDeptflow::getFlownum).thenComparing(XxbBDeptflow::getFlowDate)).collect(Collectors.toList());
+                list = list.stream().sorted(Comparator.comparing(XxbBDeptflow::getFlownum)).collect(Collectors.toList());
             }
             return list;
         }

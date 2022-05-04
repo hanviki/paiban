@@ -723,6 +723,16 @@
         </a-row>
       </div>
     </a-form>
+    <div style="margin: 5px 0px">
+      <a-row type="flex" justify="center">
+        <a-col :span="colSpan">
+          <xxbBDeptFlow-look
+            ref="xxbBDeptFlowLook"
+          >
+          </xxbBDeptFlow-look>
+        </a-col>
+      </a-row>
+    </div>
     <div class="drawer-bootom-button">
       <a-popconfirm
         title="确定放弃编辑？"
@@ -753,6 +763,7 @@
 import SelectUserRemote from "../../common/SelectXxbUserRemote";
 import XxbBLconeD from "../XxbBLcone/XxbBLconeD";
 import UploadFile from "../../common/UploadFile";
+import XxbBDeptFlowLook from "../XxbBDeptFlowLook";
 import moment from "moment";
 
 const formItemLayout1 = {
@@ -792,7 +803,8 @@ export default {
   components: {
     SelectUserRemote,
     XxbBLconeD,
-    UploadFile
+    UploadFile,
+    XxbBDeptFlowLook
   },
   props: {
     editVisiable: {
@@ -1133,6 +1145,8 @@ export default {
       }
       setTimeout(() => {
         this.$refs.xxbBLconeDList.setFieldValues(xxbBCheck == null? null : xxbBCheck.id,this.isEdit);
+        this.$refs.xxbBDeptFlowLook.setFieldValues(xxbBCheck == null? null : xxbBCheck.id,
+        1,xxbBCheck == null? 0 : xxbBCheck.state,0);
       }, 100);
 
       if (this.xxbBCheck.projectLevel == 1 || this.xxbBCheck.projectLevel == 2) {

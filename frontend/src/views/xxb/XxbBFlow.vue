@@ -566,7 +566,7 @@ export default {
       setTimeout(() => {
         this.$refs.xxbBCheckDList.setFieldValues(xxbBCheck.id);
         this.$refs.xxbBProjDeptList.setFieldValues(xxbBCheck.id);
-        this.$refs.xxbBDeptFlow.setFieldValues(xxbBCheck.id,xxbBCheck.projectType,this.isEdit);
+        this.$refs.xxbBDeptFlow.setFieldValues(xxbBCheck.id,xxbBCheck.projectType,1,this.isEdit);
       }, 200);
       if (this.xxbBCheck.projectLevel == 1 || this.xxbBCheck.projectLevel == 2) {
         this.isHong = true

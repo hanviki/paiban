@@ -4,21 +4,21 @@
       <a-space>
         <a-card
           class="cu"
-          @click="openQulifaction(0, '科主任审核')"
+          @click="openQulifaction(0, '本科室申报项目审核')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="file-text" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; margin-top: 10px">科主任审核</div>
+          <div style="font-size: 20px; margin-top: 10px">本科室申报项目审核</div>
         </a-card>
         <a-card
           class="cu"
-          @click="openQulifaction(1, '多科主任审核')"
+          @click="openQulifaction(1, '参与项目审核')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="file-done" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; margin-top: 10px">多科主任审核</div>
+          <div style="font-size: 20px; margin-top: 10px">参与项目审核</div>
         </a-card>
       </a-space>
     </div>

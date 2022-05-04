@@ -744,6 +744,16 @@
         </a-row>
       </div>
     </a-form>
+    <div style="margin: 5px 0px">
+      <a-row type="flex" justify="center">
+        <a-col :span="colSpan">
+          <xxbBDeptFlow-look
+            ref="xxbBDeptFlowLook"
+          >
+          </xxbBDeptFlow-look>
+        </a-col>
+      </a-row>
+    </div>
     <div class="drawer-bootom-button">
       <a-popconfirm
         title="确定放弃编辑？"
@@ -774,6 +784,7 @@
 import SelectUserRemote from "../../common/SelectXxbUserRemote";
 import XxbBLcmanyD from "../XxbBLcmany/XxbBLcmanyD";
 import XxbBProjDept from "../XxbBLcmany/XxbBProjDept";
+import XxbBDeptFlowLook from "../XxbBDeptFlowLook";
 import UploadFile from "../../common/UploadFile";
 import moment from "moment";
 
@@ -815,7 +826,8 @@ export default {
     SelectUserRemote,
     XxbBLcmanyD,
     UploadFile,
-    XxbBProjDept
+    XxbBProjDept,
+    XxbBDeptFlowLook
   },
   props: {
     editVisiable: {
@@ -1155,6 +1167,8 @@ export default {
       setTimeout(() => {
         this.$refs.xxbBLcmanyDList.setFieldValues(xxbBCheck == null? null : xxbBCheck.id,this.isEdit);
         this.$refs.xxbBProjDeptList.setFieldValues(xxbBCheck == null? null : xxbBCheck.id,this.isEdit);
+        this.$refs.xxbBDeptFlowLook.setFieldValues(xxbBCheck == null? null : xxbBCheck.id,
+        2,xxbBCheck == null? 0 : xxbBCheck.state,0);
       }, 100);
 
       if (this.xxbBCheck.projectLevel == 1 || this.xxbBCheck.projectLevel == 2) {

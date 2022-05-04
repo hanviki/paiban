@@ -4,41 +4,8 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'"></div>
-          <a-col :md="8" :sm="24">
-            <a-form-item label="申请日期" v-bind="formItemLayout">
-              <a-date-picker @change="onSqStartChange" style="width: 45%" />-
-              <a-date-picker @change="onSqEndChange" style="width: 45%" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="审核状态" v-bind="formItemLayout">
-              <a-select
-                v-model="queryParams.state"
-                @change="changeState"
-                style="width: 120px"
-              >
-                <a-select-option :value="23"> 未审核 </a-select-option>
-                <a-select-option :value="100"> 已审核 </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-           <a-col :md="6" :sm="24">
-            <a-form-item label="上会状态" v-bind="formItemLayout">
-              <a-select
-                v-model="queryParams.shstate"
-                @change="changeShState"
-                style="width: 120px"
-              >
-              <a-select-option :value="0"> 全部 </a-select-option>
-                <a-select-option :value="1"> 已通过 </a-select-option>
-                <a-select-option :value="2"> 未通过 </a-select-option>
-                <a-select-option :value="3"> 未上会 </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
+         
           <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="pass">上会通过</a-button>
-            <a-button type="primary" @click="nopass">上会不通过</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
             <a @click="toggleAdvanced" style="margin-left: 8px">
@@ -76,62 +43,43 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['xxbBCheck:view']"
             type="eye"
             theme="twoTone"
             twoToneColor="#42b983"
             @click="view(record)"
             title="查看"
           ></a-icon>
-          <a-divider type="vertical" v-show="queryParams.state == 23" />
           <a-icon
             type="setting"
             theme="twoTone"
-            v-show="queryParams.state == 23"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
-            title="修改"
+            title="中期报告"
           ></a-icon>
         </template>
       </a-table>
     </div>
-    <xxbB-flow
+     <xxbB-flow
       ref="xxbBFlow"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
     </xxbB-flow>
-    <a-modal
-      :maskClosable="false"
-      v-model="lookVisiable"
-      width="400px"
-      @ok="handleLookOk"
-      title="上会通过并上传附件"
+    <xxb-b-zq-edit
+      ref="zqEdit"
+      :baseId="editZqId"
+      @close="handleZqEditClose"
+      @success="handleZqEditSuccess"
+      :editVisiable="editZqVisiable"
     >
-      <a-form-item label="附件" v-bind="formItemLayout">
-        <a-select
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          show-search
-          style="width: 100%"
-          v-model="archiveId"
-        >
-          <a-select-option
-            v-for="item in archives"
-            :key="item.id"
-            :value="item.id"
-          >
-            {{ item.fileName }}
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-    </a-modal>
+    </xxb-b-zq-edit>
   </a-card>
 </template>
 
 <script>
 import moment from "moment";
+import XxbBZqEdit from './XxbBZqEdit.vue';
 import XxbBFlow from "../XxbBFlow";
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -139,7 +87,7 @@ const formItemLayout = {
 };
 export default {
   name: "XxbBFlowDept",
-  components: { XxbBFlow },
+  components: {XxbBZqEdit, XxbBFlow },
   data() {
     return {
       advanced: false,
@@ -158,8 +106,10 @@ export default {
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
       projectType: "检验检查类",
-      queryParams: { state: 23 },
+      queryParams: {  },
       editVisiable: false,
+      editZqVisiable: false,
+      editZqId: '',
       loading: false,
       bordered: true,
       lookVisiable: false,
@@ -338,42 +288,6 @@ export default {
           },
           width: 100,
         },
-        {
-          title: "审核状态",
-          dataIndex: "state",
-          customRender: (text, row, index) => {
-            switch (text) {
-               case 0:
-                return <a-tag color="cyan">未提交</a-tag>;
-              case 1:
-                return <a-tag color="orange">已提交</a-tag>;
-              case 2:
-                return <a-tag color="green">已审核</a-tag>;
-              case 3:
-                 return <a-tag color="red">已退回</a-tag>;
-              default:
-                return text;
-            }
-          },
-          width: 100,
-        },
-        {
-          title: "上会状态",
-          dataIndex: "shstate",
-          customRender: (text, row, index) => {
-            switch (text) {
-              case 0:
-              return "";
-              case 1:
-                return <a-tag color="green">通过</a-tag>;
-              case 2:
-                return <a-tag color="red">未通过</a-tag>;
-              default:
-                return <a-tag color="purple">未上会</a-tag>;
-            }
-          },
-          width: 100,
-        },
          {
           title: "上会附件",
           dataIndex: "fileUrl",
@@ -389,6 +303,25 @@ export default {
           },
           width: 100,
         },
+         {
+          title: "项目进度状态",
+          dataIndex: "xmjdstate",
+          customRender: (text, row, index) => {
+            switch (text) {
+              case 0:
+                return "";
+              case 1:
+                return <a-tag color="green">已开始</a-tag>;
+              case 2:
+                return <a-tag color="orange">中期总结已提交</a-tag>;
+              case 3:
+                return <a-tag color="red">中期总结已驳回重填</a-tag>;
+              default:
+                return text;
+            }
+          },
+          width: 100,
+        },
         {
           title: "操作",
           dataIndex: "operation",
@@ -401,7 +334,6 @@ export default {
   },
   mounted() {
     this.fetch();
-    this.fetchFiles();
   },
   methods: {
     moment,
@@ -410,9 +342,6 @@ export default {
     },
     onSqEndChange(date, dateString) {
       this.queryParams.applydatTo = dateString;
-    },
-    archiveChange(value, key) {
-      this.fileId = key;
     },
     handleRefesh() {
       this.search();
@@ -433,97 +362,19 @@ export default {
     handleEditClose() {
       this.editVisiable = false;
     },
+     handleZqEditSuccess() {
+      this.editZqVisiable = false;
+      this.search();
+    },
+    handleZqEditClose() {
+      this.editZqVisiable = false;
+    },
     filterOption(input, option) {
       return (
         option.componentOptions.children[0].text
           .toLowerCase()
           .indexOf(input.toLowerCase()) >= 0
       );
-    },
-    pass() {
-      if (!this.selectedRowKeys.length) {
-        this.$message.warning("请选择申报项目");
-        return;
-      }
-
-      let dataSource = [...this.dataSource];
-      dataSource =dataSource.filter(p=>this.selectedRowKeys.indexOf(p.id)>=0)
-      var mess = "";
-      dataSource.forEach((el) => {
-        if (el.state != 2) {
-          mess += el.projectName + "尚未审核";
-        }
-         if (el.shstate !== 0) {
-          mess += el.projectName + "上会状态已处理";
-        }
-      });
-      if (mess !== "") {
-        this.$message.error(mess);
-        return false;
-      } else {
-        this.archiveId = "";
-        this.lookVisiable = true;
-      }
-    },
-    nopass() {
-      if (!this.selectedRowKeys.length) {
-        this.$message.warning("请选择申报项目");
-        return;
-      }
-
-      let dataSource = [...this.dataSource];
-      dataSource = dataSource.filter(p=>this.selectedRowKeys.indexOf(p.id)>=0)
-      var mess = "";
-      dataSource.forEach((el) => {
-        if (el.state != 2) {
-          mess += el.projectName + "尚未审核";
-        }
-         if (el.shstate !==0) {
-          mess += el.projectName + "上会状态已处理";
-        }
-      });
-      if (mess !== "") {
-        this.$message.error(mess);
-        return false;
-      } else {
-        let that = this
-                this.$confirm({
-                    title: '确定不通过所选中的记录?',
-                    content: '当您点击确定按钮后，这些记录将设置为上会不通过',
-                    centered: true,
-                    onOk() {
-                        that.$put("xxbBCheck/updateShState", {
-          ids: that.selectedRowKeys.join(","),
-          shstate: 2
-        }).then((r) => {
-          that.selectedRowKeys = []
-          that.$message.success("上会不通过，操作完成");
-          that.search();
-        });
-                    },
-                    onCancel() {
-                        that.selectedRowKeys = []
-                    }
-                })
-      
-      }
-    },
-    handleLookOk() {
-      if (this.archiveId == "") {
-        this.$message.warning("请选择上会附件");
-        return false;
-      } else {
-        this.$put("xxbBCheck/updateShState", {
-          ids: this.selectedRowKeys.join(","),
-          archiveId: this.archiveId,
-          shstate: 1
-        }).then((r) => {
-          this.selectedRowKeys = []
-          this.$message.success("上会通过成功");
-          this.lookVisiable = false;
-          this.search();
-        });
-      }
     },
     view(record) {
       if (record.projectType == 0) {
@@ -537,22 +388,9 @@ export default {
       this.editVisiable = true;
     },
     edit(record) {
-      if (record.projectType == 0) {
-        this.projectType = "检验检查类";
-      } else if (record.projectType == 1) {
-        this.projectType = "临床类-单科申报";
-      } else if (record.projectType == 2) {
-        this.projectType = "临床类-多科联合申报";
-      }
-      this.$refs.xxbBFlow.setFormValues(record, "编辑", this.projectType);
-      this.editVisiable = true;
-    },
-    changeShState(value){
-      
-      this.search();
-    },
-    changeState() {
-      this.search();
+      this.editZqId= record.id;
+      this.$refs.zqEdit.setProject(record);
+      this.editZqVisiable = true;
     },
     search() {
       let { sortedInfo } = this;
@@ -596,14 +434,6 @@ export default {
         ...this.queryParams,
       });
     },
-    fetchFiles() {
-      this.$get("xxbBArchive", {
-        pageNum: 1,
-        pageSize: 1000,
-      }).then((r) => {
-        this.archives = r.data.rows;
-      });
-    },
     fetch(params = {}) {
       this.loading = true;
       if (this.paginationInfo) {
@@ -619,12 +449,7 @@ export default {
       }
       params.sortField = "create_Time";
       params.sortOrder = "descend";
-      params.state = this.queryParams.state;
-      params.comments = "医";
-      if(params.shstate==0){
-        delete params.shstate
-      }
-      this.$get("xxbBCheck/flowList", {
+      this.$get("xxbBCheck/zqList", {
         ...params,
       }).then((r) => {
         let data = r.data;

@@ -9,22 +9,33 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.properties.FebsProperties;
+import cc.mrbird.febs.common.utils.ExportExcelUtils;
+import cc.mrbird.febs.scm.entity.ComFile;
+import cc.mrbird.febs.scm.service.IComFileService;
 import cc.mrbird.febs.xxb.entity.*;
+import cc.mrbird.febs.xxb.service.IXxbBArchiveService;
+import cc.mrbird.febs.xxb.service.IXxbBCheckDService;
 import cc.mrbird.febs.xxb.service.IXxbBCheckService;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
+import cc.mrbird.febs.xxb.service.IXxbBDeptflowService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.beust.jcommander.internal.Lists;
 import com.wuwenze.poi.ExcelKit;
 import com.wuwenze.poi.handler.ExcelReadHandler;
 import com.wuwenze.poi.pojo.ExcelErrorField;
+import io.swagger.annotations.Authorization;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +50,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author viki
@@ -60,6 +69,17 @@ public class XxbBCheckController extends BaseController {
     public IXxbBCheckService iXxbBCheckService;
     @Autowired
     private FebsProperties febsProperties;
+
+    @Autowired
+    private IXxbBArchiveService iXxbBArchiveService;
+
+    @Autowired
+    private IXxbBDeptflowService iXxbBDeptflowService;
+
+    @Autowired
+    private IComFileService iComFileService;
+    @Autowired
+    private IXxbBCheckDService iXxbBCheckDService;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
@@ -86,7 +106,45 @@ public class XxbBCheckController extends BaseController {
         User currentUser = FebsUtil.getCurrentUser();
         return getDataTable(this.iXxbBCheckService.findXxbBChecks(request, xxbBCheck, currentUser));
     }
-
+    @GetMapping("report")
+    public Map<String, Object> List10(QueryRequest request, XxbBCheck xxbBCheck) {
+        User currentUser = FebsUtil.getCurrentUser();
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(xxbBCheck.getYggh())){
+            LambdaQueryWrapper<XxbBDeptflow> xxbBDeptflowLambdaQueryWrapper= new LambdaQueryWrapper<>();
+            xxbBDeptflowLambdaQueryWrapper.eq(XxbBDeptflow::getFlowAccount,xxbBCheck.getYggh());
+            xxbBDeptflowLambdaQueryWrapper.eq(XxbBDeptflow::getIsDeletemark,1);
+           List<XxbBDeptflow> xxbBDeptflows= this.iXxbBDeptflowService.list(xxbBDeptflowLambdaQueryWrapper);
+            if(xxbBDeptflows.size()>0){
+                List<String> pids= xxbBDeptflows.stream().map(p->p.getPid()).collect(Collectors.toList());
+                xxbBCheck.setIdList(pids);
+            }
+        }
+        return getDataTable(this.iXxbBCheckService.findXxbBCheckList(request, xxbBCheck));
+    }
+    @GetMapping("zqList")
+    public Map<String, Object> List2(QueryRequest request, XxbBCheck xxbBCheck) {
+        User currentUser = FebsUtil.getCurrentUser();
+        xxbBCheck.setCreateUserId(currentUser.getUserId());
+        return getDataTable(this.iXxbBCheckService.zqList(request, xxbBCheck));
+    }
+    @GetMapping("zqListAudit")
+    public Map<String, Object> List3(QueryRequest request, XxbBCheck xxbBCheck) {
+        User currentUser = FebsUtil.getCurrentUser();
+        xxbBCheck.setCreateUserId(currentUser.getUserId());
+        return getDataTable(this.iXxbBCheckService.zqListAudit(request, xxbBCheck));
+    }
+    @GetMapping("mqList")
+    public Map<String, Object> List4(QueryRequest request, XxbBCheck xxbBCheck) {
+        User currentUser = FebsUtil.getCurrentUser();
+        xxbBCheck.setCreateUserId(currentUser.getUserId());
+        return getDataTable(this.iXxbBCheckService.mqList(request, xxbBCheck));
+    }
+    @GetMapping("mqListAudit")
+    public Map<String, Object> List5(QueryRequest request, XxbBCheck xxbBCheck) {
+        User currentUser = FebsUtil.getCurrentUser();
+        xxbBCheck.setCreateUserId(currentUser.getUserId());
+        return getDataTable(this.iXxbBCheckService.mqListAudit(request, xxbBCheck));
+    }
     @GetMapping("flowList")
     @RequiresPermissions("xxbBCheck:view")
     public Map<String, Object> flowList(QueryRequest request, XxbBCheck xxbBCheck) {
@@ -302,6 +360,49 @@ public class XxbBCheckController extends BaseController {
         }
     }
 
+    @Log("修改上会状态")
+    @PutMapping("updateShState")
+    public void updateShState(String ids,int shstate, String archiveId) throws FebsException{
+        List<String> list = Arrays.asList(ids);
+        LambdaQueryWrapper<XxbBCheck> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(XxbBCheck::getState, 2);
+        wrapper.in(XxbBCheck::getId, list);
+        List<XxbBCheck> updateList = this.iXxbBCheckService.list(wrapper);
+        XxbBArchive archive =new XxbBArchive();
+        if(StringUtils.isNotEmpty(archiveId)) {
+             archive = iXxbBArchiveService.getById(Integer.parseInt(archiveId));
+            if (archive == null) {
+                throw new FebsException("上会附件不存在");
+            }
+        }
+        for (XxbBCheck check:updateList
+             ) {
+            XxbBCheck update= new XxbBCheck();
+            update.setId(check.getId());
+            update.setShstate(shstate);
+            if(shstate==1){
+            update.setArchiveId(archive.getId().toString());
+            update.setFileId(archive.getFileId());
+            update.setFileUrl(archive.getFileUrl());
+            update.setSrtdat(archive.getFileDate());
+
+            if(check.getProjectLevel().equals(1)||check.getProjectLevel().equals(2)) {
+                update.setEnddat(DateUtil.offsetMonth(archive.getFileDate(), 48));
+                update.setZqDate(DateUtil.offsetMonth(archive.getFileDate(), 23));
+                update.setMqDate(DateUtil.offsetMonth(archive.getFileDate(), 47));
+            }
+            else {
+                update.setEnddat(DateUtil.offsetMonth(archive.getFileDate(), 24));
+                update.setZqDate(DateUtil.offsetMonth(archive.getFileDate(), 11));
+                update.setMqDate(DateUtil.offsetMonth(archive.getFileDate(), 23));
+            }
+
+                update.setXmjdstate(1);
+            }
+            this.iXxbBCheckService.updateXxbBCheck(update);
+        }
+
+    }
 
     @Log("删除")
     @DeleteMapping("/{ids}")
@@ -318,17 +419,94 @@ public class XxbBCheckController extends BaseController {
     }
 
     @PostMapping("excel")
-    @RequiresPermissions("xxbBCheck:export")
     public void export(QueryRequest request, XxbBCheck xxbBCheck, HttpServletResponse response) throws FebsException {
         try {
-            List<XxbBCheck> xxbBChecks = this.iXxbBCheckService.findXxbBChecks(request, xxbBCheck, null).getRecords();
-            ExcelKit.$Export(XxbBCheck.class, response).downXlsx(xxbBChecks, false);
+            if(org.apache.commons.lang3.StringUtils.isNotEmpty(xxbBCheck.getYggh())){
+                LambdaQueryWrapper<XxbBDeptflow> xxbBDeptflowLambdaQueryWrapper= new LambdaQueryWrapper<>();
+                xxbBDeptflowLambdaQueryWrapper.eq(XxbBDeptflow::getFlowAccount,xxbBCheck.getYggh());
+                xxbBDeptflowLambdaQueryWrapper.eq(XxbBDeptflow::getIsDeletemark,1);
+                List<XxbBDeptflow> xxbBDeptflows= this.iXxbBDeptflowService.list(xxbBDeptflowLambdaQueryWrapper);
+                if(xxbBDeptflows.size()>0){
+                    List<String> pids= xxbBDeptflows.stream().map(p->p.getPid()).collect(Collectors.toList());
+                    xxbBCheck.setIdList(pids);
+                }
+            }
+            List<XxbBCheck> xxbBChecks= this.iXxbBCheckService.findXxbBCheckList(request, xxbBCheck).getRecords();
+          //  List<XxbBCheck> xxbBChecks = this.iXxbBCheckService.findXxbBChecks(request, xxbBCheck, null).getRecords();
+
+            ArrayList<Map<String, Object>> rows = new ArrayList<>();
+
+             int index= 1;
+            for (XxbBCheck check:xxbBChecks
+                 ) {
+                Map<String, Object> row = new LinkedHashMap<>();
+                row.put("序号",index);
+                if(check.getProjectType().equals(0)){
+                    row.put("项目类型","检验检查类");
+                }
+                else if(check.getProjectType().equals(1)){
+                    row.put("项目类型","临床类-单科申报");
+                }
+                else{
+                    row.put("项目类型","临床类-多科联合申报");
+                }
+
+                row.put("项目名称",check.getProjectName());
+                row.put("项目负责人",check.getUserAccountName());
+                row.put("申请科室",check.getDeptNew());
+                row.put("负责人工号",check.getYggh());
+                row.put("项目负责人职称",check.getZhichenglc());
+
+                if(check.getProjectLb().equals(0)){
+                    row.put("项目类别","检验检查类");
+                }
+                else if(check.getProjectLb().equals(1)){
+                    row.put("项目类别","手术类");
+                }
+                else if(check.getProjectLb().equals(2)){
+                    row.put("项目类别","治疗操作类");
+                }
+                else{
+                    row.put("项目类别","其他类");
+                }
+                row.put("是否为限制类医疗技术",check.getIsxzyljs().equals(1)?"是":"否");
+                /**
+                 * c参与者姓名
+                 */
+                LambdaQueryWrapper<XxbBCheckD> xxbBCheckDLambdaQueryWrapper= new LambdaQueryWrapper<>();
+                xxbBCheckDLambdaQueryWrapper.eq(XxbBCheckD::getPid,check.getId());
+                List<XxbBCheckD> xxbBCheckDList= this.iXxbBCheckDService.list(xxbBCheckDLambdaQueryWrapper);
+                int dx=1;
+                for (XxbBCheckD checkD:xxbBCheckDList
+                     ) {
+                    row.put("参与者"+dx,checkD.getUserAccountName()+"_"+checkD.getUserAccount());
+                    dx+=1;
+                }
+                for(;dx<=10;dx++){
+                    row.put("参与者"+dx,"");
+                }
+                LambdaQueryWrapper<ComFile> fileLambdaQueryWrapper= new LambdaQueryWrapper<>();
+                fileLambdaQueryWrapper.eq(ComFile::getRefTabId,check.getId());
+                List<ComFile> comFiles=iComFileService.list(fileLambdaQueryWrapper);
+
+                String isXy= comFiles.stream().filter(p->p.getRefTabTable().equals("xxbcheck_lcyyzqtys")).count()>0?"是":"否";
+                String isNew= comFiles.stream().filter(p->p.getRefTabTable().equals("xxbcheck_xmcxbg")).count()>0?"是":"否";
+                row.put("是否上传新技术新业务临床应用",isXy);
+                row.put("是否上交查新报告",isNew);
+
+
+                rows.add(row);
+                index+=1;
+            }
+
+            ExportExcelUtils.exportRows(response,rows,"新技术新业务申报汇总表","D:\\check.xlsx",1);
         } catch (Exception e) {
             message = "导出Excel失败";
             log.error(message, e);
             throw new FebsException(message);
         }
     }
+
 
     @PostMapping("downloadFile")
     public void findFiles(QueryRequest request, String id, HttpServletResponse response) throws Exception {
