@@ -42,6 +42,12 @@ export default {
         xlqt: 0
       },
       columns: [
+         {
+          title: "序号",
+          dataIndex: "displayIndex",
+          width: 60,
+          fixed: "left",
+        },
         {
           title: "姓名",
           dataIndex: "userAccountName",
@@ -79,7 +85,6 @@ export default {
         {
           title: "专业",
           dataIndex: "zhuany",
-          width: 150,
         },
         {
           title: "专长",

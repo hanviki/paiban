@@ -39,6 +39,14 @@ private static final long serialVersionUID=1L;
     private String id;
 
     /**
+     * 院区
+     */
+
+    @ExcelField(value ="院区")
+    private String yuanqu;
+
+
+    /**
      * 申请科室
      */
         

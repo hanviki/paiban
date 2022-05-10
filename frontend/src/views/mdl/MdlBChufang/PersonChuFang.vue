@@ -1,5 +1,7 @@
 <template>
-  <div > <div v-if="type!=='考试管理'">{{dataSource.length>0 ?'是':'否'}}</div>
+  <div > <div v-if="type=='抗菌药物分级管理'">{{dataSource.length>0 ?dataSource[0].level:''}}</div>
+    <div v-else-if="type!=='考试管理'">{{dataSource.length>0 ?'是':'否'}}</div>
+  
      <div v-if="type=='考试管理'">
  
       <a-table
@@ -251,6 +253,8 @@ export default {
         type= "考试管理"
       }
       this.$get(url, {
+        sortField: 'create_time',
+        sortOrder: 'descend',
         type: type,
         userAccount: this.$store.state.account.user.username
       }).then((r) => {

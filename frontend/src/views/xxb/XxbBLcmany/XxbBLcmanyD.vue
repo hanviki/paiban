@@ -18,6 +18,21 @@
       size="small"
       :scroll="{ x: 900 }"
     >
+       <template
+        slot="displayIndex"
+        slot-scope="text, record, index"
+      >
+        <div key='displayIndex'>
+          <a-input-number
+            v-if="isEdit"
+            :value="text"
+            :min="0"
+            :step="1"
+            @change="(e) => handleChange2(e, record)"
+          />
+          <div v-else>{{ text }}</div>
+        </div>
+      </template>
       <template
         v-for="col in ['zhiwu','zhuany','zhuanc']"
         :slot="col"
@@ -109,6 +124,15 @@ export default {
       },
       // baseUserYggh: null,
       columns: [
+         {
+          title: "序号",
+          dataIndex: "displayIndex",
+          scopedSlots: {
+            customRender: "displayIndex",
+          },
+          fixed: "left",
+          width: 100,
+        },
         {
           title: "姓名",
           dataIndex: "userAccountName",
@@ -183,6 +207,8 @@ export default {
       this.baseId = id;
       if (this.baseId !== null && this.baseId !== '') {
         this.fetch();
+      } else {
+        this.jisuanFor()
       }
     },
     reset(){
@@ -368,9 +394,13 @@ export default {
         this.dataRs.xlqt += 1
       }
     },
+     handleChange2(value,record){
+record.displayIndex= value
+    },
     handleChange(value, key, column) {
       const newData = [...this.dataSource];
       const target = newData.filter((item) => key === item.userAccount)[0];
+      console.info(22222)
       if (target) {
         target[column] = value;
         this.dataSource = newData;
@@ -395,7 +425,8 @@ export default {
         zhuany: "",
         age: "",
         tel: "",
-        renshizifw: ''
+        renshizifw: '',
+        displayIndex: ''
       }
       this.addDataSource(checkD);
       this.selectUserDataSource = []

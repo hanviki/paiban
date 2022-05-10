@@ -119,7 +119,7 @@ public class SdlBUserMgServiceImpl extends ServiceImpl<SdlBUserMgMapper, SdlBUse
 
             IPage<SdlBUserMg> page = new Page<>();
             page.setPages(1L);
-            page.setSize(20);
+            page.setSize(5);
             return  this.baseMapper.selectPage(page,queryWrapper).getRecords();
 
         } catch (Exception e) {

@@ -91,7 +91,7 @@
         }"
         @change="handleTableChange"
         :bordered="bordered"
-        :scroll="{ x: 900 }"
+        :scroll="{ x: 1000 }"
       >
         <template slot="remark" slot-scope="text, record">
           <a-popover placement="topLeft">

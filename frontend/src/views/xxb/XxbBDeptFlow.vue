@@ -9,7 +9,7 @@
               <b>{{
                 item.flownum == 1 ? '本科室申报项目审核' : 
                 item.flownum == 3 ? '医务处审核' :
-                item.flownum == 2 && projectType != 2 ? '医务处审核' : '参与项目审核'
+                item.flownum == 2 && projectType != 2 ? '医务处审核' : '多科室联合申报审核'
                }}</b>
               </a-col>
             </a-row>
@@ -54,14 +54,7 @@
               placeholder="审核意见"
               v-decorator="[
                 'flowcontent',
-                {
-                  rules: [
-                    {
-                      required: isFlowcontent,
-                      message: '审核意见不能为空',
-                    },
-                  ],
-                },
+              
               ]"
             />
           </a-form-item>
@@ -150,6 +143,9 @@ export default {
     },
     handleSubmit(type) {
       let btn = type == 1 ? '同意审核' : type == 2 ? '驳回审核' : '保存'
+      if(type == 9){
+        btn = '终止项目'
+      }
       this.form.validateFields((err, values) => {
         if (!err) {
           let deptFlow = this.form.getFieldsValue();
@@ -162,12 +158,15 @@ export default {
           if (type == 2) {
             this.deptFlow.state = 2
           }
+           if (type == 9) {
+            this.deptFlow.state = 9
+          }
           this.$put("xxbBCheck/editDeptFlow", {
             ...this.deptFlow
           }).then((r) => {
             if (r.data.data.success === 1) {
               this.isUpdate = true;
-              if (type == 1 || type == 2) {
+              if (type == 1 || type == 2 || type == 9) {
                 this.reset();
                 this.$emit("success");
               } else {

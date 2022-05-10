@@ -163,4 +163,10 @@ public class SdlBScheduleDetailServiceImpl extends ServiceImpl<SdlBScheduleDetai
     public List<SdlBScheduleDetail> findMenZhenSubReportAccount(SdlBScheduleDetail sdlBScheduleDetail) {
         return this.baseMapper.findMenZhenSubReportAccount(sdlBScheduleDetail);
     }
+
+    @Override
+    @Transactional
+    public void updateXuelie(String month){
+         this.baseMapper.updateXuelie(month);
+    }
 }

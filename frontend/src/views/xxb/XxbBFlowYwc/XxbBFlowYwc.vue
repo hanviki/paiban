@@ -4,13 +4,18 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'"></div>
+           <a-col :md="6" :sm="24">
+            <a-form-item label="项目名称" v-bind="formItemLayout">
+              <a-input v-model="queryParams.projectName"/>
+            </a-form-item>
+          </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="申请日期" v-bind="formItemLayout">
               <a-date-picker @change="onSqStartChange" style="width: 45%" />-
               <a-date-picker @change="onSqEndChange" style="width: 45%" />
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="24">
+          <a-col :md="4" :sm="24">
             <a-form-item label="审核状态" v-bind="formItemLayout">
               <a-select
                 v-model="queryParams.state"
@@ -22,7 +27,7 @@
               </a-select>
             </a-form-item>
           </a-col>
-           <a-col :md="6" :sm="24">
+           <a-col :md="4" :sm="24">
             <a-form-item label="上会状态" v-bind="formItemLayout">
               <a-select
                 v-model="queryParams.shstate"
@@ -351,6 +356,8 @@ export default {
                 return <a-tag color="green">已审核</a-tag>;
               case 3:
                  return <a-tag color="red">已退回</a-tag>;
+              case 9:
+                 return <a-tag color="red">终止申报</a-tag>;
               default:
                 return text;
             }

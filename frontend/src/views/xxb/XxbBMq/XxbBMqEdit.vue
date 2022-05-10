@@ -96,13 +96,19 @@
 
       <a-row style="line-height:60px;">
        <a-col :span="4" style="border: 1px solid #e8e8e8;">开展情况明细附件</a-col>
-       <a-col :span="20" >
+       <a-col :span="14" >
         <upload-single-file
               ref="fileagent"
  @uploadRemove="removeAgent_1"
  @uploadSuc="uploadAgent_1"
  >
 </upload-single-file>
+       </a-col>
+        <a-col :span="2" style="border: 1px solid #e8e8e8;height:62px;">
+<a href='#' @click="downLoadExcel()" >下载模板</a>
+       </a-col>
+        <a-col :span="4" style="border: 1px solid #e8e8e8;height:62px;">
+<span style="color:red;">*只能为excel</span>
        </a-col></a-row>
 
       <a-row style="line-height:60px;"> <a-col :span="24" style="border: 1px solid #e8e8e8;text-align:center;font-size:20px;">主要经济效益与社会效益
@@ -268,6 +274,9 @@ export default {
       } else {
         this.isShow= false
       }
+    },
+    downLoadExcel(){
+      location.href= this.$baseUrl+'uploadFile/mq2022.xlsx'
     },
     uploadAgent_1(fileId, fileUrl) {
       this.xxbBMq.fileId = fileId;

@@ -101,6 +101,7 @@
                   </a-form-item>
                 </td>
               </tr>
+            
             </table>
           </a-col>
         </a-row>
@@ -115,6 +116,44 @@
         <a-row type="flex" justify="center">
           <a-col :span="colSpan">
             <table class="formtab">
+                 <tr> <td class="tdRight" style="width: 13%;"><font class="fontColor">*</font>所在院区：</td>
+                <td style="width: 25%;">
+                    <a-form-item>
+                   <a-select
+                    placeholder="请选择所在院区"
+                    v-decorator="[
+                      'yuanqu',
+                      { rules: [{ required: true, message: '所在院区不能为空' }] },
+                    ]"
+                  >
+                    <a-select-option
+                      key="本院"
+                      value="本院"
+                    >
+                     本院
+                    </a-select-option>
+                     <a-select-option
+                      key="西院"
+                      value="西院"
+                    >
+                     西院
+                    </a-select-option>
+                     <a-select-option
+                      key="肿瘤"
+                      value="肿瘤"
+                    >
+                     肿瘤
+                    </a-select-option>
+                     <a-select-option
+                      key="金银湖"
+                      value="金银湖"
+                    >
+                     金银湖
+                    </a-select-option>
+                  </a-select>
+                    </a-form-item>
+                </td><td colspan="4"></td>
+                </tr>
               <tr>
                 <td class="tdRight" style="width: 13%;"><font class="fontColor">*</font>姓　　名：</td>
                 <td style="width: 25%;">
@@ -663,6 +702,14 @@
                       ]"
                     />
                   </a-form-item>
+                   <upload-file
+                    ref="czgzFile"
+                    :baseId="xxbBCheck.id"
+                    btnTitle="上传相关操作规程PDF"
+                    :isEdit="isEdit"
+                    refTab="xxbcheck_czgz"
+                  >
+                  </upload-file>
                 </td>
               </tr>
               <tr>
@@ -1065,13 +1112,15 @@ export default {
         this.form.getFieldDecorator("lev");
         this.form.getFieldDecorator("typ");
         this.form.getFieldDecorator("applydat");
+        this.form.getFieldDecorator("yuanqu");
         this.form.setFieldsValue({
           isxzyljs: this.xxbBCheck.isxzyljs,
           projectLevel: this.xxbBCheck.projectLevel,
           projectLb: this.xxbBCheck.projectLb,
           lev: this.xxbBCheck.lev,
           typ: this.xxbBCheck.typ,
-          applydat: this.xxbBCheck.applydat
+          applydat: this.xxbBCheck.applydat,
+          yuanqu: this.xxbBCheck.yuanqu,
         });
       } else {
         if(tit!='查看') {
@@ -1101,6 +1150,7 @@ export default {
           "projectLb",
           "isxzyljs",
           "applydat",
+          "yuanqu",
           "userAccountName",
           // "userAccount",
           // "yggh",

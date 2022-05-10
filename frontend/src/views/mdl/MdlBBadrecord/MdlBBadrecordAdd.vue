@@ -42,7 +42,7 @@
             @change="fileChange"
           >
             <a-select-option v-for="d in indData" :key="d" :value="`${d.code}`">
-              {{ d.code + " " + d.name+ " " +d.score }}
+              {{ d.code + " " + d.name+ " " +d.score+"分"}}
             </a-select-option>
           </a-select>
       </a-form-item>

@@ -105,12 +105,12 @@
             @click="flowLook(record)"
             title="流程"
           ></a-icon>
-          <a-divider type="vertical" />
+          <!-- <a-divider type="vertical" />
           <a-icon 
             type="download"
             @click="download(record)"
             title="下载pdf"
-           ></a-icon>
+           ></a-icon> -->
           <!-- <a-badge
             v-hasNoPermission="['xxbBCheck:update']"
             status="warning"
@@ -322,6 +322,8 @@ export default {
                 return '已审核'
               case 3:
                 return '已退回'
+              case 9:
+                return '终止申报'
               default:
                 return text
             }

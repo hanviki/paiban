@@ -331,7 +331,7 @@ public class ComFileController extends BaseController{
             if (comFile != null) {
                 String[] ids = {inUploadFile.getId()};
                 this.iComFileService.deleteComFiles(ids);
-//                success = 1;
+                success = 1;
 //                String filePath = febsProperties.getUploadPath(); // 上传后的路径
 //                String fileUrl = filePath + "/" + comFile.getServerName();
 //                delete(fileUrl);

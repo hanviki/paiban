@@ -274,7 +274,7 @@
           v-decorator="[
             'auditSuggestion',
             {
-              rules: [{ required: true, message: '审核意见不能为空' }],
+             
             },
           ]"
         /></a-form-item>

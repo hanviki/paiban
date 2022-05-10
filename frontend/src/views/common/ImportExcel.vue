@@ -1,6 +1,5 @@
 <template>
-  <div class="option-area">
-    
+  <div style="width:500px;float:right;" >
     <a-row>
       <a-col :span="8">
          <a-button
@@ -10,7 +9,7 @@
           >导入模板下载</a-button>
           </a-col>
 
-    <a-col :span="8">
+    <a-col :span="10">
           <a-upload
          :fileList="fileList"
          :remove="handleRemove"
@@ -21,7 +20,7 @@
         </a-button>
       </a-upload>
     </a-col>
-    <a-col :span="8">
+    <a-col :span="6">
     <a-button
       @click="handleUpload"
       :disabled="fileList.length === 0"

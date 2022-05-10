@@ -4,30 +4,66 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="6" :sm="24">
-              <a-form-item label="人员类型" v-bind="formItemLayout">
-                <a-input v-model="queryParams.type" />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="科室" v-bind="formItemLayout">
+                <a-select v-model="queryParams.deptNew"
+                  option-filter-prop="children"
+         :filter-option="filterOption"
+         show-search>
+                  <a-select-option
+                    v-for="d in deptData"
+                    :key="d.deptId"
+                    :value="`${d.deptId}`"
+                  >
+                    {{ d.deptName }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="24">
-              <a-form-item label="发薪号" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccount" />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="编码" v-bind="formItemLayout">
+                <a-input v-model="queryParams.code" />
               </a-form-item>
             </a-col>
-          <a-col :md="6" :sm="24">
-              <a-form-item label="开始日期" v-bind="formItemLayout">
-                 <a-date-picker
-          @change="handleStartDateChange"
-        />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="手术名称" v-bind="formItemLayout">
+                <a-input v-model="queryParams.name" />
               </a-form-item>
             </a-col>
-             <a-col :md="6" :sm="24">
-              <a-form-item label="结束日期" v-bind="formItemLayout">
-                <a-date-picker
-          @change="handleEndDateChange"
-        />
-              </a-form-item>
-            </a-col>
+            <template v-if="advanced">
+              <a-col :md="8" :sm="24">
+                <a-form-item label="手术等级" v-bind="formItemLayout">
+                  <a-select v-model="queryParams.level"
+                 >
+                  <a-select-option
+                    :value="-1"
+                  >
+                   全部
+                  </a-select-option>
+                   <a-select-option
+                    value="一级"
+                  >
+                   一级
+                  </a-select-option>
+                   <a-select-option
+                    value="二级"
+                  >
+                   二级
+                  </a-select-option>
+                   <a-select-option
+                    value="三级"
+                  >
+                   三级
+                  </a-select-option>
+                   <a-select-option
+                    value="四级"
+                  >
+                   四级
+                  </a-select-option>
+                </a-select>
+                </a-form-item>
+              </a-col>
+            </template>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -40,13 +76,30 @@
         </a-row>
       </a-form>
     </div>
-       <div>
-      
+    <div>
+      <div class="operator">
+        <a-button
+          type="primary"
+          ghost
+          @click="add"
+          >新增</a-button
+        >
+        <a-button @click="batchDelete"
+          >删除</a-button
+        >
+       
+        <import-excel
+          templateUrl="mdlDSurgery/downTemplate"
+          @succ="handleRefesh"
+          url="mdlDSurgery/import"
+        >
+        </import-excel>
+      </div>
       <!-- 表格区域 -->
       <a-table
         ref="TableInfo"
         :columns="columns"
-        :rowKey="(record) => record.userAccount"
+        :rowKey="(record) => record.id"
         :dataSource="dataSource"
         :pagination="pagination"
         :loading="loading"
@@ -56,29 +109,49 @@
         }"
         @change="handleTableChange"
         :bordered="bordered"
-        :scroll="{ x: 1000 }"
-        :expandedRowKeys="expandedRowKeys"
-        @expand="expandSubGrid"
+        :scroll="{ x: 900 }"
       >
-         <a-table
-          ref="subTable"
-          slot="expandedRowRender"
-          slot-scope="record"
-          :columns="innerColumns"
-          :dataSource="record.innerData"
-          :pagination="false"
-          :rowKey="record2 => record2.id"
-          :scroll="{y: 200}"
-        >
-          
-        </a-table> 
+        <template slot="remark" slot-scope="text, record">
+          <a-popover placement="topLeft">
+            <template slot="content">
+              <div style="max-width: 200px">{{ text }}</div>
+            </template>
+            <p style="width: 200px; margin-bottom: 0">{{ text }}</p>
+          </a-popover>
+        </template>
+        <template slot="operation" slot-scope="text, record">
+          <a-icon
+            type="setting"
+            theme="twoTone"
+            twoToneColor="#4a9ff5"
+            @click="edit(record)"
+            title="修改"
+          ></a-icon>
+        </template>
       </a-table>
     </div>
-    
+    <!-- 新增字典 -->
+    <mdlDSurgery-add
+      @close="handleAddClose"
+      @success="handleAddSuccess"
+      :addVisiable="addVisiable"
+    >
+    </mdlDSurgery-add>
+    <!-- 修改字典 -->
+    <mdlDSurgery-edit
+      ref="mdlDSurgeryEdit"
+      @close="handleEditClose"
+      @success="handleEditSuccess"
+      :editVisiable="editVisiable"
+    >
+    </mdlDSurgery-edit>
   </a-card>
 </template>
 
 <script>
+import MdlDSurgeryAdd from "./MdlDSurgeryAdd";
+import MdlDSurgeryEdit from "./MdlDSurgeryEdit";
+import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
 
 const formItemLayout = {
@@ -86,8 +159,8 @@ const formItemLayout = {
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "MdlBBadrecord",
-  components: {   },
+  name: "MdlDSurgery",
+  components: { MdlDSurgeryAdd, MdlDSurgeryEdit, ImportExcel },
   data() {
     return {
       advanced: false,
@@ -106,12 +179,11 @@ export default {
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
       queryParams: {},
-      expandedRowKeys: [],
       addVisiable: false,
       editVisiable: false,
       loading: false,
       bordered: true,
-      indData: [],
+      deptData: []
     };
   },
   computed: {
@@ -120,184 +192,65 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "发薪号",
-          dataIndex: "userAccount",
-          width: 200,
-        },
-        {
-          title: "姓名",
-          dataIndex: "userAccountName",
-          width: 200,
-        },
-        {
-          title: "人员类型",
-          dataIndex: "type",
+          title: "科室",
+          dataIndex: "deptNew",
           width: 100,
         },
         {
-          title: "工号",
-          dataIndex: "yggh",
-          width: 80,
+          title: "编码",
+          dataIndex: "code",
+          width: 100,
         },
-        
         {
-          title: "记分额度",
-          dataIndex: "score",
-          width: 80,
-          customCell: function (record2,index2) {
-            if(record2.score!=null && record2.score>=12){
-              return { style: { backgroundColor: 'red',color: 'white' } };
-            }
-            if(record2.score!=null && record2.score>=6){
-              return { style: { backgroundColor: 'blue',color: 'white' } };
-            }
-            return { style: {} };
-          },
+          title: "手术名称",
+          dataIndex: "name",
+          width: 100,
+        },
+        {
+          title: "手术等级",
+          dataIndex: "level",
+          width: 100,
+        },
+        {
+          title: "手术切口类别",
+          dataIndex: "lb",
+          width: 100,
+        },
+        {
+          title: "备注",
+          dataIndex: "note",
+          width: 100,
         },
         {
           title: "操作",
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" },
-          width: 200,
+          fixed: "right",
+          width: 100,
         },
       ];
     },
-     innerColumns() {
-      return [
-          {
-          title: "发薪号",
-          dataIndex: "userAccount",
-          width: 80,
-        },
-        {
-          title: "姓名",
-          dataIndex: "userAccountName",
-          width: 80,
-        },
-        {
-          title: "人员类型",
-          dataIndex: "type",
-          width: 60,
-        },
-        {
-          title: "工号",
-          dataIndex: "yggh",
-          width: 60,
-        },
-        {
-          title: "记分部门",
-          dataIndex: "deptName",
-          width: 80,
-        },
-        {
-          title: "序号",
-          dataIndex: "code",
-          width: 60,
-        },
-        {
-          title: "记分指标",
-          dataIndex: "indict",
-          width: 150,
-        },
-        {
-          title: "具体事由",
-          dataIndex: "note",
-          width: 150,
-        },
-        {
-          title: "记分额度",
-          dataIndex: "score",
-          width: 60,
-        },
-        {
-          title: "记录时间",
-          dataIndex: "startDate",
-          customRender: (text, row, index) => {
-            if (text == null) return "";
-            return moment(text).format("YYYY-MM-DD");
-          },
-          width: 100,
-        },
-        {
-          title: "附件",
-          dataIndex: "fileId",
-          customRender: (text, row, index) => {
-            if (text != null && text != "") {
-              return (
-                <a href={this.$baseUrl + row.fileUrl} target="_blank">
-                  查看
-                </a>
-              );
-            }
-            return "";
-          },
-          width: 80,
-        }
-      ]}
   },
   mounted() {
+    this.fetchDept();
     this.fetch();
-   // this.fetchIndict();
   },
-
   methods: {
     moment,
-    expandSubGrid (expanded, record) {//获取供应计划的数量
-      if (expanded) {
-        this.expandedRowKeys.push(record.userAccount)
-        this.handleSubData(record) //获取子表数据
-      } else {
-        let expandedRowKeys = this.expandedRowKeys.filter(RowKey => RowKey !== record.userAccount)
-        this.expandedRowKeys = expandedRowKeys
-      }
-    },
-    handleSubData (record) {
-      this.loading = true
-      let queryParams = { ...this.queryParams };
-      queryParams.userAccount = record.userAccount
-      this.$get('mdlBBadrecord/sub', {
-        ...queryParams,
-        pageSize: 100000
-      }).then((r) => {
-        let data = r.data
-        this.loading = false
-        record.innerData = data
-      })
-    },
-    fetchIndict() {
-      this.$get("mdlDBadscore", {
-        pageNum: 1,
-        pageSize: 1000,
-      }).then((r) => {
-        console.log(r);
-        this.indData = r.data.rows;
-      });
-    },
-    filterOption(input, option) {
-      return (
-        option.componentOptions.children[0].text
-          .toLowerCase()
-          .indexOf(input.toLowerCase()) >= 0
-      );
-    },
-     handleStartDateChange(value) {
-      if(value==null){
-        delete this.queryParams.startDateFrom
-      }
-      else{
-        this.queryParams.startDateFrom = moment(value).format("YYYY-MM-DD");
-      }
-    },
-    handleEndDateChange(value) {
-      if(value==null){
-        delete this.queryParams.startDateTo
-      }
-      else{
-        this.queryParams.startDateTo = moment(value).format("YYYY-MM-DD");
-      }
-    },
     handleRefesh() {
       this.search();
+    },
+     fetchDept() {
+      this.$get("sdlBUser/deptNew", {  }).then((res) => {
+        this.deptData = [];
+         this.deptData.push({
+          deptId: "-1",
+          deptName: "全部",
+        });
+       if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
+      });
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
@@ -307,6 +260,13 @@ export default {
       if (!this.advanced) {
         this.queryParams.comments = "";
       }
+    },
+     filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
     },
     handleAddSuccess() {
       this.addVisiable = false;
@@ -328,7 +288,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      this.$refs.mdlBBadrecordEdit.setFormValues(record);
+      this.$refs.mdlDSurgeryEdit.setFormValues(record);
       this.editVisiable = true;
     },
     batchDelete() {
@@ -342,8 +302,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let mdlBBadrecordIds = that.selectedRowKeys.join(",");
-          that.$delete("mdlBBadrecord/" + mdlBBadrecordIds).then(() => {
+          let mdlDSurgeryIds = that.selectedRowKeys.join(",");
+          that.$delete("mdlDSurgery/" + mdlDSurgeryIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -362,7 +322,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("mdlBBadrecord/excel", {
+      this.$export("mdlDSurgery/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -423,7 +383,12 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("mdlBBadrecord/statistic", {
+      for (var items in params){
+          if(params[items]==-1){
+              delete params[items]
+          }
+      }
+      this.$get("mdlDSurgery", {
         ...params,
       }).then((r) => {
         let data = r.data;

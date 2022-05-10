@@ -2,6 +2,7 @@ package cc.mrbird.febs.sdl.dao;
 
 import cc.mrbird.febs.sdl.entity.CustomData;
 import cc.mrbird.febs.sdl.entity.SdlBScheduleDetail;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -33,4 +34,6 @@ public interface SdlBScheduleDetailMapper extends BaseMapper<SdlBScheduleDetail>
         List<SdlBScheduleDetail>  findSdlBScheduleReportAccount( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<SdlBScheduleDetail>  findYeBanSubReportAccount( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
         List<SdlBScheduleDetail>  findMenZhenSubReportAccount( @Param("sdlBScheduleDetail")SdlBScheduleDetail sdlBScheduleDetail);
-        }
+
+        void updateXuelie(@Param("month") String month);
+}

@@ -13,12 +13,12 @@
         </a-card>
         <a-card
           class="cu"
-          @click="openQulifaction(1, '参与项目审核')"
+          @click="openQulifaction(1, '多科室联合申报审核')"
           style="width: 200px"
           :bordered="false"
         >
           <a-icon type="file-done" style="font-size: 60px" :bordered="false" />
-          <div style="font-size: 20px; margin-top: 10px">参与项目审核</div>
+          <div style="font-size: 20px; margin-top: 10px">多科室联合申报审核</div>
         </a-card>
       </a-space>
     </div>

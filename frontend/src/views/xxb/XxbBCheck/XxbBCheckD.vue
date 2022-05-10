@@ -18,6 +18,21 @@
       size="small"
       :scroll="{ x: 900 }"
     >
+       <template
+        slot="displayIndex"
+        slot-scope="text, record, index"
+      >
+        <div key='displayIndex'>
+          <a-input-number
+            v-if="isEdit"
+            :value="text"
+            :min="0"
+            :step="1"
+            @change="(e) => handleChange2(e, record)"
+          />
+          <div v-else>{{ text }}</div>
+        </div>
+      </template>
       <template
         v-for="col in ['zhiwu','zhuany', 'zhuanc']"
         :slot="col"
@@ -95,6 +110,15 @@ export default {
       xxbBCheckD: {userAccount: null},
       // baseUserYggh: null,
       columns: [
+         {
+          title: "序号",
+          dataIndex: "displayIndex",
+          scopedSlots: {
+            customRender: "displayIndex",
+          },
+          fixed: "left",
+          width: 100,
+        },
         {
           title: "姓名",
           dataIndex: "userAccountName",
@@ -102,7 +126,7 @@ export default {
             customRender: "userAccountName",
           },
           fixed: "left",
-          width: 280,
+          width: 250,
         },
         {
           title: "性别",
@@ -306,6 +330,9 @@ export default {
         record.zhuanc = "";
       }
     },
+     handleChange2(value,record){
+record.displayIndex= value
+    },
     handleChange(value, key, column) {
       const newData = [...this.dataSource];
       const target = newData.filter((item) => key === item.userAccount)[0];
@@ -352,7 +379,8 @@ export default {
         zhuanc: "",
         age: "",
         tel: "",
-        renshizifw: ''
+        renshizifw: '',
+         displayIndex: ''
       }
       this.addDataSource(checkD);
       this.selectUserDataSource = []

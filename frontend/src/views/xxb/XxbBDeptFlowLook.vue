@@ -9,7 +9,7 @@
               <b>{{
                 item.flownum == 1 ? '本科室申报项目审核' : 
                 item.flownum == 3 ? '医务处审核' :
-                item.flownum == 2 && projectType != 2 ? '医务处审核' : '参与项目审核'
+                item.flownum == 2 && projectType != 2 ? '医务处审核' : '多科室联合申报审核'
                }}</b>
               </a-col>
             </a-row>

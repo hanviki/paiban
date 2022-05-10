@@ -143,6 +143,10 @@
              <mdl-b-profession-index>
              </mdl-b-profession-index>
           </a-card>
+           <a-card title="不良积分记录" headStyle="font-weight:bold;">
+             <person-bad-record>
+             </person-bad-record>
+          </a-card>
            <!-- <a-card
             style="
               margin-top: 10px;
@@ -189,6 +193,7 @@ import PersonChuFang from './MdlBChufang/PersonChuFang.vue';
 import UserInfoView from './UserInfoView.vue';
 import MdlBProfessionIndex from './MdlBProfession/MdlBProfessionIndex.vue';
 import MdlBSpecialIndex from './MdlBSpecial/MdlBSpecialIndex.vue';
+import PersonBadRecord from './MdlBBadrecord/PersonBadRecord.vue';
 const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 18 },
@@ -200,7 +205,7 @@ export default {
       default: false,
     },
   },
-  components: { PersonManager, PersonZhiBan, PersonHuiZhen, PersonChuFang, UserInfoView, MdlBProfessionIndex, MdlBSpecialIndex },
+  components: { PersonManager, PersonZhiBan, PersonHuiZhen, PersonChuFang, UserInfoView, MdlBProfessionIndex, MdlBSpecialIndex, PersonBadRecord },
   data() {
     return {
       loading: false,

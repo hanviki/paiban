@@ -4,6 +4,37 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'"></div>
+           <a-col :md="4" :sm="24">
+            <a-form-item label="负责人院区" v-bind="formItemLayout">
+             <a-select v-model="queryParams.yuanqu">
+                <a-select-option :value="-1">全部</a-select-option>
+                  <a-select-option
+                      key="本院"
+                      value="本院"
+                    >
+                     本院
+                    </a-select-option>
+                     <a-select-option
+                      key="西院"
+                      value="西院"
+                    >
+                     西院
+                    </a-select-option>
+                     <a-select-option
+                      key="肿瘤"
+                      value="肿瘤"
+                    >
+                     肿瘤
+                    </a-select-option>
+                     <a-select-option
+                      key="金银湖"
+                      value="金银湖"
+                    >
+                     金银湖
+                    </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col :md="4" :sm="24">
             <a-form-item label="项目名称" v-bind="formItemLayout">
               <a-input v-model="queryParams.projectName" />
@@ -27,6 +58,7 @@
                  <a-select-option :value="1">已提交</a-select-option>
                  <a-select-option :value="2">已审核</a-select-option>
                  <a-select-option :value="3">审核未通过</a-select-option>
+                  <a-select-option :value="9">项目终止</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -151,38 +183,58 @@
             title="流程"
           ></a-icon>
           <a-divider type="vertical" />
-          <a-icon 
-            type="download"
-            @click="download(record)"
-            title="下载pdf"
-           ></a-icon>
-          <a-divider type="vertical" />
           <a-icon
             type="cloud"
             theme="twoTone"
             twoToneColor="#42b983"
             @click="viewZq(record)"
-            title="中期报告"></a-icon>
+            title="中期总结报告"></a-icon>
             <a-divider type="vertical" />
              <a-icon
             type="file"
             theme="twoTone"
             twoToneColor="#42b983"
             @click="viewMq(record)"
-            title="末期报告"></a-icon>
-            <a-divider type="vertical" />
+            title="总结反馈报告"></a-icon>
+        </template>
+         <template slot="operation2" slot-scope="text, record">
+          <a-icon 
+            type="download"
+            @click="download(record)"
+            title="下载申报表"
+           ></a-icon>
+          <a-divider type="vertical" />
+           <a-icon 
+            type="fire"
+            @click="download_attach(record)"
+            title="下载申报表附件"
+           ></a-icon>
+          <a-divider type="vertical" />
             <a-icon 
            
             type="down"
             @click="download_zq(record)"
-            title="下载中期报告文档"
+            title="下载中期总结报告文档"
+           ></a-icon>
+            <a-divider type="vertical" />
+            <a-icon 
+           
+            type="tag"
+            @click="download_zq_file(record)"
+            title="下载中期总结Excel附件"
            ></a-icon>
            <a-divider type="vertical" />
             <a-icon 
-           
             type="export"
             @click="download_mq(record)"
-            title="下载总结报告文档"
+            title="下载总结反馈报告文档"
+           ></a-icon>
+             <a-divider type="vertical" />
+            <a-icon 
+           
+            type="star"
+            @click="download_mq_file(record)"
+            title="下载总结反馈Excel附件"
            ></a-icon>
         </template>
       </a-table>
@@ -304,18 +356,23 @@ export default {
           fixed: "left",
           width: 100,
         },
+         {
+          title: "项目名称",
+          dataIndex: "projectName",
+          width: 200,
+          fixed: "left",
+        },
+          {
+          title: "项目负责人所在院区",
+          dataIndex: "yuanqu",
+          width: 100,
+        },
         {
           title: "申请科室",
           dataIndex: "deptNew",
-          fixed: "left",
           width: 120,
         },
-        {
-          title: "项目名称",
-          dataIndex: "projectName",
-          fixed: "left",
-          width: 200,
-        },
+       
         {
           title: "是否为限制类医疗技术",
           dataIndex: "isxzyljs",
@@ -472,6 +529,8 @@ export default {
                 return '已审核'
               case 3:
                 return '已退回'
+              case 9:
+                return '终止申报'
               default:
                 return text
             }
@@ -527,11 +586,18 @@ export default {
           width: 100,
         },
         {
-          title: "操作",
+          title: "查看",
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" },
           fixed: "right",
-          width: 300,
+          width: 150,
+        },
+         {
+          title: "下载",
+          dataIndex: "operation2",
+          scopedSlots: { customRender: "operation2" },
+          fixed: "right",
+          width: 250,
         },
       ];
     },
@@ -608,11 +674,43 @@ export default {
       }, `${new Date().getTime()}_` + record.deptNew + '-' + 
         record.projectName + '-' + record.userAccountName + '.pdf')
     },
+     download_attach (record) {
+      let formData = {}
+      formData.id = record.id
+      this.$download('xxbBCheck/downloadFile2', {
+        ...formData
+      }, `${new Date().getTime()}_` + record.deptNew + '-' + 
+        record.projectName + '-' + record.userAccountName + '.pdf')
+    },
      download_zq (record) {
       this.$download('xxbBZq/doc', {
         baseId: record.id
       }, `${new Date().getTime()}_` + 
         record.projectName + '_中期反馈表.docx')
+    },
+     download_zq_file (record) {
+      this.$post('xxbBZq/excelFile', {
+        baseId: record.id
+      }).then((r)=>{
+            if(r.data.data!=null && r.data.data.success==1){
+               location.href= this.$baseUrl+ r.data.data.data
+            }
+            else{
+              this.$message.warn("不存在该附件");
+            }
+      })
+    },
+     download_mq_file (record) {
+      this.$post('xxbBMq/excelFile', {
+        baseId: record.id
+      }).then((r)=>{
+            if(r.data.data!=null && r.data.data.success==1){
+               location.href= this.$baseUrl+ r.data.data.data
+            }
+            else{
+              this.$message.warn("不存在该附件");
+            }
+      })
     },
     download_mq (record) {
       this.$download('xxbBMq/doc', {
@@ -784,6 +882,9 @@ export default {
       }
        if(params.xmjdstate=='-1'){
           delete params.xmjdstate
+      }
+      if(params.yuanqu=='-1'){
+          delete params.yuanqu
       }
       this.$get("xxbBCheck/report", {
         ...params,

@@ -4,10 +4,12 @@ package cc.mrbird.febs.xxb.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.domain.FebsResponse;
 import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.properties.FebsProperties;
 import cc.mrbird.febs.common.utils.DocUtil;
 import cc.mrbird.febs.xxb.entity.XxbBCheck;
 import cc.mrbird.febs.xxb.service.IXxbBCheckService;
@@ -34,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,9 +45,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -63,6 +68,8 @@ private String message;
 public IXxbBZqService iXxbBZqService;
     @Autowired
     public IXxbBCheckService iXxbBCheckService;
+    @Autowired
+    private FebsProperties febsProperties;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
@@ -175,6 +182,58 @@ public void export(QueryRequest request, XxbBZq xxbBZq, HttpServletResponse resp
         throw new FebsException(message);
         }
         }
+
+    @PostMapping("excelFile")
+    public FebsResponse downFiles(QueryRequest request, String baseId, HttpServletResponse response) throws Exception {
+
+        ModelMap map = new ModelMap();
+        int success=0;
+        String mergeFileName="";
+        LambdaQueryWrapper<XxbBZq> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(XxbBZq::getBaseId,baseId);
+
+        List<XxbBZq> list= this.iXxbBZqService.list(queryWrapper);
+        if(list.size()>0) {
+             mergeFileName = list.get(0).getFileUrl();;
+            success= 1;
+
+        }
+        map.put("success", success);
+        map.put("data", mergeFileName);
+        return new FebsResponse().data(map);
+}
+    private void downFile(HttpServletResponse response, String filePath, String fileName, boolean isDel) {
+        try {
+            File file = new File(filePath);
+            if (file.exists()) {
+                InputStream ins = new FileInputStream(filePath);
+                BufferedInputStream bins = new BufferedInputStream(ins);// 放到缓冲流里面
+                OutputStream outs = response.getOutputStream();// 获取文件输出IO流
+                BufferedOutputStream bouts = new BufferedOutputStream(outs);
+                response.setContentType("application/octet-stream");
+                response.setHeader("Content-Disposition",
+                        "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+
+                int bytesRead = 0;
+                byte[] buffer = new byte[512];
+                //开始向网络传输文件流
+                while ((bytesRead = bins.read(buffer, 0, 512)) != -1) {
+                    bouts.write(buffer, 0, bytesRead);
+                }
+                bouts.flush();// 这里一定要调用flush()方法
+                ins.close();
+                bins.close();
+                outs.close();
+                bouts.close();
+            } else {
+//                response.sendRedirect("../error.jsp");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+    }
 
     @PostMapping("doc")
     public void export3(QueryRequest request, String baseId, HttpServletResponse response) throws FebsException {

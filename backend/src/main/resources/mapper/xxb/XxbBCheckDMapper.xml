@@ -23,11 +23,12 @@
         <result column="renshizifw" property="renshizifw"/>
         <result column="CREATE_TIME" property="createTime"/>
         <result column="IS_DELETEMARK" property="isDeletemark"/>
+        <result column="display_index" property="displayIndex"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, pid, user_account_name, user_account, yggh, sex_name, userdept, birthday, age, edu, zhicheng, zhichenglc, zhiwu, telephone, zhuany, zhuanc, renshizifw, CREATE_TIME, IS_DELETEMARK
+        id, pid, user_account_name, user_account, yggh, sex_name, userdept, birthday, age, edu, zhicheng, zhichenglc, zhiwu, telephone, zhuany, zhuanc, renshizifw, CREATE_TIME, display_index, IS_DELETEMARK
     </sql>
     <update id="updateXxbBCheckD" parameterType="cc.mrbird.febs.xxb.entity.XxbBCheckD">
         update xxb_b_check_d
@@ -49,6 +50,7 @@
             <if test="zhuanc != null">zhuanc=#{zhuanc},</if>
             <if test="renshizifw != null">renshizifw=#{renshizifw},</if>
             <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+            <if test="displayIndex != null">display_index=#{displayIndex},</if>
         </trim>
         where id=#{id}
 

@@ -9,6 +9,7 @@ import cc.mrbird.febs.sdl.entity.SdlBPersoninfo;
 import cc.mrbird.febs.sdl.entity.SdlBUser;
 import cc.mrbird.febs.sdl.entity.SdlBUserMg;
 import cc.mrbird.febs.sdl.service.ISdlBPersoninfoService;
+import cc.mrbird.febs.sdl.service.ISdlBScheduleDetailService;
 import cc.mrbird.febs.sdl.service.ISdlBUserMgService;
 import cc.mrbird.febs.sdl.service.ISdlBUserService;
 import cc.mrbird.febs.sdl.service.impl.SdlBUserServiceImpl;
@@ -35,6 +36,9 @@ public class MsgValidTask {
 
     @Autowired
     private ISdlBPersoninfoService iSdlBPersoninfoService;
+
+    @Autowired
+    private ISdlBScheduleDetailService iSdlBScheduleDetailService;
 
     public void user() {
         RfcNoc rfcNoc = new RfcNoc();
@@ -83,5 +87,13 @@ public class MsgValidTask {
             log.info(mess);
             sendMessUtil.SendMessByTel(person.getTelephone(),mess);
         }
+    }
+
+    /**
+     * 在15号，更新当前月上一个月的人员序列
+     */
+    public  void updateXulie(){
+        String month =DateUtil.format(DateUtil.offsetMonth(new Date(),-1),"yyyy-MM");
+        iSdlBScheduleDetailService.updateXuelie(month);
     }
 }

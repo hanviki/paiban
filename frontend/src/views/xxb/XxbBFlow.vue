@@ -50,6 +50,7 @@
                 {{ xxbBCheck.applydat }}
               </td>
             </tr>
+            
           </table>
         </a-col>
       </a-row>
@@ -64,6 +65,11 @@
       <a-row type="flex" justify="center">
         <a-col :span="colSpan">
           <table class="formtab">
+              <tr> <td class="tdRight" style="width: 15%;"><font class="fontColor">*</font>所在院区：</td>
+                <td style="width: 23%;">
+                    {{ xxbBCheck.yuanqu }}
+                </td><td colspan="4"></td>
+                </tr>
             <tr>
               <td class="tdRight" style="width: 15%;padding:10px 5px"><font class="fontColor">*</font>姓　　名：</td>
               <td style="width: 23%;">
@@ -376,6 +382,14 @@
               <td class="tdRight" style="width:20%;padding:20px 5px"><font class="fontColor">*</font>操作规程：</td>
               <td style="width:80%">
                 {{ xxbBCheck.czgz }}
+                 <upload-file
+                  ref="czgzFile"
+                  :baseId="xxbBCheck.id"
+                  btnTitle="上传相关操作规程PDF"
+                  :isEdit="false"
+                  refTab="xxbcheck_czgz"
+                >
+                </upload-file>
               </td>
             </tr>
             <tr v-show="xxbBCheck.projectType !=0">
@@ -462,6 +476,16 @@
         >
         <a-button v-if="isBtn"  type="danger" :loading="loading"
           >驳回审核</a-button>
+        </a-popconfirm>
+        <a-popconfirm
+          title="确定终止项目"
+          v-if="isBtn"
+          @confirm="handleSubmit(9)"
+          okText="确定"
+          cancelText="取消"
+        >
+        <a-button v-if="isBtn"  type="danger" :loading="loading"
+          >项目终止</a-button>
         </a-popconfirm>
       </a-space>
     </div>
@@ -582,7 +606,7 @@ export default {
       this.$emit("success");
     },
     handleSubmit(type) {
-     this.$refs.xxbBDeptFlow.handleSubmit(type,)
+     this.$refs.xxbBDeptFlow.handleSubmit(type)
     },
   },
 };
@@ -597,6 +621,7 @@ export default {
     padding: 5px;
     border: 1px solid #e8e8e8;
     color: rgba(0, 0, 0, 0.85);
+    word-wrap: break-word;    word-break: break-all;
   }
   .tdRight {
     text-align:center;

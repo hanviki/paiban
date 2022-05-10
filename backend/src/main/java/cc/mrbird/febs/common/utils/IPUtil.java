@@ -1,7 +1,10 @@
 package cc.mrbird.febs.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 public class IPUtil {
 
 	private static final String UNKNOWN = "unknown";
@@ -27,6 +30,10 @@ public class IPUtil {
 		if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
 			ip = request.getRemoteAddr();
 		}
+		if(ip!=null && ip.contains(",")){
+			ip= ip.split(",")[0];
+		}
+		log.error("显示ip:"+ip);
 		return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
 	}
 

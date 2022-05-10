@@ -10,16 +10,14 @@ import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.properties.FebsProperties;
 import cc.mrbird.febs.common.utils.ExportExcelUtils;
+import cc.mrbird.febs.export.pdf.XxbBPdfInfo;
 import cc.mrbird.febs.scm.entity.ComFile;
 import cc.mrbird.febs.scm.service.IComFileService;
 import cc.mrbird.febs.xxb.entity.*;
-import cc.mrbird.febs.xxb.service.IXxbBArchiveService;
-import cc.mrbird.febs.xxb.service.IXxbBCheckDService;
-import cc.mrbird.febs.xxb.service.IXxbBCheckService;
+import cc.mrbird.febs.xxb.service.*;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
 import cc.mrbird.febs.system.domain.User;
-import cc.mrbird.febs.xxb.service.IXxbBDeptflowService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
@@ -75,6 +73,9 @@ public class XxbBCheckController extends BaseController {
 
     @Autowired
     private IXxbBDeptflowService iXxbBDeptflowService;
+
+    @Autowired
+    IXxbBProjdeptService iXxbBProjdeptService;
 
     @Autowired
     private IComFileService iComFileService;
@@ -166,6 +167,7 @@ public class XxbBCheckController extends BaseController {
         try {
 //            User currentUser = FebsUtil.getCurrentUser();
             xxbBCheckDataList = this.iXxbBCheckService.getCheckDataList(baseId);
+            xxbBCheckDataList= xxbBCheckDataList.stream().sorted(Comparator.comparing(XxbBCheckD::getDisplayIndex)).collect(Collectors.toList());
             success = 1;
         } catch (Exception e) {
             message = "查询失败.";
@@ -507,31 +509,132 @@ public class XxbBCheckController extends BaseController {
         }
     }
 
-
     @PostMapping("downloadFile")
     public void findFiles(QueryRequest request, String id, HttpServletResponse response) throws Exception {
-//        String filePath = febsProperties.getUploadPath(); // 上传后的路径
-//        String fileName = filePath + "down/" + UUID.randomUUID().toString() + ".pdf";
-//        String name = UUID.randomUUID().toString() + ".pdf";
-//        String mergeFileName = filePath + "down/" + name;
-//        List<String> mergeAddPdfList = new ArrayList<>();
-//        mergeAddPdfList.add(fileName);
-//        try {
-//            XxbBCheck xxbBCheck =  this.iXxbBCheckService.getById(id);
-//            if (xxbBCheck != null) {
-//                XxbBPdfInfo pdf = new XxbBPdfInfo();
-//                pdf.writeXxbPdf(fileName, mergeFileName, mergeAddPdfList, xxbBCheck);
-//                if (mergeAddPdfList.size() == 1) {
-//                    mergeFileName = mergeAddPdfList.get(0);
-//                }
-//                this.downFile(response, mergeFileName, name, true);
-//                this.deleteFile(fileName);            }
-//        } catch (Exception e) {
-//            message = "下载失败.";
-//            log.error(message, e);
-//            throw new FebsException(message);
-//        }
+        String filePath = febsProperties.getUploadPath(); // 上传后的路径
+        String fileName = filePath + "down/" + UUID.randomUUID().toString() + ".pdf";
+        String name = UUID.randomUUID().toString() + ".pdf";
+        String mergeFileName = filePath + "down/" + name;
+        List<String> mergeAddPdfList = new ArrayList<>();
+        mergeAddPdfList.add(fileName);
+        try {
+            XxbBCheck xxbBCheck = this.iXxbBCheckService.getById(id);
+            if (xxbBCheck != null) {
+                XxbBPdfInfo pdf = new XxbBPdfInfo();
+                LambdaQueryWrapper<XxbBCheckD> renyWrapper = new LambdaQueryWrapper<>();
+                renyWrapper.eq(XxbBCheckD::getPid, xxbBCheck.getId());
+                List<XxbBCheckD> renyList = iXxbBCheckDService.list(renyWrapper);
+                List<XxbBProjdept> projDeptList = new ArrayList<>();
+                if (xxbBCheck.getProjectType() == 2) {
+                    LambdaQueryWrapper<XxbBProjdept> pdWrapper = new LambdaQueryWrapper<>();
+                    pdWrapper.eq(XxbBProjdept::getPid, xxbBCheck.getId());
+                    projDeptList = iXxbBProjdeptService.list(pdWrapper);
+                }
+
+                /*
+                LambdaQueryWrapper<ComFile> fileWrapper = new LambdaQueryWrapper<>();
+                fileWrapper.eq(ComFile::getRefTabId, xxbBCheck.getId());
+                List<ComFile> fileList = iComFileService.list(fileWrapper);
+                List<ComFile> fileQuery = new ArrayList<>();
+
+                // xxbcheck_aqxfx 技术临床应用安全性分析
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_aqxfx")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+                //xxbcheck_yxxfx  技术临床应用有效性分析
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_yxxfx")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+                //xxbcheck_xmcxbg 项目查新报告
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_xmcxbg")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+                //xxbcheck_lcyyzqtys 新技术新业务临床应用
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_lcyyzqtys")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+*/
+                pdf.writeXxbPdf(fileName, mergeFileName, mergeAddPdfList, xxbBCheck, renyList, projDeptList);
+
+                if (mergeAddPdfList.size() == 1) {
+                    mergeFileName = mergeAddPdfList.get(0);
+                }
+                this.downFile(response, mergeFileName, name, true);
+                this.deleteFile(fileName);
+            }
+        } catch (Exception e) {
+            message = "下载失败.";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
     }
+
+    @PostMapping("downloadFile2")
+    public void findFiles3(QueryRequest request, String id, HttpServletResponse response) throws Exception {
+        String filePath = febsProperties.getUploadPath(); // 上传后的路径
+        String fileName = filePath + "down/" + UUID.randomUUID().toString() + ".pdf";
+        String name = UUID.randomUUID().toString() + ".pdf";
+        List<String> mergeAddPdfList = new ArrayList<>();
+        try {
+            XxbBCheck xxbBCheck = this.iXxbBCheckService.getById(id);
+                if (xxbBCheck != null) {
+                    XxbBPdfInfo pdf = new XxbBPdfInfo();
+                LambdaQueryWrapper<ComFile> fileWrapper = new LambdaQueryWrapper<>();
+                fileWrapper.eq(ComFile::getRefTabId, xxbBCheck.getId());
+                List<ComFile> fileList = iComFileService.list(fileWrapper);
+                List<ComFile> fileQuery = new ArrayList<>();
+
+                // xxbcheck_aqxfx 技术临床应用安全性分析
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_aqxfx")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+                //xxbcheck_yxxfx  技术临床应用有效性分析
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_yxxfx")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+                //xxbcheck_xmcxbg 项目查新报告
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_xmcxbg")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+                //xxbcheck_lcyyzqtys 新技术新业务临床应用
+                fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                        s.getRefTabTable().equals("xxbcheck_lcyyzqtys")).collect(Collectors.toList());
+                if (fileQuery.size() > 0) {
+                    mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                }
+                    //xxbcheck_lcyyzqtys 新技术新业务临床应用
+                    fileQuery = fileList.stream().filter(s -> s.getRefTabTable() != null &&
+                            s.getRefTabTable().equals("xxbcheck_czgz")).collect(Collectors.toList());
+                    if (fileQuery.size() > 0) {
+                        mergeAddPdfList.add(filePath + fileQuery.get(0).getServerName());
+                    }
+
+               pdf.mergePdfFiles(mergeAddPdfList,fileName);
+
+                this.downFile(response, fileName, name, true);
+                this.deleteFile(fileName);
+            }
+        } catch (Exception e) {
+            message = "下载失败.";
+            log.error(message, e);
+            throw new FebsException(message);
+        }
+    }
+
 
     @RequestMapping(value = "downTemplate", method = RequestMethod.POST)
     @RequiresPermissions("xxbBCheck:import")

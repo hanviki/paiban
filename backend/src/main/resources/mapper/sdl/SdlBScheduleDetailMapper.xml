@@ -581,4 +581,7 @@
         ORDER BY A.schedule_date asc
     </select>
 
+    <update id="updateXuelie" >
+        update sdl_b_schedule_detail a,sdl_b_user b set a.xulie=b.patent_good where a.month=#{month} and a.account_id= b.user_account
+    </update>
 </mapper>

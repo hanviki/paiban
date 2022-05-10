@@ -5,6 +5,7 @@
         <!-- 通用查询映射结果 -->
         <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBCheck">
                     <id column="id" property="id"/>
+            <result column="yuanqu" property="yuanqu"/>
                     <result column="dept_new" property="deptNew"/>
                     <result column="project_name" property="projectName"/>
                     <result column="project_level" property="projectLevel"/>
@@ -65,11 +66,13 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, dept_new, project_name, project_level, project_type, project_lb, isxzyljs, applydat, user_account_name, user_account, yggh, sex_name, birthday, userdept, edu, zhicheng, zhichenglc, zhiwu, zhuany, zhuanc, telephone, lev, typ, projectcontent, lincaqfx, lincyyfx, lincjssb, syz, jjz, czgz, srtdat, enddat, yanzhan_date, zq_date, mq_date, archive_id, file_id, file_url, ycdat, shstate, xmjdstate, COMMENTS, STATE, IS_DELETEMARK, MODIFY_TIME, CREATE_TIME, CREATE_USER_ID, MODIFY_USER_ID, projectmdyycx, gnwyjyygk, kxxfxssjh, projectlcwtxyfx, ryjjpxgwzzqk, blhgbfzffcs, zkcs, sfwyzlkmfw, flownum
+        id, yuanqu, dept_new, project_name, project_level, project_type, project_lb, isxzyljs, applydat, user_account_name, user_account, yggh, sex_name, birthday, userdept, edu, zhicheng, zhichenglc, zhiwu, zhuany, zhuanc, telephone, lev, typ, projectcontent, lincaqfx, lincyyfx, lincjssb, syz, jjz, czgz, srtdat, enddat, yanzhan_date, zq_date, mq_date, archive_id, file_id, file_url, ycdat, shstate, xmjdstate, COMMENTS, STATE, IS_DELETEMARK, MODIFY_TIME, CREATE_TIME, CREATE_USER_ID, MODIFY_USER_ID, projectmdyycx, gnwyjyygk, kxxfxssjh, projectlcwtxyfx, ryjjpxgwzzqk, blhgbfzffcs, zkcs, sfwyzlkmfw, flownum
     </sql>
     <update id="updateXxbBCheck" parameterType="cc.mrbird.febs.xxb.entity.XxbBCheck">
         update xxb_b_check
         <trim prefix="set" suffixOverrides=",">
+
+            <if test="yuanqu != null">yuanqu=#{yuanqu},</if>
 <if test="deptNew != null">dept_new=#{deptNew},</if>
 <if test="projectName != null">project_name=#{projectName},</if>
 <if test="projectLevel != null">project_level=#{projectLevel},</if>
@@ -138,6 +141,7 @@
             <if test="xxbBCheck.projectName != null and xxbBCheck.projectName != ''"> and  xxb_b_check.project_name like concat('%', #{ xxbBCheck.projectName} ,'%')</if>
         <if test="xxbBCheck.projectLevel != null"> and  xxb_b_check.project_level =#{ xxbBCheck.projectLevel} </if>
         <if test="xxbBCheck.projectType != null"> and  xxb_b_check.project_type =#{ xxbBCheck.projectType} </if>
+        <if test="xxbBCheck.yuanqu != null"> and  xxb_b_check.yuanqu =#{ xxbBCheck.yuanqu} </if>
         <if test="xxbBCheck.projectLb != null"> and  xxb_b_check.project_lb =#{ xxbBCheck.projectLb} </if>
         <if test="xxbBCheck.isxzyljs != null"> and  xxb_b_check.isxzyljs =#{ xxbBCheck.isxzyljs} </if>
         <if test="xxbBCheck.applydatFrom!= null">

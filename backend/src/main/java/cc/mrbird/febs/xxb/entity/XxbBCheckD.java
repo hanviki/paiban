@@ -166,6 +166,11 @@ public class XxbBCheckD implements Serializable {
     @ExcelField(value = "是否删除")
     private Integer isDeletemark;
 
+    @TableField("display_index")
+
+    @ExcelField(value = "序号")
+    private Integer displayIndex;
+
     public static final String ID = "id";
 
     public static final String PID = "pid";

@@ -42,5 +42,7 @@ public interface ISdlBScheduleDetailService extends IService<SdlBScheduleDetail>
 
         List<SdlBScheduleDetail> findMenZhenSubReportAccount(SdlBScheduleDetail sdlBScheduleDetail);
 
+        void updateXuelie(String month);
+
 
 }

@@ -26,6 +26,7 @@ public class XxbBCheckInfo {
      */
 
     private String id;
+    private String yuanqu;
 
     /**
      * 申请科室

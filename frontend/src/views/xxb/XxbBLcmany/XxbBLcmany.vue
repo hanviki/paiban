@@ -338,6 +338,8 @@ export default {
                 return '已审核'
               case 3:
                 return '已退回'
+              case 9:
+                return '终止申报'
               default:
                 return text
             }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlDSurgeryMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlDSurgery">
+                    <id column="id" property="id"/>
+                    <result column="dept_new" property="deptNew"/>
+                    <result column="code" property="code"/>
+                    <result column="name" property="name"/>
+                    <result column="level" property="level"/>
+                    <result column="lb" property="lb"/>
+                    <result column="note" property="note"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, dept_new, code, name, level, lb, note, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlDSurgery" parameterType="cc.mrbird.febs.mdl.entity.MdlDSurgery">
+        update mdl_d_surgery
+        <trim prefix="set" suffixOverrides=",">
+<if test="deptNew != null">dept_new=#{deptNew},</if>
+<if test="code != null">code=#{code},</if>
+<if test="name != null">name=#{name},</if>
+<if test="level != null">level=#{level},</if>
+<if test="lb != null">lb=#{lb},</if>
+<if test="note != null">note=#{note},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlDSurgery" resultType="cc.mrbird.febs.mdl.entity.MdlDSurgery" parameterType="cc.mrbird.febs.mdl.entity.MdlDSurgery">
+        select  *  from mdl_d_surgery
+        where  1=1
+            <if test="mdlDSurgery.deptNew != null and mdlDSurgery.deptNew != ''"> and  mdl_d_surgery.dept_new like concat('%', #{ mdlDSurgery.deptNew} ,'%')</if>
+            <if test="mdlDSurgery.code != null and mdlDSurgery.code != ''"> and  mdl_d_surgery.code like concat('%', #{ mdlDSurgery.code} ,'%')</if>
+            <if test="mdlDSurgery.name != null and mdlDSurgery.name != ''"> and  mdl_d_surgery.name like concat('%', #{ mdlDSurgery.name} ,'%')</if>
+            <if test="mdlDSurgery.level != null and mdlDSurgery.level != ''"> and  mdl_d_surgery.level like concat('%', #{ mdlDSurgery.level} ,'%')</if>
+            <if test="mdlDSurgery.lb != null and mdlDSurgery.lb != ''"> and  mdl_d_surgery.lb like concat('%', #{ mdlDSurgery.lb} ,'%')</if>
+            <if test="mdlDSurgery.note != null and mdlDSurgery.note != ''"> and  mdl_d_surgery.note like concat('%', #{ mdlDSurgery.note} ,'%')</if>
+        <if test="mdlDSurgery.state != null"> and  mdl_d_surgery.state =#{ mdlDSurgery.state} </if>
+        <if test="mdlDSurgery.isDeletemark != null"> and  mdl_d_surgery.IS_DELETEMARK =#{ mdlDSurgery.isDeletemark} </if>
+        <if test="mdlDSurgery.createTimeFrom!= null">
+            AND mdl_d_surgery.CREATE_TIME <![CDATA[ >= ]]>  #{mdlDSurgery.createTimeFrom}
+        </if>
+        <if test="mdlDSurgery.createTimeTo!= null">
+            AND  mdl_d_surgery.CREATE_TIME <![CDATA[ <= ]]>  #{mdlDSurgery.createTimeTo}
+        </if>
+        <if test="mdlDSurgery.modifyTimeFrom!= null">
+            AND mdl_d_surgery.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlDSurgery.modifyTimeFrom}
+        </if>
+        <if test="mdlDSurgery.modifyTimeTo!= null">
+            AND  mdl_d_surgery.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlDSurgery.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>
