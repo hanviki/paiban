@@ -167,7 +167,7 @@
         sdl_b_schedule_detail A INNER JOIN sdl_d_banci B ON A.banci_id = B.id
         INNER JOIN sdl_b_user C ON A.account_id = C.user_account
         inner join sdl_b_schedule D on A.base_id =D.id
-        where B.cishu>0 and D.state=3 and A.banci!='夜班' and C.rylx='职工'  AND A.zizhi_id in (1,2,6,7)
+        where  D.state=3 and A.banci!='夜班' and C.rylx='职工'  AND A.zizhi_id in (1,2,6,7)
         <if test="sdlBScheduleDetail.accountId != null and sdlBScheduleDetail.accountId != ''">
             and  A.account_id like concat('%', #{ sdlBScheduleDetail.accountId} ,'%')</if>
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
@@ -251,7 +251,7 @@
         sdl_b_schedule
         WHERE
         ( date_format( start_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} OR date_format( end_date, '%Y-%m' ) = #{ sdlBScheduleDetail.scheduleDateFrom} )
-        AND state = 3 ;
+        AND state != 3 ;
     </select>
 
     <select id="findYeBanReport" resultType="cc.mrbird.febs.sdl.entity.CustomData" parameterType="cc.mrbird.febs.sdl.entity.SdlBScheduleDetail">
@@ -290,7 +290,7 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        and A.base_id in
+        and A.base_id not in
         <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -353,7 +353,7 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        and A.base_id in
+        and A.base_id not in
         <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -451,7 +451,7 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        and A.base_id in
+        and A.base_id not in
         <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -524,7 +524,7 @@
         <if test="sdlBScheduleDetail.accountName != null and sdlBScheduleDetail.accountName != ''">
             and  A.account_name like concat('%', #{ sdlBScheduleDetail.accountName} ,'%')
         </if>
-        and A.base_id in
+        and A.base_id not in
         <foreach item="item" index="index" collection="sdlBScheduleDetail.baseList" open="(" separator="," close=")">
             #{item}
         </foreach>

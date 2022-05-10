@@ -145,7 +145,15 @@ export default {
       formItemLayout,
       form: this.$form.createForm(this),
       mdlDSurgery: {},
+      deptData: []
     };
+  },
+  watch: {
+    editVisiable(){
+      if(this.editVisiable){
+        this.fetchDept()
+      }
+   }
   },
   methods: {
     reset() {
@@ -155,6 +163,18 @@ export default {
     onClose() {
       this.reset();
       this.$emit("close");
+    },
+     fetchDept() {
+      this.$get("sdlBUser/deptNew", {  }).then((res) => {
+        this.deptData = [];
+         this.deptData.push({
+          deptId: "-1",
+          deptName: "全部",
+        });
+       if(res.data[0]!=null){
+         this.deptData.push(...res.data);
+        }
+      });
     },
     setFormValues({ ...mdlDSurgery }) {
       let fields = ["deptNew", "code", "name", "level", "lb", "note"];
