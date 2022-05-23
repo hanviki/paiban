@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBSurgeryinfoMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBSurgeryinfo">
+                    <id column="id" property="id"/>
+                    <result column="dept_name" property="deptName"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="sex_name" property="sexName"/>
+                    <result column="birthday" property="birthday"/>
+                    <result column="jb" property="jb"/>
+                    <result column="valid_date" property="validDate"/>
+                    <result column="note" property="note"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, dept_name, user_account_name, user_account, zhicheng, sex_name, birthday, jb, valid_date, note, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBSurgeryinfo" parameterType="cc.mrbird.febs.mdl.entity.MdlBSurgeryinfo">
+        update mdl_b_surgeryinfo
+        <trim prefix="set" suffixOverrides=",">
+<if test="deptName != null">dept_name=#{deptName},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="sexName != null">sex_name=#{sexName},</if>
+<if test="birthday != null">birthday=#{birthday},</if>
+<if test="jb != null">jb=#{jb},</if>
+<if test="validDate != null">valid_date=#{validDate},</if>
+<if test="note != null">note=#{note},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBSurgeryinfo" resultType="cc.mrbird.febs.mdl.entity.ViewInfo" parameterType="cc.mrbird.febs.mdl.entity.MdlBSurgeryinfo">
+        SELECT
+        `mdl_b_surgeryinfo_d`.`id` AS `id`,
+        `mdl_b_surgeryinfo_d`.`code` AS `code`,
+        `mdl_b_surgeryinfo_d`.`name` AS `name`,
+        `mdl_b_surgeryinfo_d`.`level` AS `level`,
+        `mdl_b_surgeryinfo_d`.`lb` AS `lb`,
+        `mdl_b_surgeryinfo`.`user_account_name` AS `user_account_name`,
+        `mdl_b_surgeryinfo`.`user_account` AS `user_account`,
+        `mdl_b_surgeryinfo`.`zhicheng` AS `zhicheng`,
+        `mdl_b_surgeryinfo`.`sex_name` AS `sex_name`,
+        `mdl_b_surgeryinfo`.`birthday` AS `birthday`,
+        `mdl_b_surgeryinfo`.`jb` AS `jb`,
+        `mdl_b_surgeryinfo`.`valid_date` AS `valid_date`,
+        `mdl_b_surgeryinfo`.`dept_name` AS `dept_name`,
+        `mdl_b_surgeryinfo`.`note` AS `note`
+        FROM
+        `mdl_b_surgeryinfo`
+        JOIN `mdl_b_surgeryinfo_d` ON `mdl_b_surgeryinfo`.`id` = `mdl_b_surgeryinfo_d`.`base_id`
+        where  1=1  and mdl_b_surgeryinfo.IS_DELETEMARK = 1
+            <if test="mdlBSurgeryinfo.deptName != null and mdlBSurgeryinfo.deptName != ''"> and  mdl_b_surgeryinfo.dept_name like concat('%', #{ mdlBSurgeryinfo.deptName} ,'%')</if>
+            <if test="mdlBSurgeryinfo.userAccount != null and mdlBSurgeryinfo.userAccount != ''">
+                and ( mdl_b_surgeryinfo.user_account = #{ mdlBSurgeryinfo.userAccount}  or
+                mdl_b_surgeryinfo.user_account_name like concat('%', #{ mdlBSurgeryinfo.userAccount} ,'%') )
+            </if>
+            <if test="mdlBSurgeryinfo.zhicheng != null and mdlBSurgeryinfo.zhicheng != ''"> and  mdl_b_surgeryinfo.zhicheng like concat('%', #{ mdlBSurgeryinfo.zhicheng} ,'%')</if>
+            <if test="mdlBSurgeryinfo.sexName != null and mdlBSurgeryinfo.sexName != ''"> and  mdl_b_surgeryinfo.sex_name like concat('%', #{ mdlBSurgeryinfo.sexName} ,'%')</if>
+            <if test="mdlBSurgeryinfo.birthday != null and mdlBSurgeryinfo.birthday != ''"> and  mdl_b_surgeryinfo.birthday like concat('%', #{ mdlBSurgeryinfo.birthday} ,'%')</if>
+            <if test="mdlBSurgeryinfo.jb != null and mdlBSurgeryinfo.jb != ''"> and  mdl_b_surgeryinfo.jb like concat('%', #{ mdlBSurgeryinfo.jb} ,'%')</if>
+        <if test="mdlBSurgeryinfo.validDateFrom!= null">
+            AND mdl_b_surgeryinfo.valid_date <![CDATA[ >= ]]>  #{mdlBSurgeryinfo.validDateFrom}
+        </if>
+        <if test="mdlBSurgeryinfo.validDateTo!= null">
+            AND  mdl_b_surgeryinfo.valid_date <![CDATA[ <= ]]>  #{mdlBSurgeryinfo.validDateTo}
+        </if>
+        <if test="mdlBSurgeryinfo.validDatePot!= null">
+            AND mdl_b_surgeryinfo.valid_date in (
+            SELECT MAX(valid_date) from mdl_b_surgeryinfo b
+             where b.valid_date <![CDATA[ <= ]]>  #{mdlBSurgeryinfo.validDatePot}  and b.user_account= mdl_b_surgeryinfo.user_account  GROUP BY user_account)
+        </if>
+            <if test="mdlBSurgeryinfo.note != null and mdlBSurgeryinfo.note != ''"> and  mdl_b_surgeryinfo.note like concat('%', #{ mdlBSurgeryinfo.note} ,'%')</if>
+        <if test="mdlBSurgeryinfo.state != null"> and  mdl_b_surgeryinfo.state =#{ mdlBSurgeryinfo.state} </if>
+
+        <if test="mdlBSurgeryinfo.createTimeFrom!= null">
+            AND mdl_b_surgeryinfo.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBSurgeryinfo.createTimeFrom}
+        </if>
+        <if test="mdlBSurgeryinfo.createTimeTo!= null">
+            AND  mdl_b_surgeryinfo.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBSurgeryinfo.createTimeTo}
+        </if>
+        <if test="mdlBSurgeryinfo.modifyTimeFrom!= null">
+            AND mdl_b_surgeryinfo.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBSurgeryinfo.modifyTimeFrom}
+        </if>
+        <if test="mdlBSurgeryinfo.modifyTimeTo!= null">
+            AND  mdl_b_surgeryinfo.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBSurgeryinfo.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

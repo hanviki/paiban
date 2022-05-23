@@ -9,40 +9,43 @@
     :visible="editVisiable"
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
-    <a-form :form="form">
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="序号">
-          <a-input
-            placeholder="请输入序号"
-            v-decorator="[
-              'code',
-              { rules: [{ required: true, message: '序号不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="不良执业行为">
-          <a-input
-            placeholder="请输入不良执业行为"
-            v-decorator="[
-              'name',
-              { rules: [{ required: true, message: '不良执业行为不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-col>
-      <a-col :sm="6">
-        <a-form-item v-bind="formItemLayout" label="扣分">
-          <a-input
-            placeholder="请输入扣分"
-            v-decorator="[
-              'score',
-              { rules: [{ required: true, message: '扣分不能为空' }] },
-            ]"
-          />
-        </a-form-item>
-      </a-col>
+     <a-form :form="form">
+       <a-form-item v-bind="formItemLayout" label="大类">
+        <a-input
+          placeholder="请输入大类"
+          v-decorator="[
+            'lb',
+            { rules: [{ required: true, message: '大类不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="编码">
+        <a-input
+          placeholder="请输入编码"
+          v-decorator="[
+            'code',
+            { rules: [{ required: true, message: '编码不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="不良执业行为">
+        <a-input
+          placeholder="请输入不良执业行为"
+          v-decorator="[
+            'name',
+            { rules: [{ required: true, message: '不良执业行为不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="扣分">
+        <a-input
+          placeholder="请输入扣分"
+          v-decorator="[
+            'score',
+            { rules: [{ required: true, message: '扣分不能为空' }] },
+          ]"
+        />
+      </a-form-item>
     </a-form>
     <div class="drawer-bootom-button">
       <a-popconfirm
@@ -91,7 +94,7 @@ export default {
       this.$emit("close");
     },
     setFormValues({ ...mdlDBadscore }) {
-      let fields = ["code", "name", "score"];
+      let fields = ["lb","code", "name", "score"];
       let fieldDates = [];
       Object.keys(mdlDBadscore).forEach((key) => {
         if (fields.indexOf(key) !== -1) {

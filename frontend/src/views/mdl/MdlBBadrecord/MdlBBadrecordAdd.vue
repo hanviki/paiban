@@ -63,6 +63,15 @@
           ]"
         />
       </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="记分人员">
+        <a-input
+          placeholder="请输入记分人员"
+          v-decorator="[
+            'jfPerson',
+            { rules: [{ required: true, message: '记分人员不能为空' }] },
+          ]"
+        />
+      </a-form-item>
      <a-form-item v-bind="formItemLayout" label="附件">
         <upload-single-file
             ref="fileagent"
@@ -171,10 +180,13 @@ export default {
       
       this.mdlBBadrecord["type"] = option.key.rylx;
       this.mdlBBadrecord["yggh"] = option.key.yggh;
+      this.mdlBBadrecord["deptNew"] = option.key.deptNew;
+      this.mdlBBadrecord["rszfw"] = option.key.renshizifw;
     },
     fileChange(value, option) {
       this.mdlBBadrecord["indict"] = option.key.name;
       this.mdlBBadrecord["score"] = option.key.score;
+      this.mdlBBadrecord["lb"] = option.key.lb;
     },
     handleSubmit() {
       this.form.validateFields((err, values) => {
@@ -197,7 +209,7 @@ export default {
       let values = this.form.getFieldsValue([
         "code",
         "note",
-      
+        "jfPerson",
         "startDate",
        
       ]);

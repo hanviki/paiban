@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBForeignDMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBForeignD">
+                    <id column="id" property="id"/>
+                    <result column="base_id" property="baseId"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="sex_name" property="sexName"/>
+                    <result column="birthday" property="birthday"/>
+                    <result column="telephone" property="telephone"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, base_id, user_account_name, user_account, sex_name, birthday, telephone, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBForeignD" parameterType="cc.mrbird.febs.mdl.entity.MdlBForeignD">
+        update mdl_b_foreign_d
+        <trim prefix="set" suffixOverrides=",">
+<if test="baseId != null">base_id=#{baseId},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="sexName != null">sex_name=#{sexName},</if>
+<if test="birthday != null">birthday=#{birthday},</if>
+<if test="telephone != null">telephone=#{telephone},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBForeignD" resultType="cc.mrbird.febs.mdl.entity.MdlBForeignD" parameterType="cc.mrbird.febs.mdl.entity.MdlBForeignD">
+        select  *  from mdl_b_foreign_d
+        where  1=1
+            <if test="mdlBForeignD.userAccountName != null and mdlBForeignD.userAccountName != ''"> and  mdl_b_foreign_d.user_account_name like concat('%', #{ mdlBForeignD.userAccountName} ,'%')</if>
+            <if test="mdlBForeignD.userAccount != null and mdlBForeignD.userAccount != ''"> and  mdl_b_foreign_d.user_account like concat('%', #{ mdlBForeignD.userAccount} ,'%')</if>
+            <if test="mdlBForeignD.sexName != null and mdlBForeignD.sexName != ''"> and  mdl_b_foreign_d.sex_name like concat('%', #{ mdlBForeignD.sexName} ,'%')</if>
+            <if test="mdlBForeignD.birthday != null and mdlBForeignD.birthday != ''"> and  mdl_b_foreign_d.birthday like concat('%', #{ mdlBForeignD.birthday} ,'%')</if>
+            <if test="mdlBForeignD.telephone != null and mdlBForeignD.telephone != ''"> and  mdl_b_foreign_d.telephone like concat('%', #{ mdlBForeignD.telephone} ,'%')</if>
+        <if test="mdlBForeignD.state != null"> and  mdl_b_foreign_d.state =#{ mdlBForeignD.state} </if>
+        <if test="mdlBForeignD.isDeletemark != null"> and  mdl_b_foreign_d.IS_DELETEMARK =#{ mdlBForeignD.isDeletemark} </if>
+        <if test="mdlBForeignD.createTimeFrom!= null">
+            AND mdl_b_foreign_d.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBForeignD.createTimeFrom}
+        </if>
+        <if test="mdlBForeignD.createTimeTo!= null">
+            AND  mdl_b_foreign_d.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBForeignD.createTimeTo}
+        </if>
+        <if test="mdlBForeignD.modifyTimeFrom!= null">
+            AND mdl_b_foreign_d.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBForeignD.modifyTimeFrom}
+        </if>
+        <if test="mdlBForeignD.modifyTimeTo!= null">
+            AND  mdl_b_foreign_d.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBForeignD.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

@@ -22,6 +22,8 @@ public interface IMdlBBadrecordService extends IService<MdlBBadrecord> {
 
         IPage<MdlBBadrecord> findMdlBBadrecordList(QueryRequest request, MdlBBadrecord mdlBBadrecord);
 
+        IPage<MdlBBadrecord> findMdlBBadrecordListYear(QueryRequest request, MdlBBadrecord mdlBBadrecord);
+        IPage<MdlBBadrecord> findMdlBBadrecordListYear2(QueryRequest request, MdlBBadrecord mdlBBadrecord);
         void createMdlBBadrecord(MdlBBadrecord mdlBBadrecord);
 
         void updateMdlBBadrecord(MdlBBadrecord mdlBBadrecord);

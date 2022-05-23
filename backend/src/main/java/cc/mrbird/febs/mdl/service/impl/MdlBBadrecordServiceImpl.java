@@ -58,6 +58,12 @@ public class MdlBBadrecordServiceImpl extends ServiceImpl<MdlBBadrecordMapper, M
             if (StringUtils.isNotBlank(mdlBBadrecord.getDeptName())) {
                queryWrapper.eq(MdlBBadrecord::getDeptName,mdlBBadrecord.getDeptName());
             }
+            if (StringUtils.isNotBlank(mdlBBadrecord.getDeptNew())) {
+                queryWrapper.like(MdlBBadrecord::getDeptNew,mdlBBadrecord.getDeptNew());
+            }
+            if (StringUtils.isNotBlank(mdlBBadrecord.getLb())) {
+                queryWrapper.eq(MdlBBadrecord::getLb,mdlBBadrecord.getLb());
+            }
             if (StringUtils.isNotBlank(mdlBBadrecord.getCode())) {
                 queryWrapper.eq(MdlBBadrecord::getCode,mdlBBadrecord.getCode());
             }
@@ -66,6 +72,15 @@ public class MdlBBadrecordServiceImpl extends ServiceImpl<MdlBBadrecordMapper, M
             }
             if (StringUtils.isNotBlank(mdlBBadrecord.getStartDateTo())) {
                 queryWrapper.le(MdlBBadrecord::getStartDate,mdlBBadrecord.getStartDateTo());
+            }
+            if (mdlBBadrecord.getYear2()>0
+            ) {
+                queryWrapper.and(warp->warp.eq(MdlBBadrecord::getYear,mdlBBadrecord.getYear2()).or()
+                .eq(MdlBBadrecord::getYear,mdlBBadrecord.getYear2()-1));
+            }
+            if (mdlBBadrecord.getYear()!=null
+            ) {
+                queryWrapper.eq(MdlBBadrecord::getYear,mdlBBadrecord.getYear());
             }
 
             Page<MdlBBadrecord> page = new Page<>();
@@ -83,6 +98,28 @@ public class MdlBBadrecordServiceImpl extends ServiceImpl<MdlBBadrecordMapper, M
             Page<MdlBBadrecord> page = new Page<>();
             SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
             return this.baseMapper.findMdlBBadrecord(page, mdlBBadrecord);
+        } catch (Exception e) {
+            log.error("获取失败", e);
+            return null;
+        }
+    }
+    @Override
+    public IPage<MdlBBadrecord> findMdlBBadrecordListYear(QueryRequest request, MdlBBadrecord mdlBBadrecord) {
+        try {
+            Page<MdlBBadrecord> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            return this.baseMapper.findMdlBBadrecordYear(page, mdlBBadrecord);
+        } catch (Exception e) {
+            log.error("获取失败", e);
+            return null;
+        }
+    }
+    @Override
+    public IPage<MdlBBadrecord> findMdlBBadrecordListYear2(QueryRequest request, MdlBBadrecord mdlBBadrecord) {
+        try {
+            Page<MdlBBadrecord> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            return this.baseMapper.findMdlBBadrecordYear2(page, mdlBBadrecord);
         } catch (Exception e) {
             log.error("获取失败", e);
             return null;

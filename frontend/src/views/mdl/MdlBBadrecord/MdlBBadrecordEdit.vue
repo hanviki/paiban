@@ -71,6 +71,15 @@
           ]"
         />
       </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="记分人员">
+        <a-input
+          placeholder="请输入记分人员"
+          v-decorator="[
+            'jfPerson',
+            { rules: [{ required: true, message: '记分人员不能为空' }] },
+          ]"
+        />
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="附件">
         <upload-single-file
           ref="fileagent"
@@ -177,13 +186,16 @@ export default {
       console.info(option);
       this.mdlBBadrecord["userAccountName"] = option.key.userAccountName;
       this.mdlBBadrecord["userAccount"] = option.key.userAccount;
-      this.mdlBBadrecord["deptName"] = option.key.deptNew;
+     // this.mdlBBadrecord["deptName"] = option.key.deptNew;
       this.mdlBBadrecord["type"] = option.key.rylx;
       this.mdlBBadrecord["yggh"] = option.key.yggh;
+            this.mdlBBadrecord["deptNew"] = option.key.deptNew;
+      this.mdlBBadrecord["rszfw"] = option.key.renshizifw;
     },
     fileChange(value, option) {
       this.mdlBBadrecord["indict"] = option.key.name;
       this.mdlBBadrecord["score"] = option.key.score;
+      this.mdlBBadrecord["lb"] = option.key.lb;
     },
     setFormValues({ ...mdlBBadrecord }) {
       let fields = ["code", "note", "userAccount", "startDate"];
@@ -228,6 +240,10 @@ export default {
           mdlBBadrecord.yggh = this.mdlBBadrecord["yggh"];
           mdlBBadrecord.indict = this.mdlBBadrecord["indict"];
           mdlBBadrecord.score = this.mdlBBadrecord["score"];
+          mdlBBadrecord.lb = this.mdlBBadrecord["lb"];
+          mdlBBadrecord["deptNew"] = this.mdlBBadrecord["deptNew"];
+          mdlBBadrecord["rszfw"] = this.mdlBBadrecord["rszfw"];
+
           this.$put("mdlBBadrecord", {
             ...mdlBBadrecord,
           })

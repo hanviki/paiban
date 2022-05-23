@@ -148,6 +148,11 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
+          title: "大类",
+          dataIndex: "lb",
+          width: 60,
+        },
+        {
           title: "序号",
           dataIndex: "code",
           width: 100,
@@ -155,7 +160,6 @@ export default {
         {
           title: "不良执业行为",
           dataIndex: "name",
-          width: 100,
         },
         {
           title: "扣分",
@@ -166,7 +170,6 @@ export default {
           title: "操作",
           dataIndex: "operation",
           scopedSlots: { customRender: "operation" },
-          fixed: "right",
           width: 100,
         },
       ];

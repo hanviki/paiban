@@ -114,9 +114,9 @@ public class SdlBUserServiceImpl extends ServiceImpl<SdlBUserMapper, SdlBUser> i
            // queryWrapper.eq(SdlBUser::getRylx,"职工");
             queryWrapper.apply("sdl_b_user.yuangongzu!='规培' and sdl_b_user.yuangongzu!='博士后' and (sdl_b_user.renshizifw ='医师' or  (sdl_b_user.renshizifw='技术' and sdl_b_user.renshizfenlei='卫生'))");
 
-            IPage<SdlBUser> page = new Page<>();
-            page.setPages(1L);
-            page.setSize(20);
+            IPage<SdlBUser> page = new Page<>(1,10,false);
+          //  page.setPages(1L);
+           // page.setSize(20);
             return  this.baseMapper.selectPage(page,queryWrapper).getRecords();
 
         } catch (Exception e) {

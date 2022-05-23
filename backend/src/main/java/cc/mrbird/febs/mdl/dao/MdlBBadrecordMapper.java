@@ -17,4 +17,6 @@ import org.apache.ibatis.annotations.Param;
 public interface MdlBBadrecordMapper extends BaseMapper<MdlBBadrecord> {
         void updateMdlBBadrecord(MdlBBadrecord mdlBBadrecord);
         IPage<MdlBBadrecord> findMdlBBadrecord(Page page, @Param("mdlBBadrecord") MdlBBadrecord mdlBBadrecord);
-        }
+        IPage<MdlBBadrecord> findMdlBBadrecordYear(Page page, @Param("mdlBBadrecord") MdlBBadrecord mdlBBadrecord);
+        IPage<MdlBBadrecord> findMdlBBadrecordYear2(Page page, @Param("mdlBBadrecord") MdlBBadrecord mdlBBadrecord);
+}

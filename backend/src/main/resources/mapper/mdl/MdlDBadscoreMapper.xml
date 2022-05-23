@@ -9,6 +9,7 @@
                     <result column="name" property="name"/>
                     <result column="score" property="score"/>
                     <result column="state" property="state"/>
+            <result column="lb" property="lb"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
                     <result column="MODIFY_TIME" property="modifyTime"/>
@@ -19,7 +20,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id,  code, name, score, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, display_index
+        id,  code, name,lb, score, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID, display_index
     </sql>
     <update id="updateMdlDBadscore" parameterType="cc.mrbird.febs.mdl.entity.MdlDBadscore">
         update mdl_d_badscore
@@ -27,6 +28,7 @@
 <if test=" code != null"> code=#{ code},</if>
 <if test="name != null">name=#{name},</if>
 <if test="score != null">score=#{score},</if>
+            <if test="lb != null">lb=#{lb},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -42,6 +44,7 @@
         select  *  from mdl_d_badscore
         where  1=1
             <if test="mdlDBadscore. code != null and mdlDBadscore. code != ''"> and  mdl_d_badscore. code like concat('%', #{ mdlDBadscore. code} ,'%')</if>
+        <if test="mdlDBadscore.lb != null"> and  mdl_d_badscore.lb =#{ mdlDBadscore.lb} </if>
             <if test="mdlDBadscore.name != null and mdlDBadscore.name != ''"> and  mdl_d_badscore.name like concat('%', #{ mdlDBadscore.name} ,'%')</if>
         <if test="mdlDBadscore.score != null"> and  mdl_d_badscore.score =#{ mdlDBadscore.score} </if>
         <if test="mdlDBadscore.state != null"> and  mdl_d_badscore.state =#{ mdlDBadscore.state} </if>

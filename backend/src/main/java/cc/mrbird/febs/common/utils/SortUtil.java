@@ -23,6 +23,9 @@ public class SortUtil {
     public static void handlePageSort(QueryRequest request, Page page, String defaultSort, String defaultOrder, boolean camelToUnderscore) {
         page.setCurrent(request.getPageNum());
         page.setSize(request.getPageSize());
+        if(request.getIsSearchCount()!=null){
+             page.setSearchCount(request.getIsSearchCount());
+        }
         String sortField = request.getSortField();
         if (camelToUnderscore) {
             sortField = FebsUtil.camelToUnderscore(sortField);

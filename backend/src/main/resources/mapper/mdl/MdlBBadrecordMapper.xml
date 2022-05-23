@@ -12,6 +12,11 @@
                     <result column="yggh" property="yggh"/>
                     <result column="user_account_name" property="userAccountName"/>
                     <result column="dept_name" property="deptName"/>
+                    <result column="dept_new" property="deptNew"/>
+                    <result column="rszfw" property="rszfw"/>
+                    <result column="jf_person" property="jfPerson"/>
+                    <result column="year" property="year"/>
+                    <result column="lb" property="lb"/>
                     <result column="code" property="code"/>
                     <result column="indict" property="indict"/>
                     <result column="note" property="note"/>
@@ -29,7 +34,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, type, name, user_name, user_account, yggh, user_account_name, dept_name, code, indict, note, score, start_date, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, type, name, user_name, user_account, yggh, user_account_name, dept_name, dept_new, rszfw, jf_person, year, lb, code, indict, note, score, start_date, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBBadrecord" parameterType="cc.mrbird.febs.mdl.entity.MdlBBadrecord">
         update mdl_b_badrecord
@@ -41,6 +46,11 @@
 <if test="yggh != null">yggh=#{yggh},</if>
 <if test="userAccountName != null">user_account_name=#{userAccountName},</if>
 <if test="deptName != null">dept_name=#{deptName},</if>
+<if test="deptNew != null">dept_new=#{deptNew},</if>
+<if test="rszfw != null">rszfw=#{rszfw},</if>
+<if test="jfPerson != null">jf_person=#{jfPerson},</if>
+<if test="year != null">year=#{year},</if>
+<if test="lb != null">lb=#{lb},</if>
 <if test="code != null">code=#{code},</if>
 <if test="indict != null">indict=#{indict},</if>
 <if test="note != null">note=#{note},</if>
@@ -61,13 +71,18 @@
     <select id="findMdlBBadrecord" resultType="cc.mrbird.febs.mdl.entity.MdlBBadrecord" parameterType="cc.mrbird.febs.mdl.entity.MdlBBadrecord">
         select  type,user_account,user_account_name,yggh,SUM(score) score  from mdl_b_badrecord
         where  1=1
-            <if test="mdlBBadrecord.type != null and mdlBBadrecord.type != ''"> and  mdl_b_badrecord.type like= #{ mdlBBadrecord.type} </if>
+            <if test="mdlBBadrecord.type != null and mdlBBadrecord.type != ''"> and  mdl_b_badrecord.type like concat('%', #{ mdlBBadrecord.type} ,'%')</if>
             <if test="mdlBBadrecord.name != null and mdlBBadrecord.name != ''"> and  mdl_b_badrecord.name like concat('%', #{ mdlBBadrecord.name} ,'%')</if>
             <if test="mdlBBadrecord.userName != null and mdlBBadrecord.userName != ''"> and  mdl_b_badrecord.user_name like concat('%', #{ mdlBBadrecord.userName} ,'%')</if>
-            <if test="mdlBBadrecord.userAccount != null and mdlBBadrecord.userAccount != ''"> and  (mdl_b_badrecord.user_account= #{ mdlBBadrecord.userAccount} or mdl_b_badrecord.user_account_name like concat('%', #{ mdlBBadrecord.userAccount} ,'%'))</if>
-            <if test="mdlBBadrecord.yggh != null and mdlBBadrecord.yggh != ''"> and  mdl_b_badrecord.yggh like concat('%', #{ mdlBBadrecord.yggh} ,'%')</if>
-            <if test="mdlBBadrecord.userAccountName != null and mdlBBadrecord.userAccountName != ''"> and  mdl_b_badrecord.user_account_name like concat('%', #{ mdlBBadrecord.userAccountName} ,'%')</if>
+        <if test="mdlBBadrecord.userAccount != null and mdlBBadrecord.userAccount != ''"> and  (mdl_b_badrecord.user_account= #{ mdlBBadrecord.userAccount} or mdl_b_badrecord.user_account_name like concat('%', #{ mdlBBadrecord.userAccount} ,'%'))</if>
+           <if test="mdlBBadrecord.yggh != null and mdlBBadrecord.yggh != ''"> and  mdl_b_badrecord.yggh like concat('%', #{ mdlBBadrecord.yggh} ,'%')</if>
+
             <if test="mdlBBadrecord.deptName != null and mdlBBadrecord.deptName != ''"> and  mdl_b_badrecord.dept_name like concat('%', #{ mdlBBadrecord.deptName} ,'%')</if>
+            <if test="mdlBBadrecord.deptNew != null and mdlBBadrecord.deptNew != ''"> and  mdl_b_badrecord.dept_new like concat('%', #{ mdlBBadrecord.deptNew} ,'%')</if>
+            <if test="mdlBBadrecord.rszfw != null and mdlBBadrecord.rszfw != ''"> and  mdl_b_badrecord.rszfw like concat('%', #{ mdlBBadrecord.rszfw} ,'%')</if>
+            <if test="mdlBBadrecord.jfPerson != null and mdlBBadrecord.jfPerson != ''"> and  mdl_b_badrecord.jf_person like concat('%', #{ mdlBBadrecord.jfPerson} ,'%')</if>
+            <if test="mdlBBadrecord.year != null and mdlBBadrecord.year != ''"> and  mdl_b_badrecord.year like concat('%', #{ mdlBBadrecord.year} ,'%')</if>
+            <if test="mdlBBadrecord.lb != null and mdlBBadrecord.lb != ''"> and  mdl_b_badrecord.lb like concat('%', #{ mdlBBadrecord.lb} ,'%')</if>
             <if test="mdlBBadrecord.code != null and mdlBBadrecord.code != ''"> and  mdl_b_badrecord.code like concat('%', #{ mdlBBadrecord.code} ,'%')</if>
             <if test="mdlBBadrecord.indict != null and mdlBBadrecord.indict != ''"> and  mdl_b_badrecord.indict like concat('%', #{ mdlBBadrecord.indict} ,'%')</if>
             <if test="mdlBBadrecord.note != null and mdlBBadrecord.note != ''"> and  mdl_b_badrecord.note like concat('%', #{ mdlBBadrecord.note} ,'%')</if>
@@ -97,4 +112,134 @@
         GROUP BY type,user_account,user_account_name,yggh
 </select>
 
+    <select id="findMdlBBadrecordYear" resultType="cc.mrbird.febs.mdl.entity.MdlBBadrecord" parameterType="cc.mrbird.febs.mdl.entity.MdlBBadrecord">
+        select type,user_account,user_account_name,yggh,SUM(score) score, year,rszfw,dept_new from mdl_b_badrecord
+        where  1=1
+        <if test="mdlBBadrecord.type != null and mdlBBadrecord.type != ''"> and  mdl_b_badrecord.type like concat('%', #{ mdlBBadrecord.type} ,'%')</if>
+        <if test="mdlBBadrecord.name != null and mdlBBadrecord.name != ''"> and  mdl_b_badrecord.name like concat('%', #{ mdlBBadrecord.name} ,'%')</if>
+        <if test="mdlBBadrecord.userName != null and mdlBBadrecord.userName != ''"> and  mdl_b_badrecord.user_name like concat('%', #{ mdlBBadrecord.userName} ,'%')</if>
+        <if test="mdlBBadrecord.userAccount != null and mdlBBadrecord.userAccount != ''"> and  (mdl_b_badrecord.user_account= #{ mdlBBadrecord.userAccount} or mdl_b_badrecord.user_account_name like concat('%', #{ mdlBBadrecord.userAccount} ,'%'))</if>
+        <if test="mdlBBadrecord.yggh != null and mdlBBadrecord.yggh != ''"> and  mdl_b_badrecord.yggh like concat('%', #{ mdlBBadrecord.yggh} ,'%')</if>
+
+        <if test="mdlBBadrecord.deptName != null and mdlBBadrecord.deptName != ''"> and  mdl_b_badrecord.dept_name like concat('%', #{ mdlBBadrecord.deptName} ,'%')</if>
+        <if test="mdlBBadrecord.deptNew != null and mdlBBadrecord.deptNew != ''"> and  mdl_b_badrecord.dept_new like concat('%', #{ mdlBBadrecord.deptNew} ,'%')</if>
+        <if test="mdlBBadrecord.rszfw != null and mdlBBadrecord.rszfw != ''"> and  mdl_b_badrecord.rszfw like concat('%', #{ mdlBBadrecord.rszfw} ,'%')</if>
+        <if test="mdlBBadrecord.jfPerson != null and mdlBBadrecord.jfPerson != ''"> and  mdl_b_badrecord.jf_person like concat('%', #{ mdlBBadrecord.jfPerson} ,'%')</if>
+        <if test="mdlBBadrecord.year != null and mdlBBadrecord.year != ''"> and  mdl_b_badrecord.year like concat('%', #{ mdlBBadrecord.year} ,'%')</if>
+        <if test="mdlBBadrecord.lb != null and mdlBBadrecord.lb != ''"> and  mdl_b_badrecord.lb like concat('%', #{ mdlBBadrecord.lb} ,'%')</if>
+        <if test="mdlBBadrecord.code != null and mdlBBadrecord.code != ''"> and  mdl_b_badrecord.code like concat('%', #{ mdlBBadrecord.code} ,'%')</if>
+        <if test="mdlBBadrecord.indict != null and mdlBBadrecord.indict != ''"> and  mdl_b_badrecord.indict like concat('%', #{ mdlBBadrecord.indict} ,'%')</if>
+        <if test="mdlBBadrecord.note != null and mdlBBadrecord.note != ''"> and  mdl_b_badrecord.note like concat('%', #{ mdlBBadrecord.note} ,'%')</if>
+        <if test="mdlBBadrecord.score != null"> and  mdl_b_badrecord.score =#{ mdlBBadrecord.score} </if>
+        <if test="mdlBBadrecord.startDateFrom!= null">
+            AND mdl_b_badrecord.start_date <![CDATA[ >= ]]>  #{mdlBBadrecord.startDateFrom}
+        </if>
+        <if test="mdlBBadrecord.startDateTo!= null">
+            AND  mdl_b_badrecord.start_date <![CDATA[ <= ]]>  #{mdlBBadrecord.startDateTo}
+        </if>
+        <if test="mdlBBadrecord.fileId != null and mdlBBadrecord.fileId != ''"> and  mdl_b_badrecord.file_id like concat('%', #{ mdlBBadrecord.fileId} ,'%')</if>
+        <if test="mdlBBadrecord.fileUrl != null and mdlBBadrecord.fileUrl != ''"> and  mdl_b_badrecord.file_url like concat('%', #{ mdlBBadrecord.fileUrl} ,'%')</if>
+        <if test="mdlBBadrecord.state != null"> and  mdl_b_badrecord.state =#{ mdlBBadrecord.state} </if>
+        <if test="mdlBBadrecord.isDeletemark != null"> and  mdl_b_badrecord.IS_DELETEMARK =#{ mdlBBadrecord.isDeletemark} </if>
+        <if test="mdlBBadrecord.createTimeFrom!= null">
+            AND mdl_b_badrecord.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBBadrecord.createTimeFrom}
+        </if>
+        <if test="mdlBBadrecord.createTimeTo!= null">
+            AND  mdl_b_badrecord.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBBadrecord.createTimeTo}
+        </if>
+        <if test="mdlBBadrecord.modifyTimeFrom!= null">
+            AND mdl_b_badrecord.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBBadrecord.modifyTimeFrom}
+        </if>
+        <if test="mdlBBadrecord.modifyTimeTo!= null">
+            AND  mdl_b_badrecord.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBBadrecord.modifyTimeTo}
+        </if>
+        GROUP BY type,user_account,user_account_name,yggh, year,rszfw,dept_new  having(score)>=6
+    </select>
+
+    <select id="findMdlBBadrecordYear2" resultType="cc.mrbird.febs.mdl.entity.MdlBBadrecord" parameterType="cc.mrbird.febs.mdl.entity.MdlBBadrecord">
+      select  a.*,b.year year2,b.score score2  from
+ (select  type,user_account,user_account_name,yggh,SUM(score) score, year,rszfw,dept_new from mdl_b_badrecord
+        where  1=1
+        <if test="mdlBBadrecord.type != null and mdlBBadrecord.type != ''"> and  mdl_b_badrecord.type like concat('%', #{ mdlBBadrecord.type} ,'%')</if>
+        <if test="mdlBBadrecord.name != null and mdlBBadrecord.name != ''"> and  mdl_b_badrecord.name like concat('%', #{ mdlBBadrecord.name} ,'%')</if>
+        <if test="mdlBBadrecord.userName != null and mdlBBadrecord.userName != ''"> and  mdl_b_badrecord.user_name like concat('%', #{ mdlBBadrecord.userName} ,'%')</if>
+        <if test="mdlBBadrecord.userAccount != null and mdlBBadrecord.userAccount != ''"> and  (mdl_b_badrecord.user_account= #{ mdlBBadrecord.userAccount} or mdl_b_badrecord.user_account_name like concat('%', #{ mdlBBadrecord.userAccount} ,'%'))</if>
+        <if test="mdlBBadrecord.yggh != null and mdlBBadrecord.yggh != ''"> and  mdl_b_badrecord.yggh like concat('%', #{ mdlBBadrecord.yggh} ,'%')</if>
+
+        <if test="mdlBBadrecord.deptName != null and mdlBBadrecord.deptName != ''"> and  mdl_b_badrecord.dept_name like concat('%', #{ mdlBBadrecord.deptName} ,'%')</if>
+        <if test="mdlBBadrecord.deptNew != null and mdlBBadrecord.deptNew != ''"> and  mdl_b_badrecord.dept_new like concat('%', #{ mdlBBadrecord.deptNew} ,'%')</if>
+        <if test="mdlBBadrecord.rszfw != null and mdlBBadrecord.rszfw != ''"> and  mdl_b_badrecord.rszfw like concat('%', #{ mdlBBadrecord.rszfw} ,'%')</if>
+        <if test="mdlBBadrecord.jfPerson != null and mdlBBadrecord.jfPerson != ''"> and  mdl_b_badrecord.jf_person like concat('%', #{ mdlBBadrecord.jfPerson} ,'%')</if>
+        <if test="mdlBBadrecord.year != null and mdlBBadrecord.year != ''"> and  mdl_b_badrecord.year like concat('%', #{ mdlBBadrecord.year} ,'%')</if>
+        <if test="mdlBBadrecord.lb != null and mdlBBadrecord.lb != ''"> and  mdl_b_badrecord.lb like concat('%', #{ mdlBBadrecord.lb} ,'%')</if>
+        <if test="mdlBBadrecord.code != null and mdlBBadrecord.code != ''"> and  mdl_b_badrecord.code like concat('%', #{ mdlBBadrecord.code} ,'%')</if>
+        <if test="mdlBBadrecord.indict != null and mdlBBadrecord.indict != ''"> and  mdl_b_badrecord.indict like concat('%', #{ mdlBBadrecord.indict} ,'%')</if>
+        <if test="mdlBBadrecord.note != null and mdlBBadrecord.note != ''"> and  mdl_b_badrecord.note like concat('%', #{ mdlBBadrecord.note} ,'%')</if>
+        <if test="mdlBBadrecord.score != null"> and  mdl_b_badrecord.score =#{ mdlBBadrecord.score} </if>
+        <if test="mdlBBadrecord.startDateFrom!= null">
+            AND mdl_b_badrecord.start_date <![CDATA[ >= ]]>  #{mdlBBadrecord.startDateFrom}
+        </if>
+        <if test="mdlBBadrecord.startDateTo!= null">
+            AND  mdl_b_badrecord.start_date <![CDATA[ <= ]]>  #{mdlBBadrecord.startDateTo}
+        </if>
+        <if test="mdlBBadrecord.fileId != null and mdlBBadrecord.fileId != ''"> and  mdl_b_badrecord.file_id like concat('%', #{ mdlBBadrecord.fileId} ,'%')</if>
+        <if test="mdlBBadrecord.fileUrl != null and mdlBBadrecord.fileUrl != ''"> and  mdl_b_badrecord.file_url like concat('%', #{ mdlBBadrecord.fileUrl} ,'%')</if>
+        <if test="mdlBBadrecord.state != null"> and  mdl_b_badrecord.state =#{ mdlBBadrecord.state} </if>
+        <if test="mdlBBadrecord.isDeletemark != null"> and  mdl_b_badrecord.IS_DELETEMARK =#{ mdlBBadrecord.isDeletemark} </if>
+        <if test="mdlBBadrecord.createTimeFrom!= null">
+            AND mdl_b_badrecord.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBBadrecord.createTimeFrom}
+        </if>
+        <if test="mdlBBadrecord.createTimeTo!= null">
+            AND  mdl_b_badrecord.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBBadrecord.createTimeTo}
+        </if>
+        <if test="mdlBBadrecord.modifyTimeFrom!= null">
+            AND mdl_b_badrecord.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBBadrecord.modifyTimeFrom}
+        </if>
+        <if test="mdlBBadrecord.modifyTimeTo!= null">
+            AND  mdl_b_badrecord.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBBadrecord.modifyTimeTo}
+        </if>
+   GROUP BY type,user_account,user_account_name,yggh, year,rszfw,dept_new ) a
+,(select  type,user_account,user_account_name,yggh,SUM(score) score, year,rszfw,dept_new from mdl_b_badrecord
+        where  1=1
+        <if test="mdlBBadrecord.type != null and mdlBBadrecord.type != ''"> and  mdl_b_badrecord.type like concat('%', #{ mdlBBadrecord.type} ,'%')</if>
+        <if test="mdlBBadrecord.name != null and mdlBBadrecord.name != ''"> and  mdl_b_badrecord.name like concat('%', #{ mdlBBadrecord.name} ,'%')</if>
+        <if test="mdlBBadrecord.userName != null and mdlBBadrecord.userName != ''"> and  mdl_b_badrecord.user_name like concat('%', #{ mdlBBadrecord.userName} ,'%')</if>
+        <if test="mdlBBadrecord.userAccount != null and mdlBBadrecord.userAccount != ''"> and  (mdl_b_badrecord.user_account= #{ mdlBBadrecord.userAccount} or mdl_b_badrecord.user_account_name like concat('%', #{ mdlBBadrecord.userAccount} ,'%'))</if>
+        <if test="mdlBBadrecord.yggh != null and mdlBBadrecord.yggh != ''"> and  mdl_b_badrecord.yggh like concat('%', #{ mdlBBadrecord.yggh} ,'%')</if>
+
+        <if test="mdlBBadrecord.deptName != null and mdlBBadrecord.deptName != ''"> and  mdl_b_badrecord.dept_name like concat('%', #{ mdlBBadrecord.deptName} ,'%')</if>
+        <if test="mdlBBadrecord.deptNew != null and mdlBBadrecord.deptNew != ''"> and  mdl_b_badrecord.dept_new like concat('%', #{ mdlBBadrecord.deptNew} ,'%')</if>
+        <if test="mdlBBadrecord.rszfw != null and mdlBBadrecord.rszfw != ''"> and  mdl_b_badrecord.rszfw like concat('%', #{ mdlBBadrecord.rszfw} ,'%')</if>
+        <if test="mdlBBadrecord.jfPerson != null and mdlBBadrecord.jfPerson != ''"> and  mdl_b_badrecord.jf_person like concat('%', #{ mdlBBadrecord.jfPerson} ,'%')</if>
+        <if test="mdlBBadrecord.year != null and mdlBBadrecord.year != ''"> and  mdl_b_badrecord.year like concat('%', #{ mdlBBadrecord.year} ,'%')</if>
+        <if test="mdlBBadrecord.lb != null and mdlBBadrecord.lb != ''"> and  mdl_b_badrecord.lb like concat('%', #{ mdlBBadrecord.lb} ,'%')</if>
+        <if test="mdlBBadrecord.code != null and mdlBBadrecord.code != ''"> and  mdl_b_badrecord.code like concat('%', #{ mdlBBadrecord.code} ,'%')</if>
+        <if test="mdlBBadrecord.indict != null and mdlBBadrecord.indict != ''"> and  mdl_b_badrecord.indict like concat('%', #{ mdlBBadrecord.indict} ,'%')</if>
+        <if test="mdlBBadrecord.note != null and mdlBBadrecord.note != ''"> and  mdl_b_badrecord.note like concat('%', #{ mdlBBadrecord.note} ,'%')</if>
+        <if test="mdlBBadrecord.score != null"> and  mdl_b_badrecord.score =#{ mdlBBadrecord.score} </if>
+        <if test="mdlBBadrecord.startDateFrom!= null">
+            AND mdl_b_badrecord.start_date <![CDATA[ >= ]]>  #{mdlBBadrecord.startDateFrom}
+        </if>
+        <if test="mdlBBadrecord.startDateTo!= null">
+            AND  mdl_b_badrecord.start_date <![CDATA[ <= ]]>  #{mdlBBadrecord.startDateTo}
+        </if>
+        <if test="mdlBBadrecord.fileId != null and mdlBBadrecord.fileId != ''"> and  mdl_b_badrecord.file_id like concat('%', #{ mdlBBadrecord.fileId} ,'%')</if>
+        <if test="mdlBBadrecord.fileUrl != null and mdlBBadrecord.fileUrl != ''"> and  mdl_b_badrecord.file_url like concat('%', #{ mdlBBadrecord.fileUrl} ,'%')</if>
+        <if test="mdlBBadrecord.state != null"> and  mdl_b_badrecord.state =#{ mdlBBadrecord.state} </if>
+        <if test="mdlBBadrecord.isDeletemark != null"> and  mdl_b_badrecord.IS_DELETEMARK =#{ mdlBBadrecord.isDeletemark} </if>
+        <if test="mdlBBadrecord.createTimeFrom!= null">
+            AND mdl_b_badrecord.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBBadrecord.createTimeFrom}
+        </if>
+        <if test="mdlBBadrecord.createTimeTo!= null">
+            AND  mdl_b_badrecord.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBBadrecord.createTimeTo}
+        </if>
+        <if test="mdlBBadrecord.modifyTimeFrom!= null">
+            AND mdl_b_badrecord.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBBadrecord.modifyTimeFrom}
+        </if>
+        <if test="mdlBBadrecord.modifyTimeTo!= null">
+            AND  mdl_b_badrecord.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBBadrecord.modifyTimeTo}
+        </if>
+   GROUP BY type,user_account,user_account_name,yggh, year,rszfw,dept_new ) b
+	 where a.`year`-b.`year`=1  and a.user_account=b.user_account and a.score>=12 and b.score>=12
+    </select>
 </mapper>

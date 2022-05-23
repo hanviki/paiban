@@ -46,8 +46,8 @@
               </a>
             </div>
             <div class="subDiv">
-              <a @click="openQulifaction(8, '待开发')" href="#">
-                待开发
+              <a @click="openQulifaction(8, '手术资质')" href="#">
+                手术资质
               </a>
             </div>
           </div>
@@ -73,6 +73,7 @@
       <xxb-b-mq-audit v-if="subShow == 5"></xxb-b-mq-audit>
      <xxb-b-check-report v-if="subShow == 6"></xxb-b-check-report>
      <mdl-d-surgery v-if="subShow == 7"></mdl-d-surgery>
+     <mdl-b-surgeryinfo v-if="subShow==8" ></mdl-b-surgeryinfo>
     </div>
   </a-card>
 </template>
@@ -84,6 +85,7 @@ import XxbBFlowYwc from '../xxb/XxbBFlowYwc/XxbBFlowYwc.vue';
 import XxbBMqAudit from '../xxb/XxbBMq/XxbBMqAudit.vue';
 import XxbBZqAudit from '../xxb/XxbBZq/XxbBZqAudit.vue';
 import MdlDSurgery from './MdlDSurgery/MdlDSurgery.vue';
+import MdlBSurgeryinfo from './MdlBSurgeryinfo/MdlBSurgeryinfo.vue'
 
 
 export default {
@@ -102,7 +104,8 @@ export default {
     XxbBZqAudit,
     XxbBMqAudit,
     XxbBCheckReport,
-    MdlDSurgery
+    MdlDSurgery,
+    MdlBSurgeryinfo
   },
   methods: {
     openQulifaction(index, title) {

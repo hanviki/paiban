@@ -218,6 +218,43 @@
           />
         </a-form-item>
       </a-col>
+      
+      <a-col :sm="5"  :offset="1">
+        <a-form-item v-bind="formItemLayout" label="主执业机构">
+          <a-input
+           :disabled="isPersonal==0"
+            v-decorator="[
+              'gqpxqk',
+             
+            ]"
+          />
+        </a-form-item>
+      </a-col>
+
+       <a-col :sm="5"  :offset="1">
+        <a-form-item v-bind="formItemLayout" label="多点执业机构1">
+          <a-input
+           :disabled="isPersonal==0"
+            v-decorator="[
+              'gfhyspxqk',
+             
+            ]"
+          />
+        </a-form-item>
+      </a-col>
+
+       <a-col :sm="5"  :offset="1">
+        <a-form-item v-bind="formItemLayout" label="多点执业机构2">
+          <a-input
+           :disabled="isPersonal==0"
+            v-decorator="[
+              'zjspnlceqk',
+             
+            ]"
+          />
+        </a-form-item>
+      </a-col>
+      
      <a-col :sm="5"  :offset="1">
         <a-form-item v-bind="formItemLayout" label="医师类别">
           <a-input
@@ -274,7 +311,6 @@
         </a-form-item>
       </a-col>
      
-      
       <a-col :sm="5" :offset="1">
         <a-form-item v-bind="formItemLayout" label="资格证书附件">
           <upload-single-file
@@ -335,6 +371,9 @@ export default {
     editVisiable: {
       default: false,
     },
+    isPersonal: {
+      default: 0
+    }
   },
   components: { UploadSingleFile },
   computed: {
@@ -499,7 +538,10 @@ export default {
           sdlBUser.yishiZhiyefanwei =  this.form.getFieldValue('yishiZhiyefanwei')
           sdlBUser.yishiZgzsbianhao =  this.form.getFieldValue('yishiZgzsbianhao')
           sdlBUser.yishiZiyebianhao =  this.form.getFieldValue('yishiZiyebianhao')
-          sdlBUser.id = this.sdlBUser.id;
+            sdlBUser.gqpxqk =  this.form.getFieldValue('gqpxqk')
+          sdlBUser.gfhyspxqk =  this.form.getFieldValue('gfhyspxqk')
+          sdlBUser.zjspnlceqk =  this.form.getFieldValue('zjspnlceqk')
+          sdlBUser.id = this.sdlBUser.id;zjspnlceqk
           sdlBUser.fileIdLc = this.sdlBUser.fileIdLc;
           sdlBUser.fileUrlLc = this.sdlBUser.fileUrlLc;
           sdlBUser.pictureId = this.sdlBUser.pictureId;

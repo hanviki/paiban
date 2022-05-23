@@ -4,10 +4,13 @@ package cc.mrbird.febs.mdl.controller;
 
 import cc.mrbird.febs.common.annotation.Log;
 import cc.mrbird.febs.common.controller.BaseController;
+import cc.mrbird.febs.common.domain.FebsConstant;
+import cc.mrbird.febs.common.domain.Tree;
 import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.common.utils.TreeUtil;
 import cc.mrbird.febs.mdl.entity.MdlDSurgeryImport;
 import cc.mrbird.febs.mdl.service.IMdlDSurgeryService;
 import cc.mrbird.febs.mdl.entity.MdlDSurgery;
@@ -20,12 +23,14 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.beust.jcommander.internal.Lists;
 import com.wuwenze.poi.ExcelKit;
 import com.wuwenze.poi.handler.ExcelReadHandler;
 import com.wuwenze.poi.pojo.ExcelErrorField;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +43,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,8 +87,125 @@ public IMdlDSurgeryService iMdlDSurgeryService;
 public Map<String, Object> List(QueryRequest request, MdlDSurgery mdlDSurgery){
         return getDataTable(this.iMdlDSurgeryService.findMdlDSurgerys(request, mdlDSurgery));
         }
+    @GetMapping("tree")
+    public Map<String, Object> findMenus(String jb,String deptName) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            LambdaQueryWrapper<MdlDSurgery> queryWrapper = new LambdaQueryWrapper<>();
+            if(jb.equals("一级")){
+                queryWrapper.eq(MdlDSurgery::getLevel,jb);
+            }
+            if(jb.equals("二级")){
+                queryWrapper.and(wrap->wrap.eq(MdlDSurgery::getLevel,"一级").or().eq(MdlDSurgery::getLevel,"二级" ));
+            }
+            if(jb.equals("三级")){
+                queryWrapper.and(wrap->wrap.eq(MdlDSurgery::getLevel,"一级").or().eq(MdlDSurgery::getLevel,"二级" ).or().eq(MdlDSurgery::getLevel,"三级" ));
+            }
+            queryWrapper.eq(MdlDSurgery::getIsDeletemark,1);
+            queryWrapper.eq(MdlDSurgery::getDeptNew,deptName);
+            List<MdlDSurgery> menus = this.iMdlDSurgeryService.list(queryWrapper);
+            if(jb.equals("一级")) {
+                menus.add(getSurgery("一级"));
+            }
+            if(jb.equals("二级")) {
+                menus.add(getSurgery("一级"));
+                menus.add(getSurgery("二级"));
+            }
+            if(jb.equals("三级")) {
+                menus.add(getSurgery("一级"));
+                menus.add(getSurgery("二级"));
+                menus.add(getSurgery("三级"));
+            }
+            if(jb.equals("四级")) {
+                menus.add(getSurgery("一级"));
+                menus.add(getSurgery("二级"));
+                menus.add(getSurgery("三级"));
+                menus.add(getSurgery("四级"));
+            }
 
-/**
+
+            List<Tree<MdlDSurgery>> trees = new ArrayList<>();
+            List<String> ids = new ArrayList<>();
+            buildTrees(trees, menus, ids);
+
+            result.put("ids", ids);
+
+            Tree<MdlDSurgery> menuTree = TreeUtil.build(trees);
+            result.put("rows", menuTree);
+
+            result.put("total", menus.size());
+        } catch (NumberFormatException e) {
+            log.error("查询菜单失败", e);
+            result.put("rows", null);
+            result.put("total", 0);
+        }
+        return result;
+    }
+    private  MdlDSurgery getSurgery(String lb){
+        MdlDSurgery mdlDSurgery= new MdlDSurgery();
+        if(lb.equals("一级")) {
+            mdlDSurgery.setId(10000L);
+            mdlDSurgery.setName("一级");
+
+        }
+        if(lb.equals("二级")) {
+            mdlDSurgery.setId(20000L);
+            mdlDSurgery.setName("二级");
+
+        }
+        if(lb.equals("三级")) {
+            mdlDSurgery.setId(30000L);
+            mdlDSurgery.setName("三级");
+
+        }
+        if(lb.equals("四级")) {
+            mdlDSurgery.setId(40000L);
+            mdlDSurgery.setName("四级");
+
+        }
+        mdlDSurgery.setCode("");
+        mdlDSurgery.setLb("");
+        mdlDSurgery.setLevel("");
+        return  mdlDSurgery;
+    }
+    private  String getParentId(String lb,Long id){
+      if(id==10000||id==20000||id==30000||id==40000){
+          return "0";
+      }
+       if(lb.equals("一级")){
+           return "10000";
+       }
+        if(lb.equals("二级")){
+            return "20000";
+        }
+        if(lb.equals("三级")){
+            return "30000";
+        }
+
+            return "40000";
+
+    }
+    private void buildTrees(List<Tree<MdlDSurgery>> trees, List<MdlDSurgery> menus, List<String> ids) {
+        menus.forEach(menu -> {
+            ids.add(menu.getId().toString());
+            Tree<MdlDSurgery> tree = new Tree<>();
+            tree.setId(menu.getId().toString());
+            tree.setKey(tree.getId());
+            tree.setParentId(getParentId(menu.getLevel(),menu.getId()));
+            if(!StringUtils.isNotEmpty(menu.getCode())){
+                tree.setText(menu.getName());
+                tree.setTitle(menu.getName());
+            }
+            else {
+                tree.setText(menu.getName() + "_" + menu.getCode() + "_" + menu.getLevel() + "_" + menu.getLb());
+                tree.setTitle(menu.getName() + "_" + menu.getCode() + "_" + menu.getLevel() + "_" + menu.getLb());
+            }
+
+            trees.add(tree);
+        });
+    }
+
+    /**
  * 添加
  * @param  mdlDSurgery
  * @return

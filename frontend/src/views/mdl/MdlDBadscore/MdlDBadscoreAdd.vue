@@ -10,12 +10,21 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="序号">
+       <a-form-item v-bind="formItemLayout" label="大类">
         <a-input
-          placeholder="请输入序号"
+          placeholder="请输入大类"
+          v-decorator="[
+            'lb',
+            { rules: [{ required: true, message: '大类不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="编码">
+        <a-input
+          placeholder="请输入编码"
           v-decorator="[
             'code',
-            { rules: [{ required: true, message: '序号不能为空' }] },
+            { rules: [{ required: true, message: '编码不能为空' }] },
           ]"
         />
       </a-form-item>
@@ -101,7 +110,7 @@ export default {
       });
     },
     setFields() {
-      let values = this.form.getFieldsValue(["code", "name", "score"]);
+      let values = this.form.getFieldsValue(["lb","code", "name", "score"]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {
           this.mdlDBadscore[_key] = values[_key];

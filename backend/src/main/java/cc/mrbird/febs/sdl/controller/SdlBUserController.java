@@ -84,6 +84,7 @@ public Map<String, Object> List(QueryRequest request, SdlBUser sdlBUser){
             n.setRylx(p.getRylx());
             n.setYggh(p.getYggh());
             n.setUserAccountName(p.getUserAccountName());
+            n.setRenshizifw(p.getRenshizifw());
             return  n;
         }).collect(Collectors.toList());
         return  list;

@@ -66,5 +66,14 @@
             AND  mdl_d_surgery.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlDSurgery.modifyTimeTo}
         </if>
 </select>
+    <select id="findSdlBUserMgByDeptId" resultType="cc.mrbird.febs.sdl.entity.CustomUser">
+        select  user_account_name, user_account, user_type,user_type_name  from sdl_b_user_mg
+        where  1=1
+        and dept_id in
+        <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and state!=0
 
+    </select>
 </mapper>

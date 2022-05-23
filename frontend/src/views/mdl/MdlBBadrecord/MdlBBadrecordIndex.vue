@@ -28,6 +28,18 @@
         />
               </a-form-item>
             </a-col>
+            <template v-if="advanced">
+            <a-col :md="6" :sm="24" >
+               <a-form-item label="部门" v-bind="formItemLayout">
+              <a-input v-model="queryParams.deptNew" />
+               </a-form-item>
+            </a-col>
+             <a-col :md="6" :sm="24" >
+                <a-form-item label="大类" v-bind="formItemLayout">
+              <a-input v-model="queryParams.lb" />
+                </a-form-item>
+            </a-col>
+          </template>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -56,7 +68,7 @@
         }"
         @change="handleTableChange"
         :bordered="bordered"
-        :scroll="{ x: 1000 }"
+        :scroll="{ x: 1200 }"
         :expandedRowKeys="expandedRowKeys"
         @expand="expandSubGrid"
       >
@@ -174,10 +186,15 @@ export default {
           dataIndex: "userAccountName",
           width: 80,
         },
+       {
+          title: "所在部门",
+          dataIndex: "deptNew",
+          width: 100,
+        },
         {
-          title: "人员类型",
-          dataIndex: "type",
-          width: 60,
+          title: "人员子范围",
+          dataIndex: "rszfw",
+          width: 100,
         },
         {
           title: "工号",
@@ -187,6 +204,16 @@ export default {
         {
           title: "记分部门",
           dataIndex: "deptName",
+          width: 80,
+        },
+         {
+          title: "记分人员",
+          dataIndex: "jfPerson",
+          width: 100,
+        },
+         {
+          title: "记分大类",
+          dataIndex: "lb",
           width: 80,
         },
         {

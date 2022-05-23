@@ -52,6 +52,11 @@ export default {
           dataIndex: "deptName",
           width: 100,
         },
+         {
+          title: "记分人员",
+          dataIndex: "jfPerson",
+          width: 100,
+        },
         {
           title: "记分指标",
           dataIndex: "indict",

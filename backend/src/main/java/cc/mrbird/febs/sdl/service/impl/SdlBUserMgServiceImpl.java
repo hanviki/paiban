@@ -117,9 +117,10 @@ public class SdlBUserMgServiceImpl extends ServiceImpl<SdlBUserMgMapper, SdlBUse
            // queryWrapper.eq(SdlBUserMg::getRylx,"职工");
           //  queryWrapper.apply("sdl_b_user_mg.yuangongzu!='规培' and sdl_b_user_mg.yuangongzu!='博士后' and (sdl_b_user_mg.renshizifw ='医师' or  (sdl_b_user_mg.renshizifw='技术' and sdl_b_user_mg.renshizfenlei='卫生'))");
 
-            IPage<SdlBUserMg> page = new Page<>();
-            page.setPages(1L);
-            page.setSize(5);
+            IPage<SdlBUserMg> page = new Page<>(1,5,false);
+           // page.setPages(1L);
+           // page.setSize(5);
+           // page.setSearchCount(false);
             return  this.baseMapper.selectPage(page,queryWrapper).getRecords();
 
         } catch (Exception e) {
@@ -168,6 +169,7 @@ public class SdlBUserMgServiceImpl extends ServiceImpl<SdlBUserMgMapper, SdlBUse
 
 
             Page<SdlBUserMg> page = new Page<>();
+
             SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
             return this.page(page, queryWrapper);
         } catch (Exception e) {

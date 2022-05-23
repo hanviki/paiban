@@ -10,6 +10,8 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import java.util.Date;
+import java.util.List;
+
 import com.wuwenze.poi.annotation.Excel;
 import com.wuwenze.poi.annotation.ExcelField;
 import cc.mrbird.febs.common.converter.*;
@@ -33,6 +35,13 @@ private static final long serialVersionUID=1L;
                     @TableId(value = "id" , type = IdType.AUTO)
                 
     private Long id;
+
+    /**
+     * 序号
+     */
+
+    @ExcelField(value ="大类")
+    private String  lb;
 
     /**
      * 序号
@@ -112,6 +121,7 @@ private static final long serialVersionUID=1L;
         
         @ExcelField(value ="排序字段")
     private Integer displayIndex;
+
 
 
 

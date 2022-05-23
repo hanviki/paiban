@@ -116,6 +116,7 @@
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
+      :isPersonal="1"
     >
     </user-info-view>
   </a-card>
@@ -377,6 +378,21 @@ export default {
         {
           title: "参加工作时间",
           dataIndex: "workDate",
+          width: 100,
+        },
+        {
+          title: "主执业机构",
+          dataIndex: "gqpxqk",
+          width: 100,
+        },
+         {
+          title: "多点执业机构1",
+          dataIndex: "gfhyspxqk",
+          width: 100,
+        },
+         {
+          title: "多点执业机构2",
+          dataIndex: "zjspnlceqk",
           width: 100,
         },
        

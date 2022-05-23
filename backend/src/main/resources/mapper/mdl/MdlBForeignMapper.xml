@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBForeignMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBForeign">
+                    <id column="id" property="id"/>
+                    <result column="task_source" property="taskSource"/>
+                    <result column="task_type" property="taskType"/>
+                    <result column="task_item" property="taskItem"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
+                    <result column="province" property="province"/>
+                    <result column="city" property="city"/>
+                    <result column="street" property="street"/>
+                    <result column="address" property="address"/>
+                    <result column="link_url" property="linkUrl"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, task_source, task_type, task_item, start_date, end_date, province, city, street, address, link_url, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBForeign" parameterType="cc.mrbird.febs.mdl.entity.MdlBForeign">
+        update mdl_b_foreign
+        <trim prefix="set" suffixOverrides=",">
+<if test="taskSource != null">task_source=#{taskSource},</if>
+<if test="taskType != null">task_type=#{taskType},</if>
+<if test="taskItem != null">task_item=#{taskItem},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
+<if test="province != null">province=#{province},</if>
+<if test="city != null">city=#{city},</if>
+<if test="street != null">street=#{street},</if>
+<if test="address != null">address=#{address},</if>
+<if test="linkUrl != null">link_url=#{linkUrl},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBForeign" resultType="cc.mrbird.febs.mdl.entity.MdlBForeign" parameterType="cc.mrbird.febs.mdl.entity.MdlBForeign">
+        select  *  from mdl_b_foreign
+        where  1=1
+            <if test="mdlBForeign.taskSource != null and mdlBForeign.taskSource != ''"> and  mdl_b_foreign.task_source like concat('%', #{ mdlBForeign.taskSource} ,'%')</if>
+            <if test="mdlBForeign.taskType != null and mdlBForeign.taskType != ''"> and  mdl_b_foreign.task_type like concat('%', #{ mdlBForeign.taskType} ,'%')</if>
+            <if test="mdlBForeign.taskItem != null and mdlBForeign.taskItem != ''"> and  mdl_b_foreign.task_item like concat('%', #{ mdlBForeign.taskItem} ,'%')</if>
+        <if test="mdlBForeign.startDateFrom!= null">
+            AND mdl_b_foreign.start_date <![CDATA[ >= ]]>  #{mdlBForeign.startDateFrom}
+        </if>
+        <if test="mdlBForeign.startDateTo!= null">
+            AND  mdl_b_foreign.start_date <![CDATA[ <= ]]>  #{mdlBForeign.startDateTo}
+        </if>
+        <if test="mdlBForeign.endDateFrom!= null">
+            AND mdl_b_foreign.end_date <![CDATA[ >= ]]>  #{mdlBForeign.endDateFrom}
+        </if>
+        <if test="mdlBForeign.endDateTo!= null">
+            AND  mdl_b_foreign.end_date <![CDATA[ <= ]]>  #{mdlBForeign.endDateTo}
+        </if>
+            <if test="mdlBForeign.province != null and mdlBForeign.province != ''"> and  mdl_b_foreign.province like concat('%', #{ mdlBForeign.province} ,'%')</if>
+            <if test="mdlBForeign.city != null and mdlBForeign.city != ''"> and  mdl_b_foreign.city like concat('%', #{ mdlBForeign.city} ,'%')</if>
+            <if test="mdlBForeign.street != null and mdlBForeign.street != ''"> and  mdl_b_foreign.street like concat('%', #{ mdlBForeign.street} ,'%')</if>
+            <if test="mdlBForeign.address != null and mdlBForeign.address != ''"> and  mdl_b_foreign.address like concat('%', #{ mdlBForeign.address} ,'%')</if>
+            <if test="mdlBForeign.linkUrl != null and mdlBForeign.linkUrl != ''"> and  mdl_b_foreign.link_url like concat('%', #{ mdlBForeign.linkUrl} ,'%')</if>
+            <if test="mdlBForeign.fileId != null and mdlBForeign.fileId != ''"> and  mdl_b_foreign.file_id like concat('%', #{ mdlBForeign.fileId} ,'%')</if>
+            <if test="mdlBForeign.fileUrl != null and mdlBForeign.fileUrl != ''"> and  mdl_b_foreign.file_url like concat('%', #{ mdlBForeign.fileUrl} ,'%')</if>
+        <if test="mdlBForeign.state != null"> and  mdl_b_foreign.state =#{ mdlBForeign.state} </if>
+        <if test="mdlBForeign.isDeletemark != null"> and  mdl_b_foreign.IS_DELETEMARK =#{ mdlBForeign.isDeletemark} </if>
+        <if test="mdlBForeign.createTimeFrom!= null">
+            AND mdl_b_foreign.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBForeign.createTimeFrom}
+        </if>
+        <if test="mdlBForeign.createTimeTo!= null">
+            AND  mdl_b_foreign.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBForeign.createTimeTo}
+        </if>
+        <if test="mdlBForeign.modifyTimeFrom!= null">
+            AND mdl_b_foreign.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBForeign.modifyTimeFrom}
+        </if>
+        <if test="mdlBForeign.modifyTimeTo!= null">
+            AND  mdl_b_foreign.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBForeign.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

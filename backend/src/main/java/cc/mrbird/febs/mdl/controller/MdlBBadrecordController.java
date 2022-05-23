@@ -18,6 +18,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.beust.jcommander.internal.Lists;
@@ -98,6 +99,19 @@ public Map<String, Object> List(QueryRequest request, MdlBBadrecord mdlBBadrecor
         //mdlBBadrecord.setDeptName(currentUser.getCode());
         return getDataTable(this.iMdlBBadrecordService.findMdlBBadrecordList(request, mdlBBadrecord));
     }
+    @GetMapping("statisticYear")
+    public Map<String, Object> List9(QueryRequest request, MdlBBadrecord mdlBBadrecord){
+        User currentUser= FebsUtil.getCurrentUser();
+        //mdlBBadrecord.setDeptName(currentUser.getCode());
+        return getDataTable(this.iMdlBBadrecordService.findMdlBBadrecordListYear(request, mdlBBadrecord));
+    }
+
+    @GetMapping("statisticYear2")
+    public Map<String, Object> List10(QueryRequest request, MdlBBadrecord mdlBBadrecord){
+        User currentUser= FebsUtil.getCurrentUser();
+        //mdlBBadrecord.setDeptName(currentUser.getCode());
+        return getDataTable(this.iMdlBBadrecordService.findMdlBBadrecordListYear2(request, mdlBBadrecord));
+    }
 
 /**
  * 添加
@@ -114,6 +128,7 @@ public void addMdlBBadrecord(@Valid MdlBBadrecord mdlBBadrecord)throws FebsExcep
         mdlBBadrecord.setDeptName(currentUser.getCode());
         mdlBBadrecord.setUserName(currentUser.getUsername());
         mdlBBadrecord.setName(currentUser.getRealname());
+        mdlBBadrecord.setYear(DateUtil.year(mdlBBadrecord.getStartDate()));
         this.iMdlBBadrecordService.createMdlBBadrecord(mdlBBadrecord);
         }catch(Exception e){
         message="新增/按钮失败" ;
@@ -134,6 +149,7 @@ public void updateMdlBBadrecord(@Valid MdlBBadrecord mdlBBadrecord)throws FebsEx
         try{
         User currentUser= FebsUtil.getCurrentUser();
       mdlBBadrecord.setModifyUserId(currentUser.getUserId());
+            mdlBBadrecord.setYear(DateUtil.year(mdlBBadrecord.getStartDate()));
         this.iMdlBBadrecordService.updateMdlBBadrecord(mdlBBadrecord);
         }catch(Exception e){
         message="修改失败" ;

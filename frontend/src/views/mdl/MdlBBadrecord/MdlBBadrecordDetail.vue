@@ -47,6 +47,16 @@
         />
               </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="24" >
+               <a-form-item label="部门" v-bind="formItemLayout">
+              <a-input v-model="queryParams.deptNew" />
+               </a-form-item>
+            </a-col>
+             <a-col :md="6" :sm="24" >
+                <a-form-item label="大类" v-bind="formItemLayout">
+              <a-input v-model="queryParams.lb" />
+                </a-form-item>
+            </a-col>
           </template>
           </div>
           <span style="float: right; margin-top: 3px">
@@ -75,7 +85,7 @@
         }"
         @change="handleTableChange"
         :bordered="bordered"
-        :scroll="{ x: 900 }"
+        :scroll="{ x: 1200 }"
       >
         <template slot="remark" slot-scope="text, record">
           <a-popover placement="topLeft">
@@ -146,7 +156,7 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
-        {
+         {
           title: "发薪号",
           dataIndex: "userAccount",
           width: 100,
@@ -156,10 +166,15 @@ export default {
           dataIndex: "userAccountName",
           width: 100,
         },
+         {
+          title: "所在部门",
+          dataIndex: "deptNew",
+          width: 100,
+        },
         {
-          title: "人员类型",
-          dataIndex: "type",
-          width: 80,
+          title: "人员子范围",
+          dataIndex: "rszfw",
+          width: 100,
         },
         {
           title: "工号",
@@ -171,15 +186,25 @@ export default {
           dataIndex: "deptName",
           width: 100,
         },
+         {
+          title: "记分人员",
+          dataIndex: "jfPerson",
+          width: 100,
+        },
+         {
+          title: "记分大类",
+          dataIndex: "lb",
+          width: 80,
+        },
         {
-          title: "序号",
+          title: "编码",
           dataIndex: "code",
           width: 80,
         },
         {
           title: "记分指标",
           dataIndex: "indict",
-          width: 200,
+          width: 250,
         },
         {
           title: "具体事由",

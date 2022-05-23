@@ -15,4 +15,6 @@ public class QueryRequest implements Serializable {
 
     private String sortField;
     private String sortOrder;
+
+    private Boolean isSearchCount;
 }
