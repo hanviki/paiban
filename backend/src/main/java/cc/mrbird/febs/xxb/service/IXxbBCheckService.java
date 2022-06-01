@@ -32,6 +32,9 @@ public interface IXxbBCheckService extends IService<XxbBCheck> {
 
         IPage<XxbBCheck> mqListAudit(QueryRequest request, XxbBCheck xxbBCheck);
 
+        List<XxbBCheck> findUserCreateCheck(String projectName, User user);
+        List<XxbBCheckD> selectUserCheckD(String baseId);
+
         void createXxbBCheck(XxbBCheck xxbBCheck);
 
         void updateXxbBCheck(XxbBCheck xxbBCheck);

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBResultPMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBResultP">
+                    <id column="id" property="id"/>
+                    <result column="pid" property="pid"/>
+                    <result column="dfname" property="dfname"/>
+                    <result column="dfwork" property="dfwork"/>
+                    <result column="dfzhic" property="dfzhic"/>
+                    <result column="cxx" property="cxx"/>
+                    <result column="syx" property="syx"/>
+                    <result column="jsnd" property="jsnd"/>
+                    <result column="xyx" property="xyx"/>
+                    <result column="total" property="total"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="STATE" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, pid, dfname, dfwork, dfzhic, cxx, syx, jsnd, xyx, total, CREATE_TIME, STATE, IS_DELETEMARK
+    </sql>
+    <update id="updateXxbBResultP" parameterType="cc.mrbird.febs.xxb.entity.XxbBResultP">
+        update xxb_b_result_p
+        <trim prefix="set" suffixOverrides=",">
+<if test="pid != null">pid=#{pid},</if>
+<if test="dfname != null">dfname=#{dfname},</if>
+<if test="dfwork != null">dfwork=#{dfwork},</if>
+<if test="dfzhic != null">dfzhic=#{dfzhic},</if>
+<if test="cxx != null">cxx=#{cxx},</if>
+<if test="syx != null">syx=#{syx},</if>
+<if test="jsnd != null">jsnd=#{jsnd},</if>
+<if test="xyx != null">xyx=#{xyx},</if>
+<if test="total != null">total=#{total},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="state != null">STATE=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findXxbBResultP" resultType="cc.mrbird.febs.xxb.entity.XxbBResultP" parameterType="cc.mrbird.febs.xxb.entity.XxbBResultP">
+        select  *  from xxb_b_result_p
+        where  1=1
+            <if test="xxbBResultP.id != null and xxbBResultP.id != ''"> and  xxb_b_result_p.id =#{ xxbBResultP.id} </if>
+            <if test="xxbBResultP.pid != null and xxbBResultP.pid != ''"> and  xxb_b_result_p.pid like concat('%', #{ xxbBResultP.pid} ,'%')</if>
+            <if test="xxbBResultP.dfname != null and xxbBResultP.dfname != ''"> and  xxb_b_result_p.dfname like concat('%', #{ xxbBResultP.dfname} ,'%')</if>
+            <if test="xxbBResultP.dfwork != null and xxbBResultP.dfwork != ''"> and  xxb_b_result_p.dfwork like concat('%', #{ xxbBResultP.dfwork} ,'%')</if>
+            <if test="xxbBResultP.dfzhic != null and xxbBResultP.dfzhic != ''"> and  xxb_b_result_p.dfzhic like concat('%', #{ xxbBResultP.dfzhic} ,'%')</if>
+        <if test="xxbBResultP.cxx != null"> and  xxb_b_result_p.cxx =#{ xxbBResultP.cxx} </if>
+        <if test="xxbBResultP.syx != null"> and  xxb_b_result_p.syx =#{ xxbBResultP.syx} </if>
+        <if test="xxbBResultP.jsnd != null"> and  xxb_b_result_p.jsnd =#{ xxbBResultP.jsnd} </if>
+        <if test="xxbBResultP.xyx != null"> and  xxb_b_result_p.xyx =#{ xxbBResultP.xyx} </if>
+        <if test="xxbBResultP.total != null"> and  xxb_b_result_p.total =#{ xxbBResultP.total} </if>
+        <if test="xxbBResultP.createTimeFrom!= null">
+            AND xxb_b_result_p.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBResultP.createTimeFrom}
+        </if>
+        <if test="xxbBResultP.createTimeTo!= null">
+            AND  xxb_b_result_p.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBResultP.createTimeTo}
+        </if>
+        <if test="xxbBResultP.state != null"> and  xxb_b_result_p.STATE =#{ xxbBResultP.state} </if>
+        <if test="xxbBResultP.isDeletemark != null"> and  xxb_b_result_p.IS_DELETEMARK =#{ xxbBResultP.isDeletemark} </if>
+</select>
+
+</mapper>

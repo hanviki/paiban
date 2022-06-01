@@ -1,8 +1,6 @@
 package cc.mrbird.febs.export.pdf;
 
-import cc.mrbird.febs.xxb.entity.XxbBCheck;
-import cc.mrbird.febs.xxb.entity.XxbBCheckD;
-import cc.mrbird.febs.xxb.entity.XxbBProjdept;
+import cc.mrbird.febs.xxb.entity.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
@@ -15,6 +13,7 @@ import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class XxbBPdfInfo {
@@ -2180,11 +2179,530 @@ public class XxbBPdfInfo {
         }
     }
 
+    public void writeXxbResultPdf(String fileName, XxbBResult result, List<XxbBResultD> renyList) throws Exception {
+
+        Document document = new Document(PageSize.A4, 20, 20, 30, 30);
+        FileOutputStream out = new FileOutputStream(fileName);
+        PdfWriter.getInstance(document, out);
+
+        document.open(); // 文档里写入
+        BaseFont baseFontChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+
+        Font fontTitle = new Font(baseFontChinese, 11, normal, black);
+        Font fontValue = new Font(baseFontChinese, 10, normal, black);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Float contentHeightStaff = 30f;
+
+        int numColumns = 25;
+        int numColumns2 = 25;
+        int totalWidth = 520;
+        int[] setWids = new int[numColumns];
+        PdfPTable table = null;
+        PdfPCell cell;
+
+
+        //region 封面
+        String titleCover_1 = "协   和   医   院   新   技   术   新   业   务";
+        String titleCover_2 = "成   果   奖   申   报   书";
+        String titleCover_3 = "项   目    名   称：";
+        String titleCover_4 = "申报专科名称：";
+        String titleCover_5 = "项 目 负  责 人：";
+        String titleCover_6 = "申   报    日   期：";
+        String titleCover_7 = "华中科技大学同济医学院附属协和医院";
+        Font fontCover1 = new Font(baseFontChinese, 18, normal, black);
+        Font fontCover2 = new Font(baseFontChinese, 25, bold, black);
+        Font fontCover3 = new Font(baseFontChinese, 18, bold, black);
+
+
+        String valueCover_3 = result.getProjectName();
+        String valueCover_4 = result.getDeptNew();
+        String valueCover_5 = result.getUserAccountName();
+        String valueCover_6 = dateFormat.format(result.getApplydat());
+
+        document.newPage();
+        table = new PdfPTable(numColumns);
+        setWids = new int[numColumns];
+
+        //table总Width宽度
+        table.setTotalWidth(totalWidth);
+        //设置总Width宽度 生效
+        table.setLockedWidth(true);
+
+        //列布局
+        for (int i = 0; i < numColumns; i++) {
+            setWids[i] = 1;
+        }
+        table.setWidths(setWids);
+
+        //空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(10);
+        cell.setColspan(numColumns2);
+        table.addCell(cell);
+
+        //列一
+        //协和医院新技术新业务
+        cell = new PdfPCell(new Phrase(titleCover_1, fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(40);
+        cell.setColspan(numColumns2);
+        table.addCell(cell);
+
+        //成果奖申报书
+        cell = new PdfPCell(new Phrase(titleCover_2, fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(40);
+        cell.setColspan(numColumns2);
+        table.addCell(cell);
+
+        //空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(180);
+        cell.setColspan(numColumns2);
+        table.addCell(cell);
+
+        //项目名称
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(3);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(titleCover_3, fontCover3));
+        cell.setBorder(Rectangle.NO_BORDER);
+        //  cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(40);
+        cell.setColspan(7);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(valueCover_3, fontCover1));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setBorderWidthBottom(1);
+        cell.setFixedHeight(40);
+        cell.setColspan(11);
+        table.addCell(cell);
+
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        //申报专科名称
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(3);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(titleCover_4, fontCover3));
+        cell.setBorder(Rectangle.NO_BORDER);
+        //   cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(40);
+        cell.setColspan(7);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(valueCover_4, fontCover1));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setBorderWidthBottom(1);
+        cell.setFixedHeight(40);
+        cell.setColspan(11);
+        table.addCell(cell);
+
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        //项目负责人
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(3);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(titleCover_5, fontCover3));
+        cell.setBorder(Rectangle.NO_BORDER);
+        //  cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(40);
+        cell.setColspan(7);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(valueCover_5, fontCover1));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setBorderWidthBottom(1);
+        cell.setFixedHeight(40);
+        cell.setColspan(11);
+        table.addCell(cell);
+
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        //申报日期
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(3);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(titleCover_6, fontCover3));
+        cell.setBorder(Rectangle.NO_BORDER);
+        //   cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(40);
+        cell.setColspan(7);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(valueCover_6, fontCover1));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setBorderWidthBottom(1);
+        cell.setFixedHeight(40);
+        cell.setColspan(11);
+        table.addCell(cell);
+
+        // 空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setFixedHeight(40);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        //空
+        cell = new PdfPCell(new Phrase("", fontCover2));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(200);
+        cell.setColspan(numColumns2);
+        table.addCell(cell);
+
+        //华中科技大学同济医学院附属协和医院
+        cell = new PdfPCell(new Phrase(titleCover_7, fontCover3));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(40);
+        cell.setColspan(numColumns2);
+        table.addCell(cell);
+
+
+        document.add(table);
+
+        //endregion
+
+        //region 内容
+        document.newPage();
+        numColumns = 25;
+        table = new PdfPTable(numColumns);
+        setWids = new int[numColumns];
+        //table总Width宽度
+        table.setTotalWidth(totalWidth);
+        //设置总Width宽度 生效
+        table.setLockedWidth(true);
+        //列布局
+        for (int i = 0; i < numColumns; i++) {
+            setWids[i] = 1;
+        }
+        table.setWidths(setWids);
+
+        String title1_1 = "项目名称";
+        String title1_2 = "科室";
+        String title1_2_1 = "开展时间";
+        String title1_2_2 = "开展例数\n（立项至今）";
+        String title1_3 = "主要负责人及\n职称";
+        String title1_4 = "项目成员\n（限五名内）";
+
+        String value_1 = result.getProjectName();
+        String value1_2 = result.getDeptNew();
+        String value1_2_1 = dateFormat.format(result.getKzsrtdat());
+        String value1_2_2 = result.getKzls().toString();
+        String value1_3 = result.getUserAccountName() + " " + result.getUserAccount() + " " + result.getZhichenglc();
+        String v4 = "";
+        if(renyList.size() > 0) {
+            renyList.sort(Comparator.comparing(XxbBResultD::getDisplayIndex));
+            for(XxbBResultD item: renyList) {
+                if (StringUtil.isBlank(v4)) {
+                    v4 = item.getUserAccountName() + " " + item.getUserAccount();
+                } else {
+                    v4 += "," + item.getUserAccountName() + " " + item.getUserAccount();
+                }
+            }
+        }
+        String value1_4 = v4;
+
+//        一、项目主要内容、目标和意义（摘要），重点是对学科的推动力
+
+        // 项目名称
+        cell = new PdfPCell(new Phrase(title1_1, fontTitle));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value_1, fontValue));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(21);
+        table.addCell(cell);
+
+        // 科室
+        cell = new PdfPCell(new Phrase(title1_2, fontTitle));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value1_2, fontValue));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(6);
+        table.addCell(cell);
+
+        // 开展时间
+        cell = new PdfPCell(new Phrase(title1_2_1, fontTitle));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value1_2_1, fontValue));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        // 开展例数（立项至今）
+        cell = new PdfPCell(new Phrase(title1_2_2, fontTitle));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value1_2_2, fontValue));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(3);
+        table.addCell(cell);
+
+        // 主要负责人及职称
+        cell = new PdfPCell(new Phrase(title1_3, fontTitle));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value1_3, fontValue));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(21);
+        table.addCell(cell);
+
+        // 项目成员（限五名内）
+        cell = new PdfPCell(new Phrase(title1_4, fontTitle));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(4);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value1_4, fontValue));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(21);
+        table.addCell(cell);
+
+        String title2_1 = "一、项目主要内容、目标和意义（摘要），重点是对学科的推动力";
+        String title2_2 = "二、项目的科学依据（包括国内外进展、新颖性和创新性）";
+        String title2_3 = "三、项目采取的方法、技术路线";
+        String title2_6 = "六、项目产生的经济效益、社会效益";
+        String title2_4 = "四、项目解决的关键问题";
+        String title2_5 = "五、技术存在的主要风险及预案";
+        String title2_7 = "七、主要技术文献目录及出处";
+        String title2_8 = "八、新闻报道情况";
+        String title2_9 = "九、项目开展情况";
+
+        String value2_1 = result.getProjectcontent();
+        String value2_2 = result.getProjectkxyj();
+        String value2_3 = result.getProjectffjslx();
+        String value2_4 = result.getProjectkey();
+        String value2_5 = result.getJsfxya();
+        String value2_6 = result.getProjectjjshxy();
+        String value2_7 = result.getJswxmlcc();
+        String value2_8 = result.getNewbdqk();
+        String value2_9 = result.getProjectkzqk();
+
+        // 一、项目主要内容、目标和意义（摘要），重点是对学科的推动力
+        cell = new PdfPCell(new Phrase(title2_1, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_1, fontValue));
+        this.setHeightResult(value2_1,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 二、项目的科学依据（包括国内外进展、新颖性和创新性）
+        cell = new PdfPCell(new Phrase(title2_2, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_2, fontValue));
+        this.setHeightResult(value2_2,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 三、项目采取的方法、技术路线
+        cell = new PdfPCell(new Phrase(title2_3, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_3, fontValue));
+        this.setHeightResult(value2_3,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 四、项目解决的关键问题
+        cell = new PdfPCell(new Phrase(title2_4, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_4, fontValue));
+        this.setHeightResult(value2_4,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 五、技术存在的主要风险及预案
+        cell = new PdfPCell(new Phrase(title2_5, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_5, fontValue));
+        this.setHeightResult(value2_5,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 六、项目产生的经济效益、社会效益
+        cell = new PdfPCell(new Phrase(title2_6, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_6, fontValue));
+        this.setHeightResult(value2_6,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 七、主要技术文献目录及出处
+        cell = new PdfPCell(new Phrase(title2_7, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_7, fontValue));
+        this.setHeightResult(value2_7,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 八、新闻报道情况
+        cell = new PdfPCell(new Phrase(title2_8, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_8, fontValue));
+        this.setHeightResult(value2_8,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        // 九、项目开展情况
+        cell = new PdfPCell(new Phrase(title2_9, fontTitle));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setFixedHeight(contentHeightStaff);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Phrase(value2_9, fontValue));
+        this.setHeightResult(value2_9,cell);
+        cell.setColspan(numColumns);
+        table.addCell(cell);
+
+        //如何控制分页展示table，显得紧凑些？在add到document之前添加跨页设置
+//        table.setSplitLate(false);//跨页处理
+//        table.setSplitRows(true);
+        document.add(table);
+        //endregion
+
+
+        out.flush();
+        document.close();
+        out.close();
+
+    }
+
+
     private void setHeight(String value,PdfPCell cell){
         if(value.length() < 500) {
             cell.setFixedHeight(500 * 0.22f);
         } else {
             cell.setFixedHeight(value.length() * 0.22f);
+        }
+    }
+
+    private void setHeightResult(String value,PdfPCell cell){
+        if(value.length() < 500) {
+            cell.setFixedHeight(500 * 0.18f);
+        } else {
+            cell.setFixedHeight(value.length() * 0.18f);
         }
     }
 

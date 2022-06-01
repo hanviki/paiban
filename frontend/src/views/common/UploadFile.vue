@@ -79,14 +79,23 @@ export default {
     },
     beforeUpload (file) {
       let isType = true;
-      if (this.suffix === ".pdf") {
-        isType = file.type === 'application/pdf'
-        if (!(isType)) {
-          this.$error({
-            title: '只能上传pdf 格式~'
+      // if (this.suffix === ".pdf") {
+      //   isType = file.type === 'application/pdf'
+      //   if (!(isType)) {
+      //     this.$error({
+      //       title: '只能上传pdf 格式~'
+      //     })
+      //     return
+      //   }
+      // }
+      var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
+      testmsg = testmsg.toLowerCase()
+      isType = '.' + testmsg === this.suffix
+      if (!isType) {
+            this.$error({
+            title: '只能上传'+ this.suffix +' 格式~'
           })
           return
-        }
       }
       const isLt3M = file.size / 1024 < 3001
       if (!isLt3M) {

@@ -3,18 +3,25 @@
     <div :class="advanced ? 'search' : null">
       <a-form layout="horizontal">
         <a-row>
-          <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="发薪号\姓名" v-bind="formItemLayout">
-                <a-input v-model="queryParams.deptName" />
-              </a-form-item>
-            </a-col>
-             <a-col :md="8" :sm="24">
-              <a-form-item label="科室" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccount" />
-              </a-form-item>
-            </a-col>
-          </div>
+          <div :class="advanced ? null : 'fold'"></div>
+          <a-col :md="10" :sm="24">
+            <a-form-item label="申报日期" v-bind="formItemLayout">
+              <a-date-picker @change="onSqStartChange" style="width:115px" />- 
+              <a-date-picker @change="onSqEndChange" style="width:115px"/>
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="24">
+            <a-form-item label="审核状态" v-bind="formItemLayout">
+              <a-select v-model="queryParams.state" @change="changeState" style="width: 120px">
+                <a-select-option :value="1">
+                  未审核
+                </a-select-option>
+                <a-select-option :value="100">
+                  已审核
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
@@ -27,38 +34,6 @@
       </a-form>
     </div>
     <div>
-      <div class="operator">
-        <a-button
-          v-hasPermission="['xxbBDeptleader:add']"
-          type="primary"
-          ghost
-          @click="add"
-          >新增</a-button
-        >
-        <a-button
-          v-hasPermission="['xxbBDeptleader:delete']"
-          @click="batchDelete"
-          >删除</a-button
-        >
-        <a-dropdown v-hasPermission="['xxbBDeptleader:export']">
-          <a-menu slot="overlay">
-            <a-menu-item key="export-data" @click="exportExcel"
-              >导出Excel</a-menu-item
-            >
-          </a-menu>
-          <a-button>
-            更多操作
-            <a-icon type="down" />
-          </a-button>
-        </a-dropdown>
-        <import-excel
-          v-hasPermission="['xxbBDeptleader:import']"
-          templateUrl="xxbBDeptleader/downTemplate"
-          @succ="handleRefesh"
-          url="xxbBDeptleader/import"
-        >
-        </import-excel>
-      </div>
       <!-- 表格区域 -->
       <a-table
         ref="TableInfo"
@@ -85,62 +60,44 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['xxbBDeptleader:update']"
+            v-hasPermission="['xxbBResult:view']"
+            type="eye"
+            theme="twoTone"
+            twoToneColor="#42b983"
+            @click="view(record)"
+            title="查看"></a-icon>
+          <a-divider type="vertical" v-show="queryParams.state==1" />
+          <a-icon
             type="setting"
             theme="twoTone"
+            v-show="queryParams.state==1"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-          <a-badge
-            v-hasNoPermission="['xxbBDeptleader:update']"
-            status="warning"
-            text="无权限"
-          ></a-badge>
         </template>
       </a-table>
     </div>
-    <!-- 新增字典 -->
-    <xxbBDeptleader-add
-      ref="xxbBDeptleaderAdd"
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </xxbBDeptleader-add>
-    <!-- 修改字典 -->
-    <xxbBDeptleader-edit
-      ref="xxbBDeptleaderEdit"
+    <xxbBR-flow
+      ref="xxbBRFlow"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </xxbBDeptleader-edit>
+    </xxbBR-flow>
   </a-card>
 </template>
 
 <script>
-import XxbBDeptleaderAdd from "./XxbBDeptleaderAdd";
-import XxbBDeptleaderEdit from "./XxbBDeptleaderEdit";
-import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
-
+import XxbBRFlow from "../XxbBRFlow";
 const formItemLayout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 15,
-    offset: 1,
-  },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "XxbBDeptleader",
-  components: {
-    XxbBDeptleaderAdd,
-    XxbBDeptleaderEdit,
-    ImportExcel,
-  },
+  name: "XxbBRFlowDept",
+  components: { XxbBRFlow },
   data() {
     return {
       advanced: false,
@@ -158,10 +115,8 @@ export default {
         showTotal: (total, range) =>
           `显示 ${range[0]} ~ ${range[1]} 条记录，共 ${total} 条记录`,
       },
-      queryParams: {},
-      addVisiable: false,
+      queryParams: { state: 1},
       editVisiable: false,
-      deptData: [],
       loading: false,
       bordered: true,
     };
@@ -172,38 +127,90 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "科室名称",
-          dataIndex: "deptName",
+          title: "申报科室",
+          dataIndex: "deptNew",
+          fixed: "left",
+          width: 120,
+        },
+        {
+          title: "项目名称",
+          dataIndex: "projectName",
+          fixed: "left",
+          width: 250,
+        },
+        {
+          title: "申报日期",
+          dataIndex: "applydat",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
           width: 100,
         },
         {
-          title: "姓名",
+          title: "项目负责人",
           dataIndex: "userAccountName",
+          customRender: (text, row, index) => {
+            return row.userAccountName + ' ' + row.userAccount + ' ' + row.yggh
+          },
+          width: 200,
+        },
+        {
+          title: "开展日期",
+          dataIndex: "kzsrtdat",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
           width: 100,
         },
         {
-          title: "人事编号",
-          dataIndex: "userAccount",
+          title: "开展例数",
+          dataIndex: "kzls",
           width: 100,
+        },
+        {
+          title: "审核状态",
+          dataIndex: "state",
+          customRender: (text, row, index) => {
+            switch (text) {
+              case 0:
+                return '未提交'
+              case 1:
+                return '已提交'
+              case 2:
+                return '已审核'
+              case 3:
+                return '已退回'
+              case 9:
+                return '终止申报'
+              default:
+                return text
+            }
+          },
+          width: 80,
         },
         {
           title: "操作",
           dataIndex: "operation",
-          scopedSlots: {
-            customRender: "operation",
-          },
+          scopedSlots: { customRender: "operation" },
           fixed: "right",
-          width: 100,
+          width: 80,
         },
       ];
     },
   },
   mounted() {
     this.fetch();
-    this.fetchDept()
   },
   methods: {
     moment,
+    onSqStartChange (date, dateString) {
+      this.queryParams.applydatFrom = dateString;
+    },
+    onSqEndChange (date, dateString) {
+      this.queryParams.applydatTo = dateString;
+    },
     handleRefesh() {
       this.search();
     },
@@ -216,72 +223,23 @@ export default {
         this.queryParams.comments = "";
       }
     },
-    fetchDept() {
-      this.$get("sdlBUser/deptNew", {}).then((res) => {
-        this.deptData = [];
-        this.deptData.push(...res.data);
-      });
-    },
-    handleAddSuccess() {
-      this.addVisiable = false;
-      this.$message.success("新增成功");
-      this.search();
-    },
-    handleAddClose() {
-      this.addVisiable = false;
-    },
-    add() {
-      this.addVisiable = true;
-      this.$refs.xxbBDeptleaderAdd.setFormValues(this.deptData);
-    },
     handleEditSuccess() {
       this.editVisiable = false;
-      this.$message.success("修改成功");
       this.search();
     },
     handleEditClose() {
       this.editVisiable = false;
     },
-    edit(record) {
-      this.$refs.xxbBDeptleaderEdit.setFormValues(record,this.deptData);
+    view(record) {
+      this.$refs.xxbBRFlow.setFormValues(record,'查看','成果奖申报书 科主任审核');
       this.editVisiable = true;
     },
-    batchDelete() {
-      if (!this.selectedRowKeys.length) {
-        this.$message.warning("请选择需要删除的记录");
-        return;
-      }
-      let that = this;
-      this.$confirm({
-        title: "确定删除所选中的记录?",
-        content: "当您点击确定按钮后，这些记录将会被彻底删除",
-        centered: true,
-        onOk() {
-          let xxbBDeptleaderIds = that.selectedRowKeys.join(",");
-          that.$delete("xxbBDeptleader/" + xxbBDeptleaderIds).then(() => {
-            that.$message.success("删除成功");
-            that.selectedRowKeys = [];
-            that.search();
-          });
-        },
-        onCancel() {
-          that.selectedRowKeys = [];
-        },
-      });
+    edit(record) {
+      this.$refs.xxbBRFlow.setFormValues(record,'编辑','成果奖申报书 科主任审核');
+      this.editVisiable = true;
     },
-    exportExcel() {
-      let { sortedInfo } = this;
-      let sortField, sortOrder;
-      // 获取当前列的排序和列的过滤规则
-      if (sortedInfo) {
-        sortField = sortedInfo.field;
-        sortOrder = sortedInfo.order;
-      }
-      this.$export("xxbBDeptleader/excel", {
-        sortField: sortField,
-        sortOrder: sortOrder,
-        ...this.queryParams,
-      });
+    changeState () {
+      this.search()
     },
     search() {
       let { sortedInfo } = this;
@@ -338,13 +296,15 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("xxbBDeptleader", {
+      params.sortField = 'create_Time'
+      params.sortOrder = 'descend'
+      params.state = this.queryParams.state
+      params.comments = "科"
+      this.$get("xxbBResult/flowList", {
         ...params,
       }).then((r) => {
         let data = r.data;
-        const pagination = {
-          ...this.pagination,
-        };
+        const pagination = { ...this.pagination };
         pagination.total = data.total;
         this.loading = false;
         this.dataSource = data.rows;

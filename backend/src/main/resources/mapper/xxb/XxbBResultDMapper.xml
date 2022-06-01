@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.xxb.dao.XxbBResultDMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.xxb.entity.XxbBResultD">
+                    <id column="id" property="id"/>
+                    <result column="pid" property="pid"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="yggh" property="yggh"/>
+                    <result column="sex_name" property="sexName"/>
+                    <result column="birthday" property="birthday"/>
+                    <result column="edu" property="edu"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="zhichenglc" property="zhichenglc"/>
+                    <result column="zhiwu" property="zhiwu"/>
+                    <result column="zhuany" property="zhuany"/>
+                    <result column="zhuanc" property="zhuanc"/>
+                    <result column="userdept" property="userdept"/>
+                    <result column="age" property="age"/>
+                    <result column="telephone" property="telephone"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="renshizifw" property="renshizifw"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="display_index" property="displayIndex"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, pid, user_account_name, user_account, yggh, sex_name, birthday, edu, zhicheng, zhichenglc, zhiwu, zhuany, zhuanc, userdept, age, telephone, CREATE_TIME, renshizifw, IS_DELETEMARK, display_index
+    </sql>
+    <update id="updateXxbBResultD" parameterType="cc.mrbird.febs.xxb.entity.XxbBResultD">
+        update xxb_b_result_d
+        <trim prefix="set" suffixOverrides=",">
+<if test="pid != null">pid=#{pid},</if>
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="yggh != null">yggh=#{yggh},</if>
+<if test="sexName != null">sex_name=#{sexName},</if>
+<if test="birthday != null">birthday=#{birthday},</if>
+<if test="edu != null">edu=#{edu},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="zhichenglc != null">zhichenglc=#{zhichenglc},</if>
+<if test="zhiwu != null">zhiwu=#{zhiwu},</if>
+<if test="zhuany != null">zhuany=#{zhuany},</if>
+<if test="zhuanc != null">zhuanc=#{zhuanc},</if>
+<if test="userdept != null">userdept=#{userdept},</if>
+<if test="age != null">age=#{age},</if>
+<if test="telephone != null">telephone=#{telephone},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="renshizifw != null">renshizifw=#{renshizifw},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="displayIndex != null">display_index=#{displayIndex},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findXxbBResultD" resultType="cc.mrbird.febs.xxb.entity.XxbBResultD" parameterType="cc.mrbird.febs.xxb.entity.XxbBResultD">
+        select  *  from xxb_b_result_d
+        where  1=1
+            <if test="xxbBResultD.id != null and xxbBResultD.id != ''"> and  xxb_b_result_d.id =#{ xxbBResultD.id} </if>
+            <if test="xxbBResultD.pid != null and xxbBResultD.pid != ''"> and  xxb_b_result_d.pid like concat('%', #{ xxbBResultD.pid} ,'%')</if>
+            <if test="xxbBResultD.userAccountName != null and xxbBResultD.userAccountName != ''"> and  xxb_b_result_d.user_account_name like concat('%', #{ xxbBResultD.userAccountName} ,'%')</if>
+            <if test="xxbBResultD.userAccount != null and xxbBResultD.userAccount != ''"> and  xxb_b_result_d.user_account like concat('%', #{ xxbBResultD.userAccount} ,'%')</if>
+            <if test="xxbBResultD.yggh != null and xxbBResultD.yggh != ''"> and  xxb_b_result_d.yggh like concat('%', #{ xxbBResultD.yggh} ,'%')</if>
+            <if test="xxbBResultD.sexName != null and xxbBResultD.sexName != ''"> and  xxb_b_result_d.sex_name like concat('%', #{ xxbBResultD.sexName} ,'%')</if>
+            <if test="xxbBResultD.birthday != null and xxbBResultD.birthday != ''"> and  xxb_b_result_d.birthday like concat('%', #{ xxbBResultD.birthday} ,'%')</if>
+            <if test="xxbBResultD.edu != null and xxbBResultD.edu != ''"> and  xxb_b_result_d.edu like concat('%', #{ xxbBResultD.edu} ,'%')</if>
+            <if test="xxbBResultD.zhicheng != null and xxbBResultD.zhicheng != ''"> and  xxb_b_result_d.zhicheng like concat('%', #{ xxbBResultD.zhicheng} ,'%')</if>
+            <if test="xxbBResultD.zhichenglc != null and xxbBResultD.zhichenglc != ''"> and  xxb_b_result_d.zhichenglc like concat('%', #{ xxbBResultD.zhichenglc} ,'%')</if>
+            <if test="xxbBResultD.zhiwu != null and xxbBResultD.zhiwu != ''"> and  xxb_b_result_d.zhiwu like concat('%', #{ xxbBResultD.zhiwu} ,'%')</if>
+            <if test="xxbBResultD.zhuany != null and xxbBResultD.zhuany != ''"> and  xxb_b_result_d.zhuany like concat('%', #{ xxbBResultD.zhuany} ,'%')</if>
+            <if test="xxbBResultD.zhuanc != null and xxbBResultD.zhuanc != ''"> and  xxb_b_result_d.zhuanc like concat('%', #{ xxbBResultD.zhuanc} ,'%')</if>
+            <if test="xxbBResultD.userdept != null and xxbBResultD.userdept != ''"> and  xxb_b_result_d.userdept like concat('%', #{ xxbBResultD.userdept} ,'%')</if>
+            <if test="xxbBResultD.age != null and xxbBResultD.age != ''"> and  xxb_b_result_d.age like concat('%', #{ xxbBResultD.age} ,'%')</if>
+            <if test="xxbBResultD.telephone != null and xxbBResultD.telephone != ''"> and  xxb_b_result_d.telephone like concat('%', #{ xxbBResultD.telephone} ,'%')</if>
+        <if test="xxbBResultD.createTimeFrom!= null">
+            AND xxb_b_result_d.CREATE_TIME <![CDATA[ >= ]]>  #{xxbBResultD.createTimeFrom}
+        </if>
+        <if test="xxbBResultD.createTimeTo!= null">
+            AND  xxb_b_result_d.CREATE_TIME <![CDATA[ <= ]]>  #{xxbBResultD.createTimeTo}
+        </if>
+            <if test="xxbBResultD.renshizifw != null and xxbBResultD.renshizifw != ''"> and  xxb_b_result_d.renshizifw like concat('%', #{ xxbBResultD.renshizifw} ,'%')</if>
+        <if test="xxbBResultD.isDeletemark != null"> and  xxb_b_result_d.IS_DELETEMARK =#{ xxbBResultD.isDeletemark} </if>
+        <if test="xxbBResultD.displayIndex != null"> and  xxb_b_result_d.display_index =#{ xxbBResultD.displayIndex} </if>
+</select>
+
+</mapper>

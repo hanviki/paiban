@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruiyun.jvppeteer.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,24 @@ public class XxbBCheckServiceImpl extends ServiceImpl<XxbBCheckMapper, XxbBCheck
         }
     }
 
+    @Override
+    public List<XxbBCheck> findUserCreateCheck(String projectName, User user){
+        LambdaQueryWrapper<XxbBCheck> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(XxbBCheck::getIsDeletemark,1);
+        wrapper.eq(XxbBCheck::getShstate,1);
+        wrapper.eq(XxbBCheck::getCreateUserId,user.getUserId());
+        if(StringUtil.isNotBlank(projectName)) {
+            wrapper.like(XxbBCheck::getProjectName, projectName);
+        }
+        return this.list(wrapper);
+    }
+    @Override
+    public List<XxbBCheckD> selectUserCheckD(String baseId) {
+        LambdaQueryWrapper<XxbBCheckD> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(XxbBCheckD::getIsDeletemark,1);
+        wrapper.eq(XxbBCheckD::getPid,baseId);
+        return iXxbBCheckDService.list(wrapper);
+    }
     public IPage<XxbBCheck> mqListAudit(QueryRequest request, XxbBCheck xxbBCheck) {
         try {
             LambdaQueryWrapper<XxbBCheck> queryWrapper = new LambdaQueryWrapper<>();

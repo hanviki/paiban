@@ -28,5 +28,6 @@ public interface IXxbBDeptleaderService extends IService<XxbBDeptleader> {
 
         void deleteXxbBDeptleaders(String[]Ids);
 
+        List<XxbBDeptleader> getDeptLeaderList(String userAccount, List<String> deptList);
 
         }

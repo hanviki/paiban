@@ -4,7 +4,7 @@
       
         <div class="cuDiv"  style="background-color: #1c998c">
           <div class="bigDiv">
-            <div class="titleDiv">新技术新业务管理</div>
+            <div class="titleDiv">新技术新业务立项</div>
             <div class="subDiv">
               <a @click="openQulifaction(1, '部门负责人设置')" href="#">
                 部门负责人设置
@@ -35,6 +35,20 @@
             </div>
           </div>
           <div class="imageDiv"><a-avatar :size="50" style=" backgroundColor:white" ><a-icon type="home"  style="font-size: 30px;color:green" :bordered="false" /></a-avatar></div>
+        </div>
+          <div class="cuDiv"  style="background-color: #abdb51">
+          <div class="bigDiv">
+            <div class="titleDiv">新技术新业务成果报奖</div>
+            <div class="subDiv">
+              <a @click="openQulifaction(21, '新技术新业务成果奖审核')" href="#">
+                新技术新业务成果奖审核
+              </a>
+            </div>
+            <div class="subDiv">
+              <a @click="openQulifaction(22, '新技术新业务成果奖报表')" href="#"> 新技术新业务成果奖报表 </a>
+            </div>
+          </div>
+          <div class="imageDiv"><a-avatar :size="50" style=" backgroundColor:white" ><a-icon type="global"  style="font-size: 30px;color:green" :bordered="false" /></a-avatar></div>
         </div>
         <div class="cuDiv"  style="background-color: #a874c7">
           <div class="bigDiv">
@@ -94,6 +108,10 @@
      </mdl-d-mdt-old>
      <mdl-d-prize-old v-if="subShow==10">
      </mdl-d-prize-old>
+     <xxb-b-result-ywc-flow v-if="subShow==21">
+     </xxb-b-result-ywc-flow>
+     <xxb-b-result-report v-if="subShow==22">
+     </xxb-b-result-report>
     </div>
   </a-card>
 </template>
@@ -108,6 +126,8 @@ import MdlDSurgery from './MdlDSurgery/MdlDSurgery.vue';
 import MdlBSurgeryinfo from './MdlBSurgeryinfo/MdlBSurgeryinfo.vue'
 import MdlDMdtOld from './MdlDMdtOld/MdlDMdtOld.vue'
 import MdlDPrizeOld from './MdlDPrizeOld/MdlDPrizeOld.vue'
+import XxbBResultReport from  '../xxb/XxbBResultFlow/XxbBResultReport.vue'
+import XxbBResultYwcFlow from  '../xxb/XxbBResultFlow/XxbBResultYwcFlow.vue'
 
 
 export default {
@@ -129,7 +149,9 @@ export default {
     MdlDSurgery,
     MdlBSurgeryinfo,
     MdlDMdtOld,
-    MdlDPrizeOld
+    MdlDPrizeOld,
+    XxbBResultYwcFlow,
+    XxbBResultReport
   },
   methods: {
     openQulifaction(index, title) {

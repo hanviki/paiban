@@ -265,7 +265,7 @@ export default {
           customRender: (text, row, index) => {
             return row.userAccountName + ' ' + row.userAccount + ' ' + row.yggh
           },
-          width: 150,
+          width: 200,
         },
         {
           title: "第一操作者的最低级别",

@@ -3,18 +3,13 @@
     <div :class="advanced ? 'search' : null">
       <a-form layout="horizontal">
         <a-row>
-          <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="发薪号\姓名" v-bind="formItemLayout">
-                <a-input v-model="queryParams.deptName" />
-              </a-form-item>
-            </a-col>
-             <a-col :md="8" :sm="24">
-              <a-form-item label="科室" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccount" />
-              </a-form-item>
-            </a-col>
-          </div>
+          <div :class="advanced ? null : 'fold'"></div>
+          <a-col :md="10" :sm="24">
+            <a-form-item label="申报日期" v-bind="formItemLayout">
+              <a-date-picker @change="onSqStartChange" style="width:115px" />- 
+              <a-date-picker @change="onSqEndChange" style="width:115px"/>
+            </a-form-item>
+          </a-col>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
@@ -29,18 +24,16 @@
     <div>
       <div class="operator">
         <a-button
-          v-hasPermission="['xxbBDeptleader:add']"
+          v-hasPermission="['xxbBResult:add']"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button
-          v-hasPermission="['xxbBDeptleader:delete']"
-          @click="batchDelete"
+        <a-button v-hasPermission="['xxbBResult:delete']" @click="batchDelete"
           >删除</a-button
         >
-        <a-dropdown v-hasPermission="['xxbBDeptleader:export']">
+        <a-dropdown v-hasPermission="['xxbBResult:export']">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exportExcel"
               >导出Excel</a-menu-item
@@ -51,13 +44,13 @@
             <a-icon type="down" />
           </a-button>
         </a-dropdown>
-        <import-excel
-          v-hasPermission="['xxbBDeptleader:import']"
-          templateUrl="xxbBDeptleader/downTemplate"
+        <!-- <import-excel
+          v-hasPermission="['xxbBResult:import']"
+          templateUrl="xxbBResult/downTemplate"
           @succ="handleRefesh"
-          url="xxbBDeptleader/import"
+          url="xxbBResult/import"
         >
-        </import-excel>
+        </import-excel> -->
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -85,62 +78,78 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-            v-hasPermission="['xxbBDeptleader:update']"
+            v-hasPermission="['xxbBResult:view']"
+            type="eye"
+            theme="twoTone"
+            twoToneColor="#42b983"
+            @click="view(record)"
+            title="查看"></a-icon>
+          <a-divider v-hasPermission="['xxbBResult:update']" 
+            v-show="record.state==0 || record.state == 3? true : false" type="vertical" />
+          <a-icon
+            v-hasPermission="['xxbBResult:update']"
             type="setting"
             theme="twoTone"
+            v-show="record.state==0 || record.state == 3? true : false"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-          <a-badge
-            v-hasNoPermission="['xxbBDeptleader:update']"
+          <a-divider
+            v-show="record.state> 0? true : false" type="vertical" />
+          <a-icon
+            v-show="record.state> 0? true : false"
+            type="message"
+            theme="twoTone"
+            twoToneColor="#4a9ff5"
+            @click="flowLook(record)"
+            title="流程"
+          ></a-icon>
+          <!-- <a-badge
+            v-hasNoPermission="['xxbBResult:update']"
             status="warning"
             text="无权限"
-          ></a-badge>
+          ></a-badge> -->
         </template>
       </a-table>
     </div>
     <!-- 新增字典 -->
-    <xxbBDeptleader-add
-      ref="xxbBDeptleaderAdd"
+    <!-- <xxbBResult-add
+      ref="xxbBResultAdd"
       @close="handleAddClose"
       @success="handleAddSuccess"
       :addVisiable="addVisiable"
     >
-    </xxbBDeptleader-add>
+    </xxbBResult-add> -->
     <!-- 修改字典 -->
-    <xxbBDeptleader-edit
-      ref="xxbBDeptleaderEdit"
+    <xxbBResult-edit
+      ref="xxbBResultEdit"
       @close="handleEditClose"
       @success="handleEditSuccess"
       :editVisiable="editVisiable"
     >
-    </xxbBDeptleader-edit>
+    </xxbBResult-edit>
+    <a-modal :maskClosable="false" :footer="null" v-model="lookFlowVisiable" width="85%" title="浏览流程" @ok="handleLookFlowOk">
+      <xxbBResultF-look
+        ref="xxbBResultFLook"
+      >
+      </xxbBResultF-look>
+    </a-modal>
   </a-card>
 </template>
 
 <script>
-import XxbBDeptleaderAdd from "./XxbBDeptleaderAdd";
-import XxbBDeptleaderEdit from "./XxbBDeptleaderEdit";
-import ImportExcel from "../../common/ImportExcel";
+import XxbBResultEdit from "./XxbBResultEdit";
+import XxbBResultFLook from "../XxbBResultFLook";
 import moment from "moment";
 
 const formItemLayout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 15,
-    offset: 1,
-  },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "XxbBDeptleader",
-  components: {
-    XxbBDeptleaderAdd,
-    XxbBDeptleaderEdit,
-    ImportExcel,
-  },
+  name: "xxbBResult",
+  components: { XxbBResultEdit, XxbBResultFLook },
   data() {
     return {
       advanced: false,
@@ -161,7 +170,8 @@ export default {
       queryParams: {},
       addVisiable: false,
       editVisiable: false,
-      deptData: [],
+      lookVisiable: false,
+      lookFlowVisiable: false,
       loading: false,
       bordered: true,
     };
@@ -172,38 +182,99 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "科室名称",
-          dataIndex: "deptName",
+          title: "申报科室",
+          dataIndex: "deptNew",
+          fixed: "left",
+          width: 120,
+        },
+        {
+          title: "项目名称",
+          dataIndex: "projectName",
+          fixed: "left",
+          width: 250,
+        },
+        {
+          title: "申报日期",
+          dataIndex: "applydat",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
           width: 100,
         },
         {
-          title: "姓名",
+          title: "项目负责人",
           dataIndex: "userAccountName",
+          customRender: (text, row, index) => {
+            return row.userAccountName + ' ' + row.userAccount + ' ' + row.yggh
+          },
+          width: 200,
+        },
+        {
+          title: "开展日期",
+          dataIndex: "kzsrtdat",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
           width: 100,
         },
         {
-          title: "人事编号",
-          dataIndex: "userAccount",
+          title: "开展例数",
+          dataIndex: "kzls",
           width: 100,
+        },
+        {
+          title: "审核状态",
+          dataIndex: "state",
+          customRender: (text, row, index) => {
+            switch (text) {
+              case 0:
+                return '未提交'
+              case 1:
+                return '已提交'
+              case 2:
+                return '已审核'
+              case 3:
+                return '已退回'
+              case 9:
+                return '终止申报'
+              default:
+                return text
+            }
+          },
+          width: 80,
         },
         {
           title: "操作",
           dataIndex: "operation",
-          scopedSlots: {
-            customRender: "operation",
-          },
+          scopedSlots: { customRender: "operation" },
           fixed: "right",
-          width: 100,
+          width: 130,
         },
       ];
     },
   },
   mounted() {
     this.fetch();
-    this.fetchDept()
   },
   methods: {
     moment,
+    handleLookFlowOk () {
+      this.lookFlowVisiable = false
+    },
+    flowLook(record) {
+      this.lookFlowVisiable = true;
+      setTimeout(() => {
+        this.$refs.xxbBResultFLook.setFieldValues(record.id, record.state,0,null,null,null,null,null,null);
+      }, 100);
+    },
+    onSqStartChange (date, dateString) {
+      this.queryParams.applydatFrom = dateString;
+    },
+    onSqEndChange (date, dateString) {
+      this.queryParams.applydatTo = dateString;
+    },
     handleRefesh() {
       this.search();
     },
@@ -216,12 +287,6 @@ export default {
         this.queryParams.comments = "";
       }
     },
-    fetchDept() {
-      this.$get("sdlBUser/deptNew", {}).then((res) => {
-        this.deptData = [];
-        this.deptData.push(...res.data);
-      });
-    },
     handleAddSuccess() {
       this.addVisiable = false;
       this.$message.success("新增成功");
@@ -231,19 +296,23 @@ export default {
       this.addVisiable = false;
     },
     add() {
-      this.addVisiable = true;
-      this.$refs.xxbBDeptleaderAdd.setFormValues(this.deptData);
+      this.editVisiable = true;
+      this.$refs.xxbBResultEdit.setFormValues(null,'新增');
     },
     handleEditSuccess() {
       this.editVisiable = false;
-      this.$message.success("修改成功");
+      this.$message.success("提交成功");
       this.search();
     },
     handleEditClose() {
       this.editVisiable = false;
     },
+    view(record) {
+      this.$refs.xxbBResultEdit.setFormValues(record,'查看');
+      this.editVisiable = true;
+    },
     edit(record) {
-      this.$refs.xxbBDeptleaderEdit.setFormValues(record,this.deptData);
+      this.$refs.xxbBResultEdit.setFormValues(record,'修改');
       this.editVisiable = true;
     },
     batchDelete() {
@@ -257,8 +326,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let xxbBDeptleaderIds = that.selectedRowKeys.join(",");
-          that.$delete("xxbBDeptleader/" + xxbBDeptleaderIds).then(() => {
+          let xxbBResultIds = that.selectedRowKeys.join(",");
+          that.$delete("xxbBResult/" + xxbBResultIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -277,7 +346,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("xxbBDeptleader/excel", {
+      this.$export("xxbBResult/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -338,13 +407,13 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("xxbBDeptleader", {
+      params.sortField = 'create_Time'
+      params.sortOrder = 'descend'
+      this.$get("xxbBResult", {
         ...params,
       }).then((r) => {
         let data = r.data;
-        const pagination = {
-          ...this.pagination,
-        };
+        const pagination = { ...this.pagination };
         pagination.total = data.total;
         this.loading = false;
         this.dataSource = data.rows;
