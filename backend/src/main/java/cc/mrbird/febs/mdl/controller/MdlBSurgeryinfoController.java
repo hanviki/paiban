@@ -8,17 +8,22 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfoD;
+import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfoImport;
 import cc.mrbird.febs.mdl.entity.ViewInfo;
 import cc.mrbird.febs.mdl.service.IMdlBSurgeryinfoService;
 import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfo;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.sdl.entity.SdlBUser;
+import cc.mrbird.febs.sdl.service.ISdlBUserService;
 import cc.mrbird.febs.system.domain.User;
 import cn.hutool.Hutool;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -27,6 +32,7 @@ import com.wuwenze.poi.ExcelKit;
 import com.wuwenze.poi.handler.ExcelReadHandler;
 import com.wuwenze.poi.pojo.ExcelErrorField;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +63,9 @@ public class MdlBSurgeryinfoController extends BaseController{
 private String message;
 @Autowired
 public IMdlBSurgeryinfoService iMdlBSurgeryinfoService;
+
+@Autowired
+private ISdlBUserService iSdlBUserService;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
@@ -155,29 +164,27 @@ public void export(QueryRequest request, MdlBSurgeryinfo mdlBSurgeryinfo, HttpSe
         }
         }
 @RequestMapping(value = "downTemplate", method = RequestMethod.POST)
-@RequiresPermissions("mdlBSurgeryinfo:import")
 public void downTemplate(HttpServletResponse response) {
-        List<MdlBSurgeryinfo> publishList = new ArrayList<>();
-        ExcelKit.$Export(MdlBSurgeryinfo.class, response).downXlsx(publishList, true);
+        List<MdlBSurgeryinfoImport> publishList = new ArrayList<>();
+        ExcelKit.$Export(MdlBSurgeryinfoImport.class, response).downXlsx(publishList, true);
         }
 @RequestMapping(value = "import", method = RequestMethod.POST)
-@RequiresPermissions("mdlBSurgeryinfo:import")
 public ResponseEntity<?> importUser(@RequestParam MultipartFile file)
         throws IOException {
         long beginMillis = System.currentTimeMillis();
 
-        List<MdlBSurgeryinfo> successList = Lists.newArrayList();
+        List<MdlBSurgeryinfoImport> successList = Lists.newArrayList();
         List<Map<String, Object>> errorList = Lists.newArrayList();
         List<Map<String, Object>> resultList = Lists.newArrayList();
 
         User currentUser=FebsUtil.getCurrentUser();
 
 
-        ExcelKit.$Import(MdlBSurgeryinfo.class)
-        .readXlsx(file.getInputStream(), new ExcelReadHandler<MdlBSurgeryinfo>() {
+        ExcelKit.$Import(MdlBSurgeryinfoImport.class)
+        .readXlsx(file.getInputStream(), new ExcelReadHandler<MdlBSurgeryinfoImport>() {
 
 @Override
-public void onSuccess(int sheetIndex, int rowIndex, MdlBSurgeryinfo entity) {
+public void onSuccess(int sheetIndex, int rowIndex, MdlBSurgeryinfoImport entity) {
         successList.add(entity); // 单行读取成功，加入入库队列。
         }
 
@@ -193,11 +200,39 @@ public void onError(int sheetIndex, int rowIndex,
 
         // TODO: 执行successList的入库操作。
         if(CollectionUtil.isEmpty(errorList)){
-        for (MdlBSurgeryinfo mdlBSurgeryinfoImport:successList
+        for (MdlBSurgeryinfoImport mdlBSurgeryinfoImport:successList
         ) {
     MdlBSurgeryinfo mdlBSurgeryinfo =new MdlBSurgeryinfo();
-        BeanUtil.copyProperties(mdlBSurgeryinfoImport,mdlBSurgeryinfo, CopyOptions.create().setIgnoreNullValue(true));
+            LambdaQueryWrapper<SdlBUser> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SdlBUser::getUserAccount, mdlBSurgeryinfoImport.getUserAccount());
+            SdlBUser user = this.iSdlBUserService.getOne(queryWrapper);
+            mdlBSurgeryinfo.setUserAccount(user.getUserAccount());
+            mdlBSurgeryinfo.setUserAccountName(user.getUserAccountName());
+            mdlBSurgeryinfo.setDeptName(user.getDeptNew());
+
+            mdlBSurgeryinfo.setZhicheng(user.getZhicheng());
+            mdlBSurgeryinfo.setBirthday(user.getBirthday());
+            mdlBSurgeryinfo.setSexName(user.getSexName());
+            mdlBSurgeryinfo.setJb(mdlBSurgeryinfoImport.getJb());
+            mdlBSurgeryinfo.setNote(mdlBSurgeryinfoImport.getNote());
+
+        mdlBSurgeryinfo.setValidDate(DateUtil.parseDate(mdlBSurgeryinfoImport.getValidDate()));
         this.iMdlBSurgeryinfoService.createMdlBSurgeryinfo(mdlBSurgeryinfo);
+        if(StringUtils.isNotBlank(mdlBSurgeryinfo.getJb())) {
+            MdlBSurgeryinfoD mdlBSurgeryinfoD = new MdlBSurgeryinfoD();
+            if (mdlBSurgeryinfo.getJb().equals("四级")) {
+                mdlBSurgeryinfoD.setLevel("一级,二级,三级,四级");
+            } else if (mdlBSurgeryinfo.getJb().equals("三级")) {
+                mdlBSurgeryinfoD.setLevel("一级,二级,三级");
+            } else if (mdlBSurgeryinfo.getJb().equals("二级")) {
+                mdlBSurgeryinfoD.setLevel("一级,二级");
+            } else {
+                mdlBSurgeryinfoD.setLevel("一级");
+            }
+            mdlBSurgeryinfoD.setBaseId(mdlBSurgeryinfo.getId());
+            mdlBSurgeryinfoD.setDeptNew(mdlBSurgeryinfo.getDeptName());
+            this.iMdlBSurgeryinfoService.InserSub(mdlBSurgeryinfoD);
+        }
         }
         }
 

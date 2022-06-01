@@ -4,21 +4,42 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
+             <a-col :md="6" :sm="24">
               <a-form-item label="任务来源" v-bind="formItemLayout">
                 <a-input v-model="queryParams.taskSource" />
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="外派事项" v-bind="formItemLayout">
+                <a-input v-model="queryParams.taskItem" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
               <a-form-item label="外派类型" v-bind="formItemLayout">
                 <a-input v-model="queryParams.taskType" />
               </a-form-item>
             </a-col>
-             <a-col :md="8" :sm="24">
+             <a-col :md="6" :sm="24">
               <a-form-item label="发薪号\姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.city" />
               </a-form-item>
             </a-col>
+            <template v-if="advanced">
+  <a-col :md="6" :sm="24">
+              <a-form-item label="开始日期" v-bind="formItemLayout">
+                 <a-date-picker
+          @change="handleStartDateChange"
+        />
+              </a-form-item>
+            </a-col>
+             <a-col :md="6" :sm="24">
+              <a-form-item label="结束日期" v-bind="formItemLayout">
+                <a-date-picker
+          @change="handleEndDateChange"
+        />
+              </a-form-item>
+            </a-col>
+            </template>
           </div>
           <span style="float: right; margin-top: 3px">
             <a-button type="primary" @click="search">查询</a-button>
@@ -210,6 +231,22 @@ export default {
     moment,
     handleRefesh() {
       this.search();
+    },
+     handleStartDateChange(value) {
+      if(value==null){
+        delete this.queryParams.startDateFrom
+      }
+      else{
+        this.queryParams.startDateFrom = moment(value).format("YYYY-MM-DD");
+      }
+    },
+    handleEndDateChange(value) {
+      if(value==null){
+        delete this.queryParams.startDateTo
+      }
+      else{
+        this.queryParams.startDateTo = moment(value).format("YYYY-MM-DD");
+      }
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;

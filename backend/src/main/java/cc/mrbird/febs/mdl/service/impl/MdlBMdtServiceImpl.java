@@ -64,6 +64,20 @@ public IPage<MdlBMdt> findMdlBMdts(QueryRequest request, MdlBMdt mdlBMdt){
                                 }
 
 
+            if (StringUtils.isNotBlank(mdlBMdt.getTelLeader2())) { //考核年度
+                queryWrapper.apply("mdl_b_mdt.id in (select base_id from mdl_b_mdt_file where IS_DELETEMARK=1 and year='"+mdlBMdt.getTelLeader2()+"')");
+            }
+            if (StringUtils.isNotBlank(mdlBMdt.getEmailLeader2())) { //考核结果
+                queryWrapper.apply("mdl_b_mdt.id in (select base_id from mdl_b_mdt_file where IS_DELETEMARK=1 and result='"+mdlBMdt.getEmailLeader2()+"')");
+            }
+            if (StringUtils.isNotBlank(mdlBMdt.getTelAssist())) { //考核结果
+                queryWrapper.apply("mdl_b_mdt.id in (select base_id from mdl_b_mdt_d where IS_DELETEMARK=1 and user_account='"+mdlBMdt.getTelAssist()+"' or user_account_name like '%"+mdlBMdt.getTelAssist()+"%' )");
+            }
+
+
+
+
+
         Page<MdlBMdt> page=new Page<>();
         SortUtil.handlePageSort(request,page,false);//true 是属性  false是数据库字段可两个
         return this.page(page,queryWrapper);

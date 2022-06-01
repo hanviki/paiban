@@ -63,6 +63,28 @@
                 </a-select>
                 </a-form-item>
               </a-col>
+              <a-col :md="8" :sm="24">
+              <a-form-item label="是否停用" v-bind="formItemLayout">
+                <a-select v-model="queryParams.state"
+                  >
+                  <a-select-option
+                   :value="-1"
+                  >
+                    全部
+                  </a-select-option>
+                   <a-select-option
+                   :value="1"
+                  >
+                    在用
+                  </a-select-option>
+                   <a-select-option
+                   :value="2"
+                  >
+                    停用
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
             </template>
           </div>
           <span style="float: right; margin-top: 3px">
@@ -84,9 +106,12 @@
           @click="add"
           >新增</a-button
         >
-        <a-button @click="batchDelete"
+          <a-button @click="pass"
+          >停用手术目录</a-button
+        > 
+        <!-- <a-button @click="batchDelete"
           >删除</a-button
-        >
+        > -->
        
         <import-excel
           templateUrl="mdlDSurgery/downTemplate"
@@ -145,6 +170,19 @@
       :editVisiable="editVisiable"
     >
     </mdlDSurgery-edit>
+     <a-modal
+      :maskClosable="false"
+      v-model="lookVisiable"
+      width="400px"
+      @ok="handleLookOk"
+      title="停用手术目录"
+    >
+      <a-form-item label="停用时间" v-bind="formItemLayout">
+           <a-date-picker
+            v-model="endDate"
+        />
+      </a-form-item>
+    </a-modal>
   </a-card>
 </template>
 
@@ -183,7 +221,9 @@ export default {
       editVisiable: false,
       loading: false,
       bordered: true,
-      deptData: []
+      deptData: [],
+      lookVisiable: false,
+      endDate: ''
     };
   },
   computed: {
@@ -216,6 +256,33 @@ export default {
           dataIndex: "lb",
           width: 100,
         },
+         {
+          title: "启用日期",
+          dataIndex: "startDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+         {
+          title: "停用日期",
+          dataIndex: "endDate",
+          customRender: (text, row, index) => {
+            if (text == null) return "";
+            return moment(text).format("YYYY-MM-DD");
+          },
+          width: 100,
+        },
+        {
+          title: "是否停用",
+          dataIndex: "note2",
+          customRender: (text, row, index) => {
+            if (row.endDate == null) {return <a-tag color="green">在用</a-tag>};
+            return <a-tag color="red">停用</a-tag>
+          },
+          width: 100,
+        },
         {
           title: "备注",
           dataIndex: "note",
@@ -237,6 +304,32 @@ export default {
   },
   methods: {
     moment,
+     pass() {
+      if (!this.selectedRowKeys.length) {
+        this.$message.warning("请选择手术目录");
+        return;
+      }
+      this.lookVisiable = true;
+      this.endDate="";
+     
+      },
+      handleLookOk(){
+        if (this.endDate == "") {
+        this.$message.warning("请选择停用时间");
+        return false;
+      } else {
+        this.$put("mdlDSurgery/batch", {
+          ids: this.selectedRowKeys.join(","),
+          endDate: this.endDate
+        }).then((r) => {
+          this.endDate="";
+          this.selectedRowKeys = []
+          this.$message.success("停用成功");
+          this.lookVisiable = false;
+          this.search();
+        });
+      }
+      },
     handleRefesh() {
       this.search();
     },

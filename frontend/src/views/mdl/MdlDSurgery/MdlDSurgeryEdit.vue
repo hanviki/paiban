@@ -101,6 +101,14 @@
                   </a-select-option>
                 </a-select>
       </a-form-item>
+      <a-form-item v-bind="formItemLayout" label="启用日期">
+        <a-date-picker
+          v-decorator="[
+            'startDate',
+            { rules: [{ required: true, message: '启用日期不能为空' }] },
+          ]"
+        />
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="备注">
         <a-input
           placeholder="请输入备注"
@@ -177,8 +185,8 @@ export default {
       });
     },
     setFormValues({ ...mdlDSurgery }) {
-      let fields = ["deptNew", "code", "name", "level", "lb", "note"];
-      let fieldDates = [];
+      let fields = ["deptNew", "code", "name", "level", "lb", "note","startDate"];
+      let fieldDates = ["startDate"];
       Object.keys(mdlDSurgery).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
           this.form.getFieldDecorator(key);

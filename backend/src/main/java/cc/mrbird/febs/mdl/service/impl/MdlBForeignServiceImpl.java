@@ -52,7 +52,15 @@ public class MdlBForeignServiceImpl extends ServiceImpl<MdlBForeignMapper, MdlBF
             if (mdlBForeign.getState() != null) {
                 queryWrapper.eq(MdlBForeign::getState, mdlBForeign.getState());
             }
-
+            if (StringUtils.isNotBlank(mdlBForeign.getTaskItem())) {
+                queryWrapper.like(MdlBForeign::getTaskItem, mdlBForeign.getTaskItem());
+            }
+            if (StringUtils.isNotBlank(mdlBForeign.getStartDateFrom())) {
+                queryWrapper.ge(MdlBForeign::getEndDate, mdlBForeign.getStartDateFrom());
+            }
+            if (StringUtils.isNotBlank(mdlBForeign.getStartDateTo())) {
+                queryWrapper.le(MdlBForeign::getStartDate, mdlBForeign.getStartDateTo());
+            }
             if (StringUtils.isNotBlank(mdlBForeign.getTaskSource())) {
                 queryWrapper.like(MdlBForeign::getTaskSource, mdlBForeign.getTaskSource());
             }

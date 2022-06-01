@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlDMdtOldMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlDMdtOld">
+                    <id column="id" property="id"/>
+                    <result column="dept_new" property="deptNew"/>
+                    <result column="fzr" property="fzr"/>
+                    <result column="zhicheng" property="zhicheng"/>
+                    <result column="cy1" property="cy1"/>
+                    <result column="cy2" property="cy2"/>
+                    <result column="cy3" property="cy3"/>
+                    <result column="cy4" property="cy4"/>
+                    <result column="cy5" property="cy5"/>
+                    <result column="cy6" property="cy6"/>
+                    <result column="cy7" property="cy7"/>
+                    <result column="cy8" property="cy8"/>
+                    <result column="cy9" property="cy9"/>
+                    <result column="cy10" property="cy10"/>
+                    <result column="xmmc" property="xmmc"/>
+                    <result column="year" property="year"/>
+                    <result column="xmsp" property="xmsp"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, dept_new, fzr, zhicheng, cy1, cy2, cy3, cy4, cy5, cy6, cy7, cy8, cy9, cy10, xmmc, year, xmsp, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlDMdtOld" parameterType="cc.mrbird.febs.mdl.entity.MdlDMdtOld">
+        update mdl_d_mdt_old
+        <trim prefix="set" suffixOverrides=",">
+<if test="deptNew != null">dept_new=#{deptNew},</if>
+<if test="fzr != null">fzr=#{fzr},</if>
+<if test="zhicheng != null">zhicheng=#{zhicheng},</if>
+<if test="cy1 != null">cy1=#{cy1},</if>
+<if test="cy2 != null">cy2=#{cy2},</if>
+<if test="cy3 != null">cy3=#{cy3},</if>
+<if test="cy4 != null">cy4=#{cy4},</if>
+<if test="cy5 != null">cy5=#{cy5},</if>
+<if test="cy6 != null">cy6=#{cy6},</if>
+<if test="cy7 != null">cy7=#{cy7},</if>
+<if test="cy8 != null">cy8=#{cy8},</if>
+<if test="cy9 != null">cy9=#{cy9},</if>
+<if test="cy10 != null">cy10=#{cy10},</if>
+<if test="xmmc != null">xmmc=#{xmmc},</if>
+<if test="year != null">year=#{year},</if>
+<if test="xmsp != null">xmsp=#{xmsp},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlDMdtOld" resultType="cc.mrbird.febs.mdl.entity.MdlDMdtOld" parameterType="cc.mrbird.febs.mdl.entity.MdlDMdtOld">
+        select  *  from mdl_d_mdt_old
+        where  1=1
+            <if test="mdlDMdtOld.deptNew != null and mdlDMdtOld.deptNew != ''"> and  mdl_d_mdt_old.dept_new like concat('%', #{ mdlDMdtOld.deptNew} ,'%')</if>
+            <if test="mdlDMdtOld.fzr != null and mdlDMdtOld.fzr != ''"> and  mdl_d_mdt_old.fzr like concat('%', #{ mdlDMdtOld.fzr} ,'%')</if>
+            <if test="mdlDMdtOld.zhicheng != null and mdlDMdtOld.zhicheng != ''"> and  mdl_d_mdt_old.zhicheng like concat('%', #{ mdlDMdtOld.zhicheng} ,'%')</if>
+            <if test="mdlDMdtOld.cy1 != null and mdlDMdtOld.cy1 != ''"> and  mdl_d_mdt_old.cy1 like concat('%', #{ mdlDMdtOld.cy1} ,'%')</if>
+            <if test="mdlDMdtOld.cy2 != null and mdlDMdtOld.cy2 != ''"> and  mdl_d_mdt_old.cy2 like concat('%', #{ mdlDMdtOld.cy2} ,'%')</if>
+            <if test="mdlDMdtOld.cy3 != null and mdlDMdtOld.cy3 != ''"> and  mdl_d_mdt_old.cy3 like concat('%', #{ mdlDMdtOld.cy3} ,'%')</if>
+            <if test="mdlDMdtOld.cy4 != null and mdlDMdtOld.cy4 != ''"> and  mdl_d_mdt_old.cy4 like concat('%', #{ mdlDMdtOld.cy4} ,'%')</if>
+            <if test="mdlDMdtOld.cy5 != null and mdlDMdtOld.cy5 != ''"> and  mdl_d_mdt_old.cy5 like concat('%', #{ mdlDMdtOld.cy5} ,'%')</if>
+            <if test="mdlDMdtOld.cy6 != null and mdlDMdtOld.cy6 != ''"> and  mdl_d_mdt_old.cy6 like concat('%', #{ mdlDMdtOld.cy6} ,'%')</if>
+            <if test="mdlDMdtOld.cy7 != null and mdlDMdtOld.cy7 != ''"> and  mdl_d_mdt_old.cy7 like concat('%', #{ mdlDMdtOld.cy7} ,'%')</if>
+            <if test="mdlDMdtOld.cy8 != null and mdlDMdtOld.cy8 != ''"> and  mdl_d_mdt_old.cy8 like concat('%', #{ mdlDMdtOld.cy8} ,'%')</if>
+            <if test="mdlDMdtOld.cy9 != null and mdlDMdtOld.cy9 != ''"> and  mdl_d_mdt_old.cy9 like concat('%', #{ mdlDMdtOld.cy9} ,'%')</if>
+            <if test="mdlDMdtOld.cy10 != null and mdlDMdtOld.cy10 != ''"> and  mdl_d_mdt_old.cy10 like concat('%', #{ mdlDMdtOld.cy10} ,'%')</if>
+            <if test="mdlDMdtOld.xmmc != null and mdlDMdtOld.xmmc != ''"> and  mdl_d_mdt_old.xmmc like concat('%', #{ mdlDMdtOld.xmmc} ,'%')</if>
+            <if test="mdlDMdtOld.year != null and mdlDMdtOld.year != ''"> and  mdl_d_mdt_old.year like concat('%', #{ mdlDMdtOld.year} ,'%')</if>
+            <if test="mdlDMdtOld.xmsp != null and mdlDMdtOld.xmsp != ''"> and  mdl_d_mdt_old.xmsp like concat('%', #{ mdlDMdtOld.xmsp} ,'%')</if>
+        <if test="mdlDMdtOld.state != null"> and  mdl_d_mdt_old.state =#{ mdlDMdtOld.state} </if>
+        <if test="mdlDMdtOld.isDeletemark != null"> and  mdl_d_mdt_old.IS_DELETEMARK =#{ mdlDMdtOld.isDeletemark} </if>
+        <if test="mdlDMdtOld.createTimeFrom!= null">
+            AND mdl_d_mdt_old.CREATE_TIME <![CDATA[ >= ]]>  #{mdlDMdtOld.createTimeFrom}
+        </if>
+        <if test="mdlDMdtOld.createTimeTo!= null">
+            AND  mdl_d_mdt_old.CREATE_TIME <![CDATA[ <= ]]>  #{mdlDMdtOld.createTimeTo}
+        </if>
+        <if test="mdlDMdtOld.modifyTimeFrom!= null">
+            AND mdl_d_mdt_old.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlDMdtOld.modifyTimeFrom}
+        </if>
+        <if test="mdlDMdtOld.modifyTimeTo!= null">
+            AND  mdl_d_mdt_old.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlDMdtOld.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

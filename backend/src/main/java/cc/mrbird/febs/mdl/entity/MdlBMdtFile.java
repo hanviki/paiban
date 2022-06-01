@@ -56,6 +56,22 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="年度")
     private String year;
 
+
+    /**
+     * 考核分数
+     */
+
+    @ExcelField(value ="考核分数")
+    private double score;
+    /**
+     * 考核结果
+     */
+
+    @ExcelField(value ="考核结果")
+    private String result;
+
+
+
     /**
      * 备注
      */

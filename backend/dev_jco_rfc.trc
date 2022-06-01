@@ -1814,3 +1814,28 @@ COUNTER     2
     error group: 102
     key: RFC_ERROR_COMMUNICATION
 
+
+**** Error file opened at 20220527 160021 China Standard Time Rel 3.0.9 (2012-07-19) [720.310]
+Error:  >Fri May 27 16:00:21,296<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ECC ASHOST=192.168.64.26 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '192.168.64.26:3301' not reached
+TIME        Fri May 27 16:00:21 2022
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3286
+DETAIL      NiPConnect2: 192.168.64.26:3301
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+

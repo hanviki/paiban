@@ -1,6 +1,7 @@
 package cc.mrbird.febs.mdl.service.impl;
 
 import cc.mrbird.febs.common.domain.QueryRequest;
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.mdl.entity.MdlDSurgery;
 import cc.mrbird.febs.mdl.dao.MdlDSurgeryMapper;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.time.LocalDate;
+
 /**
  * <p>
  * 手术目录 服务实现类
@@ -37,73 +39,88 @@ import java.time.LocalDate;
 public class MdlDSurgeryServiceImpl extends ServiceImpl<MdlDSurgeryMapper, MdlDSurgery> implements IMdlDSurgeryService {
 
 
-@Override
-public IPage<MdlDSurgery> findMdlDSurgerys(QueryRequest request, MdlDSurgery mdlDSurgery){
-        try{
-        LambdaQueryWrapper<MdlDSurgery> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(MdlDSurgery::getIsDeletemark, 1);//1是未删 0是已删
+    @Override
+    public IPage<MdlDSurgery> findMdlDSurgerys(QueryRequest request, MdlDSurgery mdlDSurgery) {
+        try {
+            LambdaQueryWrapper<MdlDSurgery> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(MdlDSurgery::getIsDeletemark, 1);//1是未删 0是已删
 
-        if (mdlDSurgery.getState()!=null) {
-        queryWrapper.eq(MdlDSurgery::getState, mdlDSurgery.getState());
-        }
+            if (mdlDSurgery.getState() != null) {
 
-                                if (StringUtils.isNotBlank(mdlDSurgery.getDeptNew())) {
-                                queryWrapper.like(MdlDSurgery::getDeptNew, mdlDSurgery.getDeptNew());
-                                }
-                                if (StringUtils.isNotBlank(mdlDSurgery.getCode())) {
-                                queryWrapper.like(MdlDSurgery::getCode, mdlDSurgery.getCode());
-                                }
-                                if (StringUtils.isNotBlank(mdlDSurgery.getName())) {
-                                queryWrapper.like(MdlDSurgery::getName, mdlDSurgery.getName());
-                                }
-                                if (StringUtils.isNotBlank(mdlDSurgery.getLevel())) {
-                                queryWrapper.like(MdlDSurgery::getLevel, mdlDSurgery.getLevel());
-                                }
+                if (mdlDSurgery.getState().equals(1)) { //在用
+                    queryWrapper.apply("mdl_d_surgery.end_date is NULL");
+                }
+                if (mdlDSurgery.getState().equals(2)) { //停用
+                    queryWrapper.apply("mdl_d_surgery.end_date is not NULL");
+                }
+            }
 
-        Page<MdlDSurgery> page=new Page<>();
-        SortUtil.handlePageSort(request,page,false);//true 是属性  false是数据库字段可两个
-        return this.page(page,queryWrapper);
-        }catch(Exception e){
-        log.error("获取字典信息失败" ,e);
-        return null;
+            if (StringUtils.isNotBlank(mdlDSurgery.getDeptNew())) {
+                queryWrapper.like(MdlDSurgery::getDeptNew, mdlDSurgery.getDeptNew());
+            }
+            if (StringUtils.isNotBlank(mdlDSurgery.getCode())) {
+                queryWrapper.like(MdlDSurgery::getCode, mdlDSurgery.getCode());
+            }
+            if (StringUtils.isNotBlank(mdlDSurgery.getName())) {
+                queryWrapper.like(MdlDSurgery::getName, mdlDSurgery.getName());
+            }
+            if (StringUtils.isNotBlank(mdlDSurgery.getLevel())) {
+                queryWrapper.like(MdlDSurgery::getLevel, mdlDSurgery.getLevel());
+            }
+
+            Page<MdlDSurgery> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            return this.page(page, queryWrapper);
+        } catch (Exception e) {
+            log.error("获取字典信息失败", e);
+            return null;
         }
+    }
+
+    @Override
+    public IPage<MdlDSurgery> findMdlDSurgeryList(QueryRequest request, MdlDSurgery mdlDSurgery) {
+        try {
+            Page<MdlDSurgery> page = new Page<>();
+            SortUtil.handlePageSort(request, page, false);//true 是属性  false是数据库字段可两个
+            return this.baseMapper.findMdlDSurgery(page, mdlDSurgery);
+        } catch (Exception e) {
+            log.error("获取手术目录失败", e);
+            return null;
         }
-@Override
-public IPage<MdlDSurgery> findMdlDSurgeryList (QueryRequest request, MdlDSurgery mdlDSurgery){
-        try{
-        Page<MdlDSurgery> page=new Page<>();
-        SortUtil.handlePageSort(request,page,false);//true 是属性  false是数据库字段可两个
-        return  this.baseMapper.findMdlDSurgery(page,mdlDSurgery);
-        }catch(Exception e){
-        log.error("获取手术目录失败" ,e);
-        return null;
+    }
+
+    @Override
+    @Transactional
+    public void createMdlDSurgery(MdlDSurgery mdlDSurgery) throws FebsException {
+        LambdaQueryWrapper<MdlDSurgery> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MdlDSurgery::getCode, mdlDSurgery.getCode());
+        queryWrapper.apply("mdl_d_surgery.end_date is NULL");
+        int count = this.baseMapper.selectCount(queryWrapper);
+        if (count > 0) {
+            throw new FebsException("请停用当前手术编码，然后再新增");
         }
-        }
-@Override
-@Transactional
-public void createMdlDSurgery(MdlDSurgery mdlDSurgery){
-                mdlDSurgery.setCreateTime(new Date());
+        mdlDSurgery.setCreateTime(new Date());
         mdlDSurgery.setIsDeletemark(1);
         this.save(mdlDSurgery);
-        }
+    }
 
-@Override
-@Transactional
-public void updateMdlDSurgery(MdlDSurgery mdlDSurgery){
+    @Override
+    @Transactional
+    public void updateMdlDSurgery(MdlDSurgery mdlDSurgery) {
         mdlDSurgery.setModifyTime(new Date());
         this.baseMapper.updateMdlDSurgery(mdlDSurgery);
-        }
+    }
 
-@Override
-@Transactional
-public void deleteMdlDSurgerys(String[]Ids){
-        List<String> list=Arrays.asList(Ids);
-        MdlDSurgery surgery= new MdlDSurgery();
+    @Override
+    @Transactional
+    public void deleteMdlDSurgerys(String[] Ids) {
+        List<String> list = Arrays.asList(Ids);
+        MdlDSurgery surgery = new MdlDSurgery();
         surgery.setIsDeletemark(0);
-        LambdaQueryWrapper<MdlDSurgery> queryWrapper =new LambdaQueryWrapper<>();
-        queryWrapper.in(MdlDSurgery::getId,list);
-        this.baseMapper.update(surgery,queryWrapper);
-       // this.baseMapper.deleteBatchIds(list);
-        }
+        LambdaQueryWrapper<MdlDSurgery> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(MdlDSurgery::getId, list);
+        this.baseMapper.update(surgery, queryWrapper);
+        // this.baseMapper.deleteBatchIds(list);
+    }
 
-        }
+}

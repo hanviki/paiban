@@ -44,6 +44,8 @@ public class MdlDSurgeryImport {
     @ExcelField(value ="手术切口类别")
     private String lb;
 
+    @ExcelField(value ="启用时间")
+    private String startDate;
     /**
      * 备注
      */

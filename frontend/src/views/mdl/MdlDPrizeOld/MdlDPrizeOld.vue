@@ -5,41 +5,36 @@
         <a-row>
           <div :class="advanced ? null : 'fold'">
             <a-col :md="8" :sm="24">
-              <a-form-item label="科室" v-bind="formItemLayout">
-                <a-input v-model="queryParams.deptName" />
+              <a-form-item label="获奖年度" v-bind="formItemLayout">
+                <a-input v-model="queryParams.year" />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="发薪号" v-bind="formItemLayout">
-                <a-input v-model="queryParams.userAccount" />
+              <a-form-item label="科室" v-bind="formItemLayout">
+                <a-input v-model="queryParams.deptNew" />
               </a-form-item>
             </a-col>
-           <a-col :md="8" :sm="24">
-              <a-form-item label="时间点查询" v-bind="formItemLayout">
-                 <a-date-picker @change="onvalidDatePotChange" />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="项目负责人" v-bind="formItemLayout">
+                <a-input v-model="queryParams.xmfzr" />
               </a-form-item>
             </a-col>
-           
-               <a-col :md="8" :sm="24">
-              <a-form-item label="生效时间开始" v-bind="formItemLayout">
-                <a-date-picker @change="onvalidDateFromChange" />
-              </a-form-item>
-            </a-col>
+            <template v-if="advanced">
               <a-col :md="8" :sm="24">
-                <a-form-item label="生效日期截至" v-bind="formItemLayout">
-                  <a-date-picker @change="onvalidDateToChange" />
+                <a-form-item label="项目名称" v-bind="formItemLayout">
+                  <a-input v-model="queryParams.xmmc" />
                 </a-form-item>
               </a-col>
-           
+            </template>
           </div>
           <span style="float: right; margin-top: 3px">
-            <a-button type="primary" @click="exportExcel">导出Excel</a-button>
+              <a-button type="primary" @click="exportExcel">导出</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
-            <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
+            <a @click="toggleAdvanced" style="margin-left: 8px">
               {{ advanced ? "收起" : "展开" }}
               <a-icon :type="advanced ? 'up' : 'down'" />
-            </a> -->
+            </a>
           </span>
         </a-row>
       </a-form>
@@ -47,22 +42,21 @@
     <div>
       <div class="operator">
         <a-button
-         
+          v-hasPermission="['mdlDPrizeOld:add']"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button
-         
-          @click="batchDelete"
+        <a-button v-hasPermission="['mdlDPrizeOld:delete']" @click="batchDelete"
           >删除</a-button
         >
-      
+       
         <import-excel
-          templateUrl="mdlBSurgeryinfo/downTemplate"
+          v-hasPermission="['mdlDPrizeOld:import']"
+          templateUrl="mdlDPrizeOld/downTemplate"
           @succ="handleRefesh"
-          url="mdlBSurgeryinfo/import"
+          url="mdlDPrizeOld/import"
         >
         </import-excel>
       </div>
@@ -92,39 +86,27 @@
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-icon
-          
+            v-hasPermission="['mdlDPrizeOld:update']"
             type="setting"
             theme="twoTone"
             twoToneColor="#4a9ff5"
             @click="edit(record)"
             title="修改"
           ></a-icon>
-        
+          <a-badge
+            v-hasNoPermission="['mdlDPrizeOld:update']"
+            status="warning"
+            text="无权限"
+          ></a-badge>
         </template>
       </a-table>
     </div>
-    <!-- 新增字典 -->
-    <mdlBSurgeryinfo-add
-      @close="handleAddClose"
-      @success="handleAddSuccess"
-      :addVisiable="addVisiable"
-    >
-    </mdlBSurgeryinfo-add>
-    <!-- 修改字典 -->
-    <mdlBSurgeryinfo-edit
-      :info="editRecord"
-      ref="mdlBSurgeryinfoEdit"
-      @close="handleEditClose"
-      @success="handleEditSuccess"
-      :roleEditVisiable="editVisiable"
-    >
-    </mdlBSurgeryinfo-edit>
+    
   </a-card>
 </template>
 
 <script>
-import MdlBSurgeryinfoAdd from "./MdlBSurgeryinfoAdd";
-import MdlBSurgeryinfoEdit from "./MdlBSurgeryinfoEdit";
+
 import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
 
@@ -133,11 +115,11 @@ const formItemLayout = {
   wrapperCol: { span: 15, offset: 1 },
 };
 export default {
-  name: "MdlBSurgeryinfo",
-  components: { MdlBSurgeryinfoAdd, MdlBSurgeryinfoEdit, ImportExcel },
+  name: "MdlDPrizeOld",
+  components: {  ImportExcel },
   data() {
     return {
-      advanced: true,
+      advanced: false,
       dataSource: [],
       selectedRowKeys: [],
       sortedInfo: null,
@@ -157,7 +139,6 @@ export default {
       editVisiable: false,
       loading: false,
       bordered: true,
-      editRecord: {}
     };
   },
   computed: {
@@ -166,61 +147,61 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
+          title: "获奖年度",
+          dataIndex: "year",
+          width: 100,
+        },
+        {
           title: "科室",
-          dataIndex: "deptName",
+          dataIndex: "deptNew",
           width: 100,
         },
         {
-          title: "姓名",
-          dataIndex: "userAccountName",
+          title: "项目负责人",
+          dataIndex: "xmfzr",
           width: 100,
         },
         {
-          title: "发薪号",
-          dataIndex: "userAccount",
+          title: "项目名称",
+          dataIndex: "xmmc",
+          width: 200,
+        },
+        {
+          title: "获奖等级",
+          dataIndex: "hjdj",
           width: 100,
         },
         {
-          title: "职称",
-          dataIndex: "zhicheng",
+          title: "项目成员1",
+          dataIndex: "cy1",
           width: 100,
         },
         {
-          title: "性别",
-          dataIndex: "sexName",
+          title: "项目成员2",
+          dataIndex: "cy2",
           width: 100,
         },
         {
-          title: "生日",
-          dataIndex: "birthday",
+          title: "项目成员3",
+          dataIndex: "cy3",
           width: 100,
         },
         {
-          title: "级别",
-          dataIndex: "jb",
+          title: "项目成员4",
+          dataIndex: "cy4",
           width: 100,
         },
         {
-          title: "生效日期",
-          dataIndex: "validDate",
-          customRender: (text, row, index) => {
-            if (text == null) return "";
-            return moment(text).format("YYYY-MM-DD");
-          },
+          title: "项目成员5",
+          dataIndex: "cy5",
           width: 100,
         },
         {
-          title: "备注",
-          dataIndex: "note",
+          title: "项目成员6",
+          dataIndex: "cy6",
           width: 100,
         },
-        {
-          title: "操作",
-          dataIndex: "operation",
-          scopedSlots: { customRender: "operation" },
-          fixed: "right",
-          width: 100,
-        },
+      
       ];
     },
   },
@@ -241,30 +222,6 @@ export default {
         this.queryParams.comments = "";
       }
     },
-     onvalidDatePotChange(date, dateString) {
-       if(date==null){
-          this.queryParams.validDatePot= ''
-       }
-       else{
-          this.queryParams.validDatePot = dateString;
-       }
-    },
-    onvalidDateFromChange(date, dateString) {
-      if(date==null){
-          this.queryParams.validDateFrom= ''
-       }
-       else{
-      this.queryParams.validDateFrom = dateString;
-       }
-    },
-    onvalidDateToChange(date, dateString) {
-     if(date==null){
-          this.queryParams.validDateTo= ''
-       }
-       else{
-      this.queryParams.validDateTo = dateString;
-       }
-    },
     handleAddSuccess() {
       this.addVisiable = false;
       this.$message.success("新增成功");
@@ -278,22 +235,15 @@ export default {
     },
     handleEditSuccess() {
       this.editVisiable = false;
-      this.$message.success("设置成功");
-     // this.search();
+      this.$message.success("修改成功");
+      this.search();
     },
     handleEditClose() {
       this.editVisiable = false;
     },
     edit(record) {
-      if(record.jb==''){
-         this.$message.warning("级别为空，不支持编辑");
-        return;
-      }
-      else{
-     // this.$refs.mdlBSurgeryinfoEdit.setFormValues(record);
-        this.editRecord= record;
-        this.editVisiable = true;
-      }
+      this.$refs.mdlDPrizeOldEdit.setFormValues(record);
+      this.editVisiable = true;
     },
     batchDelete() {
       if (!this.selectedRowKeys.length) {
@@ -306,8 +256,8 @@ export default {
         content: "当您点击确定按钮后，这些记录将会被彻底删除",
         centered: true,
         onOk() {
-          let mdlBSurgeryinfoIds = that.selectedRowKeys.join(",");
-          that.$delete("mdlBSurgeryinfo/" + mdlBSurgeryinfoIds).then(() => {
+          let mdlDPrizeOldIds = that.selectedRowKeys.join(",");
+          that.$delete("mdlDPrizeOld/" + mdlDPrizeOldIds).then(() => {
             that.$message.success("删除成功");
             that.selectedRowKeys = [];
             that.search();
@@ -326,7 +276,7 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
-      this.$export("mdlBSurgeryinfo/excel", {
+      this.$export("mdlDPrizeOld/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
         ...this.queryParams,
@@ -387,7 +337,7 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
-      this.$get("mdlBSurgeryinfo", {
+      this.$get("mdlDPrizeOld", {
         ...params,
       }).then((r) => {
         let data = r.data;

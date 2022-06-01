@@ -49,6 +49,7 @@ export default {
     },
     setFiledValue(value){
        this.defaultValue= value;
+       this.fetchUser(value)
     }
   }
 

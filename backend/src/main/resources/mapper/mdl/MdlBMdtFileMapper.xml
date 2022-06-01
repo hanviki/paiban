@@ -8,6 +8,8 @@
                     <result column="base_id" property="baseId"/>
                     <result column="name" property="name"/>
                     <result column="year" property="year"/>
+            <result column="result" property="result"/>
+            <result column="score" property="score"/>
                     <result column="note" property="note"/>
                     <result column="file_id" property="fileId"/>
                     <result column="file_url" property="fileUrl"/>
@@ -23,7 +25,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, base_id, name, year, note, file_id, file_url, zc_file_id, zc_file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, base_id, name, year, note,score, result, file_id, file_url, zc_file_id, zc_file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBMdtFile" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdtFile">
         update mdl_b_mdt_file
@@ -31,6 +33,8 @@
 <if test="baseId != null">base_id=#{baseId},</if>
 <if test="name != null">name=#{name},</if>
 <if test="year != null">year=#{year},</if>
+            <if test="score != null">score=#{score},</if>
+            <if test="result != null">result=#{result},</if>
 <if test="note != null">note=#{note},</if>
 <if test="fileId != null">file_id=#{fileId},</if>
 <if test="fileUrl != null">file_url=#{fileUrl},</if>
@@ -52,6 +56,7 @@
             <if test="mdlBMdtFile.id != null and mdlBMdtFile.id != ''"> and  mdl_b_mdt_file.id =#{ mdlBMdtFile.id} </if>
             <if test="mdlBMdtFile.name != null and mdlBMdtFile.name != ''"> and  mdl_b_mdt_file.name like concat('%', #{ mdlBMdtFile.name} ,'%')</if>
             <if test="mdlBMdtFile.year != null and mdlBMdtFile.year != ''"> and  mdl_b_mdt_file.year like concat('%', #{ mdlBMdtFile.year} ,'%')</if>
+        <if test="mdlBMdtFile.result != null and mdlBMdtFile.result != ''"> and  mdl_b_mdt_file.result like concat('%', #{ mdlBMdtFile.result} ,'%')</if>
             <if test="mdlBMdtFile.note != null and mdlBMdtFile.note != ''"> and  mdl_b_mdt_file.note like concat('%', #{ mdlBMdtFile.note} ,'%')</if>
             <if test="mdlBMdtFile.fileId != null and mdlBMdtFile.fileId != ''"> and  mdl_b_mdt_file.file_id like concat('%', #{ mdlBMdtFile.fileId} ,'%')</if>
             <if test="mdlBMdtFile.fileUrl != null and mdlBMdtFile.fileUrl != ''"> and  mdl_b_mdt_file.file_url like concat('%', #{ mdlBMdtFile.fileUrl} ,'%')</if>

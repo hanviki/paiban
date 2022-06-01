@@ -198,7 +198,7 @@ export default {
       this.mdlBBadrecord["lb"] = option.key.lb;
     },
     setFormValues({ ...mdlBBadrecord }) {
-      let fields = ["code", "note", "userAccount", "startDate"];
+      let fields = ["jfPerson","code", "note", "userAccount", "startDate"];
       let fieldDates = ["startDate"];
       Object.keys(mdlBBadrecord).forEach((key) => {
         if (fields.indexOf(key) !== -1) {

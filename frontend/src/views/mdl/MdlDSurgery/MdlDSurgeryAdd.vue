@@ -101,6 +101,14 @@
                   </a-select-option>
                 </a-select>
       </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="启用日期">
+        <a-date-picker
+          v-decorator="[
+            'startDate',
+            { rules: [{ required: true, message: '启用日期不能为空' }] },
+          ]"
+        />
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="备注">
         <a-input
           placeholder="请输入备注"
@@ -208,6 +216,7 @@ export default {
         "level",
         "lb",
         "note",
+        "startDate"
       ]);
       if (typeof values !== "undefined") {
         Object.keys(values).forEach((_key) => {

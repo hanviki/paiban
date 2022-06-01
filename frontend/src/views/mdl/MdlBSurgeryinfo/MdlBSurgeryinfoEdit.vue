@@ -159,15 +159,21 @@ export default {
       if (this.roleEditVisiable) {
         this.$get('mdlDSurgery/tree',{
             jb: this.info.jb,
-            deptName: this.info.deptName
+            deptName: this.info.deptName,
+            baseId: parseInt(this.info.id)
         }).then((r) => {
           this.menuTreeData = r.data.rows.children
-          console.log(r.data)
+       
           this.allTreeKeys = r.data.ids
           this.$get('mdlBSurgeryinfoD/tree/',{baseId: parseInt(this.info.id)}).then((r) => {
-            this.defaultCheckedKeys.splice(0, this.defaultCheckedKeys.length, r.data)
-            this.checkedKeys = r.data
-            this.expandedKeys = r.data
+            let subData=  r.data
+            console.info(subData)
+            if(subData.length==0){
+              subData = this.menuTreeData.map(p=>p.id)
+            }
+            this.defaultCheckedKeys.splice(0, this.defaultCheckedKeys.length, subData)
+            this.checkedKeys = subData
+            this.expandedKeys = subData
             this.menuTreeKey = +new Date()
           })
         })

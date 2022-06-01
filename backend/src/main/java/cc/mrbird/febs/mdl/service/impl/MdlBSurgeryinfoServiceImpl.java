@@ -4,6 +4,7 @@ import cc.mrbird.febs.common.domain.QueryRequest;
 import cc.mrbird.febs.common.utils.SortUtil;
 import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfo;
 import cc.mrbird.febs.mdl.dao.MdlBSurgeryinfoMapper;
+import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfoD;
 import cc.mrbird.febs.mdl.entity.ViewInfo;
 import cc.mrbird.febs.mdl.service.IMdlBSurgeryinfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -114,5 +115,9 @@ public void deleteMdlBSurgeryinfos(String[]Ids){
         List<String> list=Arrays.asList(Ids);
         this.baseMapper.deleteBatchIds(list);
         }
-
+    @Override
+    @Transactional
+    public void InserSub(MdlBSurgeryinfoD mdlBSurgeryinfoD){
+       this.baseMapper.insertSub(mdlBSurgeryinfoD.getLevel().split(","),mdlBSurgeryinfoD.getBaseId(),mdlBSurgeryinfoD.getDeptNew());
+    }
         }

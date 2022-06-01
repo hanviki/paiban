@@ -53,7 +53,23 @@
           </div>
           <div class="imageDiv"><a-avatar :size="50" style=" backgroundColor:white;" ><a-icon type="user"  style="font-size: 30px;color:green" :bordered="false" /></a-avatar></div>
         </div>
-      
+       <div class="cuDiv"  style="background-color: #05582f">
+          <div class="bigDiv">
+            <div class="titleDiv">新技术新业务历史记录</div>
+
+            <div class="subDiv">
+              <a @click="openQulifaction(9, '（1998-2021年）新技术新业务立项总结')" href="#">
+                立项总结
+              </a>
+            </div>
+            <div class="subDiv">
+              <a @click="openQulifaction(10, '历年新技术新业务获奖名单')" href="#">
+                历年新技术新业务获奖名单
+              </a>
+            </div>
+          </div>
+          <div class="imageDiv"><a-avatar :size="50" style=" backgroundColor:white;" ><a-icon type="user"  style="font-size: 30px;color:green" :bordered="false" /></a-avatar></div>
+        </div>
     </div>
     <div v-else="isShow">
       <a-row
@@ -74,6 +90,10 @@
      <xxb-b-check-report v-if="subShow == 6"></xxb-b-check-report>
      <mdl-d-surgery v-if="subShow == 7"></mdl-d-surgery>
      <mdl-b-surgeryinfo v-if="subShow==8" ></mdl-b-surgeryinfo>
+     <mdl-d-mdt-old v-if="subShow==9">
+     </mdl-d-mdt-old>
+     <mdl-d-prize-old v-if="subShow==10">
+     </mdl-d-prize-old>
     </div>
   </a-card>
 </template>
@@ -86,6 +106,8 @@ import XxbBMqAudit from '../xxb/XxbBMq/XxbBMqAudit.vue';
 import XxbBZqAudit from '../xxb/XxbBZq/XxbBZqAudit.vue';
 import MdlDSurgery from './MdlDSurgery/MdlDSurgery.vue';
 import MdlBSurgeryinfo from './MdlBSurgeryinfo/MdlBSurgeryinfo.vue'
+import MdlDMdtOld from './MdlDMdtOld/MdlDMdtOld.vue'
+import MdlDPrizeOld from './MdlDPrizeOld/MdlDPrizeOld.vue'
 
 
 export default {
@@ -105,7 +127,9 @@ export default {
     XxbBMqAudit,
     XxbBCheckReport,
     MdlDSurgery,
-    MdlBSurgeryinfo
+    MdlBSurgeryinfo,
+    MdlDMdtOld,
+    MdlDPrizeOld
   },
   methods: {
     openQulifaction(index, title) {

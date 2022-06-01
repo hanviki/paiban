@@ -50,11 +50,12 @@
     </update>
     <select id="findMdlBSurgeryinfo" resultType="cc.mrbird.febs.mdl.entity.ViewInfo" parameterType="cc.mrbird.febs.mdl.entity.MdlBSurgeryinfo">
         SELECT
-        `mdl_b_surgeryinfo_d`.`id` AS `id`,
-        `mdl_b_surgeryinfo_d`.`code` AS `code`,
-        `mdl_b_surgeryinfo_d`.`name` AS `name`,
-        `mdl_b_surgeryinfo_d`.`level` AS `level`,
-        `mdl_b_surgeryinfo_d`.`lb` AS `lb`,
+--         `mdl_b_surgeryinfo_d`.`id` AS `id`,
+--         `mdl_b_surgeryinfo_d`.`code` AS `code`,
+--         `mdl_b_surgeryinfo_d`.`name` AS `name`,
+--         `mdl_b_surgeryinfo_d`.`level` AS `level`,
+--         `mdl_b_surgeryinfo_d`.`lb` AS `lb`,
+        `mdl_b_surgeryinfo`.id  AS `id`,
         `mdl_b_surgeryinfo`.`user_account_name` AS `user_account_name`,
         `mdl_b_surgeryinfo`.`user_account` AS `user_account`,
         `mdl_b_surgeryinfo`.`zhicheng` AS `zhicheng`,
@@ -66,7 +67,7 @@
         `mdl_b_surgeryinfo`.`note` AS `note`
         FROM
         `mdl_b_surgeryinfo`
-        JOIN `mdl_b_surgeryinfo_d` ON `mdl_b_surgeryinfo`.`id` = `mdl_b_surgeryinfo_d`.`base_id`
+       --  JOIN `mdl_b_surgeryinfo_d` ON `mdl_b_surgeryinfo`.`id` = `mdl_b_surgeryinfo_d`.`base_id`
         where  1=1  and mdl_b_surgeryinfo.IS_DELETEMARK = 1
             <if test="mdlBSurgeryinfo.deptName != null and mdlBSurgeryinfo.deptName != ''"> and  mdl_b_surgeryinfo.dept_name like concat('%', #{ mdlBSurgeryinfo.deptName} ,'%')</if>
             <if test="mdlBSurgeryinfo.userAccount != null and mdlBSurgeryinfo.userAccount != ''">
@@ -105,4 +106,13 @@
         </if>
 </select>
 
+    <insert id="insertSub" >
+
+INSERT into mdl_b_surgeryinfo_d(code,base_id)
+SELECT code, #{baseId} as base_id from mdl_d_surgery where `level`  in
+ <foreach collection="jbList" item="item" index="index" open="(" close=")" separator="," >
+     #{item}
+ </foreach>
+ and end_date is NULL and dept_new =#{deptNew}
+    </insert>
 </mapper>

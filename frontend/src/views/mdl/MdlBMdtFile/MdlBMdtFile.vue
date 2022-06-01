@@ -118,11 +118,17 @@ export default {
           dataIndex: "year",
           width: 100,
         },
-        {
-          title: "备注",
-          dataIndex: "note",
+          {
+          title: "考核分数",
+          dataIndex: "score",
           width: 100,
         },
+         {
+          title: "考核结果",
+          dataIndex: "result",
+          width: 100,
+        },
+       
         {
           title: "工作总结",
           dataIndex: "fileId",
@@ -151,6 +157,11 @@ export default {
             }
             return "";
           },
+          width: 100,
+        },
+         {
+          title: "备注",
+          dataIndex: "note",
           width: 100,
         },
         {

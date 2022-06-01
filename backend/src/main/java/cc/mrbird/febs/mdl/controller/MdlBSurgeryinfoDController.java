@@ -91,9 +91,13 @@ public class MdlBSurgeryinfoDController extends BaseController {
 
     @GetMapping("tree")
     public List<String> List2(Long baseId) {
-        LambdaQueryWrapper<MdlBSurgeryinfoD> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(MdlBSurgeryinfoD::getBaseId, baseId);
-        List<MdlBSurgeryinfoD> list = this.iMdlBSurgeryinfoDService.list(queryWrapper);
+        QueryRequest request =new QueryRequest();
+        request.setPageNum(1);
+        request.setPageSize(10000);
+        MdlBSurgeryinfoD mdlBSurgeryinfoD= new MdlBSurgeryinfoD();
+        mdlBSurgeryinfoD.setBaseId(baseId);
+        request.setIsSearchCount(false);
+        List<MdlBSurgeryinfoD> list = this.iMdlBSurgeryinfoDService.findMdlBSurgeryinfoDList(request,mdlBSurgeryinfoD).getRecords();
         return list.stream().map(roleMenu -> String.valueOf(roleMenu.getSugeryId())).collect(Collectors.toList());
     }
 
@@ -121,10 +125,10 @@ public class MdlBSurgeryinfoDController extends BaseController {
                 mdlBSurgeryinfoD.setBaseId(Long.parseLong(baseId));
                 mdlBSurgeryinfoD.setCode(item.getCode());
                 mdlBSurgeryinfoD.setSugeryId(item.getId());
-                mdlBSurgeryinfoD.setDeptNew(item.getDeptNew());
-                mdlBSurgeryinfoD.setLb(item.getLb());
-                mdlBSurgeryinfoD.setLevel(item.getLevel());
-                mdlBSurgeryinfoD.setName(item.getName());
+              //  mdlBSurgeryinfoD.setDeptNew(item.getDeptNew());
+              //  mdlBSurgeryinfoD.setLb(item.getLb());
+              //  mdlBSurgeryinfoD.setLevel(item.getLevel());
+              //  mdlBSurgeryinfoD.setName(item.getName());
                 mdlBSurgeryinfoD.setCreateTime(new Date());
                 mdlBSurgeryinfoD.setIsDeletemark(1);
                 listAdd.add(mdlBSurgeryinfoD);

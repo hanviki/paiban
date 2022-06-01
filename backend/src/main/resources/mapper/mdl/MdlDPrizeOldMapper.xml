@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlDPrizeOldMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlDPrizeOld">
+                    <id column="id" property="id"/>
+                    <result column="year" property="year"/>
+                    <result column="dept_new" property="deptNew"/>
+                    <result column="xmfzr" property="xmfzr"/>
+                    <result column="xmmc" property="xmmc"/>
+                    <result column="hjdj" property="hjdj"/>
+                    <result column="cy1" property="cy1"/>
+                    <result column="cy2" property="cy2"/>
+                    <result column="cy3" property="cy3"/>
+                    <result column="cy4" property="cy4"/>
+                    <result column="cy5" property="cy5"/>
+                    <result column="cy6" property="cy6"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, year, dept_new, xmfzr, xmmc, hjdj, cy1, cy2, cy3, cy4, cy5, cy6, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlDPrizeOld" parameterType="cc.mrbird.febs.mdl.entity.MdlDPrizeOld">
+        update mdl_d_prize_old
+        <trim prefix="set" suffixOverrides=",">
+<if test="year != null">year=#{year},</if>
+<if test="deptNew != null">dept_new=#{deptNew},</if>
+<if test="xmfzr != null">xmfzr=#{xmfzr},</if>
+<if test="xmmc != null">xmmc=#{xmmc},</if>
+<if test="hjdj != null">hjdj=#{hjdj},</if>
+<if test="cy1 != null">cy1=#{cy1},</if>
+<if test="cy2 != null">cy2=#{cy2},</if>
+<if test="cy3 != null">cy3=#{cy3},</if>
+<if test="cy4 != null">cy4=#{cy4},</if>
+<if test="cy5 != null">cy5=#{cy5},</if>
+<if test="cy6 != null">cy6=#{cy6},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlDPrizeOld" resultType="cc.mrbird.febs.mdl.entity.MdlDPrizeOld" parameterType="cc.mrbird.febs.mdl.entity.MdlDPrizeOld">
+        select  *  from mdl_d_prize_old
+        where  1=1
+            <if test="mdlDPrizeOld.year != null and mdlDPrizeOld.year != ''"> and  mdl_d_prize_old.year like concat('%', #{ mdlDPrizeOld.year} ,'%')</if>
+            <if test="mdlDPrizeOld.deptNew != null and mdlDPrizeOld.deptNew != ''"> and  mdl_d_prize_old.dept_new like concat('%', #{ mdlDPrizeOld.deptNew} ,'%')</if>
+            <if test="mdlDPrizeOld.xmfzr != null and mdlDPrizeOld.xmfzr != ''"> and  mdl_d_prize_old.xmfzr like concat('%', #{ mdlDPrizeOld.xmfzr} ,'%')</if>
+            <if test="mdlDPrizeOld.xmmc != null and mdlDPrizeOld.xmmc != ''"> and  mdl_d_prize_old.xmmc like concat('%', #{ mdlDPrizeOld.xmmc} ,'%')</if>
+            <if test="mdlDPrizeOld.hjdj != null and mdlDPrizeOld.hjdj != ''"> and  mdl_d_prize_old.hjdj like concat('%', #{ mdlDPrizeOld.hjdj} ,'%')</if>
+            <if test="mdlDPrizeOld.cy1 != null and mdlDPrizeOld.cy1 != ''"> and  mdl_d_prize_old.cy1 like concat('%', #{ mdlDPrizeOld.cy1} ,'%')</if>
+            <if test="mdlDPrizeOld.cy2 != null and mdlDPrizeOld.cy2 != ''"> and  mdl_d_prize_old.cy2 like concat('%', #{ mdlDPrizeOld.cy2} ,'%')</if>
+            <if test="mdlDPrizeOld.cy3 != null and mdlDPrizeOld.cy3 != ''"> and  mdl_d_prize_old.cy3 like concat('%', #{ mdlDPrizeOld.cy3} ,'%')</if>
+            <if test="mdlDPrizeOld.cy4 != null and mdlDPrizeOld.cy4 != ''"> and  mdl_d_prize_old.cy4 like concat('%', #{ mdlDPrizeOld.cy4} ,'%')</if>
+            <if test="mdlDPrizeOld.cy5 != null and mdlDPrizeOld.cy5 != ''"> and  mdl_d_prize_old.cy5 like concat('%', #{ mdlDPrizeOld.cy5} ,'%')</if>
+            <if test="mdlDPrizeOld.cy6 != null and mdlDPrizeOld.cy6 != ''"> and  mdl_d_prize_old.cy6 like concat('%', #{ mdlDPrizeOld.cy6} ,'%')</if>
+        <if test="mdlDPrizeOld.state != null"> and  mdl_d_prize_old.state =#{ mdlDPrizeOld.state} </if>
+        <if test="mdlDPrizeOld.isDeletemark != null"> and  mdl_d_prize_old.IS_DELETEMARK =#{ mdlDPrizeOld.isDeletemark} </if>
+        <if test="mdlDPrizeOld.createTimeFrom!= null">
+            AND mdl_d_prize_old.CREATE_TIME <![CDATA[ >= ]]>  #{mdlDPrizeOld.createTimeFrom}
+        </if>
+        <if test="mdlDPrizeOld.createTimeTo!= null">
+            AND  mdl_d_prize_old.CREATE_TIME <![CDATA[ <= ]]>  #{mdlDPrizeOld.createTimeTo}
+        </if>
+        <if test="mdlDPrizeOld.modifyTimeFrom!= null">
+            AND mdl_d_prize_old.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlDPrizeOld.modifyTimeFrom}
+        </if>
+        <if test="mdlDPrizeOld.modifyTimeTo!= null">
+            AND  mdl_d_prize_old.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlDPrizeOld.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

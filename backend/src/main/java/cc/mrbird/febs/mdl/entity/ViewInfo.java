@@ -94,33 +94,33 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="备注")
     private String note;
 
-    /**
-     * 编码
-     */
-
-    @ExcelField(value ="编码")
-    private String code;
-
-    /**
-     * 手术名称
-     */
-
-    @ExcelField(value ="手术名称")
-    private String name;
-
-    /**
-     * 手术等级
-     */
-
-    @ExcelField(value ="手术等级")
-    private String level;
-
-    /**
-     * 手术切口类别
-     */
-
-    @ExcelField(value ="手术切口类别")
-    private String lb;
+//    /**
+//     * 编码
+//     */
+//
+//    @ExcelField(value ="编码")
+//    private String code;
+//
+//    /**
+//     * 手术名称
+//     */
+//
+//    @ExcelField(value ="手术名称")
+//    private String name;
+//
+//    /**
+//     * 手术等级
+//     */
+//
+//    @ExcelField(value ="手术等级")
+//    private String level;
+//
+//    /**
+//     * 手术切口类别
+//     */
+//
+//    @ExcelField(value ="手术切口类别")
+//    private String lb;
 
 
     public static final String ID ="id" ;

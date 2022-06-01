@@ -1,5 +1,6 @@
 package cc.mrbird.febs.mdl.service;
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.mdl.entity.MdlDSurgery;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface IMdlDSurgeryService extends IService<MdlDSurgery> {
 
         IPage<MdlDSurgery> findMdlDSurgeryList(QueryRequest request, MdlDSurgery mdlDSurgery);
 
-        void createMdlDSurgery(MdlDSurgery mdlDSurgery);
+        void createMdlDSurgery(MdlDSurgery mdlDSurgery) throws FebsException;
 
         void updateMdlDSurgery(MdlDSurgery mdlDSurgery);
 

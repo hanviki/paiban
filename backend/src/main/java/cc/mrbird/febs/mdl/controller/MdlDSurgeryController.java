@@ -11,7 +11,9 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.utils.TreeUtil;
+import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfoD;
 import cc.mrbird.febs.mdl.entity.MdlDSurgeryImport;
+import cc.mrbird.febs.mdl.service.IMdlBSurgeryinfoDService;
 import cc.mrbird.febs.mdl.service.IMdlDSurgeryService;
 import cc.mrbird.febs.mdl.entity.MdlDSurgery;
 
@@ -22,6 +24,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -41,11 +44,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -62,6 +63,9 @@ public class MdlDSurgeryController extends BaseController{
 private String message;
 @Autowired
 public IMdlDSurgeryService iMdlDSurgeryService;
+
+@Autowired
+public IMdlBSurgeryinfoDService iMdlBSurgeryinfoDService;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
@@ -88,7 +92,7 @@ public Map<String, Object> List(QueryRequest request, MdlDSurgery mdlDSurgery){
         return getDataTable(this.iMdlDSurgeryService.findMdlDSurgerys(request, mdlDSurgery));
         }
     @GetMapping("tree")
-    public Map<String, Object> findMenus(String jb,String deptName) {
+    public Map<String, Object> findMenus(String jb,String deptName , Long baseId) {
         Map<String, Object> result = new HashMap<>();
         try {
             LambdaQueryWrapper<MdlDSurgery> queryWrapper = new LambdaQueryWrapper<>();
@@ -103,7 +107,10 @@ public Map<String, Object> List(QueryRequest request, MdlDSurgery mdlDSurgery){
             }
             queryWrapper.eq(MdlDSurgery::getIsDeletemark,1);
             queryWrapper.eq(MdlDSurgery::getDeptNew,deptName);
+            queryWrapper.apply("mdl_d_surgery.end_date is NULL");
             List<MdlDSurgery> menus = this.iMdlDSurgeryService.list(queryWrapper);
+            List<String> codeList= menus.stream().map(p->p.getCode()).collect(Collectors.toList());
+
             if(jb.equals("一级")) {
                 menus.add(getSurgery("一级"));
             }
@@ -123,6 +130,36 @@ public Map<String, Object> List(QueryRequest request, MdlDSurgery mdlDSurgery){
                 menus.add(getSurgery("四级"));
             }
 
+            /**
+             * 子表中有 主表没有的
+             */
+            QueryRequest request =new QueryRequest();
+            request.setPageNum(1);
+            request.setPageSize(10000);
+            MdlBSurgeryinfoD mdlBSurgeryinfoD= new MdlBSurgeryinfoD();
+            mdlBSurgeryinfoD.setBaseId(baseId);
+            request.setIsSearchCount(false);
+            List<MdlBSurgeryinfoD> list = this.iMdlBSurgeryinfoDService.findMdlBSurgeryinfoDList(request,mdlBSurgeryinfoD).getRecords();
+
+            List<MdlBSurgeryinfoD> leftList= list.stream().filter(p->!codeList.contains(p.getCode())).collect(Collectors.toList());
+            if(leftList.size()>0){
+                List<String> levelList= leftList.stream().map(p->p.getLevel()).distinct().collect(Collectors.toList());
+                for (String level:levelList
+                     ) {
+                    menus.add(getSurgery(level));
+                }
+                for (MdlBSurgeryinfoD d:leftList
+                     ) {
+                    MdlDSurgery surgery =new MdlDSurgery();
+                    surgery.setLevel(d.getLevel());
+                    surgery.setLb(d.getLb());
+                    surgery.setName(d.getName());
+                    surgery.setCode(d.getCode());
+                    surgery.setId(d.getSugeryId());
+                    surgery.setDeptNew(d.getDeptNew());
+                    menus.add(surgery);
+                }
+            }
 
             List<Tree<MdlDSurgery>> trees = new ArrayList<>();
             List<String> ids = new ArrayList<>();
@@ -245,7 +282,16 @@ public void updateMdlDSurgery(@Valid MdlDSurgery mdlDSurgery)throws FebsExceptio
         }
         }
 
+@PutMapping("batch")
+public void updateEndDate(String ids, Date endDate){
+    String[] list = ids.split(",");
+    LambdaQueryWrapper<MdlDSurgery> wrapper = new LambdaQueryWrapper<>();
+    wrapper.in(MdlDSurgery::getId, list);
+    MdlDSurgery update = new MdlDSurgery();
+    update.setEndDate(endDate);
+    this.iMdlDSurgeryService.update(update, wrapper);
 
+}
 @Log("删除")
 @DeleteMapping("/{ids}")
 //@RequiresPermissions("mdlDSurgery:delete")
@@ -313,7 +359,14 @@ public void onError(int sheetIndex, int rowIndex,
         ) {
     MdlDSurgery mdlDSurgery =new MdlDSurgery();
         BeanUtil.copyProperties(mdlDSurgeryImport,mdlDSurgery, CopyOptions.create().setIgnoreNullValue(true));
-        this.iMdlDSurgeryService.createMdlDSurgery(mdlDSurgery);
+        mdlDSurgery.setStartDate(DateUtil.parseDate(mdlDSurgeryImport.getStartDate()));
+        try {
+            this.iMdlDSurgeryService.createMdlDSurgery(mdlDSurgery);
+        }
+        catch (Exception ex){
+
+        }
+
         }
         }
 

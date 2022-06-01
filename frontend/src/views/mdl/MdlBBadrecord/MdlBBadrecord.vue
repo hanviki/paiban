@@ -34,14 +34,33 @@
             </a-col>
             <template v-if="advanced">
             <a-col :md="6" :sm="24" >
-               <a-form-item label="部门" v-bind="formItemLayout">
+               <a-form-item label="所在部门" v-bind="formItemLayout">
               <a-input v-model="queryParams.deptNew" />
                </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="24" >
+               <a-form-item label="记分部门" v-bind="formItemLayout">
+              <a-input v-model="queryParams.deptName" />
+               </a-form-item>
+            </a-col>
              <a-col :md="6" :sm="24" >
-                <a-form-item label="大类" v-bind="formItemLayout">
+                <a-form-item label="指标大类" v-bind="formItemLayout">
               <a-input v-model="queryParams.lb" />
                 </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="开始日期" v-bind="formItemLayout">
+                 <a-date-picker
+          @change="handleStartDateChange"
+        />
+              </a-form-item>
+            </a-col>
+             <a-col :md="6" :sm="24">
+              <a-form-item label="结束日期" v-bind="formItemLayout">
+                <a-date-picker
+          @change="handleEndDateChange"
+        />
+              </a-form-item>
             </a-col>
           </template>
           </div>
@@ -69,6 +88,13 @@
           v-hasPermission="['mdlBBadrecord:delete']"
           @click="batchDelete"
           >删除</a-button
+        >
+         <a-button
+          v-hasPermission="['mdlBBadrecord:import']"
+          type="primary"
+          ghost
+          @click="pass"
+          >批量上传附件</a-button
         >
         <a-dropdown v-hasPermission="['mdlBBadrecord:export']">
           <a-menu slot="overlay">
@@ -145,6 +171,22 @@
       :editVisiable="editVisiable"
     >
     </mdlBBadrecord-edit>
+     <a-modal
+      :maskClosable="false"
+      v-model="lookVisiable"
+      width="400px"
+      @ok="handleLookOk"
+      title="上传附件"
+    >
+      <a-form-item label="附件" v-bind="formItemLayout">
+        <upload-single-file
+            ref="fileagent"
+            @uploadRemove="removeAgent_1"
+            @uploadSuc="uploadAgent_1"
+          >
+          </upload-single-file>
+      </a-form-item>
+    </a-modal>
   </a-card>
 </template>
 
@@ -153,6 +195,7 @@ import MdlBBadrecordAdd from "./MdlBBadrecordAdd";
 import MdlBBadrecordEdit from "./MdlBBadrecordEdit";
 import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
+import UploadSingleFile from "../../common/uploadSingleFile"
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -160,7 +203,7 @@ const formItemLayout = {
 };
 export default {
   name: "MdlBBadrecord",
-  components: { MdlBBadrecordAdd, MdlBBadrecordEdit, ImportExcel },
+  components: { MdlBBadrecordAdd, MdlBBadrecordEdit, ImportExcel , UploadSingleFile},
   data() {
     return {
       advanced: false,
@@ -184,6 +227,11 @@ export default {
       loading: false,
       bordered: true,
       indData: [],
+       lookVisiable: false,
+      archives: [],
+      archiveId: [],
+      fileId: "",
+      fileUrl: ''
     };
   },
   computed: {
@@ -227,12 +275,12 @@ export default {
           width: 100,
         },
          {
-          title: "记分大类",
+          title: "指标大类",
           dataIndex: "lb",
           width: 80,
         },
         {
-          title: "编码",
+          title: "指标编码",
           dataIndex: "code",
           width: 80,
         },
@@ -292,6 +340,41 @@ export default {
 
   methods: {
     moment,
+      pass() {
+      if (!this.selectedRowKeys.length) {
+        this.$message.warning("请选择不良积分记录");
+        return;
+      }
+      this.lookVisiable = true;
+      this.fileId= '';
+      this.fileUrl = '';
+      },
+      handleLookOk(){
+        if (this.fileId == "") {
+        this.$message.warning("请选择附件");
+        return false;
+      } else {
+        this.$put("mdlBBadrecord/updateFile", {
+          ids: this.selectedRowKeys.join(","),
+          fileId: this.fileId,
+          fileUrl: this.fileUrl
+        }).then((r) => {
+          this.selectedRowKeys = []
+          this.$refs.fileagent.reset();
+          this.$message.success("附件上传成功");
+          this.lookVisiable = false;
+          this.search();
+        });
+      }
+      },
+       uploadAgent_1(fileId, fileUrl) {
+      this.fileId = fileId;
+      this.fileUrl = fileUrl;
+    },
+    removeAgent_1() {
+      this.fileId = "";
+      this.fileUrl = "";
+    },
     fetchIndict() {
       this.$get("mdlDBadscore", {
         pageNum: 1,
@@ -310,6 +393,22 @@ export default {
     },
     handleRefesh() {
       this.search();
+    },
+     handleStartDateChange(value) {
+      if(value==null){
+        delete this.queryParams.startDateFrom
+      }
+      else{
+        this.queryParams.startDateFrom = moment(value).format("YYYY-MM-DD");
+      }
+    },
+    handleEndDateChange(value) {
+      if(value==null){
+        delete this.queryParams.startDateTo
+      }
+      else{
+        this.queryParams.startDateTo = moment(value).format("YYYY-MM-DD");
+      }
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
@@ -435,8 +534,11 @@ export default {
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
       }
+      
       this.$get("mdlBBadrecord", {
         ...params,
+        sortField: 'id',
+        sortOrder: 'descend',
       }).then((r) => {
         let data = r.data;
         const pagination = { ...this.pagination };

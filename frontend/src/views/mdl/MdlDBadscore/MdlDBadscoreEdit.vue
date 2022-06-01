@@ -10,21 +10,21 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
      <a-form :form="form">
-       <a-form-item v-bind="formItemLayout" label="大类">
+       <a-form-item v-bind="formItemLayout" label="指标大类">
         <a-input
-          placeholder="请输入大类"
+          placeholder="请输入指标大类"
           v-decorator="[
             'lb',
-            { rules: [{ required: true, message: '大类不能为空' }] },
+            { rules: [{ required: true, message: '指标大类不能为空' }] },
           ]"
         />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="编码">
+      <a-form-item v-bind="formItemLayout" label="指标编码">
         <a-input
-          placeholder="请输入编码"
+          placeholder="请输入指标编码"
           v-decorator="[
             'code',
-            { rules: [{ required: true, message: '编码不能为空' }] },
+            { rules: [{ required: true, message: '指标编码不能为空' }] },
           ]"
         />
       </a-form-item>

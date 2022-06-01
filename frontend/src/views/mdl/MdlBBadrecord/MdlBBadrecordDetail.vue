@@ -48,12 +48,17 @@
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24" >
-               <a-form-item label="部门" v-bind="formItemLayout">
+               <a-form-item label="所在部门" v-bind="formItemLayout">
               <a-input v-model="queryParams.deptNew" />
                </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="24" >
+               <a-form-item label="记分部门" v-bind="formItemLayout">
+              <a-input v-model="queryParams.deptName" />
+               </a-form-item>
+            </a-col>
              <a-col :md="6" :sm="24" >
-                <a-form-item label="大类" v-bind="formItemLayout">
+                <a-form-item label="指标大类" v-bind="formItemLayout">
               <a-input v-model="queryParams.lb" />
                 </a-form-item>
             </a-col>
@@ -192,12 +197,12 @@ export default {
           width: 100,
         },
          {
-          title: "记分大类",
+          title: "指标大类",
           dataIndex: "lb",
           width: 80,
         },
         {
-          title: "编码",
+          title: "指标编码",
           dataIndex: "code",
           width: 80,
         },

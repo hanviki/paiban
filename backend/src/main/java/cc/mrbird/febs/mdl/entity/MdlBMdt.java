@@ -244,6 +244,19 @@ private static final long serialVersionUID=1L;
         @ExcelField(value ="修改人")
     private Long modifyUserId;
 
+    /**
+     * 附件ID
+     */
+
+    @ExcelField(value ="附件ID")
+    private String fileId;
+
+    /**
+     * 附件地址
+     */
+
+    @ExcelField(value ="附件地址")
+    private String fileUrl;
 
 
     public static final String ID ="id" ;

@@ -45,8 +45,20 @@
 
     </update>
     <select id="findMdlBSurgeryinfoD" resultType="cc.mrbird.febs.mdl.entity.MdlBSurgeryinfoD" parameterType="cc.mrbird.febs.mdl.entity.MdlBSurgeryinfoD">
-        select  *  from mdl_b_surgeryinfo_d
-        where  1=1
+        SELECT
+        mdl_d_surgery.dept_new,
+        mdl_d_surgery.`code`,
+        mdl_d_surgery.`name`,
+        mdl_d_surgery.`level`,
+        mdl_d_surgery.lb,
+        mdl_d_surgery.id AS sugery_id,
+        mdl_b_surgeryinfo_d.id,
+        mdl_b_surgeryinfo_d.base_id
+        FROM
+        mdl_b_surgeryinfo_d inner join
+        mdl_d_surgery  on mdl_b_surgeryinfo_d.`code` =mdl_d_surgery.code
+        where  mdl_d_surgery.end_date is NULL and mdl_b_surgeryinfo_d.IS_DELETEMARK=1
+        <if test="mdlBSurgeryinfoD.baseId != null and mdlBSurgeryinfoD.baseId != ''"> and  mdl_b_surgeryinfo_d.base_id = #{ mdlBSurgeryinfoD.baseId}</if>
             <if test="mdlBSurgeryinfoD.deptNew != null and mdlBSurgeryinfoD.deptNew != ''"> and  mdl_b_surgeryinfo_d.dept_new like concat('%', #{ mdlBSurgeryinfoD.deptNew} ,'%')</if>
             <if test="mdlBSurgeryinfoD.code != null and mdlBSurgeryinfoD.code != ''"> and  mdl_b_surgeryinfo_d.code like concat('%', #{ mdlBSurgeryinfoD.code} ,'%')</if>
             <if test="mdlBSurgeryinfoD.name != null and mdlBSurgeryinfoD.name != ''"> and  mdl_b_surgeryinfo_d.name like concat('%', #{ mdlBSurgeryinfoD.name} ,'%')</if>

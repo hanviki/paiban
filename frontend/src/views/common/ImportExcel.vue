@@ -5,7 +5,7 @@
          <a-button
             @click="exportTemplate"
             type="primary"
-            :loading="loading"
+            :loading="uploading"
           >导入模板下载</a-button>
           </a-col>
 
@@ -90,16 +90,16 @@ export default {
       formData.append('file', fileList[0])
       this.uploading = true
       this.$upload(this.url, formData).then((r) => {
+         this.uploading = false
+          this.$emit('succ')
         let data = r.data.data
-        if (data.data.length) {
-          this.fetch()
-        }
+        if (data!=null&&data.data!=null&&data.data.length) {
         this.importData = data.data
         this.errors = data.error
         this.times = data.time / 1000
-        this.uploading = false
+        }
         this.fileList = []
-        this.importResultVisible = true
+       // this.importResultVisible = true
       }).catch((r) => {
         console.error(r)
         this.uploading = false

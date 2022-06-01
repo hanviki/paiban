@@ -1,7 +1,6 @@
 package cc.mrbird.febs.mdl.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -17,23 +16,30 @@ import cc.mrbird.febs.common.converter.*;
 
 /**
  * <p>
- * 手术目录
+ * 新技术获奖记录
  * </p>
  *
  * @author viki
- * @since 2022-05-27
+ * @since 2022-05-25
  */
 
-@Excel("mdl_d_surgery")
+@Excel("mdl_d_prize_old")
 @Data
 @Accessors(chain = true)
-public class MdlDSurgery implements Serializable{
+public class MdlDPrizeOld implements Serializable{
 
 private static final long serialVersionUID=1L;
 
                     @TableId(value = "id" , type = IdType.AUTO)
                 
     private Long id;
+
+    /**
+     * 获奖年度
+     */
+        
+        @ExcelField(value ="获奖年度")
+    private String year;
 
     /**
      * 科室
@@ -43,63 +49,73 @@ private static final long serialVersionUID=1L;
     private String deptNew;
 
     /**
-     * 编码
+     * 项目负责人
      */
         
-        @ExcelField(value ="编码")
-    private String code;
+        @ExcelField(value ="项目负责人")
+    private String xmfzr;
 
     /**
-     * 手术名称
+     * 项目名称
      */
         
-        @ExcelField(value ="手术名称")
-    private String name;
+        @ExcelField(value ="项目名称")
+    private String xmmc;
 
     /**
-     * 手术等级
+     * 获奖等级
      */
         
-        @ExcelField(value ="手术等级")
-    private String level;
+        @ExcelField(value ="获奖等级")
+    private String hjdj;
 
     /**
-     * 手术切口类别
+     * 项目成员1
      */
         
-        @ExcelField(value ="手术切口类别")
-    private String lb;
+        @ExcelField(value ="项目成员1")
+    private String cy1;
 
     /**
-     * 备注
+     * 项目成员2
      */
         
-        @ExcelField(value ="备注")
-    private String note;
+        @ExcelField(value ="项目成员2")
+    private String cy2;
 
     /**
-     * 启用时间
+     * 项目成员3
      */
         
-        @ExcelField(value ="启用时间", writeConverter = DateConverter.class,readConverter = DateReadConverter.class)
-    private Date startDate;
-    private transient String startDateFrom;
-    private transient String startDateTo;
+        @ExcelField(value ="项目成员3")
+    private String cy3;
 
     /**
-     * 停用时间
+     * 项目成员4
      */
         
-        @ExcelField(value ="停用时间", writeConverter = DateConverter.class,readConverter = DateReadConverter.class)
-    private Date endDate;
-    private transient String endDateFrom;
-    private transient String endDateTo;
+        @ExcelField(value ="项目成员4")
+    private String cy4;
+
+    /**
+     * 项目成员5
+     */
+        
+        @ExcelField(value ="项目成员5")
+    private String cy5;
+
+    /**
+     * 项目成员6
+     */
+        
+        @ExcelField(value ="项目成员6")
+    private String cy6;
 
     /**
      * 状态
      */
         
-        @ExcelField(value ="状态")
+
     private Integer state;
 
     /**
@@ -107,7 +123,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("IS_DELETEMARK")
         
-        @ExcelField(value ="是否删除")
+
     private Integer isDeletemark;
 
     /**
@@ -115,8 +131,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("CREATE_TIME")
         
-        @ExcelField(value ="创建时间", writeConverter = DateConverter.class,readConverter = DateReadConverter.class)
-    private Date createTime;
+       private Date createTime;
     private transient String createTimeFrom;
     private transient String createTimeTo;
 
@@ -125,8 +140,7 @@ private static final long serialVersionUID=1L;
      */
     @TableField("MODIFY_TIME")
         
-        @ExcelField(value ="修改时间", writeConverter = DateConverter.class,readConverter = DateReadConverter.class)
-    private Date modifyTime;
+   private Date modifyTime;
     private transient String modifyTimeFrom;
     private transient String modifyTimeTo;
 
@@ -134,37 +148,41 @@ private static final long serialVersionUID=1L;
      * 创建人
      */
     @TableField("CREATE_USER_ID")
-        
-        @ExcelField(value ="创建人")
-    private Long createUserId;
+  private Long createUserId;
 
     /**
      * 修改人
      */
     @TableField("MODIFY_USER_ID")
         
-        @ExcelField(value ="修改人")
+
     private Long modifyUserId;
 
 
 
     public static final String ID ="id" ;
 
+    public static final String YEAR ="year" ;
+
     public static final String DEPT_NEW ="dept_new" ;
 
-    public static final String CODE ="code" ;
+    public static final String XMFZR ="xmfzr" ;
 
-    public static final String NAME ="name" ;
+    public static final String XMMC ="xmmc" ;
 
-    public static final String LEVEL ="level" ;
+    public static final String HJDJ ="hjdj" ;
 
-    public static final String LB ="lb" ;
+    public static final String CY1 ="cy1" ;
 
-    public static final String NOTE ="note" ;
+    public static final String CY2 ="cy2" ;
 
-    public static final String START_DATE ="start_date" ;
+    public static final String CY3 ="cy3" ;
 
-    public static final String END_DATE ="end_date" ;
+    public static final String CY4 ="cy4" ;
+
+    public static final String CY5 ="cy5" ;
+
+    public static final String CY6 ="cy6" ;
 
     public static final String STATE ="state" ;
 

@@ -11,6 +11,8 @@
                     <result column="level" property="level"/>
                     <result column="lb" property="lb"/>
                     <result column="note" property="note"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
                     <result column="state" property="state"/>
                     <result column="IS_DELETEMARK" property="isDeletemark"/>
                     <result column="CREATE_TIME" property="createTime"/>
@@ -21,7 +23,7 @@
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, dept_new, code, name, level, lb, note, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, dept_new, code, name, level, lb, note, start_date, end_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
     </sql>
     <update id="updateMdlDSurgery" parameterType="cc.mrbird.febs.mdl.entity.MdlDSurgery">
         update mdl_d_surgery
@@ -32,6 +34,8 @@
 <if test="level != null">level=#{level},</if>
 <if test="lb != null">lb=#{lb},</if>
 <if test="note != null">note=#{note},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
 <if test="state != null">state=#{state},</if>
 <if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
 <if test="createTime != null">CREATE_TIME=#{createTime},</if>
@@ -51,6 +55,18 @@
             <if test="mdlDSurgery.level != null and mdlDSurgery.level != ''"> and  mdl_d_surgery.level like concat('%', #{ mdlDSurgery.level} ,'%')</if>
             <if test="mdlDSurgery.lb != null and mdlDSurgery.lb != ''"> and  mdl_d_surgery.lb like concat('%', #{ mdlDSurgery.lb} ,'%')</if>
             <if test="mdlDSurgery.note != null and mdlDSurgery.note != ''"> and  mdl_d_surgery.note like concat('%', #{ mdlDSurgery.note} ,'%')</if>
+        <if test="mdlDSurgery.startDateFrom!= null">
+            AND mdl_d_surgery.start_date <![CDATA[ >= ]]>  #{mdlDSurgery.startDateFrom}
+        </if>
+        <if test="mdlDSurgery.startDateTo!= null">
+            AND  mdl_d_surgery.start_date <![CDATA[ <= ]]>  #{mdlDSurgery.startDateTo}
+        </if>
+        <if test="mdlDSurgery.endDateFrom!= null">
+            AND mdl_d_surgery.end_date <![CDATA[ >= ]]>  #{mdlDSurgery.endDateFrom}
+        </if>
+        <if test="mdlDSurgery.endDateTo!= null">
+            AND  mdl_d_surgery.end_date <![CDATA[ <= ]]>  #{mdlDSurgery.endDateTo}
+        </if>
         <if test="mdlDSurgery.state != null"> and  mdl_d_surgery.state =#{ mdlDSurgery.state} </if>
         <if test="mdlDSurgery.isDeletemark != null"> and  mdl_d_surgery.IS_DELETEMARK =#{ mdlDSurgery.isDeletemark} </if>
         <if test="mdlDSurgery.createTimeFrom!= null">
@@ -66,14 +82,5 @@
             AND  mdl_d_surgery.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlDSurgery.modifyTimeTo}
         </if>
 </select>
-    <select id="findSdlBUserMgByDeptId" resultType="cc.mrbird.febs.sdl.entity.CustomUser">
-        select  user_account_name, user_account, user_type,user_type_name  from sdl_b_user_mg
-        where  1=1
-        and dept_id in
-        <foreach item="item" index="index" collection="typeList" open="(" separator="," close=")">
-            #{item}
-        </foreach>
-        and state!=0
 
-    </select>
 </mapper>

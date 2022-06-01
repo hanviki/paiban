@@ -148,12 +148,12 @@ export default {
       sortedInfo = sortedInfo || {};
       return [
         {
-          title: "大类",
+          title: "指标大类",
           dataIndex: "lb",
           width: 60,
         },
         {
-          title: "序号",
+          title: "指标编码",
           dataIndex: "code",
           width: 100,
         },

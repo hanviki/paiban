@@ -1,6 +1,7 @@
 package cc.mrbird.febs.mdl.service;
 
 import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfo;
+import cc.mrbird.febs.mdl.entity.MdlBSurgeryinfoD;
 import cc.mrbird.febs.mdl.entity.ViewInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
@@ -29,5 +30,5 @@ public interface IMdlBSurgeryinfoService extends IService<MdlBSurgeryinfo> {
 
         void deleteMdlBSurgeryinfos(String[]Ids);
 
-
+        void InserSub(MdlBSurgeryinfoD mdlBSurgeryinfoD);
         }

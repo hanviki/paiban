@@ -33,11 +33,13 @@
                     <result column="MODIFY_TIME" property="modifyTime"/>
                     <result column="CREATE_USER_ID" property="createUserId"/>
                     <result column="MODIFY_USER_ID" property="modifyUserId"/>
+            <result column="file_id" property="fileId"/>
+            <result column="file_url" property="fileUrl"/>
         </resultMap>
 
         <!-- 通用查询结果列 -->
         <sql id="Base_Column_List">
-        id, team_name, dept_head, is_menzhen, user_account_name_leader, user_account_leader, tel_leader, email_leader, user_account_name_assist, user_account_name_leader2, user_account_leader2, tel_leader2, email_leader2, tel_assist, email_assist, tel_assist2, email_assist2, user_account_name_assist2, user_account_assist2, user_account_assist, state, start_date, end_date, note, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+        id, team_name, dept_head, is_menzhen, user_account_name_leader, user_account_leader, tel_leader, email_leader, user_account_name_assist, user_account_name_leader2, user_account_leader2, tel_leader2, email_leader2, tel_assist, email_assist, tel_assist2, email_assist2, user_account_name_assist2, user_account_assist2, user_account_assist, state, start_date, end_date, note, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, file_id, file_url, MODIFY_USER_ID
     </sql>
     <update id="updateMdlBMdt" parameterType="cc.mrbird.febs.mdl.entity.MdlBMdt">
         update mdl_b_mdt
@@ -70,6 +72,8 @@
 <if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
 <if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
 <if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+            <if test="fileId != null">file_id=#{fileId},</if>
+            <if test="fileUrl != null">file_url=#{fileUrl},</if>
         </trim>
                 where id=#{id}
 

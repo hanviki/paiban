@@ -9,31 +9,22 @@
     :visible="editVisiable"
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
-   <a-form :form="form">
-     <a-row>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="团队名称">
-        <a-input
-          placeholder="请输入团队名称"
-          v-decorator="[
-            'teamName',
-            { rules: [{ required: true, message: '团队名称不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-       </a-col>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="牵头科室">
-        <a-input
-          placeholder="请输入牵头科室"
-          v-decorator="[
-            'deptHead',
-            { rules: [{ required: true, message: '牵头科室不能为空' }] },
-          ]"
-        />
-      </a-form-item>
-       </a-col>
-       <a-col :sm="12">
+     <a-form :form="form">
+      <a-card title="团队基本信息" :headStyle="headStyle" >
+     
+      <a-row>
+      <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="团队名称">
+          <a-input
+            placeholder="请输入团队名称"
+            v-decorator="[
+              'teamName',
+              { rules: [{ required: true, message: '团队名称不能为空' }] },
+            ]"
+          />
+        </a-form-item>
+      </a-col>
+         <a-col :sm="12">
         <a-form-item v-bind="formItemLayout" label="是否开通MDT门诊">
           <a-select
             placeholder="请输入是否开通MDT门诊"
@@ -49,35 +40,103 @@
           </a-select-option>
           </a-select>
         </a-form-item>
-     
-       </a-col>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="团队负责人">
-         <select-user-remote ref="user1"  v-decorator="[
-            'userAccountLeader',
-           
-          ]" @userChang="userChange" >
-         </select-user-remote>
-      </a-form-item>
-       </a-col>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="团队负责人姓名">
-        <a-input
-          disabled
-          placeholder="请输入团队负责人姓名"
+      </a-col>
+      <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="牵头科室">
+          <a-input
+            placeholder="请输入牵头科室"
+            v-decorator="[
+              'deptHead',
+              { rules: [{ required: true, message: '牵头科室不能为空' }] },
+            ]"
+          />
+        </a-form-item>
+      </a-col>
+    
+       <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="成立时间">
+          <a-date-picker
+            placeholder="请选择成立时间"
+            :dateFormat="dateFormat"
+            v-decorator="['startDate']"
+          >
+          </a-date-picker>
+        </a-form-item>
+      </a-col>
+      <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="废止时间">
+          <a-date-picker
+            placeholder="请选择废止时间"
+            :dateFormat="dateFormat"
+            v-decorator="['endDate']"
+          >
+          </a-date-picker>
+        </a-form-item>
+      </a-col>
+       <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="备注">
+          <a-textarea
+          placeholder="请输入备注"
           v-decorator="[
-            'userAccountNameLeader',
-          
+            'note',
+           
           ]"
         />
+        </a-form-item>
+      </a-col>
+        <a-col :sm="12">
+       <a-form-item v-bind="formItemLayout" label="团队申报书">
+        <upload-single-file
+            ref="fileagent"
+            @uploadRemove="removeAgent_1"
+            @uploadSuc="uploadAgent_1"
+          >
+          </upload-single-file>
       </a-form-item>
        </a-col>
-         <a-col :sm="12">
+      </a-row>
+       </a-card>
+         <a-card title="负责人信息" :headStyle="headStyle" >
+           <a-row>
+      <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="团队负责人1">
+          <select-user-remote
+            ref="user1"
+            v-decorator="[
+              'userAccountLeader',
+             
+            ]"
+            @userChang="userChange"
+          >
+          </select-user-remote>
+        </a-form-item>
+      </a-col>
+       <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="团队负责人2">
+          <select-user-remote
+            ref="user12"
+            v-decorator="['userAccountLeader2']"
+            @userChang="userChange3"
+          >
+          </select-user-remote>
+        </a-form-item>
+      </a-col>
+     <a-col :sm="12">
         <a-form-item v-bind="formItemLayout" label="团队负责人电话">
           <a-input
             placeholder="请输入团队负责人电话"
             v-decorator="[
               'telLeader',
+            ]"
+          />
+        </a-form-item>
+      </a-col>
+       <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="团队负责人2电话">
+          <a-input
+            placeholder="请输入团队负责人2电话"
+            v-decorator="[
+              'telLeader2',
             ]"
           />
         </a-form-item>
@@ -92,37 +151,7 @@
           />
         </a-form-item>
       </a-col>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="团队负责人2">
-         <select-user-remote ref="user12"  v-decorator="[
-            'userAccountLeader2',
-         
-          ]" @userChang="userChange3" >
-         </select-user-remote>
-      </a-form-item>
-       </a-col>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="团队负责人2姓名">
-        <a-input
-          disabled
-          placeholder="请输入团队负责人姓名"
-          v-decorator="[
-            'userAccountNameLeader2',
-         
-          ]"
-        />
-      </a-form-item>
-       </a-col>
-        <a-col :sm="12">
-        <a-form-item v-bind="formItemLayout" label="团队负责人2电话">
-          <a-input
-            placeholder="请输入团队负责人2电话"
-            v-decorator="[
-              'telLeader2',
-            ]"
-          />
-        </a-form-item>
-      </a-col>
+        
        <a-col :sm="12">
         <a-form-item v-bind="formItemLayout" label="团队负责人2邮箱">
           <a-input
@@ -133,28 +162,24 @@
           />
         </a-form-item>
       </a-col>
-        <a-col :sm="12">
-       <a-form-item v-bind="formItemLayout" label="团队秘书">
-        <select-user-remote  ref="user2"  v-decorator="[
-            'userAccountAssist',
+         </a-row>
+     </a-card>
+      <a-card title="团队秘书信息" :headStyle="headStyle" >
+     <a-row>
+      <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="团队秘书">
+          <select-user-remote
+            ref="user2"
+            v-decorator="[
+              'userAccountAssist',
            
-          ]" @userChang="userChange2" >
-         </select-user-remote>
-      </a-form-item> 
-       </a-col>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="团队秘书姓名">
-        <a-input
-          disabled
-          placeholder="请输入团队秘书姓名"
-          v-decorator="[
-            'userAccountNameAssist',
-           
-          ]"
-        />
-      </a-form-item>
-       </a-col>
-       <a-col :sm="12">
+            ]"
+            @userChang="userChange2"
+          >
+          </select-user-remote>
+        </a-form-item>
+      </a-col>
+      <a-col :sm="12">
         <a-form-item v-bind="formItemLayout" label="团队秘书电话">
           <a-input
             placeholder="请输入团队秘书电话"
@@ -174,27 +199,18 @@
           />
         </a-form-item>
       </a-col>
-        <!-- <a-col :sm="12">
-       <a-form-item v-bind="formItemLayout" label="团队秘书2">
-        <select-user-remote  ref="user22"  v-decorator="[
-            'userAccountAssist2',
-          ]" @userChang="userChange4" >
-         </select-user-remote>
-      </a-form-item> 
-       </a-col>
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="团队秘书2姓名">
-        <a-input
-          disabled
-          placeholder="请输入团队秘书姓名"
-          v-decorator="[
-            'userAccountNameAssist2',
-           
-          ]"
-        />
-      </a-form-item>
-       </a-col>
-       <a-col :sm="12">
+     
+      <!-- <a-col :sm="12">
+        <a-form-item v-bind="formItemLayout" label="团队秘书2">
+          <select-user-remote
+            ref="user22"
+            v-decorator="['userAccountAssist2']"
+            @userChang="userChange4"
+          >
+          </select-user-remote>
+        </a-form-item>
+      </a-col>
+      <a-col :sm="12">
         <a-form-item v-bind="formItemLayout" label="团队秘书2电话">
           <a-input
             placeholder="请输入团队秘书2电话"
@@ -214,50 +230,16 @@
           />
         </a-form-item>
       </a-col> -->
-        <a-col :sm="12">
-      <a-form-item v-bind="formItemLayout" label="开始时间">
-        <a-date-picker 
-        placeholder="请选择开始时间"
-        :dateFormat="dateFormat"
-         v-decorator="[
-            'startDate',
-         
-          ]">
-        </a-date-picker>
-      </a-form-item>
-       </a-col>
-        <a-col :sm="12">
-       <a-form-item v-bind="formItemLayout" label="结束时间">
-        <a-date-picker 
-        placeholder="请选择结束时间"
-        :dateFormat="dateFormat"
-         v-decorator="[
-            'endDate',
-          
-          ]">
-        </a-date-picker>
-      </a-form-item>
-       </a-col>
-       <a-col :sm="12">
-        <a-form-item v-bind="formItemLayout" label="备注">
-          <a-textarea
-          placeholder="请输入备注"
-          v-decorator="[
-            'note',
-           
-          ]"
-        />
-        </a-form-item>
-      </a-col>
-       </a-row>
+      </a-row>
+         </a-card>
     </a-form>
-        <a-card title="核心成员" headStyle="font-weight:bold">
+        <a-card title="核心成员" :headStyle="headStyle">
         <add-user ref="userHX" :baseId="mdlBMdt.id" :type="0"></add-user>
     </a-card>
-    <a-card title="其他成员" headStyle="font-weight:bold">
+    <a-card title="其他成员" :headStyle="headStyle">
         <add-user ref="userQT" :baseId="mdlBMdt.id" :type="1"></add-user>
     </a-card>
-      <a-card title="年度总结" headStyle="font-weight:bold">
+      <a-card title="年度总结" :headStyle="headStyle">
         <mdl-b-mdt-file ref="file" :baseId="mdlBMdt.id"></mdl-b-mdt-file>
     </a-card>
     <div class="drawer-bootom-button">
@@ -280,6 +262,7 @@ import moment from "moment";
 import SelectUserRemote from '../../common/SelectUserRemote.vue';
 import AddUser from './AddUser.vue';
 import MdlBMdtFile from '../MdlBMdtFile/MdlBMdtFile.vue';
+import UploadSingleFile from "../../common/uploadSingleFile"
 
 const formItemLayout = {
   labelCol: { span: 6 },
@@ -292,7 +275,7 @@ export default {
       default: false,
     },
   },
-  components: {SelectUserRemote, AddUser, MdlBMdtFile},
+  components: {SelectUserRemote, AddUser, MdlBMdtFile, UploadSingleFile},
   data() {
     return {
       loading: false,
@@ -300,6 +283,9 @@ export default {
        dateFormat: "YYYY-MM-DD",
       form: this.$form.createForm(this),
       mdlBMdt: {},
+      headStyle: {
+        "font-weight": "bold"
+      }
     };
   },
   methods: {
@@ -311,7 +297,16 @@ export default {
      // this.$refs.user22.reset();
        this.$refs.userHX.reset();
       this.$refs.userQT.reset();
+      this.$refs.fileagent.reset();
       this.form.resetFields();
+    },
+     uploadAgent_1(fileId, fileUrl) {
+      this.mdlBMdt.fileId = fileId;
+      this.mdlBMdt.fileUrl = fileUrl;
+    },
+    removeAgent_1() {
+      this.mdlBMdt.fileId = "";
+      this.mdlBMdt.fileUrl = "";
     },
     onClose() {
       this.reset();
@@ -393,8 +388,13 @@ export default {
           }
         }
       });
+      this.mdlBMdt.fileId = mdlBMdt.fileId;
+      this.mdlBMdt.fileUrl = mdlBMdt.fileUrl;
       this.mdlBMdt.id = mdlBMdt.id;
       let that= this
+      setTimeout(()=>{
+        that.$refs.fileagent.setForm(mdlBMdt.fileId);
+      },200)
       setTimeout(()=>{
          that.$refs.user1.setFiledValue(mdlBMdt.userAccountLeader)
          that.$refs.user2.setFiledValue(mdlBMdt.userAccountAssist)
@@ -410,6 +410,8 @@ export default {
         if (!err) {
           let mdlBMdt = this.form.getFieldsValue();
           mdlBMdt.id = this.mdlBMdt.id;
+           mdlBMdt.fileId = this.mdlBMdt.fileId;
+          mdlBMdt.fileUrl = this.mdlBMdt.fileUrl;
           let jsond1= this.$refs.userHX.getAll()
           let jsond2= this.$refs.userQT.getAll()
 

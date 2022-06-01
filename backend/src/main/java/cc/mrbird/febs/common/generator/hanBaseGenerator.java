@@ -65,7 +65,7 @@ public class hanBaseGenerator {
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
         //strategy.setTablePrefix(new String[] { "tlog_", "tsys_" });// 此处可以修改为您的表前缀
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        strategy.setInclude(new String[]{"mdl_b_badrecord"}); // 需要生成的表
+        strategy.setInclude(new String[]{"mdl_d_surgery"}); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -129,9 +129,13 @@ public class hanBaseGenerator {
 
         //在生成页面时候  查询字段设置
         List<String> searchFiledsList = new ArrayList<>();
-        searchFiledsList.add("valid_date");
-        searchFiledsList.add("user_account");
-        searchFiledsList.add("dept_name");
+        searchFiledsList.add("dept_new");
+        searchFiledsList.add("fzr");
+        searchFiledsList.add("xmmc");
+        searchFiledsList.add("year");
+        searchFiledsList.add("xmfzr");
+
+
      //   searchFiledsList.add("level");
     //    searchFiledsList.add("");
      //   searchFiledsList.add("");
@@ -171,7 +175,7 @@ public class hanBaseGenerator {
                 return PageUrl + moduleName + "/" + tableInfo.getEntityName() + "/" + tableInfo.getEntityName() + ".vue";
             }
         });
-
+/**
         //   cfg.setFileOutConfigList(focList);
         //   mpg.setCfg(cfg);
 

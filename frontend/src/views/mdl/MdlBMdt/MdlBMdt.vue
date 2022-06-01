@@ -4,25 +4,45 @@
       <a-form layout="horizontal">
         <a-row>
           <div :class="advanced ? null : 'fold'">
-            <a-col :md="8" :sm="24">
+            <a-col :md="6" :sm="24">
               <a-form-item label="团队名称" v-bind="formItemLayout">
                 <a-input v-model="queryParams.teamName" />
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
+            <a-col :md="6" :sm="24">
               <a-form-item label="牵头科室" v-bind="formItemLayout">
                 <a-input v-model="queryParams.deptHead" />
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="团队负责人发薪号" v-bind="formItemLayout">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="团队负责人" v-bind="formItemLayout">
                 <a-input v-model="queryParams.userAccountLeader" />
               </a-form-item>
             </a-col>
+            <a-col :md="6" :sm="24">
+              <a-form-item label="团队秘书" v-bind="formItemLayout">
+                <a-input v-model="queryParams.userAccountAssist" />
+              </a-form-item>
+            </a-col>
             <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="团队秘书发薪号" v-bind="formItemLayout">
-                  <a-input v-model="queryParams.userAccountAssist" />
+              <a-col :md="6" :sm="24">
+                <a-form-item label="考核年度" v-bind="formItemLayout">
+                  <a-input v-model="queryParams.telLeader2" />
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="考核结果" v-bind="formItemLayout">
+                  <a-select v-model="queryParams.emailLeader2">
+                    <a-select-option value="-1"> 全部 </a-select-option>
+                    <a-select-option value="优秀"> 优秀 </a-select-option>
+                    <a-select-option value="合格"> 合格 </a-select-option>
+                    <a-select-option value="不合格"> 不合格 </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
+                <a-form-item label="参与人员" v-bind="formItemLayout">
+                  <a-input v-model="queryParams.telAssist" />
                 </a-form-item>
               </a-col>
             </template>
@@ -87,7 +107,7 @@
           :dataSource="record.innerData"
           :pagination="false"
           :rowKey="(record2) => record2.id"
-          :scroll="{x:800, y: 200 }"
+          :scroll="{ x: 800, y: 200 }"
         >
         </a-table>
         <template slot="remark" slot-scope="text, record">
@@ -303,7 +323,7 @@ export default {
           title: "有效日期",
           children: [
             {
-              title: "开始时间",
+              title: "成立时间",
               dataIndex: "startDate",
               width: 100,
               customRender: (text, row, index) => {
@@ -312,7 +332,7 @@ export default {
               },
             },
             {
-              title: "结束时间",
+              title: "废止时间",
               dataIndex: "endDate",
               width: 100,
               customRender: (text, row, index) => {
@@ -322,10 +342,26 @@ export default {
             },
           ],
         },
-         {
+        {
+          title: "团队申报书",
+          dataIndex: "fileId",
+          customRender: (text, row, index) => {
+            if (text != null && text != "") {
+              return (
+                <a href={this.$baseUrl + row.fileUrl} target="_blank">
+                  查看
+                </a>
+              );
+            }
+            return "";
+          },
+          width: 100,
+        },
+        {
           title: "备注",
           dataIndex: "note",
         },
+
         {
           title: "操作",
           dataIndex: "operation",
@@ -527,6 +563,9 @@ export default {
         // 如果分页信息为空，则设置为默认值
         params.pageSize = this.pagination.defaultPageSize;
         params.pageNum = this.pagination.defaultCurrent;
+      }
+      if (params.emailLeader2 == -1) {
+        delete params.emailLeader2;
       }
       this.$get("mdlBMdt", {
         ...params,

@@ -19,6 +19,34 @@
           ]"
         />
       </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="考核分数">
+        <a-input-number
+          placeholder="请输入考核分数"
+          v-decorator="[
+            'score',
+            { rules: [{ required: true, message: '考核分数不能为空' }] },
+          ]"
+        />
+      </a-form-item>
+       <a-form-item v-bind="formItemLayout" label="考核结果">
+        <a-select
+          placeholder="请输入考核结果"
+          v-decorator="[
+            'result',
+            { rules: [{ required: true, message: '考核结果不能为空' }] },
+          ]"
+        >
+       <a-select-option value="优秀">
+          优秀
+        </a-select-option>
+        <a-select-option value="合格">
+          合格
+        </a-select-option>
+        <a-select-option value="不合格">
+          不合格
+        </a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="备注">
        <a-textarea
           placeholder="请输入备注"
@@ -115,6 +143,8 @@ export default {
       let fields = [
         "year",
         "note",
+         "result",
+         "score"
       ];
       let fieldDates = [];
       Object.keys(mdlBMdtFile).forEach((key) => {
