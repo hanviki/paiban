@@ -285,7 +285,7 @@ export default {
       this.editVisiable = false;
     },
     edit(record) {
-      if(record.jb==''){
+      if(record.jb==null || record.jb==''){
          this.$message.warning("级别为空，不支持编辑");
         return;
       }
