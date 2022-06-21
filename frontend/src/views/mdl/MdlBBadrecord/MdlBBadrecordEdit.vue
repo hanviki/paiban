@@ -220,6 +220,14 @@ export default {
       this.mdlBBadrecord.fileId = mdlBBadrecord.fileId;
       this.mdlBBadrecord.fileUrl = mdlBBadrecord.fileUrl;
       this.mdlBBadrecord.id = mdlBBadrecord.id;
+        this.mdlBBadrecord.userAccountName = mdlBBadrecord.userAccountName;
+      this.mdlBBadrecord.userAccount = mdlBBadrecord.userAccount;
+     // this.mdlBBadrecord["deptName"] = option.key.deptNew;
+      this.mdlBBadrecord.type = mdlBBadrecord.rylx;
+      this.mdlBBadrecord.yggh = mdlBBadrecord.yggh;
+      this.mdlBBadrecord.deptNew = mdlBBadrecord.deptNew;
+      this.mdlBBadrecord.rszfw = mdlBBadrecord.renshizifw;
+
       let that = this;
       setTimeout(() => {
         that.$refs.fileagent.setForm(mdlBBadrecord.fileId);

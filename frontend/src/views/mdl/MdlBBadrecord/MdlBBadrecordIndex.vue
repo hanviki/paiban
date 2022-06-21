@@ -47,6 +47,7 @@
           </template>
           </div>
           <span style="float: right; margin-top: 3px">
+            <a-button type="primary" @click="openUploadFile">上传附件</a-button>
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
             <a @click="toggleAdvanced" style="margin-left: 8px">
@@ -77,6 +78,15 @@
         :expandedRowKeys="expandedRowKeys"
         @expand="expandSubGrid"
       >
+       <template
+                slot="userAccount"
+                slot-scope="text, record"
+              >
+                <a
+                  href="#"
+                  @click="showUserInfo(text)"
+                >{{text}}</a>
+              </template>
          <a-table
           ref="subTable"
           slot="expandedRowRender"
@@ -91,12 +101,37 @@
         </a-table> 
       </a-table>
     </div>
-    
+     <a-modal
+      :maskClosable="false"
+      v-model="lookVisiable"
+      width="400px"
+      @ok="handleLookOk"
+      title="上传附件"
+    >
+      <a-form-item label="附件" v-bind="formItemLayout">
+       <upload-single-file
+            ref="fileagent"
+            @uploadRemove="removeAgent_1"
+            @uploadSuc="uploadAgent_1"
+          >
+          </upload-single-file>
+      </a-form-item>
+      <a-form-item label="备注" v-bind="formItemLayout">
+        <a-textarea v-model="note" :rows="2" >
+        </a-textarea>
+      </a-form-item>
+    </a-modal>
+    <mdl-b-badarchive :fileVisiable="fileVisiable" ref="fileShow"
+     :userAccount="userAccount" @close="handleCloseFile"
+    >
+    </mdl-b-badarchive>
   </a-card>
 </template>
 
 <script>
 import moment from "moment";
+import UploadSingleFile from "../../common/uploadSingleFile"
+import MdlBBadarchive from '../MdlBBadarchive/MdlBBadarchive.vue'
 
 const formItemLayout = {
   labelCol: { span: 8 },
@@ -104,7 +139,7 @@ const formItemLayout = {
 };
 export default {
   name: "MdlBBadrecord",
-  components: {   },
+  components: { UploadSingleFile, MdlBBadarchive  },
   data() {
     return {
       advanced: false,
@@ -129,6 +164,12 @@ export default {
       loading: false,
       bordered: true,
       indData: [],
+      lookVisiable: false,
+      fileId: '',
+      fileUrl: '',
+      fileVisiable: false,
+      userAccount: '',
+      note: ''
     };
   },
   computed: {
@@ -139,6 +180,7 @@ export default {
         {
           title: "发薪号",
           dataIndex: "userAccount",
+          scopedSlots: { customRender: 'userAccount' },
           width: 200,
         },
         {
@@ -271,9 +313,63 @@ export default {
     this.fetch();
    // this.fetchIndict();
   },
-
+  
   methods: {
     moment,
+    showUserInfo(userAccount){
+       this.userAccount= userAccount;
+       this.fileVisiable =true
+       this.$refs.fileShow.fetch(userAccount)
+    },
+    handleCloseFile(){
+      this.fileVisiable= false
+    },
+    openUploadFile(){
+       if (!this.selectedRowKeys.length) {
+        this.$message.warning("请选择不良计分记录");
+        return;
+      }
+      this.lookVisiable = true;
+      this.fileId = ''
+      this.fileUrl = ''
+      this.note= ''
+    },
+    handleLookOk() {
+      if (this.fileId == "") {
+        this.$message.warning("请选择附件");
+        return false;
+      } else {
+        const data = this.dataSource
+        let dataSelect= data.filter(p=>this.selectedRowKeys.indexOf(p.userAccount)>=0);
+        let cls= []
+        dataSelect.forEach(item=>{
+           cls.push({
+              userAccount: item.userAccount,
+              userAccountName: item.userAccountName
+           })
+        });
+        this.$post("mdlBBadarchive", {
+          archive: JSON.stringify(cls),
+          fileId: this.fileId,
+          fileUrl: this.fileUrl,
+          note: this.note
+        }).then((r) => {
+          this.selectedRowKeys = []
+          this.$message.success("上传成功");
+          this.$refs.fileagent.reset();
+          this.lookVisiable = false;
+          this.search();
+        });
+      }
+    },
+      uploadAgent_1(fileId, fileUrl) {
+      this.fileId = fileId;
+      this.fileUrl = fileUrl;
+    },
+    removeAgent_1() {
+      this.fileId = "";
+      this.fileUrl = "";
+    },
     expandSubGrid (expanded, record) {//获取供应计划的数量
       if (expanded) {
         this.expandedRowKeys.push(record.userAccount)

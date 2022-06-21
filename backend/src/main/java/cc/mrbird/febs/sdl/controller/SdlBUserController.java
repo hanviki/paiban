@@ -7,6 +7,7 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
 import cc.mrbird.febs.common.utils.ExportExcelUtils;
+import cc.mrbird.febs.rfc.RfcNoc;
 import cc.mrbird.febs.sdl.entity.CustomDept;
 import cc.mrbird.febs.sdl.entity.CustomUser;
 import cc.mrbird.febs.sdl.entity.SdlBUserSearch;
@@ -156,11 +157,20 @@ public void updateSdlBUser(@Valid SdlBUser sdlBUser)throws FebsException{
         try{
         User currentUser= FebsUtil.getCurrentUser();
       sdlBUser.setModifyUserId(currentUser.getUserId());
-        this.iSdlBUserService.updateSdlBUser(sdlBUser);
+            RfcNoc rfcNoc =new RfcNoc();
+
+         String mess=   rfcNoc.SendInfo(sdlBUser.getUserAccount(),sdlBUser.getYishiLb()==null?"":sdlBUser.getYishiLb(),sdlBUser.getYishiJb()==null?"":sdlBUser.getYishiJb(),
+                    sdlBUser.getYishiZhiyefanwei()==null?"":sdlBUser.getYishiZhiyefanwei()==null?"":sdlBUser.getYishiZhiyefanwei(),sdlBUser.getYishiZgzsbianhao()==null?"":sdlBUser.getYishiZgzsbianhao(),sdlBUser.getYishiZiyebianhao()==null?"":sdlBUser.getYishiZiyebianhao());
+         if(mess.equals("更新成功")) {
+             this.iSdlBUserService.updateSdlBUser(sdlBUser);
+         }
+         else{
+             throw new FebsException(mess);
+         }
         }catch(Exception e){
         message="修改失败" ;
         log.error(message,e);
-        throw new FebsException(message);
+        throw new FebsException(e.getMessage());
         }
         }
 

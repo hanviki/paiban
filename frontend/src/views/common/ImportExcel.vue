@@ -6,6 +6,7 @@
             @click="exportTemplate"
             type="primary"
             :loading="uploading"
+            icon="export"
           >导入模板下载</a-button>
           </a-col>
 

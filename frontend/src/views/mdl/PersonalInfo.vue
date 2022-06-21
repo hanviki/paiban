@@ -83,7 +83,7 @@
                 
               </a-col>
             </a-row>
-            <a-row> <a-col :span='24'><div style="text-align:center;"> <a-button type="primary" @click="edit">编辑</a-button></div></a-col></a-row>
+            <a-row> <a-col :span='24'><div style="text-align:center;"> <a-button type="primary" icon="edit" @click="edit">编辑</a-button></div></a-col></a-row>
           </div>
           <div style="padding: 0px 15px 15px 15px"> 
           <a-card
@@ -143,7 +143,7 @@
              <mdl-b-profession-index>
              </mdl-b-profession-index>
           </a-card>
-           <a-card title="不良积分记录" headStyle="font-weight:bold;">
+           <a-card title="不良计分记录" headStyle="font-weight:bold;">
              <person-bad-record>
              </person-bad-record>
           </a-card>

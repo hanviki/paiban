@@ -41,6 +41,7 @@
     <div>
       <div class="operator">
         <a-button
+        icon="plus"
           v-hasPermission="['sdlBScheduleDetail:add']"
           type="primary"
           ghost
@@ -48,6 +49,7 @@
           >新增</a-button
         >
         <a-button
+        icon="delete"
           v-hasPermission="['sdlBScheduleDetail:delete']"
           @click="batchDelete"
           >删除</a-button

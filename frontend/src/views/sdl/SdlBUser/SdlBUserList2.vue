@@ -34,13 +34,14 @@
     <div>
       <div class="operator">
         <a-button
+        icon="plus"
           v-hasPermission="['sdlBUser:add']"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button v-hasPermission="['sdlBUser:delete']" @click="batchDelete"
+        <a-button v-hasPermission="['sdlBUser:delete']" @click="batchDelete" icon="delete"
           >删除</a-button
         >
         <a-dropdown v-hasPermission="['sdlBUser:export']">

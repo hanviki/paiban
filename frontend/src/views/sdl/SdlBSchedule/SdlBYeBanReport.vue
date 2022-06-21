@@ -40,14 +40,18 @@
             </a-col>
           </div>
           <span style="float: right; margin-top: 3px">
-             <a-button  @click="exportExcel">导出汇总</a-button>
-              <a-button  @click="exportExcelDetail">导出明细</a-button>
+            
             <a-button type="primary" @click="search">查询</a-button>
             <a-button style="margin-left: 8px" @click="reset">重置</a-button>
           </span>
         </a-row>
       </a-form>
     </div>
+     <div>
+      <div class="operator">
+        <a-button icon="file-excel" type="primary" ghost  @click="exportExcel">导出汇总</a-button>
+              <a-button icon="file-excel" type="primary" ghost  @click="exportExcelDetail">导出明细</a-button>
+      </div>
     <!-- 表格区域 -->
       <a-table
         ref="TableInfo"
@@ -80,6 +84,7 @@
       </template>
         </a-table> 
       </a-table>
+     </div>
         <sdl-account
         :applyVisiable="viewInfoVisalboe"
         @closeAccount="handleCloseAccount"

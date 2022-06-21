@@ -36,4 +36,5 @@ public interface ISdlBScheduleDService extends IService<SdlBScheduleD> {
 
 
         void deleteByDeptAndDate(String deptId,String startDate,String endDate);
+        void deleteByDeptAndBaseId(String deptId,String baseID);
         }

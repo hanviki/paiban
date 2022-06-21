@@ -8,17 +8,23 @@ import cc.mrbird.febs.common.domain.router.VueRouter;
 import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.domain.QueryRequest;
 
+import cc.mrbird.febs.mdl.entity.MdlBManagerImport;
+import cc.mrbird.febs.mdl.entity.MdlBManagerOut;
 import cc.mrbird.febs.mdl.service.IMdlBManagerService;
 import cc.mrbird.febs.mdl.entity.MdlBManager;
 
 import cc.mrbird.febs.common.utils.FebsUtil;
+import cc.mrbird.febs.sdl.entity.SdlBUser;
+import cc.mrbird.febs.sdl.service.ISdlBUserService;
 import cc.mrbird.febs.system.domain.User;
 import cn.hutool.Hutool;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.beust.jcommander.internal.Lists;
 import com.wuwenze.poi.ExcelKit;
@@ -55,6 +61,8 @@ public class MdlBManagerController extends BaseController{
 private String message;
 @Autowired
 public IMdlBManagerService iMdlBManagerService;
+    @Autowired
+    private ISdlBUserService iSdlBUserService;
 
 /**
  INSERT into t_menu(parent_id,menu_name,path,component,perms,icon,type,order_num,CREATE_time)
@@ -134,8 +142,11 @@ public void deleteMdlBManagers(@NotBlank(message = "{required}") @PathVariable S
 @PostMapping("excel")
 public void export(QueryRequest request, MdlBManager mdlBManager, HttpServletResponse response) throws FebsException {
         try {
+            request.setPageSize(10000);
+            request.setPageNum(1);
+            request.setIsSearchCount(false);
         List<MdlBManager> mdlBManagers = this.iMdlBManagerService.findMdlBManagers(request, mdlBManager).getRecords();
-        ExcelKit.$Export(MdlBManager.class, response).downXlsx(mdlBManagers, false);
+        ExcelKit.$Export(MdlBManagerOut.class, response).downXlsx(mdlBManagers, false);
         } catch (Exception e) {
         message = "导出Excel失败";
         log.error(message, e);
@@ -143,29 +154,27 @@ public void export(QueryRequest request, MdlBManager mdlBManager, HttpServletRes
         }
         }
 @RequestMapping(value = "downTemplate", method = RequestMethod.POST)
-@RequiresPermissions("mdlBManager:import")
 public void downTemplate(HttpServletResponse response) {
-        List<MdlBManager> publishList = new ArrayList<>();
-        ExcelKit.$Export(MdlBManager.class, response).downXlsx(publishList, true);
+        List<MdlBManagerImport> publishList = new ArrayList<>();
+        ExcelKit.$Export(MdlBManagerImport.class, response).downXlsx(publishList, true);
         }
 @RequestMapping(value = "import", method = RequestMethod.POST)
-@RequiresPermissions("mdlBManager:import")
-public ResponseEntity<?> importUser(@RequestParam MultipartFile file)
+public ResponseEntity<?> importUser(@RequestParam MultipartFile file, String type)
         throws IOException {
         long beginMillis = System.currentTimeMillis();
 
-        List<MdlBManager> successList = Lists.newArrayList();
+        List<MdlBManagerImport> successList = Lists.newArrayList();
         List<Map<String, Object>> errorList = Lists.newArrayList();
         List<Map<String, Object>> resultList = Lists.newArrayList();
 
         User currentUser=FebsUtil.getCurrentUser();
 
 
-        ExcelKit.$Import(MdlBManager.class)
-        .readXlsx(file.getInputStream(), new ExcelReadHandler<MdlBManager>() {
+        ExcelKit.$Import(MdlBManagerImport.class)
+        .readXlsx(file.getInputStream(), new ExcelReadHandler<MdlBManagerImport>() {
 
 @Override
-public void onSuccess(int sheetIndex, int rowIndex, MdlBManager entity) {
+public void onSuccess(int sheetIndex, int rowIndex, MdlBManagerImport entity) {
         successList.add(entity); // 单行读取成功，加入入库队列。
         }
 
@@ -181,11 +190,24 @@ public void onError(int sheetIndex, int rowIndex,
 
         // TODO: 执行successList的入库操作。
         if(CollectionUtil.isEmpty(errorList)){
-        for (MdlBManager mdlBManagerImport:successList
+        for (MdlBManagerImport mdlBManagerImport:successList
         ) {
     MdlBManager mdlBManager =new MdlBManager();
-        BeanUtil.copyProperties(mdlBManagerImport,mdlBManager, CopyOptions.create().setIgnoreNullValue(true));
-        this.iMdlBManagerService.createMdlBManager(mdlBManager);
+    mdlBManager.setDeptName(mdlBManagerImport.getDeptName());
+            mdlBManager.setUserAccount(mdlBManagerImport.getUserAccount());
+            mdlBManager.setEmail(mdlBManagerImport.getEmail());
+            mdlBManager.setStartDate(DateUtil.parseDate(mdlBManagerImport.getStartDate()));
+            LambdaQueryWrapper<SdlBUser> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SdlBUser::getUserAccount, mdlBManagerImport.getUserAccount());
+            SdlBUser user = this.iSdlBUserService.getOne(queryWrapper);
+            mdlBManager.setUserAccount(user.getUserAccount());
+            mdlBManager.setUserAccountName(user.getUserAccountName());
+            mdlBManager.setDeptId(user.getDeptNew());
+            mdlBManager.setTel(user.getTelephone());
+            mdlBManager.setBirthday(user.getBirthday());
+            mdlBManager.setType(type);
+
+            this.iMdlBManagerService.createMdlBManager(mdlBManager);
         }
         }
 
@@ -195,6 +217,20 @@ public void onError(int sheetIndex, int rowIndex,
         resultList.add(MapUtil.of("timeConsuming", (System.currentTimeMillis() - beginMillis) / 1000L));
         return ResponseEntity.ok(resultList);
         }
+
+    @RequestMapping(value = "import0", method = RequestMethod.POST)
+    public ResponseEntity<?> importUser0(@RequestParam MultipartFile file) throws IOException{
+         return  importUser(file,"医疗主任");
+    }
+    @RequestMapping(value = "import1", method = RequestMethod.POST)
+    public ResponseEntity<?> importUser1(@RequestParam MultipartFile file) throws IOException{
+        return  importUser(file,"医疗组长");
+    }
+    @RequestMapping(value = "import2", method = RequestMethod.POST)
+    public ResponseEntity<?> importUser2(@RequestParam MultipartFile file) throws IOException{
+        return  importUser(file,"质控员");
+    }
+
 @GetMapping("/{id}")
 public MdlBManager detail(@NotBlank(message = "{required}") @PathVariable String id) {
     MdlBManager mdlBManager=this.iMdlBManagerService.getById(id);

@@ -48,7 +48,7 @@
       </a-space>
     </div>
     <div v-else="isShow">
-      <a-button type="primary" @click="Back">返回</a-button>
+      <a-button type="primary" @click="Back" icon="rollback">返回</a-button>
       <mdl-b-manage-list v-show="subShow == 0" type="医疗主任">
       </mdl-b-manage-list>
       <mdl-b-manage-list v-show="subShow == 1" type="医疗组长">

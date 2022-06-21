@@ -46,13 +46,13 @@
     <div>
       <div class="operator">
         <a-button
-         
+         icon="plus"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button  @click="batchDelete"
+        <a-button  @click="batchDelete" icon="delete"
           >删除</a-button
         >
         <a-dropdown v-hasPermission="['mdlBArchive:export']">

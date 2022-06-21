@@ -17,13 +17,13 @@
             </a-col>
             <a-col :md="9" :sm="24">
               <a-form-item label="发证日期" v-bind="formItemLayout">
-                <a-date-picker @change="onfzDateFromChange" />- <a-date-picker @change="onfzDateToChange" />
+                <a-date-picker @change="onfzDateFromChange" style="width:48%" />- <a-date-picker @change="onfzDateToChange" style="width:48%" />
               </a-form-item>
             </a-col>
            
               <a-col :md="9" :sm="24">
                 <a-form-item label="变更日期" v-bind="formItemLayout">
-                  <a-date-picker @change="onbgDateFromChange" />-<a-date-picker @change="onbgDateToChange" />
+                  <a-date-picker @change="onbgDateFromChange" style="width:48%"  />-<a-date-picker @change="onbgDateToChange" style="width:48%" />
                 </a-form-item>
               </a-col>
           </div>
@@ -42,12 +42,15 @@
       <div class="operator">
         <a-button
           v-hasPermission="['mdlBQulification:add']"
-          type="primary"
-          ghost
+          icon="plus"
+          style="color: #fff;background-color: #1890ff;border-color: #1890ff;box-shadow: 0 2px 0 rgba(0, 0, 0, 0.035);"
           @click="add"
           >新增</a-button
         >
+        
         <a-button
+          icon="delete"
+          style="color: #fff;background-color: #f5222d;border-color: #f5f5f5;box-shadow: 0 2px 0 rgba(0, 0, 0, 0.035);"
           v-hasPermission="['mdlBQulification:delete']"
           @click="batchDelete"
           >删除</a-button
@@ -133,8 +136,8 @@ import MdlBQulificationEdit from "./MdlBQulificationEdit";
 import moment from "moment";
 
 const formItemLayout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 19 },
+  labelCol: { span: 7 },
+  wrapperCol: { span: 17 },
 };
 export default {
   name: "MdlBQulification",

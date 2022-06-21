@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBBadarchiveMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBBadarchive">
+                    <id column="id" property="id"/>
+                    <result column="user_account_name" property="userAccountName"/>
+                    <result column="user_account" property="userAccount"/>
+                    <result column="file_date" property="fileDate"/>
+                    <result column="note" property="note"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, user_account_name, user_account, file_date, note, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBBadarchive" parameterType="cc.mrbird.febs.mdl.entity.MdlBBadarchive">
+        update mdl_b_badarchive
+        <trim prefix="set" suffixOverrides=",">
+<if test="userAccountName != null">user_account_name=#{userAccountName},</if>
+<if test="userAccount != null">user_account=#{userAccount},</if>
+<if test="fileDate != null">file_date=#{fileDate},</if>
+<if test="note != null">note=#{note},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBBadarchive" resultType="cc.mrbird.febs.mdl.entity.MdlBBadarchive" parameterType="cc.mrbird.febs.mdl.entity.MdlBBadarchive">
+        select  *  from mdl_b_badarchive
+        where  1=1
+            <if test="mdlBBadarchive.userAccountName != null and mdlBBadarchive.userAccountName != ''"> and  mdl_b_badarchive.user_account_name like concat('%', #{ mdlBBadarchive.userAccountName} ,'%')</if>
+            <if test="mdlBBadarchive.userAccount != null and mdlBBadarchive.userAccount != ''"> and  mdl_b_badarchive.user_account like concat('%', #{ mdlBBadarchive.userAccount} ,'%')</if>
+        <if test="mdlBBadarchive.fileDateFrom!= null">
+            AND mdl_b_badarchive.file_date <![CDATA[ >= ]]>  #{mdlBBadarchive.fileDateFrom}
+        </if>
+        <if test="mdlBBadarchive.fileDateTo!= null">
+            AND  mdl_b_badarchive.file_date <![CDATA[ <= ]]>  #{mdlBBadarchive.fileDateTo}
+        </if>
+            <if test="mdlBBadarchive.note != null and mdlBBadarchive.note != ''"> and  mdl_b_badarchive.note like concat('%', #{ mdlBBadarchive.note} ,'%')</if>
+            <if test="mdlBBadarchive.fileId != null and mdlBBadarchive.fileId != ''"> and  mdl_b_badarchive.file_id like concat('%', #{ mdlBBadarchive.fileId} ,'%')</if>
+            <if test="mdlBBadarchive.fileUrl != null and mdlBBadarchive.fileUrl != ''"> and  mdl_b_badarchive.file_url like concat('%', #{ mdlBBadarchive.fileUrl} ,'%')</if>
+        <if test="mdlBBadarchive.state != null"> and  mdl_b_badarchive.state =#{ mdlBBadarchive.state} </if>
+        <if test="mdlBBadarchive.isDeletemark != null"> and  mdl_b_badarchive.IS_DELETEMARK =#{ mdlBBadarchive.isDeletemark} </if>
+        <if test="mdlBBadarchive.createTimeFrom!= null">
+            AND mdl_b_badarchive.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBBadarchive.createTimeFrom}
+        </if>
+        <if test="mdlBBadarchive.createTimeTo!= null">
+            AND  mdl_b_badarchive.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBBadarchive.createTimeTo}
+        </if>
+        <if test="mdlBBadarchive.modifyTimeFrom!= null">
+            AND mdl_b_badarchive.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBBadarchive.modifyTimeFrom}
+        </if>
+        <if test="mdlBBadarchive.modifyTimeTo!= null">
+            AND  mdl_b_badarchive.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBBadarchive.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

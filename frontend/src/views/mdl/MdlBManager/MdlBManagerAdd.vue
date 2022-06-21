@@ -10,7 +10,14 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
     <a-form :form="form">
-     
+     <a-form-item v-bind="formItemLayout" label="医疗组科室">
+        <a-input
+          placeholder="医疗组科室"
+          v-decorator="[
+            'deptName',
+          ]"
+        />
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="人员">
         <a-select
           v-decorator="[
@@ -179,10 +186,7 @@ export default {
       this.form.getFieldDecorator('tel');
       this.form.setFieldsValue({tel: option.key.tel});
     },
-    deptChange(value, option) {
-      // let data = this.deptData.filter((p) => p.deptId == value);
-      this.mdlBManager["deptName"] = option.key;
-    },
+  
     onClose() {
       this.reset();
       this.$emit("close");
@@ -206,7 +210,7 @@ export default {
     },
     setFields() {
       let values = this.form.getFieldsValue([
-        //"userAccount",
+        "deptName",
         "deptId",
         "birthday",
         "startDate",

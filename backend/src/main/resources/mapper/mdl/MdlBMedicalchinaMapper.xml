@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlBMedicalchinaMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlBMedicalchina">
+                    <id column="id" property="id"/>
+                    <result column="name" property="name"/>
+                    <result column="code" property="code"/>
+                    <result column="note" property="note"/>
+                    <result column="file_id" property="fileId"/>
+                    <result column="file_url" property="fileUrl"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, name, code, note, file_id, file_url, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlBMedicalchina" parameterType="cc.mrbird.febs.mdl.entity.MdlBMedicalchina">
+        update mdl_b_medicalchina
+        <trim prefix="set" suffixOverrides=",">
+<if test="name != null">name=#{name},</if>
+<if test="code != null">code=#{code},</if>
+<if test="note != null">note=#{note},</if>
+<if test="fileId != null">file_id=#{fileId},</if>
+<if test="fileUrl != null">file_url=#{fileUrl},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlBMedicalchina" resultType="cc.mrbird.febs.mdl.entity.MdlBMedicalchina" parameterType="cc.mrbird.febs.mdl.entity.MdlBMedicalchina">
+        select  *  from mdl_b_medicalchina
+        where  1=1
+            <if test="mdlBMedicalchina.id != null and mdlBMedicalchina.id != ''"> and  mdl_b_medicalchina.id =#{ mdlBMedicalchina.id} </if>
+            <if test="mdlBMedicalchina.name != null and mdlBMedicalchina.name != ''"> and  mdl_b_medicalchina.name like concat('%', #{ mdlBMedicalchina.name} ,'%')</if>
+            <if test="mdlBMedicalchina.code != null and mdlBMedicalchina.code != ''"> and  mdl_b_medicalchina.code like concat('%', #{ mdlBMedicalchina.code} ,'%')</if>
+            <if test="mdlBMedicalchina.note != null and mdlBMedicalchina.note != ''"> and  mdl_b_medicalchina.note like concat('%', #{ mdlBMedicalchina.note} ,'%')</if>
+            <if test="mdlBMedicalchina.fileId != null and mdlBMedicalchina.fileId != ''"> and  mdl_b_medicalchina.file_id like concat('%', #{ mdlBMedicalchina.fileId} ,'%')</if>
+            <if test="mdlBMedicalchina.fileUrl != null and mdlBMedicalchina.fileUrl != ''"> and  mdl_b_medicalchina.file_url like concat('%', #{ mdlBMedicalchina.fileUrl} ,'%')</if>
+        <if test="mdlBMedicalchina.state != null"> and  mdl_b_medicalchina.state =#{ mdlBMedicalchina.state} </if>
+        <if test="mdlBMedicalchina.isDeletemark != null"> and  mdl_b_medicalchina.IS_DELETEMARK =#{ mdlBMedicalchina.isDeletemark} </if>
+        <if test="mdlBMedicalchina.createTimeFrom!= null">
+            AND mdl_b_medicalchina.CREATE_TIME <![CDATA[ >= ]]>  #{mdlBMedicalchina.createTimeFrom}
+        </if>
+        <if test="mdlBMedicalchina.createTimeTo!= null">
+            AND  mdl_b_medicalchina.CREATE_TIME <![CDATA[ <= ]]>  #{mdlBMedicalchina.createTimeTo}
+        </if>
+        <if test="mdlBMedicalchina.modifyTimeFrom!= null">
+            AND mdl_b_medicalchina.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlBMedicalchina.modifyTimeFrom}
+        </if>
+        <if test="mdlBMedicalchina.modifyTimeTo!= null">
+            AND  mdl_b_medicalchina.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlBMedicalchina.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

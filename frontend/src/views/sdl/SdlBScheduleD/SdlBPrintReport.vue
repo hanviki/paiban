@@ -40,12 +40,14 @@
     </div>
     <div>
        <a-button
+        icon="file-excel"
           type="primary"
           ghost
           @click="exportExcel(0)"
           >导出</a-button
         >
         <a-button
+         icon="file-excel"
           type="primary"
           ghost
           @click="exportExcel(1)"

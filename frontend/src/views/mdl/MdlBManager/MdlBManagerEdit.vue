@@ -10,7 +10,14 @@
     style="height: calc(100% - 55px); overflow: auto; padding-bottom: 53px"
   >
       <a-form :form="form">
-     
+      <a-form-item v-bind="formItemLayout" label="医疗组科室">
+        <a-input
+          placeholder="医疗组科室"
+          v-decorator="[
+            'deptName',
+          ]"
+        />
+      </a-form-item>
       <a-form-item v-bind="formItemLayout" label="人员">
         <a-select
           v-decorator="[
@@ -196,7 +203,7 @@ export default {
       this.mdlBManager["deptName"] = option.key;
     },
     setFormValues({ ...mdlBManager }) {
-      let fields = ["deptId", "userAccountName","userAccount", "birthday","startDate","endDate","tel","email"];
+      let fields = ["deptId","deptName", "userAccountName","userAccount", "birthday","startDate","endDate","tel","email"];
       let fieldDates = ["startDate","endDate"];
       Object.keys(mdlBManager).forEach((key) => {
         if (fields.indexOf(key) !== -1) {
@@ -217,7 +224,6 @@ export default {
          
         }
       });
-       this.mdlBManager.deptName = mdlBManager.deptName;
       this.mdlBManager.type = mdlBManager.type;
       this.mdlBManager.id = mdlBManager.id;
     },
@@ -227,7 +233,6 @@ export default {
           let mdlBManager = this.form.getFieldsValue();
           mdlBManager.id = this.mdlBManager.id;
           mdlBManager.type = this.mdlBManager.type;
-           mdlBManager.deptName = this.mdlBManager.deptName;
           this.$put("mdlBManager", {
             ...mdlBManager,
           })

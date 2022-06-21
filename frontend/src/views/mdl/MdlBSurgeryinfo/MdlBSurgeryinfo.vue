@@ -47,14 +47,14 @@
     <div>
       <div class="operator">
         <a-button
-         
+         icon="plus"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
         <a-button
-         
+          icon="delete"
           @click="batchDelete"
           >删除</a-button
         >

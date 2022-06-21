@@ -107,7 +107,7 @@
     <div v-else="isShow">
       <a-row
         ><a-col :sm="6"
-          ><a-button type="primary" @click="Back">返回</a-button></a-col
+          ><a-button type="primary"  icon="rollback" @click="Back" >返回</a-button></a-col
         ><a-col :sm="18"
           ><span style="font-size: 20px; text-align: center; color: green">{{
             title

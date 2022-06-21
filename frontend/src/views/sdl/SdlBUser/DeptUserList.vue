@@ -29,8 +29,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">移入数据</a-button>
-        <a-button @click="batchDelete">移出数据</a-button>
+        <a-button type="primary" icon="login" ghost @click="add">移入数据</a-button>
+        <a-button icon="logout" type="primary" ghost @click="batchDelete">移出数据</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table

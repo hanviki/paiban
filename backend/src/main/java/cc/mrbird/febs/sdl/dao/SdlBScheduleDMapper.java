@@ -34,4 +34,7 @@ public interface SdlBScheduleDMapper extends BaseMapper<SdlBScheduleD> {
                 " delete from sdl_b_schedule_detail where dept_id=#{deptId} and schedule_date>=#{startDate} and schedule_date<=#{endDate}")
         void deleteByDeptAndDate(@Param("deptId") String  deptId,@Param("startDate") String  startDate,@Param("endDate") String  endDate);
 
+        @Delete(" delete from sdl_b_schedule_d where dept_id=#{deptId} and base_id=#{baseId};" +
+                " delete from sdl_b_schedule_detail where dept_id=#{deptId} and base_id=#{baseId}")
+        void deleteByDeptAndBaseId(@Param("deptId") String  deptId,@Param("baseId") String  baseId);
         }

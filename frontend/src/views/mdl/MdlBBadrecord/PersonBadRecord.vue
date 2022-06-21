@@ -52,11 +52,11 @@ export default {
           dataIndex: "deptName",
           width: 100,
         },
-         {
-          title: "记分人员",
-          dataIndex: "jfPerson",
-          width: 100,
-        },
+        //  {
+        //   title: "记分人员",
+        //   dataIndex: "jfPerson",
+        //   width: 100,
+        // },
         {
           title: "记分指标",
           dataIndex: "indict",
@@ -81,21 +81,22 @@ export default {
           },
           width: 100,
         },
-        {
-          title: "附件",
-          dataIndex: "fileId",
-          customRender: (text, row, index) => {
-            if (text != null && text != "") {
-              return (
-                <a href={this.$baseUrl + row.fileUrl} target="_blank">
-                  查看
-                </a>
-              );
-            }
-            return "";
-          },
-          width: 80,
-        }];
+        // {
+        //   title: "附件",
+        //   dataIndex: "fileId",
+        //   customRender: (text, row, index) => {
+        //     if (text != null && text != "") {
+        //       return (
+        //         <a href={this.$baseUrl + row.fileUrl} target="_blank">
+        //           查看
+        //         </a>
+        //       );
+        //     }
+        //     return "";
+        //   },
+        //   width: 80,
+        // }
+        ];
     },
   },
   mounted() {

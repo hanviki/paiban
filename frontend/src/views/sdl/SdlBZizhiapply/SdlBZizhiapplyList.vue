@@ -24,6 +24,7 @@
     <div>
       <div class="operator">
         <a-button
+        icon="plus"
           v-hasPermission="['sdlBZizhiapply:add']"
           type="primary"
           ghost

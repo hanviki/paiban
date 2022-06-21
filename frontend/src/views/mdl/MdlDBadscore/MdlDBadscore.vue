@@ -18,13 +18,14 @@
     <div>
       <div class="operator">
         <a-button
+        icon="plus"
           v-hasPermission="['mdlDBadscore:add']"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button v-hasPermission="['mdlDBadscore:delete']" @click="batchDelete"
+        <a-button v-hasPermission="['mdlDBadscore:delete']" @click="batchDelete" icon="delete"
           >删除</a-button
         >
         <a-dropdown v-hasPermission="['mdlDBadscore:export']">

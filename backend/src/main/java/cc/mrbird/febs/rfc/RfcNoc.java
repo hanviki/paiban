@@ -314,115 +314,52 @@ public class RfcNoc {
         return list;
     }
 
-    /**
+
     
      
-    public List<BackFromSAP_SubPlan> SendSupplyPlan_RFC(String userID, List<ViewSupplyplan> listEntitys, String Lifnr, String NAME1, String ZPSTA, String ZUPFG) {
-        String fuName = "ZMM00_FM_SCMSUPLANSEND";
-        log.info("SendSupplyPlan(发送计划) begin", 1);
-        List<BackFromSAP_SubPlan> list = new ArrayList<>();
+    public String SendInfo(String userAccount,String yslb,String ysjb,String zyfw,String zgbh,String zsbh) {
+        String fuName = "ZHR00_FM_YSLZXX";
+        log.info("传送人员证书编号等给sap");
+
         JCoDestination destination;
         try {
             destination = RfcNoc.GetDestination();
             if (destination == null) {
                 log.error("配置信息出错");
-                BackFromSAP_SubPlan pur2 = new BackFromSAP_SubPlan();
-                pur2.setMESS("无法连接SAP，或者配置出错");
-                pur2.setMSTYPE("H");
-                pur2.setZGYJH("");
-                list.add(pur2);
-                return list;
+                return  "SAP配置信息出错";
             }
             JCoRepository rfcrep = destination.getRepository();
             JCoFunction myfun = null;
             myfun = rfcrep.getFunction(fuName);
             //  myfun.SetValue("IS_SELCOND", "0");//SAP里面的传入参数
             if (myfun == null) {
-                log.info("ZMM00_FM_SCMSUPLANSEND is NULL");
-                return list;
+                log.info("ZHR00_FM_YSLZXX is NULL");
+                return "SAP配置信息出错2";
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            JCoTable IrfTable_IT_SUPLAN = myfun.getTableParameterList().getTable("IT_SUPLAN");
-            for (ViewSupplyplan entity : listEntitys) {
-                IrfTable_IT_SUPLAN.appendRow();
-                IrfTable_IT_SUPLAN.setValue("ZGYJH", entity.getId().toString());//供应计划号 对应 CODE字段
-                IrfTable_IT_SUPLAN.setValue("EBELN", entity.getEbeln());
-                IrfTable_IT_SUPLAN.setValue("EBELP", entity.getEbelp());
 
-                IrfTable_IT_SUPLAN.setValue("MATNR", entity.getMatnr());
-                IrfTable_IT_SUPLAN.setValue("TXZ01", entity.getTxz01());
-                IrfTable_IT_SUPLAN.setValue("LIFNR", entity.getGysaccount());
-                IrfTable_IT_SUPLAN.setValue("NAME1", entity.getGysname());
-                IrfTable_IT_SUPLAN.setValue("WERKS", entity.getWerks());
-                IrfTable_IT_SUPLAN.setValue("LGORT", entity.getLgort());
-
-                IrfTable_IT_SUPLAN.setValue("MENGE", entity.getgMenge().toString());
-                IrfTable_IT_SUPLAN.setValue("MENGE_S", entity.getDoneMenge()==null?"":entity.getDoneMenge().toString());
-                IrfTable_IT_SUPLAN.setValue("MEINS", entity.getMeins());
-
-                IrfTable_IT_SUPLAN.setValue("CHARG", entity.getCharge());
-                IrfTable_IT_SUPLAN.setValue("ZHSDAT", entity.getHsdat() == null ? "" : sdf.format(entity.getHsdat()));
-
-                IrfTable_IT_SUPLAN.setValue("ZVFDAT", entity.getVfdat()==null?"":sdf.format(entity.getVfdat()));
-                IrfTable_IT_SUPLAN.setValue("ZFPHM", entity.getFphm());
-                IrfTable_IT_SUPLAN.setValue("BARCODE", entity.getFpbm());
-                IrfTable_IT_SUPLAN.setValue("ZFPJR", entity.getFpjr().toString());
-                log.error("我到这里啦666");
-                IrfTable_IT_SUPLAN.setValue("ZFPRQ", entity.getFprq()==null?"":sdf.format(entity.getFprq()));
-
-                IrfTable_IT_SUPLAN.setValue("ZPSTA", ZPSTA);
-                IrfTable_IT_SUPLAN.setValue("ZUPFG", ZUPFG);
-                IrfTable_IT_SUPLAN.setValue("ZBTXT", "");
-                IrfTable_IT_SUPLAN.setValue("ZJYR", ZPSTA == "1" ? userID : "");
-                //总务
-                IrfTable_IT_SUPLAN.setValue("ZLXR", entity.getLinkPerson());//联系人
-                IrfTable_IT_SUPLAN.setValue("KOSTL", entity.getSendDepart());//科室编码
-                IrfTable_IT_SUPLAN.setValue("ZSPTM", entity.getMatnr());
-                IrfTable_IT_SUPLAN.setValue("ZTEL", entity.getLinkTelephone());
-//送货清单
-                IrfTable_IT_SUPLAN.setValue("ZSHQD", entity.getSendOrderCode());
-
-            }
+            myfun.getImportParameterList().setValue("PERNR", userAccount);
+            myfun.getImportParameterList().setValue("ZHRYSLB", yslb);
+            myfun.getImportParameterList().setValue("ZHRYSJB", ysjb);
+            myfun.getImportParameterList().setValue("ZHRZYFW", zyfw);
+            myfun.getImportParameterList().setValue("ZHRZGZS", zgbh);
+            myfun.getImportParameterList().setValue("ZHRZYZS", zsbh);
 
             // myfun.SetValue("IT_SUPLAN", IrfTable_IT_SUPLAN);
             //提前实例化一个空的表结构出来
             myfun.execute(destination);//执行
-
-            JCoTable rfcReturn = myfun.getTableParameterList().getTable("OT_RETURN"); //此处返回类型为Structure 如果是Single类型 则直接调用myfun.GetString("RETURN");
-            if ((rfcReturn == null) {
-                log.info("OT_RETURN is NULL");
-                return list;
-            }
-            log.info("上传SAP，调用成功。");
-            for (int i = 0; i < rfcReturn.getNumRows(); i++) {
-                rfcReturn.setRow(i);
-                BackFromSAP_SubPlan pur = new BackFromSAP_SubPlan();
-
-                pur.setMESS((rfcReturn.getString("MESS"));
-                pur.setMSTYPE((rfcReturn.getString("MSTYP"));
-                pur.setZGYJH((rfcReturn.getString("ZGYJH"));
-
-
-                list.add(pur);
-            }
-
-            log.info("SendSupplyPlan(发送计划) END SUCCESS!", 1);
+            log.info("测试到了这里");
+           String message= myfun.getExportParameterList().getString("MES");
+            return  message;
         } catch (Exception ex) {
-            log.info("SendSupplyPlan(发送计划)出现问题：" + ex.getMessage(), 1);
+            log.info("ZHR00_FM_YSLZXX出现问题：" + ex.getMessage(), 1);
 
-            BackFromSAP_SubPlan pur = new BackFromSAP_SubPlan();
-            pur.setMESS(ex.getMessage());
-            pur.setMSTYPE("H");
-            pur.setZGYJH("");
-            list.add(pur);
+            return  "调用ZHR00_FM_YSLZXX失败";
 
         } finally {
             destination = null;
         }
-
-        return list;
     }
-
+    /**
     public static Boolean SendUploadInfo_RFC(String GysName, String matnr, String charge, String serverName, String I_Type)
     {
         log.info("SendUploadInfo_RFC(发送附件信息) begin");

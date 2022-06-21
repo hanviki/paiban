@@ -64,6 +64,16 @@
                 手术资质
               </a>
             </div>
+            <div class="subDiv">
+              <a @click="openQulifaction(23, '中医医疗技术目录及授权表')" href="#">
+                中医医疗技术目录及授权表
+              </a>
+            </div>
+            <div class="subDiv">
+              <a @click="openQulifaction(24, '操作分级管理目录')" href="#">
+                操作分级管理目录
+              </a>
+            </div>
           </div>
           <div class="imageDiv"><a-avatar :size="50" style=" backgroundColor:white;" ><a-icon type="user"  style="font-size: 30px;color:green" :bordered="false" /></a-avatar></div>
         </div>
@@ -88,7 +98,7 @@
     <div v-else="isShow">
       <a-row
         ><a-col :sm="6"
-          ><a-button type="primary" @click="Back">返回</a-button></a-col
+          ><a-button type="primary"   @click="Back" icon="rollback">返回</a-button></a-col
         ><a-col :sm="18"
           ><span style="font-size: 20px; text-align: center; color: green">{{
             title
@@ -112,6 +122,8 @@
      </xxb-b-result-ywc-flow>
      <xxb-b-result-report v-if="subShow==22">
      </xxb-b-result-report>
+     <mdl-b-medicalchina v-if="subShow==23"></mdl-b-medicalchina>
+     <mdl-d-operation v-if="subShow==24"></mdl-d-operation>
     </div>
   </a-card>
 </template>
@@ -128,7 +140,8 @@ import MdlDMdtOld from './MdlDMdtOld/MdlDMdtOld.vue'
 import MdlDPrizeOld from './MdlDPrizeOld/MdlDPrizeOld.vue'
 import XxbBResultReport from  '../xxb/XxbBResultFlow/XxbBResultReport.vue'
 import XxbBResultYwcFlow from  '../xxb/XxbBResultFlow/XxbBResultYwcFlow.vue'
-
+import MdlBMedicalchina from '../mdl/MdlBMedicalchina/MdlBMedicalchina.vue'
+import MdlDOperation from './MdlDOperation/MdlDOperation.vue';
 
 export default {
   name: "BaseInfo",
@@ -151,7 +164,9 @@ export default {
     MdlDMdtOld,
     MdlDPrizeOld,
     XxbBResultYwcFlow,
-    XxbBResultReport
+    XxbBResultReport,
+    MdlBMedicalchina,
+    MdlDOperation
   },
   methods: {
     openQulifaction(index, title) {

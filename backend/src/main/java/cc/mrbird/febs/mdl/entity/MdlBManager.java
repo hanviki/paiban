@@ -46,7 +46,7 @@ private static final long serialVersionUID=1L;
      * 科室名称
      */
         
-        @ExcelField(value ="科室名称")
+        @ExcelField(value ="医疗组科室")
     private String deptName;
 
     /**

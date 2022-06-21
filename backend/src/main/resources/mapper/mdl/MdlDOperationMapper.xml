@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.mdl.dao.MdlDOperationMapper">
+
+        <!-- 通用查询映射结果 -->
+        <resultMap id="BaseResultMap" type="cc.mrbird.febs.mdl.entity.MdlDOperation">
+                    <id column="id" property="id"/>
+                    <result column="dept_new" property="deptNew"/>
+                    <result column="code" property="code"/>
+                    <result column="name" property="name"/>
+                    <result column="level" property="level"/>
+                    <result column="lb" property="lb"/>
+                    <result column="note" property="note"/>
+                    <result column="start_date" property="startDate"/>
+                    <result column="end_date" property="endDate"/>
+                    <result column="state" property="state"/>
+                    <result column="IS_DELETEMARK" property="isDeletemark"/>
+                    <result column="CREATE_TIME" property="createTime"/>
+                    <result column="MODIFY_TIME" property="modifyTime"/>
+                    <result column="CREATE_USER_ID" property="createUserId"/>
+                    <result column="MODIFY_USER_ID" property="modifyUserId"/>
+        </resultMap>
+
+        <!-- 通用查询结果列 -->
+        <sql id="Base_Column_List">
+        id, dept_new, code, name, level, lb, note, start_date, end_date, state, IS_DELETEMARK, CREATE_TIME, MODIFY_TIME, CREATE_USER_ID, MODIFY_USER_ID
+    </sql>
+    <update id="updateMdlDOperation" parameterType="cc.mrbird.febs.mdl.entity.MdlDOperation">
+        update mdl_d_operation
+        <trim prefix="set" suffixOverrides=",">
+<if test="deptNew != null">dept_new=#{deptNew},</if>
+<if test="code != null">code=#{code},</if>
+<if test="name != null">name=#{name},</if>
+<if test="level != null">level=#{level},</if>
+<if test="lb != null">lb=#{lb},</if>
+<if test="note != null">note=#{note},</if>
+<if test="startDate != null">start_date=#{startDate},</if>
+<if test="endDate != null">end_date=#{endDate},</if>
+<if test="state != null">state=#{state},</if>
+<if test="isDeletemark != null">IS_DELETEMARK=#{isDeletemark},</if>
+<if test="createTime != null">CREATE_TIME=#{createTime},</if>
+<if test="modifyTime != null">MODIFY_TIME=#{modifyTime},</if>
+<if test="createUserId != null">CREATE_USER_ID=#{createUserId},</if>
+<if test="modifyUserId != null">MODIFY_USER_ID=#{modifyUserId},</if>
+        </trim>
+                where id=#{id}
+
+    </update>
+    <select id="findMdlDOperation" resultType="cc.mrbird.febs.mdl.entity.MdlDOperation" parameterType="cc.mrbird.febs.mdl.entity.MdlDOperation">
+        select  *  from mdl_d_operation
+        where  1=1
+            <if test="mdlDOperation.deptNew != null and mdlDOperation.deptNew != ''"> and  mdl_d_operation.dept_new like concat('%', #{ mdlDOperation.deptNew} ,'%')</if>
+            <if test="mdlDOperation.code != null and mdlDOperation.code != ''"> and  mdl_d_operation.code like concat('%', #{ mdlDOperation.code} ,'%')</if>
+            <if test="mdlDOperation.name != null and mdlDOperation.name != ''"> and  mdl_d_operation.name like concat('%', #{ mdlDOperation.name} ,'%')</if>
+            <if test="mdlDOperation.level != null and mdlDOperation.level != ''"> and  mdl_d_operation.level like concat('%', #{ mdlDOperation.level} ,'%')</if>
+            <if test="mdlDOperation.lb != null and mdlDOperation.lb != ''"> and  mdl_d_operation.lb like concat('%', #{ mdlDOperation.lb} ,'%')</if>
+            <if test="mdlDOperation.note != null and mdlDOperation.note != ''"> and  mdl_d_operation.note like concat('%', #{ mdlDOperation.note} ,'%')</if>
+        <if test="mdlDOperation.startDateFrom!= null">
+            AND mdl_d_operation.start_date <![CDATA[ >= ]]>  #{mdlDOperation.startDateFrom}
+        </if>
+        <if test="mdlDOperation.startDateTo!= null">
+            AND  mdl_d_operation.start_date <![CDATA[ <= ]]>  #{mdlDOperation.startDateTo}
+        </if>
+        <if test="mdlDOperation.endDateFrom!= null">
+            AND mdl_d_operation.end_date <![CDATA[ >= ]]>  #{mdlDOperation.endDateFrom}
+        </if>
+        <if test="mdlDOperation.endDateTo!= null">
+            AND  mdl_d_operation.end_date <![CDATA[ <= ]]>  #{mdlDOperation.endDateTo}
+        </if>
+        <if test="mdlDOperation.state != null"> and  mdl_d_operation.state =#{ mdlDOperation.state} </if>
+        <if test="mdlDOperation.isDeletemark != null"> and  mdl_d_operation.IS_DELETEMARK =#{ mdlDOperation.isDeletemark} </if>
+        <if test="mdlDOperation.createTimeFrom!= null">
+            AND mdl_d_operation.CREATE_TIME <![CDATA[ >= ]]>  #{mdlDOperation.createTimeFrom}
+        </if>
+        <if test="mdlDOperation.createTimeTo!= null">
+            AND  mdl_d_operation.CREATE_TIME <![CDATA[ <= ]]>  #{mdlDOperation.createTimeTo}
+        </if>
+        <if test="mdlDOperation.modifyTimeFrom!= null">
+            AND mdl_d_operation.MODIFY_TIME <![CDATA[ >= ]]>  #{mdlDOperation.modifyTimeFrom}
+        </if>
+        <if test="mdlDOperation.modifyTimeTo!= null">
+            AND  mdl_d_operation.MODIFY_TIME <![CDATA[ <= ]]>  #{mdlDOperation.modifyTimeTo}
+        </if>
+</select>
+
+</mapper>

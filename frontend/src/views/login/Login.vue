@@ -108,7 +108,7 @@ export default {
   computed: {
     
     systemName () {
-      return '华中科技大学同济医学院医院医师综合管理平台'
+      return '华中科技大学同济医学院附属协和医院医师综合管理平台'
     },
     copyright () {
       return this.$store.state.setting.copyright

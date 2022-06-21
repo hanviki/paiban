@@ -5,7 +5,7 @@
         <a-row>
           <div :class="advanced ? null : 'fold'">
             <a-col :md="7" :sm="24">
-              <a-form-item label="人事编号/姓名" v-bind="formItemLayout">
+              <a-form-item label="发薪号/姓名" v-bind="formItemLayout">
                 <a-input v-model="queryParams.userAccount" />
               </a-form-item>
             </a-col>
@@ -29,8 +29,8 @@
             </a-col>
              <a-col :md="10" :sm="24">
                 <a-form-item label="入职日期" v-bind="formItemLayout">
-                  <a-date-picker @change="onfzDateFromChange" />-
-                  <a-date-picker @change="onfzDateToChange" />
+                  <a-date-picker @change="onfzDateFromChange" style="width:48%"/>-
+                  <a-date-picker @change="onfzDateToChange" style="width:48%"/>
                 </a-form-item>
               </a-col>
            
@@ -74,7 +74,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="exportExcel">导出</a-button>
+        <a-button type="primary" icon="file-excel" ghost @click="exportExcel">导出</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -128,8 +128,8 @@ import moment from "moment";
 import UserInfoView from "./UserInfoView";
 
 const formItemLayout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 19 },
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
 };
 export default {
   name: "SdlBUser",

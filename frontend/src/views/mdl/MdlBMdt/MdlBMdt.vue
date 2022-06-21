@@ -60,8 +60,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
+        <a-button type="primary" ghost @click="add" icon="plus">新增</a-button>
+        <a-button @click="batchDelete" icon="delete">删除</a-button>
         <a-dropdown v-hasPermission="['mdlBMdt:export']">
           <a-menu slot="overlay">
             <a-menu-item key="export-data" @click="exportExcel"

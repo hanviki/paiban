@@ -108,4 +108,10 @@ public class SdlBScheduleDServiceImpl extends ServiceImpl<SdlBScheduleDMapper, S
     public void deleteByDeptAndDate(String deptId,String startDate,String endDate){
         this.baseMapper.deleteByDeptAndDate(deptId,startDate,endDate);
     }
+
+    @Override
+    @Transactional
+    public  void deleteByDeptAndBaseId(String deptId,String baseId){
+        this.baseMapper.deleteByDeptAndBaseId(deptId,baseId);
+    }
 }

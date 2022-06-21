@@ -5,10 +5,11 @@
         <a-button
           type="primary"
           ghost
+          icon="plus"
           @click="add"
           >新增</a-button
         >
-        <a-button @click="batchDelete"
+        <a-button @click="batchDelete" icon="delete"
           >删除</a-button
         >
         <a-dropdown v-hasPermission="['mdlBSpecial:export']">

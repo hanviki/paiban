@@ -80,12 +80,14 @@
         <a-button
           v-hasPermission="['mdlBBadrecord:add']"
           type="primary"
+          icon="plus"
           ghost
           @click="add"
           >新增</a-button
         >
         <a-button
           v-hasPermission="['mdlBBadrecord:delete']"
+          icon="delete"
           @click="batchDelete"
           >删除</a-button
         >
@@ -342,7 +344,7 @@ export default {
     moment,
       pass() {
       if (!this.selectedRowKeys.length) {
-        this.$message.warning("请选择不良积分记录");
+        this.$message.warning("请选择不良计分记录");
         return;
       }
       this.lookVisiable = true;

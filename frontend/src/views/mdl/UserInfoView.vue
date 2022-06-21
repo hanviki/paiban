@@ -8,7 +8,7 @@
     :closable="false"
     @close="onClose"
     :visible="editVisiable"
-    style="height: calc(100% - 55px); overflow: auto"
+    style="height: calc(100% - 5px);  padding-bottom: 53px"
   >
     <a-form :form="form" :layout="formLayout">
         <a-col :sm="5"  :offset="1">
@@ -341,7 +341,9 @@
           </upload-single-file>
         </a-form-item>
       </a-col>
+      <a-col :sm="12" style="height:50px;" ></a-col>
     </a-form>
+   
     <div class="drawer-bootom-button">
       <a-popconfirm
         title="确定放弃编辑？"
@@ -541,7 +543,8 @@ export default {
             sdlBUser.gqpxqk =  this.form.getFieldValue('gqpxqk')
           sdlBUser.gfhyspxqk =  this.form.getFieldValue('gfhyspxqk')
           sdlBUser.zjspnlceqk =  this.form.getFieldValue('zjspnlceqk')
-          sdlBUser.id = this.sdlBUser.id;zjspnlceqk
+          sdlBUser.id = this.sdlBUser.id;
+          sdlBUser.userAccount= this.form.getFieldValue('userAccount')
           sdlBUser.fileIdLc = this.sdlBUser.fileIdLc;
           sdlBUser.fileUrlLc = this.sdlBUser.fileUrlLc;
           sdlBUser.pictureId = this.sdlBUser.pictureId;

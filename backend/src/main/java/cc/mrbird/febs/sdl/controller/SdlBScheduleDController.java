@@ -15,6 +15,7 @@ import cc.mrbird.febs.system.domain.User;
 import cc.mrbird.febs.system.service.DeptService;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
@@ -380,30 +381,43 @@ public class SdlBScheduleDController extends BaseController {
     @Log("新增/按钮")
     @PostMapping("add")
     public void addSdlBScheduleD_new(@Valid String jsonStr, String startDate, String endDate) throws FebsException {
+
+
         String message="";
         try {
             
             User currentUser = FebsUtil.getCurrentUser();
+
+            log.info("新增考勤数据:"+currentUser.getUsername());
             List<SdlBScheduleD> list = JSON.parseObject(jsonStr, new TypeReference<List<SdlBScheduleD>>() {
             });
 
             /**
              * 查询是否一直班 再同一天 不能跨院区
              */
-            LambdaQueryWrapper<Dept> queryWrapper_dept =new LambdaQueryWrapper<>();
-            queryWrapper_dept.eq(Dept::getParentId,currentUser.getDeptId());
+            TimeInterval timer= cn.hutool.core.date.DateUtil.timer();
+           // LambdaQueryWrapper<Dept> queryWrapper_dept =new LambdaQueryWrapper<>();
+           // queryWrapper_dept.eq(Dept::getParentId,currentUser.getDeptId());
             //List<Dept> deptList = this.deptService.list(queryWrapper_dept);
 
 
             List<SdlBScheduleDetail> list_detail = JSON.parseObject(jsonStr, new TypeReference<List<SdlBScheduleDetail>>() {
             });
+           long time111= timer.interval();
+           log.info("序列化两个list"+String.valueOf(time111));
+           timer.intervalRestart();
+
             List<SdlBScheduleDetail> addListDetail=new ArrayList<>();
             if(list.size()>0) {
                 List<SdlDBanci> banciList =this.iSdlDBanciService.list();
                 LambdaQueryWrapper<SdlBUser> queryWrapper = new LambdaQueryWrapper<>();
                 queryWrapper.apply("sdl_b_user.dept_id in (select t_dept.dept_id from t_dept where t_dept.DEPT_ID='" + currentUser.getDeptId() + "' or t_dept.PARENT_ID='" + currentUser.getDeptId() + "' )");
                 queryWrapper.ne(SdlBUser::getState, 0);//只显示2或者3的
-                List<SdlBUser> users = this.iSdlBUserService.list(queryWrapper);
+                List<SdlBUser> users = this.iSdlBUserService.list(queryWrapper); //优化放进缓存里  或者只获取人员账号和名字
+
+                long time222= timer.interval();
+                log.info("获取当前科室人员数据："+String.valueOf(time222));
+                timer.intervalRestart();
 
 
               //  list_detail.forEach(sdlBScheduleDetail -> {
@@ -424,7 +438,7 @@ public class SdlBScheduleDController extends BaseController {
 
                         }
                         nDetail.setMonth(cn.hutool.core.date.DateUtil.format(sdlBScheduleDetail.getScheduleDate(),"yyyy-MM"));
-                         nDetail.setSch(cn.hutool.core.date.DateUtil.format(sdlBScheduleDetail.getScheduleDate(),"yyyy-MM-dd"));
+                        nDetail.setSch(cn.hutool.core.date.DateUtil.format(sdlBScheduleDetail.getScheduleDate(),"yyyy-MM-dd"));
                         nDetail.setAccountId(accounts);
                         List<SdlBUser> users1=users.stream().filter(p -> accounts.equals(p.getUserAccount())).collect(Collectors.toList());
                         if(users1==null ||users1.size()==0){
@@ -438,11 +452,15 @@ public class SdlBScheduleDController extends BaseController {
                         nDetail.setXulie(user.getPatentGood());//序列
                         nDetail.setZhicheng(user.getZhicheng()); //职称
                         nDetail.setAccountName(accountName);
-                        addListDetail.add(nDetail);
+                        addListDetail.add(nDetail);  //这里的职称可以去掉了 后期会job做刷新
                        // this.iSdlBScheduleDetailService.createSdlBScheduleDetail(sdlBScheduleDetail);
                     }
 
                 }
+
+                long time333= timer.interval();
+                log.info("循环每一个单元格，二次循环单元格里的人员："+String.valueOf(time333));
+                timer.intervalRestart();
 
                 Function<SdlBScheduleDetail, List<Object>> compositeKey = personRecord ->
                         Arrays.asList(personRecord.getAccountId(), personRecord.getScheduleDate());
@@ -468,8 +486,17 @@ public class SdlBScheduleDController extends BaseController {
 
                     }
                 }
+                long time444= timer.interval();
+                log.info("不同院区同一班次一值班的判断："+String.valueOf(time444));
+                timer.intervalRestart();
+
                 this.iSdlBScheduleDService.deleteByDeptAndDate(currentUser.getDeptId(), startDate, endDate);
-                list.forEach(sdlBScheduleD -> {
+
+                long time555= timer.interval();
+                log.info("删除sdlBScheduleD和detail："+String.valueOf(time555));
+                timer.intervalRestart();
+
+                list.parallelStream().forEach(sdlBScheduleD -> {
                     sdlBScheduleD.setCreateUserId(currentUser.getUserId());
                     List<String> userAccounts = Arrays.asList(sdlBScheduleD.getAccountId().replace("[", "").replace("]", "").replace("\"", "").split(","));
                     String userAccountNames = users.stream().filter(p -> userAccounts.contains(p.getUserAccount())).map(p ->p.getUserAccount()+"_"+ p.getUserAccountName()).collect(Collectors.joining(",", "", ""));
@@ -478,11 +505,23 @@ public class SdlBScheduleDController extends BaseController {
                     sdlBScheduleD.setBanci(banciName);
                     this.iSdlBScheduleDService.createSdlBScheduleD(sdlBScheduleD);
                 });
-                for (SdlBScheduleDetail detail:addListDetail
-                     ) {
+
+                long time666= timer.interval();
+                log.info("创建sdlBScheduleD："+String.valueOf(time666));
+                timer.intervalRestart();
+                addListDetail.parallelStream().forEach(detail->{
                     this.iSdlBScheduleDetailService.createSdlBScheduleDetail(detail);
-                }
+                });
+//                for (SdlBScheduleDetail detail:addListDetail
+//                     ) {
+//                    this.iSdlBScheduleDetailService.createSdlBScheduleDetail(detail);
+//                }
+                long time777= timer.interval();
+                log.info("创建Detail："+String.valueOf(time777));
+                timer.intervalRestart();
                 this.iSdlBScheduleService.updateStateById(list.get(0).getBaseId(), 1);//更改状态为已提交，补登申请的状态改为NULL
+
+
             }
 
         } catch (Exception e) {

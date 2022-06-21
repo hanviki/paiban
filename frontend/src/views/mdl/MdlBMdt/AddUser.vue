@@ -3,13 +3,13 @@
          <div class="operator">
            <select-user-remote ref="user" @userChang="userChange" style="width:400px"></select-user-remote>
         <a-button
-          
+          icon="plus"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button  @click="batchDelete"
+        <a-button  @click="batchDelete" icon="delete"
           >删除</a-button
         >
       </div>

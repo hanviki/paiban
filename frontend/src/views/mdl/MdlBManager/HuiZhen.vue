@@ -47,7 +47,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="exportExcel">导出</a-button>
+        <a-button type="primary" icon="file-excel" ghost @click="exportExcel">导出</a-button>
       </div>
       <!-- 表格区域 -->
       <a-table

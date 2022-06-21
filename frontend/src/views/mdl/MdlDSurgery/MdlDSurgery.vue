@@ -101,12 +101,13 @@
     <div>
       <div class="operator">
         <a-button
+        icon="plus"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-          <a-button @click="pass"
+          <a-button @click="pass" icon="close"
           >停用手术目录</a-button
         > 
         <!-- <a-button @click="batchDelete"

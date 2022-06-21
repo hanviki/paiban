@@ -24,13 +24,14 @@
     <div>
       <div class="operator">
         <a-button
+        icon="plus"
           v-hasPermission="['sdlDeptZizhi:add']"
           type="primary"
           ghost
           @click="add"
           >新增</a-button
         >
-        <a-button v-hasPermission="['sdlDeptZizhi:delete']" @click="batchDelete"
+        <a-button v-hasPermission="['sdlDeptZizhi:delete']" @click="batchDelete" icon="delete"
           >删除</a-button
         >
         <a-dropdown v-hasPermission="['sdlDeptZizhi:export']">

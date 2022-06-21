@@ -18,8 +18,8 @@
         </div>
         <div>
             <div class="operator">
-                <a-button v-hasPermission="['xxbBDeptflow:add']" type="primary" ghost @click="add">新增</a-button>
-                <a-button v-hasPermission="['xxbBDeptflow:delete']" @click="batchDelete">删除</a-button>
+                <a-button v-hasPermission="['xxbBDeptflow:add']" type="primary" icon="plus" ghost @click="add">新增</a-button>
+                <a-button v-hasPermission="['xxbBDeptflow:delete']" icon="delete" @click="batchDelete">删除</a-button>
                 <a-dropdown v-hasPermission="['xxbBDeptflow:export']">
                     <a-menu slot="overlay">
                         <a-menu-item key="export-data" @click="exportExcel">导出Excel</a-menu-item>

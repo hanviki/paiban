@@ -134,7 +134,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button  type="primary" ghost @click="exportExcel">导出</a-button>
+        <a-button  type="primary" icon="file-excel" ghost @click="exportExcel">导出</a-button>
         <!-- <import-excel
           v-hasPermission="['xxbBCheck:import']"
           templateUrl="xxbBCheck/downTemplate"

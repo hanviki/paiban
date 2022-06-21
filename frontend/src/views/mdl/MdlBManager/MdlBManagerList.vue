@@ -59,14 +59,17 @@
     <div>
       <div class="operator">
         <a-button
-          
+          icon="plus"
           type="primary"
           ghost
           @click="add"
           >新增{{type}}</a-button
         >
-        <a-button  @click="batchDelete"
+        <a-button  @click="batchDelete"  icon="delete"
           >删除</a-button
+        >
+         <a-button   @click="exportExcel" icon="file-excel"
+          >导出</a-button
         >
         <!-- <a-dropdown >
           <a-menu slot="overlay">
@@ -79,13 +82,27 @@
             <a-icon type="down" />
           </a-button>
         </a-dropdown> -->
-        <!-- <import-excel
-          v-hasPermission="['mdlBManager:import']"
-          templateUrl="mdlBManager/downTemplate"
+         <import-excel
+           v-if="type=='医疗主任'"
+          :templateUrl="`mdlBManager/downTemplate`"
           @succ="handleRefesh"
-          url="mdlBManager/import"
+          :url="`mdlBManager/import0`"
         >
-        </import-excel> -->
+        </import-excel> 
+         <import-excel
+           v-if="type=='医疗组长'"
+          :templateUrl="`mdlBManager/downTemplate`"
+          @succ="handleRefesh"
+          :url="`mdlBManager/import1`"
+        >
+        </import-excel> 
+         <import-excel
+           v-if="type=='质控员'"
+          :templateUrl="`mdlBManager/downTemplate`"
+          @succ="handleRefesh"
+          :url="`mdlBManager/import2`"
+        >
+        </import-excel> 
       </div>
       <!-- 表格区域 -->
       <a-table
@@ -145,6 +162,7 @@
 <script>
 import MdlBManagerAdd from "./MdlBManagerAdd";
 import MdlBManagerEdit from "./MdlBManagerEdit";
+import ImportExcel from "../../common/ImportExcel";
 import moment from "moment";
 
 const formItemLayout2 = {
@@ -157,7 +175,7 @@ const formItemLayout = {
 };
 export default {
   name: "MdlBManager",
-  components: { MdlBManagerAdd, MdlBManagerEdit },
+  components: { MdlBManagerAdd, MdlBManagerEdit, ImportExcel },
   data() {
     return {
       advanced: false,
@@ -194,6 +212,11 @@ export default {
       let { sortedInfo } = this;
       sortedInfo = sortedInfo || {};
       return [
+         {
+          title: "医疗组科室",
+          dataIndex: "deptName",
+          width: 100,
+        },
         {
           title: "科室名称",
           dataIndex: "deptId",
@@ -382,10 +405,15 @@ export default {
         sortField = sortedInfo.field;
         sortOrder = sortedInfo.order;
       }
+      let queryParams ={...this.queryParams}
+      if(queryParams.deptId=="-1"){
+        delete queryParams.deptId
+      }
+      queryParams.type = this.type
       this.$export("mdlBManager/excel", {
         sortField: sortField,
         sortOrder: sortOrder,
-        ...this.queryParams,
+        ...queryParams,
       });
     },
     search() {
